@@ -73,20 +73,52 @@ async function checkAuth() {
 
 function initDashboard(user, account, kycStatut = null) {
   showPage('pg-dash');
-  document.getElementById('user-prenom').innerText = user.prenom;
-  if(document.getElementById('user-nom')) document.getElementById('user-nom').innerText = user.nom;
-  document.getElementById('user-avatar').innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
+  
+  ['user-prenom-mobile', 'user-prenom-desktop', 'user-prenom-greeting'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerText = user.prenom;
+  });
+  
+  ['user-nom-mobile', 'user-nom-desktop'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerText = user.nom;
+  });
+
+  ['user-avatar-mobile', 'user-avatar-desktop'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
+  });
   
   if (account) {
-    document.getElementById('solde-display').innerText = `€ ${parseFloat(account.solde).toFixed(2)}`;
-    document.getElementById('iban-display').innerText = account.iban || 'En attente';
-    if(document.getElementById('type-compte-display')) document.getElementById('type-compte-display').innerText = `Compte ${account.type_compte || 'Crédit'}`;
+    ['solde-display-mobile', 'solde-display-desktop'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.innerText = `${parseFloat(account.solde).toFixed(2).replace('.', ',')} €`;
+    });
+    
+    ['iban-display-mobile', 'iban-display-desktop'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.innerText = account.iban ? account.iban.replace(/.(?=.{4})/g, '*') : 'En attente';
+    });
+    
+    ['type-compte-display-mobile', 'type-compte-display-desktop'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.innerText = `Compte ${account.type_compte || 'Courant'}`;
+    });
     
     if (account.statut === 'kyc_requis' || kycStatut === 'en_attente') {
-      document.getElementById('kyc-alert').style.display = 'block';
+      if(document.getElementById('kyc-alert-mobile')) document.getElementById('kyc-alert-mobile').style.display = 'block';
+      if(document.getElementById('kyc-alert-desktop')) document.getElementById('kyc-alert-desktop').style.display = 'block';
     } else {
-      document.getElementById('kyc-alert').style.display = 'none';
+      if(document.getElementById('kyc-alert-mobile')) document.getElementById('kyc-alert-mobile').style.display = 'none';
+      if(document.getElementById('kyc-alert-desktop')) document.getElementById('kyc-alert-desktop').style.display = 'none';
     }
+  }
+
+  const dateEl = document.getElementById('nb-current-date');
+  if(dateEl) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateStr = new Date().toLocaleDateString('fr-FR', options);
+    dateEl.innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   }
 
   // Load transactions

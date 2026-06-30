@@ -78,97 +78,172 @@
   <!-- ECRAN DASHBOARD -->
   <div id="pg-dash" class="page" style="display:none; padding:0; width: 100%;">
     
-    <!-- SIDEBAR DESKTOP -->
-    <aside class="desktop-sidebar">
-      <div class="ds-logo">
-        <svg viewBox="0 0 120 105" fill="none" width="36" height="32">
-          <polyline points="2,85 52,5 102,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-          <polyline points="16,85 52,22 88,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-          <polyline points="30,85 52,39 74,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-        </svg>
-        <span>FINTECHIA</span>
-      </div>
-      <nav class="ds-nav">
-        <a href="#" class="active" onclick="showPage('pg-dash')">📊 Tableau de bord</a>
-        <a href="#" onclick="showPage('pg-profile-settings')">👤 Mon Profil</a>
-        <a href="#" onclick="showPage('pg-security-settings')">🔒 Sécurité</a>
-      </nav>
-      <div class="ds-footer">
-        <button class="ds-logout" onclick="logout()">🚪 Se déconnecter</button>
-      </div>
-    </aside>
-
-    <!-- CONTENU PRINCIPAL -->
-    <div class="dash-main-content">
+    <!-- === LAYOUT MOBILE (Orange Fintechia) === -->
+    <div class="mobile-layout">
       <div class="bank-app">
-      <!-- Top bar -->
-      <div class="top-bar">
-        <svg class="logo" viewBox="0 0 40 40" fill="none">
-          <polygon points="20,4 36,32 4,32" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
-          <line x1="20" y1="4" x2="12" y2="18" stroke="white" stroke-width="3"/>
-        </svg>
-        <div class="menu-icon" onclick="openAppDrawer()">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-
-      <!-- Nav -->
-      <div class="top-nav">
-        <span class="bienvenue-top">Bienvenue</span>
-        <div class="avatar-new" id="user-avatar" onclick="showPage('pg-profile')"></div>
-      </div>
-
-      <!-- Main card -->
-      <div class="bank-card">
-        <div class="card-title">Bienvenue</div>
-        <div class="user-box">
-          <div class="user-name"><span id="user-prenom">...</span> <span id="user-nom"></span></div>
-          <div class="account-bar"></div>
-          <div class="user-info">N° de compte : <span id="iban-display">...</span></div>
-          <div class="user-info">Type de compte : <span id="type-compte-display">Courant</span></div>
-        </div>
-
-        <div class="funds-box">
-          <div>
-            <div class="funds-label">Fonds disponibles</div>
-            <div class="funds-amount" id="solde-display">€ 0.00</div>
+        <div class="top-bar">
+          <svg class="logo" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="20" fill="white"/>
+            <path d="M12 28L20 12L28 28H12Z" fill="#F15A22"/>
+          </svg>
+          <div class="menu-icon" onclick="openAppDrawer()">
+            <span></span><span></span><span></span>
           </div>
-          <button class="transfer-btn" onclick="showPage('pg-virement')">→ Transférer</button>
         </div>
-      </div>
-
-      <div class="kyc-banner" id="kyc-alert" style="display:none; margin: 10px; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; cursor: pointer;" onclick="showPage('pg-kyc')">
-        ⚠️ Identité non vérifiée. Cliquez pour valider.
-      </div>
-
-      <!-- Transactions -->
-      <div class="transactions-section">
-        <div class="transactions-title">Transactions</div>
-
-        <div class="tab-row">
-          <button class="tab active" onclick="filterTx('all', this)">Toutes</button>
-          <button class="tab" onclick="filterTx('credit', this)">Crédit</button>
-          <button class="tab" onclick="filterTx('debit', this)">Débit</button>
-          <button class="tab" onclick="filterTx('traitement', this)">En Traitement</button>
+        <div class="top-nav">
+          <div class="bienvenue-top">Bienvenue</div>
+          <div class="avatar-new" id="user-avatar-mobile" onclick="openAppDrawer()">..</div>
         </div>
 
-        <table class="tx-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Montant</th>
-              <th>Solde</th>
-            </tr>
-          </thead>
-          <tbody id="tx-container">
-            <!-- Transactions injectées ici -->
-          </tbody>
-        </table>
+        <div class="bank-card">
+          <div class="card-title">Bienvenue</div>
+          <div class="user-box">
+            <div class="user-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
+            <div class="account-bar"></div>
+            <div class="user-info">N° de compte : <span id="iban-display-mobile"></span></div>
+            <div class="user-info">Type de compte : <span id="type-compte-display-mobile"></span></div>
+          </div>
+          <div class="funds-box">
+            <div>
+              <div class="funds-label">FONDS DISPONIBLES</div>
+              <div class="funds-amount" id="solde-display-mobile">€ 0.00</div>
+            </div>
+            <button class="transfer-btn">→ Transférer</button>
+          </div>
+        </div>
+
+        <div class="kyc-banner" id="kyc-alert-mobile" style="display:none; margin:1rem 0.9rem 0; background:#fff3cd; color:#856404; padding:10px; border-radius:8px; font-size:12px; font-weight:bold;">
+          ⚠️ Action requise : Veuillez fournir vos documents d'identité pour activer votre compte.
+        </div>
+
+        <div class="transactions-section">
+          <div class="transactions-title">Transactions</div>
+          <div class="tab-row">
+            <button class="tab active" onclick="filterTx('all', this)">Toutes</button>
+            <button class="tab" onclick="filterTx('credit', this)">Crédit</button>
+            <button class="tab" onclick="filterTx('debit', this)">Débit</button>
+          </div>
+          <table class="tx-table">
+            <thead><tr><th>Date</th><th>Type</th><th>Montant</th><th>Solde</th></tr></thead>
+            <tbody id="tx-tbody-mobile">
+              <tr><td colspan="4" style="text-align:center;">Chargement...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      
-      </div> <!-- /bank-app -->
-    </div> <!-- /dash-main-content -->
+    </div>
+
+    <!-- === LAYOUT DESKTOP (Bleu NovaBanque) === -->
+    <div class="desktop-layout">
+      <aside class="nb-sidebar">
+        <div class="nb-logo">
+          <div class="nb-logo-icon">N</div>
+          <span>NovaBanque</span>
+        </div>
+        <nav class="nb-nav">
+          <a href="#" class="active" onclick="showPage('pg-dash')"><span class="nb-icon">🏠</span> Accueil</a>
+          <a href="#"><span class="nb-icon">⇄</span> Virements</a>
+          <a href="#"><span class="nb-icon">💳</span> Cartes</a>
+          <a href="#"><span class="nb-icon">📊</span> Budget</a>
+          <a href="#"><span class="nb-icon">👥</span> Bénéficiaires</a>
+          <a href="#"><span class="nb-icon">📄</span> Relevés</a>
+        </nav>
+        <div class="nb-footer">
+          <a href="#" class="nb-settings" onclick="showPage('pg-profile-settings')"><span class="nb-icon">⚙️</span> Paramètres</a>
+          <div class="nb-user-profile">
+            <div class="nb-avatar" id="user-avatar-desktop">..</div>
+            <div class="nb-user-info">
+              <div class="nb-name"><span id="user-prenom-desktop"></span> <span id="user-nom-desktop"></span></div>
+              <div class="nb-plan">Premium</div>
+            </div>
+          </div>
+          <button class="nb-logout" onclick="logout()">Se déconnecter</button>
+        </div>
+      </aside>
+
+      <div class="nb-main">
+        <header class="nb-header">
+          <div class="nb-header-left">
+            <h1 class="nb-greeting">Bonjour, <span id="user-prenom-greeting"></span> 👋</h1>
+            <p class="nb-date" id="nb-current-date"></p>
+          </div>
+          <div class="nb-header-right">
+            <button class="nb-btn-primary">+ Nouveau virement ↗</button>
+            <button class="nb-btn-icon">🔔</button>
+          </div>
+        </header>
+        
+        <div class="kyc-banner" id="kyc-alert-desktop" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:12px; margin-bottom:20px; font-weight:bold;">
+          ⚠️ Action requise : Veuillez fournir vos documents d'identité.
+        </div>
+
+        <div class="nb-grid">
+          <!-- Row 1 -->
+          <div class="nb-card nb-card-blue nb-solde-card">
+            <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
+            <div class="nb-solde-amount" id="solde-display-desktop">0,00 €</div>
+            <div class="nb-solde-footer">
+              <span id="type-compte-display-desktop">Compte principal</span>
+              <span class="nb-iban-masked" id="iban-display-desktop">- ****</span>
+            </div>
+          </div>
+
+          <div class="nb-card nb-revenus-card">
+            <div class="nb-card-title-grey">REVENUS — CE MOIS</div>
+            <div class="nb-card-value">3 200,00 €</div>
+            <div class="nb-stats-list">
+              <div class="nb-stat-item"><span>Salaire</span><b>2 400,00 €</b></div>
+              <div class="nb-stat-item"><span>Freelance</span><b>800,00 €</b></div>
+            </div>
+          </div>
+
+          <div class="nb-card nb-depenses-card">
+            <div class="nb-card-title-grey">DÉPENSES — CE MOIS</div>
+            <div class="nb-card-value text-red">1 243,70 €</div>
+            <div class="nb-stats-list">
+              <div class="nb-stat-item"><span>Loyer</span><b>750,00 €</b></div>
+              <div class="nb-stat-item"><span>Courses</span><b>246,20 €</b></div>
+              <div class="nb-stat-item"><span>Autres</span><b>247,50 €</b></div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="nb-card nb-transactions-card" style="grid-column: 1 / span 2;">
+            <div class="nb-tx-header">
+              <h2>Transactions récentes</h2>
+              <div class="nb-tx-filters">
+                <select><option>Toutes catégories</option></select>
+                <a href="#">Voir tout →</a>
+              </div>
+            </div>
+            <table class="nb-tx-table">
+              <thead>
+                <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
+              </thead>
+              <tbody id="tx-tbody-desktop">
+                <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="nb-card nb-budget-card">
+            <div class="nb-card-title-grey">BUDGET MENSUEL</div>
+            <div class="nb-budget-item">
+              <div class="nb-budget-head"><span>Logement</span><span>750 / 750 €</span></div>
+              <div class="nb-budget-bar"><div class="nb-budget-fill fill-red" style="width:100%"></div></div>
+            </div>
+            <div class="nb-budget-item">
+              <div class="nb-budget-head"><span>Courses</span><span>246 / 300 €</span></div>
+              <div class="nb-budget-bar"><div class="nb-budget-fill fill-orange" style="width:82%"></div></div>
+            </div>
+            <div class="nb-budget-item">
+              <div class="nb-budget-head"><span>Transports</span><span>68 / 150 €</span></div>
+              <div class="nb-budget-bar"><div class="nb-budget-fill fill-green" style="width:45%"></div></div>
+            </div>
+          </div>
+        </div> <!-- /nb-grid -->
+      </div> <!-- /nb-main -->
+    </div> <!-- /desktop-layout -->
   </div> <!-- /pg-dash -->
 
   <!-- Drawer Menu Espace Client -->
