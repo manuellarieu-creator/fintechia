@@ -66,6 +66,47 @@ async function loadTransactions() {
     if(containerMobile) containerMobile.innerHTML = mobileRows;
     if(containerDesktop) containerDesktop.innerHTML = desktopRows;
 
+    // Calcul des revenus et dépenses (sur base des transactions chargées)
+    let totalRevenus = 0;
+    let totalDepenses = 0;
+    const revenusGroup = {};
+    const depensesGroup = {};
+
+    txs.forEach(tx => {
+      const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+      const m = Math.abs(parseFloat(tx.montant));
+      
+      if(isCredit) {
+        totalRevenus += m;
+        const cat = tx.type === 'virement_recu' ? 'Virement reçu' : 'Dépôt';
+        revenusGroup[cat] = (revenusGroup[cat] || 0) + m;
+      } else {
+        totalDepenses += m;
+        const cat = tx.type === 'virement_emis' ? 'Virement émis' : 'Paiement / Retrait';
+        depensesGroup[cat] = (depensesGroup[cat] || 0) + m;
+      }
+    });
+
+    const revenusTotalEl = document.getElementById('revenus-total-desktop');
+    if(revenusTotalEl) revenusTotalEl.innerText = `${totalRevenus.toFixed(2).replace('.', ',')} €`;
+    
+    const depensesTotalEl = document.getElementById('depenses-total-desktop');
+    if(depensesTotalEl) depensesTotalEl.innerText = `${totalDepenses.toFixed(2).replace('.', ',')} €`;
+
+    const revenusListEl = document.getElementById('revenus-list-desktop');
+    if(revenusListEl) {
+      revenusListEl.innerHTML = Object.entries(revenusGroup).map(([k, v]) => `
+        <div class="nb-stat-item"><span>${k}</span><b>${v.toFixed(2).replace('.', ',')} €</b></div>
+      `).join('');
+    }
+
+    const depensesListEl = document.getElementById('depenses-list-desktop');
+    if(depensesListEl) {
+      depensesListEl.innerHTML = Object.entries(depensesGroup).map(([k, v]) => `
+        <div class="nb-stat-item"><span>${k}</span><b>${v.toFixed(2).replace('.', ',')} €</b></div>
+      `).join('');
+    }
+
   } catch (err) {
     console.error('Erreur chargement transactions:', err);
   }
