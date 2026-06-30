@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
-const { verifyToken } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 
 // Initialisation de la table si elle n'existe pas
 pool.query(`
@@ -17,7 +17,7 @@ pool.query(`
 `).catch(err => console.error("Erreur création table budgets:", err));
 
 // GET: Récupérer les budgets de l'utilisateur
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const [budgets] = await pool.query('SELECT * FROM budgets WHERE user_id = ? ORDER BY created_at ASC', [req.user.id]);
     res.json(budgets);
@@ -28,7 +28,7 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 // POST: Créer un budget
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   const { categorie, limite, couleur } = req.body;
   if (!categorie || !limite) {
     return res.status(400).json({ error: 'Catégorie et limite sont requises' });
@@ -53,7 +53,7 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 // DELETE: Supprimer un budget
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const [result] = await pool.query('DELETE FROM budgets WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
     if (result.affectedRows === 0) {
