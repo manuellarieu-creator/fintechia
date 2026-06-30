@@ -197,13 +197,13 @@ async function supprimerBudget(id) {
 // Drawer logic
 window.openAppDrawer = function() {
   document.getElementById('app-overlay').style.display = 'block';
-  document.getElementById('app-drawer').style.display = 'block';
-}
+  document.getElementById('app-drawer').style.transform = 'translateX(0)';
+};
 
 window.closeAppDrawer = function() {
   document.getElementById('app-overlay').style.display = 'none';
-  document.getElementById('app-drawer').style.display = 'none';
-}
+  document.getElementById('app-drawer').style.transform = 'translateX(100%)';
+};
 
 window.logout = function() {
   localStorage.removeItem('fintech_token');
@@ -252,4 +252,14 @@ window.filterTx = function(type, btn) {
       row.classList.add('hidden');
     }
   });
+};
+
+window.openModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.style.display = 'flex';
+};
+
+window.closeModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.style.display = 'none';
 };
