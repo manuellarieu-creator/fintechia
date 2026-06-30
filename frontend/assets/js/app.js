@@ -4,15 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const action = urlParams.get('action');
 
+  // Afficher le loading par défaut
+  showPage('pg-loading');
+
   const token = localStorage.getItem('fintech_token');
   if (token) {
     checkAuth(token);
   } else {
-    if (action === 'register') {
-      showPage('pg-register');
-    } else {
-      showPage('pg-login');
-    }
+    setTimeout(() => {
+      if (action === 'register') {
+        showPage('pg-register');
+      } else {
+        showPage('pg-login');
+      }
+    }, 500); // Petit délai pour éviter les flashs
   }
 });
 

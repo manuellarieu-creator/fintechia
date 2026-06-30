@@ -51,7 +51,7 @@ nav a:hover { color: var(--text); }
   border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
   cursor: pointer; font-family: var(--fi); white-space: nowrap;
   transition: background .2s, transform .1s;
-  box-shadow: 0 2px 8px rgba(232,78,15,.25);
+  box-shadow: 0 2px 8px rgba(37,99,235,.25);
 }
 .btn-header:hover { background: var(--or2); }
 
@@ -73,21 +73,21 @@ nav a:hover { color: var(--text); }
   content: '';
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(232,78,15,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232,78,15,.035) 1px, transparent 1px);
+    linear-gradient(rgba(37,99,235,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,.035) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
 }
 .hero-halo {
   position: absolute; top: 5%; right: -10%;
   width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,78,15,.09) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(37,99,235,.09) 0%, transparent 65%);
   pointer-events: none;
 }
 .hero-halo2 {
   position: absolute; bottom: -15%; left: -10%;
   width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,78,15,.05) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(37,99,235,.05) 0%, transparent 65%);
   pointer-events: none;
 }
 .hero-content {
@@ -145,7 +145,7 @@ nav a:hover { color: var(--text); }
   content: '';
   position: absolute; top: -40px; right: -40px;
   width: 180px; height: 180px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,78,15,.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37,99,235,.22) 0%, transparent 70%);
 }
 .card-chip {
   width: 36px; height: 28px; border-radius: 5px;
@@ -234,7 +234,7 @@ nav a:hover { color: var(--text); }
   content: '';
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   width: 700px; height: 400px; border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(232,78,15,.05) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(37,99,235,.05) 0%, transparent 70%);
   pointer-events: none;
 }
 .numbers-grid {
@@ -270,7 +270,7 @@ nav a:hover { color: var(--text); }
   font-family: var(--fi); transition: all .2s;
   background: transparent; color: var(--text3);
 }
-.ptab.active { background: var(--or); color: #fff; box-shadow: 0 2px 8px rgba(232,78,15,.3); }
+.ptab.active { background: var(--or); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.3); }
 
 .products-layout {
   display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
@@ -331,7 +331,7 @@ nav a:hover { color: var(--text); }
 .process-steps::before {
   content: '';
   position: absolute; top: 28px; left: calc(12.5% + 16px); right: calc(12.5% + 16px);
-  height: 1px; background: linear-gradient(90deg, var(--or), rgba(232,78,15,.15));
+  height: 1px; background: linear-gradient(90deg, var(--or), rgba(37,99,235,.15));
 }
 .process-step { text-align: center; padding: 0 1rem; }
 .step-num {
@@ -410,7 +410,7 @@ nav a:hover { color: var(--text); }
   content: '';
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   width: 800px; height: 400px; border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(232,78,15,.07) 0%, transparent 65%);
+  background: radial-gradient(ellipse, rgba(37,99,235,.07) 0%, transparent 65%);
 }
 .cta-inner {
   max-width: 700px; margin: 0 auto; text-align: center;
