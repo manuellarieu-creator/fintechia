@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   id           INT AUTO_INCREMENT PRIMARY KEY,
   user_id      INT NOT NULL,
   iban         VARCHAR(34) UNIQUE,
-  bic          VARCHAR(11) DEFAULT 'FINTEFR22XXX',
+  bic          VARCHAR(12) DEFAULT 'FINTEFR22XXX',
   type_compte  ENUM('credit','epargne','courant') DEFAULT 'credit',
   solde        DECIMAL(15,2) DEFAULT 0.00,
   statut       ENUM('en_attente','actif','kyc_requis','bloque','cloture') DEFAULT 'en_attente',
