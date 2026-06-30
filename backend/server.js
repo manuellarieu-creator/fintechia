@@ -13,6 +13,7 @@ const authRoutes = require('./routes/auth');
 const kycRoutes = require('./routes/kyc');
 const transactionsRoutes = require('./routes/transactions');
 const adminRoutes = require('./routes/admin');
+const budgetsRoutes = require('./routes/budgets');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -60,6 +61,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/budgets', budgetsRoutes);
 
 // Fichiers statiques (en production configuré via Nginx internal)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

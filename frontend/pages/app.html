@@ -223,25 +223,40 @@
             </table>
           </div>
 
-          <div class="nb-card nb-budget-card">
-            <div class="nb-card-title-grey">BUDGET MENSUEL</div>
-            <div class="nb-budget-item">
-              <div class="nb-budget-head"><span>Logement</span><span>750 / 750 €</span></div>
-              <div class="nb-budget-bar"><div class="nb-budget-fill fill-red" style="width:100%"></div></div>
+          <div class="nb-card nb-budget-card" id="budget-card-desktop">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div class="nb-card-title-grey" style="margin-bottom:0;">BUDGET MENSUEL</div>
+              <button onclick="openModal('modal-budgets')" style="background:none; border:none; color:#2563EB; font-weight:600; font-size:12px; cursor:pointer;">⚙️ Gérer</button>
             </div>
-            <div class="nb-budget-item">
-              <div class="nb-budget-head"><span>Courses</span><span>246 / 300 €</span></div>
-              <div class="nb-budget-bar"><div class="nb-budget-fill fill-orange" style="width:82%"></div></div>
-            </div>
-            <div class="nb-budget-item">
-              <div class="nb-budget-head"><span>Transports</span><span>68 / 150 €</span></div>
-              <div class="nb-budget-bar"><div class="nb-budget-fill fill-green" style="width:45%"></div></div>
+            <div id="budget-list-desktop">
+              <p style="font-size:13px; color:#64748B;">Chargement des budgets...</p>
             </div>
           </div>
         </div> <!-- /nb-grid -->
       </div> <!-- /nb-main -->
     </div> <!-- /desktop-layout -->
   </div> <!-- /pg-dash -->
+
+  <!-- Modal Budgets -->
+  <div class="modal" id="modal-budgets" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
+      <h2 style="font-size:18px; margin-bottom:16px;">Mes Budgets</h2>
+      <div id="budgets-manage-list" style="margin-bottom:20px; max-height:200px; overflow-y:auto;">
+        <!-- Dynamique -->
+      </div>
+      
+      <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
+        <h4 style="margin-bottom:10px; font-size:14px; color:#0F172A;">Ajouter une enveloppe</h4>
+        <input type="text" id="new-budget-cat" placeholder="Catégorie (ex: Casino)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <input type="number" id="new-budget-limite" placeholder="Limite (€)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <button onclick="ajouterBudget()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Ajouter</button>
+      </div>
+
+      <div style="text-align:right; margin-top:20px;">
+        <button onclick="closeModal('modal-budgets')" style="background:none; border:none; color:#64748B; font-weight:600; cursor:pointer; padding:8px 16px;">Fermer</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Drawer Menu Espace Client -->
   <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>

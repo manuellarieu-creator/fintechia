@@ -121,3 +121,13 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 INSERT IGNORE INTO users (prenom, nom, email, password_hash, role)
 VALUES ('Super', 'Admin', 'admin@fintechia.fr',
 '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+
+CREATE TABLE IF NOT EXISTS budgets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  categorie VARCHAR(100) NOT NULL,
+  limite DECIMAL(15,2) NOT NULL,
+  couleur VARCHAR(20) DEFAULT 'blue',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

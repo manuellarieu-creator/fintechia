@@ -107,6 +107,46 @@ async function loadTransactions() {
       `).join('');
     }
 
+    // Calcul et affichage des budgets
+    const budgetListEl = document.getElementById('budget-list-desktop');
+    if(budgetListEl && typeof userBudgets !== 'undefined') {
+      if(userBudgets.length === 0) {
+        budgetListEl.innerHTML = '<p style="font-size:13px; color:#64748B;">Aucun budget défini. Cliquez sur Gérer pour commencer.</p>';
+      } else {
+        budgetListEl.innerHTML = userBudgets.map(b => {
+          const spent = txs.filter(tx => {
+            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
+            if(!isDebit) return false;
+            
+            let lib = tx.description || 'Transaction';
+            if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
+            
+            return lib.toLowerCase().includes(b.categorie.toLowerCase());
+          }).reduce((acc, curr) => acc + Math.abs(parseFloat(curr.montant)), 0);
+
+          const limit = parseFloat(b.limite);
+          let pct = (spent / limit) * 100;
+          if(pct > 100) pct = 100;
+          
+          let colorClass = 'fill-green';
+          if(pct > 75) colorClass = 'fill-orange';
+          if(pct > 90) colorClass = 'fill-red';
+
+          return `
+            <div class="nb-budget-item">
+              <div class="nb-budget-head">
+                <span>${b.categorie}</span>
+                <span>${spent.toFixed(2).replace('.',',')} / ${limit.toFixed(2).replace('.',',')} €</span>
+              </div>
+              <div class="nb-budget-bar">
+                <div class="nb-budget-fill ${colorClass}" style="width:${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
   } catch (err) {
     console.error('Erreur chargement transactions:', err);
   }

@@ -121,8 +121,12 @@ function initDashboard(user, account, kycStatut = null) {
     dateEl.innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   }
 
-  // Load transactions
-  if (typeof loadTransactions === 'function') {
+  // Load budgets & transactions
+  if (typeof loadBudgets === 'function') {
+    loadBudgets().then(() => {
+      if (typeof loadTransactions === 'function') loadTransactions();
+    });
+  } else if (typeof loadTransactions === 'function') {
     loadTransactions();
   }
 
@@ -131,6 +135,62 @@ function initDashboard(user, account, kycStatut = null) {
     document.getElementById('prof-prenom').value = user.prenom || '';
     document.getElementById('prof-nom').value = user.nom || '';
     document.getElementById('prof-tel').value = user.telephone || '';
+  }
+}
+
+/* === GESTION DES BUDGETS === */
+let userBudgets = [];
+
+async function loadBudgets() {
+  try {
+    userBudgets = await apiCall('/budgets');
+    renderBudgetsManageList();
+  } catch (err) {
+    console.error("Erreur chargement budgets:", err);
+  }
+}
+
+function renderBudgetsManageList() {
+  const container = document.getElementById('budgets-manage-list');
+  if(!container) return;
+  if(userBudgets.length === 0) {
+    container.innerHTML = '<p style="font-size:13px; color:#64748B;">Aucune enveloppe budgétaire définie.</p>';
+    return;
+  }
+  container.innerHTML = userBudgets.map(b => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #E2E8F0;">
+      <div>
+        <div style="font-weight:600; font-size:14px; color:#0F172A;">${b.categorie}</div>
+        <div style="font-size:12px; color:#64748B;">Limite: ${parseFloat(b.limite).toFixed(2).replace('.',',')} €</div>
+      </div>
+      <button onclick="supprimerBudget(${b.id})" style="background:none; border:none; color:#EF4444; font-size:16px; cursor:pointer;">🗑</button>
+    </div>
+  `).join('');
+}
+
+async function ajouterBudget() {
+  const cat = document.getElementById('new-budget-cat').value;
+  const lim = document.getElementById('new-budget-limite').value;
+  if(!cat || !lim) return; // Simple validation
+  try {
+    await apiCall('/budgets', 'POST', { categorie: cat, limite: parseFloat(lim), couleur: 'blue' });
+    document.getElementById('new-budget-cat').value = '';
+    document.getElementById('new-budget-limite').value = '';
+    await loadBudgets();
+    if(typeof loadTransactions === 'function') loadTransactions();
+  } catch(e) {
+    alert('Erreur ajout budget');
+  }
+}
+
+async function supprimerBudget(id) {
+  if(!confirm("Supprimer cette enveloppe budgétaire ?")) return;
+  try {
+    await apiCall(`/budgets/${id}`, 'DELETE');
+    await loadBudgets();
+    if(typeof loadTransactions === 'function') loadTransactions();
+  } catch(e) {
+    alert('Erreur suppression');
   }
 }
 
