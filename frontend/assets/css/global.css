@@ -1,0 +1,72 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --or:    #E84E0F;
+  --or2:   #FF6B35;
+  --or-light: rgba(232,78,15,.08);
+  --or-border: rgba(232,78,15,.2);
+  --bg:    #FAFAF8;
+  --bg2:   #F4F3F0;
+  --bg3:   #EEEDE9;
+  --text:  #111110;
+  --text2: #3D3D3B;
+  --text3: #7A7A77;
+  --bd:    rgba(0,0,0,0.08);
+  --bd2:   rgba(0,0,0,0.05);
+  --white: #FFFFFF;
+  --fs:    'Playfair Display', Georgia, serif;
+  --fi:    'Inter', sans-serif;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.05);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.1), 0 4px 16px rgba(0,0,0,.06);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fi);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ═══ LANGUE ═══ */
+.lang-fr .en { display: none; }
+.lang-en .fr { display: none; }
+
+/* ═══ BOUTONS ═══ */
+.btn-primary {
+  padding: 14px 28px; background: var(--or); color: #fff;
+  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: var(--fi); transition: background .2s, transform .1s;
+  box-shadow: 0 4px 14px rgba(232,78,15,.3);
+}
+.btn-primary:hover { background: var(--or2); transform: translateY(-1px); }
+
+.btn-secondary {
+  padding: 14px 28px; background: var(--white); color: var(--text);
+  border: 1px solid var(--bd); border-radius: 10px;
+  font-size: 15px; font-weight: 500; cursor: pointer; font-family: var(--fi);
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover { border-color: rgba(0,0,0,.18); box-shadow: var(--shadow-md); }
+
+/* ═══ SECTIONS COMMUNES ═══ */
+section { padding: 6rem 2rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 11px; font-weight: 700; color: var(--or);
+  text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem;
+}
+.section-title {
+  font-family: var(--fs);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 800; line-height: 1.15; letter-spacing: -.02em;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+.section-sub {
+  font-size: 16px; color: var(--text3);
+  line-height: 1.7; max-width: 560px;
+}

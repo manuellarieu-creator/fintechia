@@ -1,0 +1,74 @@
+.app-body {
+  background: var(--bg2);
+  display: flex; justify-content: center;
+}
+
+#app-wrap {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow-x: hidden;
+  display: flex; flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  display: flex; flex-direction: column;
+}
+
+.flex-col {
+  justify-content: center; align-items: center; padding: 2rem;
+}
+
+/* LOGIN */
+.login-container { width: 100%; max-width: 320px; }
+.login-logo { text-align: center; margin-bottom: 2rem; }
+.login-title { font-family: var(--fs); font-size: 24px; text-align: center; margin-bottom: 2rem; }
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text2); }
+.form-group input { width: 100%; padding: 12px; border: 1px solid var(--bd); border-radius: 8px; font-family: var(--fi); }
+.w-full { width: 100%; }
+.login-links { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 10px; text-align: center; }
+.login-links a { font-size: 13px; color: var(--or); text-decoration: none; font-weight: 500; }
+
+/* APP DASHBOARD */
+.app-header {
+  padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;
+  background: var(--white); border-bottom: 1px solid var(--bd);
+}
+.app-header-left { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 36px; height: 36px; background: var(--or); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+.greeting { font-size: 14px; color: var(--text2); }
+.icon-btn { background: none; border: none; font-size: 20px; position: relative; cursor: pointer; }
+.badge { position: absolute; top: -5px; right: -5px; background: red; color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 10px; font-weight: 700; }
+
+.app-main { flex: 1; padding: 1.5rem; overflow-y: auto; padding-bottom: 80px; }
+.card { background: var(--white); padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; }
+.balance-card { border: 1px solid var(--or-border); }
+.balance-label { font-size: 13px; color: var(--text3); margin-bottom: 5px; }
+.balance-amount { font-family: var(--fs); font-size: 2.2rem; font-weight: 700; color: var(--or); margin-bottom: 10px; }
+.balance-iban { font-size: 12px; color: var(--text3); font-family: monospace; letter-spacing: 1px; margin-bottom: 1.5rem; }
+
+.kyc-banner { background: #FEF3C7; color: #92400E; padding: 12px; border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.kyc-banner button { background: none; border: none; font-weight: 700; color: #92400E; cursor: pointer; }
+
+.section-title-sm { font-size: 14px; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+.tx-list { display: flex; flex-direction: column; gap: 10px; }
+.tx-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--white); border-radius: 10px; border: 1px solid var(--bd); }
+.tx-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.tx-info p { font-size: 12px; color: var(--text3); }
+.tx-amount { font-weight: 700; font-size: 15px; }
+.tx-amount.credit { color: #16a34a; }
+.tx-amount.debit { color: var(--text); }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: var(--white); border-top: 1px solid var(--bd);
+  display: flex; justify-content: space-around; align-items: center;
+}
+.bottom-nav a { font-size: 22px; text-decoration: none; opacity: 0.5; transition: opacity .2s; }
+.bottom-nav a.active { opacity: 1; }

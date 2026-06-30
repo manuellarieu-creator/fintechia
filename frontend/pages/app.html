@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fintechia — Mon Espace Client</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body class="app-body">
+
+<div id="app-wrap">
+  <!-- ECRAN LOGIN -->
+  <div id="pg-login" class="page flex-col">
+    <div class="login-container">
+      <div class="login-logo">
+        <svg viewBox="0 0 120 105" fill="none" width="60" height="52">
+          <polyline points="2,85 52,5 102,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <polyline points="16,85 52,22 88,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <polyline points="30,85 52,39 74,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="login-title">Connexion à votre espace</h2>
+      
+      <form id="form-login" class="login-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" required />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="login-pwd" required />
+        </div>
+        <button type="submit" class="btn-primary w-full">Se connecter</button>
+      </form>
+      
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-register')">Créer un compte</a>
+        <a href="index.html">← Retour à l'accueil</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRAN REGISTER -->
+  <div id="pg-register" class="page flex-col" style="display:none;">
+    <div class="login-container">
+      <h2 class="login-title">Ouvrir un compte</h2>
+      <form id="form-register" class="login-form">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="reg-prenom" required />
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="reg-nom" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" required />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="reg-pwd" required minlength="6" />
+        </div>
+        <button type="submit" class="btn-primary w-full">Créer mon compte</button>
+      </form>
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-login')">Déjà un compte ? Se connecter</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRAN DASHBOARD -->
+  <div id="pg-dash" class="page" style="display:none;">
+    <header class="app-header">
+      <div class="app-header-left">
+        <div class="avatar" id="user-avatar">JD</div>
+        <span class="greeting">Bonjour, <b id="user-prenom">...</b></span>
+      </div>
+      <div class="app-header-right">
+        <button class="icon-btn" onclick="showPage('pg-notifs')">🔔 <span id="notif-badge" class="badge">0</span></button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="card balance-card">
+        <div class="balance-label">Solde disponible</div>
+        <div class="balance-amount" id="solde-display">€ 0.00</div>
+        <div class="balance-iban" id="iban-display">IBAN en attente</div>
+        <div class="card-actions">
+          <button class="btn-primary" onclick="showPage('pg-virement')">→ Transférer</button>
+        </div>
+      </div>
+
+      <div class="kyc-banner" id="kyc-alert" style="display:none;">
+        ⚠️ Identité non vérifiée <button onclick="showPage('pg-kyc')">Valider maintenant</button>
+      </div>
+
+      <div class="transactions-section">
+        <div class="section-title-sm">Transactions récentes</div>
+        <div class="tx-list" id="tx-container">
+          <!-- Transactions injectées ici -->
+        </div>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="#" class="active" onclick="showPage('pg-dash')">🏠</a>
+      <a href="#" onclick="showPage('pg-kyc')">🪪</a>
+      <a href="#" onclick="showPage('pg-profile')">👤</a>
+    </nav>
+  </div>
+</div>
+
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/transactions.js"></script>
+<script src="../assets/js/virement.js"></script>
+<script src="../assets/js/kyc.js"></script>
+</body>
+</html>

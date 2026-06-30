@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administration — Fintechia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <style>
+    body { background: var(--bg2); display: flex; }
+    .sidebar { width: 250px; background: var(--white); height: 100vh; border-right: 1px solid var(--bd); padding: 1.5rem; position: fixed; }
+    .sidebar-logo { font-family: var(--fs); font-size: 20px; font-weight: 700; color: var(--or); margin-bottom: 3rem; }
+    .nav-item { display: block; padding: 10px 15px; margin-bottom: 5px; color: var(--text2); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; }
+    .nav-item:hover, .nav-item.active { background: var(--bg); color: var(--or); }
+    .main-content { margin-left: 250px; flex: 1; padding: 2.5rem; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--bd); }
+    .stat-card-val { font-family: var(--fs); font-size: 28px; font-weight: 700; color: var(--text); }
+    .stat-card-lbl { font-size: 12px; color: var(--text3); }
+    
+    .data-table { width: 100%; border-collapse: collapse; background: var(--white); box-shadow: var(--shadow-sm); border-radius: 12px; overflow: hidden; }
+    .data-table th, .data-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--bd); font-size: 14px; }
+    .data-table th { background: var(--bg); font-size: 12px; text-transform: uppercase; color: var(--text3); }
+    .action-btn { background: var(--or); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">FINTECHIA Admin</div>
+  <a href="#" class="nav-item active">Tableau de bord</a>
+  <a href="#" class="nav-item">Comptes & KYC</a>
+  <a href="#" class="nav-item">Virements</a>
+  <a href="#" class="nav-item">Audit légal</a>
+</div>
+
+<div class="main-content">
+  <div class="admin-header">
+    <h1 class="section-title" style="margin:0">Administration</h1>
+    <button class="btn-secondary" onclick="localStorage.removeItem('fintech_token'); window.location.href='app.html'">Déconnexion</button>
+  </div>
+
+  <div class="dashboard-grid" id="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-val">...</div>
+      <div class="stat-card-lbl">Clients</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Derniers logs d'audit</div>
+  <table class="data-table" id="audit-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Admin / Acteur</th>
+        <th>Catégorie</th>
+        <th>Action</th>
+        <th>Détails</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="5" style="text-align:center; color:var(--text3)">Chargement des audits...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  async function apiCall(endpoint) {
+    const token = localStorage.getItem('fintech_token');
+    if(!token) { window.location.href='app.html'; return; }
+    const res = await fetch('/api' + endpoint, { headers: { 'Authorization': 'Bearer ' + token }});
+    if(!res.ok) throw new Error('Auth failed');
+    return res.json();
+  }
+
+  async function loadAdmin() {
+    try {
+      // Load Stats
+      const stats = await apiCall('/admin/dashboard');
+      document.getElementById('stats-grid').innerHTML = `
+        <div class="stat-card"><div class="stat-card-val">${stats.total_clients}</div><div class="stat-card-lbl">Clients</div></div>
+        <div class="stat-card"><div class="stat-card-val">${stats.comptes_actifs}</div><div class="stat-card-lbl">Comptes Actifs</div></div>
+        <div class="stat-card"><div class="stat-card-val">${stats.kyc_en_attente}</div><div class="stat-card-lbl">KYC en attente</div></div>
+        <div class="stat-card"><div class="stat-card-val">${stats.virements_en_attente}</div><div class="stat-card-lbl">Virements en attente</div></div>
+      `;
+
+      // Load Audit
+      const audits = await apiCall('/admin/audit?limit=10');
+      const tbody = document.querySelector('#audit-table tbody');
+      tbody.innerHTML = audits.map(a => `
+        <tr>
+          <td>${new Date(a.created_at).toLocaleString()}</td>
+          <td>${a.acteur_email}</td>
+          <td><span style="background:var(--bg3);padding:3px 8px;border-radius:10px;font-size:11px;">${a.categorie}</span></td>
+          <td><b>${a.action}</b></td>
+          <td>${a.cible_detail || '-'}</td>
+        </tr>
+      `).join('');
+    } catch(err) {
+      console.error(err);
+      alert('Accès refusé. Vous n\'êtes pas administrateur.');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadAdmin);
+</script>
+</body>
+</html>
