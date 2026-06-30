@@ -35,7 +35,7 @@ async function apiCall(endpoint, method = 'GET', body = null) {
 
   const res = await fetch(`/api${endpoint}`, options);
   
-  if (res.status === 401) {
+  if (res.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem('fintech_token');
     showPage('pg-login');
     alert('Session expirée, veuillez vous reconnecter.');
