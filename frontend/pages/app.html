@@ -6,9 +6,11 @@
   <title>Fintechia — Mon Espace Client</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
   
   <link rel="stylesheet" href="../assets/css/global.css">
   <link rel="stylesheet" href="../assets/css/app.css">
+  <link rel="stylesheet" href="../assets/css/mobile.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body class="app-body">
@@ -78,58 +80,146 @@
   <!-- ECRAN DASHBOARD -->
   <div id="pg-dash" class="page" style="display:none; padding:0; width: 100%;">
     
-    <!-- === LAYOUT MOBILE (Orange Fintechia) === -->
+    <!-- === LAYOUT MOBILE (Bleu NovaBanque) === -->
     <div class="mobile-layout">
-      <div class="bank-app">
-        <div class="top-bar">
-          <svg class="logo" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="20" fill="white"/>
-            <path d="M12 28L20 12L28 28H12Z" fill="#F15A22"/>
-          </svg>
-          <div class="menu-icon" onclick="openAppDrawer()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        <div class="top-nav">
-          <div class="bienvenue-top">Bienvenue</div>
-          <div class="avatar-new" id="user-avatar-mobile" onclick="openAppDrawer()">..</div>
-        </div>
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="dynamic-island"></div>
+      </div>
 
-        <div class="bank-card">
-          <div class="card-title">Bienvenue</div>
-          <div class="user-box">
-            <div class="user-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
-            <div class="account-bar"></div>
-            <div class="user-info">N° de compte : <span id="iban-display-mobile"></span></div>
-            <div class="user-info">Type de compte : <span id="type-compte-display-mobile"></span></div>
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-greeting">Bonjour 👋</div>
+          <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
+        </div>
+        <div class="topbar-right">
+          <div class="notif-wrap" onclick="showPage('pg-profile-settings')">
+            <i class="ti ti-settings"></i>
           </div>
-          <div class="funds-box">
-            <div>
-              <div class="funds-label">FONDS DISPONIBLES</div>
-              <div class="funds-amount" id="solde-display-mobile">€ 0.00</div>
+          <div class="avatar-sm" id="user-avatar-mobile" onclick="showPage('pg-profile-settings')">..</div>
+        </div>
+      </div>
+
+      <!-- Scroll content -->
+      <div class="scroll-area" id="mobile-views-container">
+
+        <!-- Vue principale -->
+        <div id="m-view-dashboard" class="m-view">
+          <!-- Solde -->
+          <div class="hero-card">
+            <div class="hero-label">Solde disponible</div>
+            <div class="hero-amount" id="solde-display-mobile">€ 0.00</div>
+            <div class="hero-footer">
+              <span id="iban-display-mobile">**** **** **** 4821</span>
+              <i class="ti ti-credit-card" style="font-size:20px;opacity:.7;"></i>
             </div>
-            <button class="transfer-btn">→ Transférer</button>
+          </div>
+
+          <!-- Revenus | Dépenses -->
+          <div class="grid-2">
+            <div class="mobile-card">
+              <span class="card-label">Revenus (mois)</span>
+              <div class="card-value" id="revenus-mobile">0,00 €</div>
+            </div>
+            <div class="mobile-card">
+              <span class="card-label">Dépenses (mois)</span>
+              <div class="card-value" style="color:var(--danger-text);" id="depenses-mobile">0,00 €</div>
+            </div>
+          </div>
+
+          <!-- Budget -->
+          <div class="mobile-card">
+            <div class="card-head">
+              <h2>Budget mensuel</h2>
+              <a href="#" onclick="showMobileView('m-view-budget')">Détail →</a>
+            </div>
+            <div id="budget-list-mobile">Chargement...</div>
+          </div>
+
+          <!-- Virements rapides -->
+          <div class="mobile-card">
+            <div class="card-head">
+              <h2>Virements rapides</h2>
+              <a href="#" onclick="showMobileView('m-view-virements')">Gérer →</a>
+            </div>
+            <div class="bene-list" id="beneficiaires-mobile-list">
+              <div class="bene bene-add" onclick="showMobileView('m-view-virements')">
+                <div class="bene-av"><i class="ti ti-plus"></i></div>
+                <span class="bene-n">Nouveau</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transactions -->
+          <div class="mobile-card">
+            <div class="card-head">
+              <h2>Transactions récentes</h2>
+            </div>
+            <div id="tx-tbody-mobile">Chargement...</div>
           </div>
         </div>
 
-        <div class="kyc-banner" id="kyc-alert-mobile" style="display:none; margin:1rem 0.9rem 0; background:#fff3cd; color:#856404; padding:10px; border-radius:8px; font-size:12px; font-weight:bold;">
-          ⚠️ Action requise : Veuillez fournir vos documents d'identité pour activer votre compte.
+        <!-- Vues supplémentaires (Cartes, Virements, etc) cachées par defaut -->
+        <div id="m-view-cartes" class="m-view" style="display:none;">
+          <h2 style="margin-bottom:15px; font-weight:600;">Mes Cartes</h2>
+          <div id="cartes-mobile-container">Chargement...</div>
+        </div>
+        
+        <div id="m-view-budget" class="m-view" style="display:none;">
+          <h2 style="margin-bottom:15px; font-weight:600;">Gestion Budgets</h2>
+          <div id="budget-page-list-mobile">Chargement...</div>
+          <button onclick="openModal('modal-budgets')" class="nb-btn-primary" style="width:100%; margin-top:20px; padding:12px; background:var(--accent); color:white; border:none; border-radius:12px; font-weight:600;">Configurer</button>
         </div>
 
-        <div class="transactions-section">
-          <div class="transactions-title">Transactions</div>
-          <div class="tab-row">
-            <button class="tab active" onclick="filterTx('all', this)">Toutes</button>
-            <button class="tab" onclick="filterTx('credit', this)">Crédit</button>
-            <button class="tab" onclick="filterTx('debit', this)">Débit</button>
+        <div id="m-view-virements" class="m-view" style="display:none;">
+          <h2 style="margin-bottom:15px; font-weight:600;">Virements & Bénéficiaires</h2>
+          <div class="mobile-card" style="margin-bottom:15px;">
+            <h3>Bénéficiaires</h3>
+            <div class="bene-list" id="beneficiaires-mobile-full-list" style="margin-top:15px;"></div>
+            <button onclick="openModal('modal-add-beneficiaire')" class="nb-btn-primary" style="width:100%; margin-top:15px; padding:8px; background:var(--surface-1); color:var(--text-primary); border:none; border-radius:8px; font-weight:600;">+ Ajouter un bénéficiaire</button>
           </div>
-          <table class="tx-table">
-            <thead><tr><th>Date</th><th>Type</th><th>Montant</th><th>Solde</th></tr></thead>
-            <tbody id="tx-tbody-mobile">
-              <tr><td colspan="4" style="text-align:center;">Chargement...</td></tr>
-            </tbody>
-          </table>
+          
+          <div class="mobile-card">
+            <h3>Nouveau Virement</h3>
+            <form id="form-virement-mobile" style="margin-top:15px;">
+              <select id="vir-iban-mobile" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required><option value="">Bénéficiaire...</option></select>
+              <input type="number" id="vir-montant-mobile" placeholder="Montant (€)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required>
+              <input type="text" id="vir-motif-mobile" placeholder="Motif" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required>
+              <input type="hidden" id="vir-nom-mobile">
+              <button type="submit" class="nb-btn-primary" style="width:100%; padding:12px; background:var(--accent); color:white; border:none; border-radius:8px; font-weight:600;">Envoyer</button>
+            </form>
+          </div>
         </div>
+
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="bottom-nav">
+        <div class="nb-item active" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-dashboard')">
+          <i class="ti ti-home"></i>
+          <span>Accueil</span>
+        </div>
+        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-cartes')">
+          <i class="ti ti-credit-card"></i>
+          <span>Cartes</span>
+        </div>
+        <div class="nb-fab" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); showMobileView('m-view-virements')">
+          <div class="nb-fab-btn"><i class="ti ti-arrows-exchange"></i></div>
+          <span>Virements</span>
+        </div>
+        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-budget')">
+          <i class="ti ti-chart-pie"></i>
+          <span>Budget</span>
+        </div>
+        <div class="nb-item" onclick="showPage('pg-profile-settings')">
+          <i class="ti ti-user"></i>
+          <span>Profil</span>
+        </div>
+      </div>
+
+      <div class="home-indicator">
+        <div class="home-bar"></div>
       </div>
     </div>
 

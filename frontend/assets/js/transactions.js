@@ -11,23 +11,31 @@ async function loadTransactions() {
       if(containerMobile) containerMobile.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:15px;">Aucune transaction récente.</td></tr>';
       if(containerDesktop) containerDesktop.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">Aucune transaction récente.</td></tr>';
     } else {
-      // Lignes Mobile
+      // Lignes Mobile (Nouveau design)
       const mobileRows = txs.map(tx => {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
-        const badgeClass = isCredit ? 'badge-credit' : 'badge-debit';
-        const amountClass = isCredit ? 'amount-pos' : 'amount-neg';
+        const badgeClass = isCredit ? 'badge-success' : 'badge-neutral';
+        const amountClass = isCredit ? 'pos' : 'neg';
         const sign = isCredit ? '+' : '';
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const soldeDisplay = tx.solde_apres ? `€${parseFloat(tx.solde_apres).toFixed(2)}` : '-';
+        const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        
+        let libelle = tx.description || 'Transaction';
+        if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
+        if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
+
+        const iconClass = isCredit ? 'success' : 'neutral';
+        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-shopping-bag';
 
         return `
-          <tr class="tx-row" data-type="${isCredit ? 'credit' : 'debit'}">
-            <td>${date}</td>
-            <td><span class="badge ${badgeClass}">${typeLabel}</span></td>
-            <td class="${amountClass}">${sign}€${Math.abs(tx.montant).toFixed(2)}</td>
-            <td>${soldeDisplay}</td>
-          </tr>
+          <div class="tx">
+            <div class="tx-icon ${iconClass}"><i class="ti ${icon}"></i></div>
+            <div class="tx-body">
+              <div class="tx-name">${libelle}</div>
+              <div class="tx-meta">${date} <span class="badge ${badgeClass}">${typeLabel}</span></div>
+            </div>
+            <div class="tx-amount ${amountClass}">${sign}${Math.abs(tx.montant).toFixed(2).replace('.', ',')} €</div>
+          </div>
         `;
       }).join('');
 
@@ -92,6 +100,12 @@ async function loadTransactions() {
     const depensesTotalEl = document.getElementById('depenses-total-desktop');
     if(depensesTotalEl) depensesTotalEl.innerText = `${totalDepenses.toFixed(2).replace('.', ',')} €`;
 
+    // Mobile stats
+    const revenusMobileEl = document.getElementById('revenus-mobile');
+    if(revenusMobileEl) revenusMobileEl.innerText = `${totalRevenus.toFixed(2).replace('.', ',')} €`;
+    const depensesMobileEl = document.getElementById('depenses-mobile');
+    if(depensesMobileEl) depensesMobileEl.innerText = `${totalDepenses.toFixed(2).replace('.', ',')} €`;
+
     const revenusListEl = document.getElementById('revenus-list-desktop');
     if(revenusListEl) {
       revenusListEl.innerHTML = Object.entries(revenusGroup).map(([k, v]) => `
@@ -108,18 +122,19 @@ async function loadTransactions() {
 
     // Calcul et affichage des budgets
     const budgetListEl = document.getElementById('budget-list-desktop');
-    if(budgetListEl && typeof userBudgets !== 'undefined') {
+    const budgetListMobileEl = document.getElementById('budget-list-mobile');
+    
+    if(typeof userBudgets !== 'undefined') {
       if(userBudgets.length === 0) {
-        budgetListEl.innerHTML = '<p style="font-size:13px; color:#64748B;">Aucun budget défini. Cliquez sur Gérer pour commencer.</p>';
+        if(budgetListEl) budgetListEl.innerHTML = '<p style="font-size:13px; color:#64748B;">Aucun budget défini. Cliquez sur Gérer pour commencer.</p>';
+        if(budgetListMobileEl) budgetListMobileEl.innerHTML = '<p style="font-size:12px; color:var(--text-muted);">Aucun budget.</p>';
       } else {
-        budgetListEl.innerHTML = userBudgets.map(b => {
+        const desktopBudgets = userBudgets.map(b => {
           const spent = txs.filter(tx => {
             const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
             if(!isDebit) return false;
-            
             let lib = tx.description || 'Transaction';
             if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
-            
             return lib.toLowerCase().includes(b.categorie.toLowerCase());
           }).reduce((acc, curr) => acc + Math.abs(parseFloat(curr.montant)), 0);
 
@@ -143,6 +158,34 @@ async function loadTransactions() {
             </div>
           `;
         }).join('');
+
+        const mobileBudgets = userBudgets.map(b => {
+          const spent = txs.filter(tx => {
+            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
+            if(!isDebit) return false;
+            let lib = tx.description || 'Transaction';
+            if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
+            return lib.toLowerCase().includes(b.categorie.toLowerCase());
+          }).reduce((acc, curr) => acc + Math.abs(parseFloat(curr.montant)), 0);
+
+          const limit = parseFloat(b.limite);
+          let pct = (spent / limit) * 100;
+          if(pct > 100) pct = 100;
+          
+          let color = 'var(--success)';
+          if(pct > 75) color = 'var(--warning)';
+          if(pct > 90) color = 'var(--danger)';
+
+          return `
+            <div class="budget-row">
+              <div class="budget-labels"><span>${b.categorie}</span><span>${spent.toFixed(0)} / ${limit.toFixed(0)} €</span></div>
+              <div class="budget-track"><div class="budget-fill" style="width:${pct}%;background:${color};"></div></div>
+            </div>
+          `;
+        }).join('');
+
+        if(budgetListEl) budgetListEl.innerHTML = desktopBudgets;
+        if(budgetListMobileEl) budgetListMobileEl.innerHTML = mobileBudgets;
       }
     }
 

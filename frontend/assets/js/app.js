@@ -42,6 +42,22 @@ function showView(viewId) {
   }
 }
 
+function showMobileView(viewId) {
+  document.querySelectorAll('.m-view').forEach(v => v.style.display = 'none');
+  const target = document.getElementById(viewId);
+  if (target) {
+    target.style.display = 'block';
+  }
+
+  if (viewId === 'm-view-virements' && typeof loadBeneficiairesForSelect === 'function') {
+    loadBeneficiairesForSelect();
+  } else if (viewId === 'm-view-cartes' && typeof loadCartes === 'function') {
+    loadCartes();
+  } else if (viewId === 'm-view-budget' && typeof loadBudgetsPage === 'function') {
+    loadBudgetsPage();
+  }
+}
+
 // Global API Fetch function
 async function apiCall(endpoint, method = 'GET', body = null) {
   const token = localStorage.getItem('fintech_token');
