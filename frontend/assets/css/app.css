@@ -104,39 +104,75 @@
 .tx-row.hidden { display: none !important; }
 
 /* =========================================
-   DESKTOP RESPONSIVE (Espace Client)
+   MOBILE/BASE STRUCTURAL FIXES
+   ========================================= */
+.desktop-sidebar { display: none; }
+.dash-main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 0; }
+#pg-dash { flex-direction: row; align-items: stretch; }
+
+/* =========================================
+   DESKTOP RESPONSIVE (Espace Client SaaS)
    ========================================= */
 @media (min-width: 768px) {
-  #app-wrap {
-    max-width: 100%;
-    align-items: center;
+  #app-wrap { max-width: 100%; align-items: stretch; background: #f4f6f8; }
+  
+  .desktop-sidebar {
+    display: flex; flex-direction: column; width: 260px; background: white;
+    border-right: 1px solid #e5e7eb; padding: 2rem 1.5rem; height: 100vh; position: sticky; top: 0;
   }
+  .ds-logo { display: flex; align-items: center; gap: 10px; font-family: var(--fs); font-size: 20px; font-weight: 800; color: #1a1a1a; margin-bottom: 3rem; }
+  .ds-nav { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .ds-nav a { display: block; padding: 12px 15px; border-radius: 8px; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; }
+  .ds-nav a:hover, .ds-nav a.active { background: #fff5f0; color: #F15A22; }
+  .ds-footer { margin-top: auto; }
+  .ds-logout { width: 100%; background: none; border: none; text-align: left; padding: 12px 15px; color: #dc2626; font-weight: 600; cursor: pointer; font-size: 14px; border-radius: 8px; }
+  .ds-logout:hover { background: #fef2f2; }
 
+  .dash-main-content { padding: 2.5rem; background: #f4f6f8; align-items: stretch; display: block; }
+  
   .bank-app {
-    max-width: 950px;
-    border-radius: 20px;
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 15px 25px;
-    padding: 2rem;
-    align-items: start;
-    margin-top: 3rem;
+    background: transparent; border-radius: 0; max-width: 1200px; margin: 0 auto;
+    width: 100%; padding: 0; display: grid;
+    grid-template-columns: 350px 1fr; grid-template-rows: auto auto 1fr; gap: 25px 35px;
   }
 
-  .top-bar { grid-column: 1 / -1; grid-row: 1; padding: 0; }
-  .top-nav { grid-column: 1 / -1; grid-row: 2; padding: 0 0 1rem; }
+  .top-bar { display: none; } /* On cache la navbar mobile */
   
-  .bank-card { grid-column: 1; grid-row: 3; margin: 0; }
-  
-  .kyc-banner { grid-column: 1; grid-row: 4; margin: 0 !important; }
+  .top-nav { grid-column: 1 / -1; padding: 0; margin-bottom: 0; display: flex; align-items: center; }
+  .bienvenue-top { color: #111827; font-size: 26px; font-weight: 800; }
+  .avatar-new { background: #e5e7eb; color: #4b5563; width: 44px; height: 44px; font-size: 16px; margin-left: auto; }
+
+  /* CARTES BLANCHES ET ÉPURÉES */
+  .bank-card { 
+    background: white; border-radius: 16px; padding: 2rem; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; grid-column: 1; margin: 0;
+  }
+  .card-title { color: #111827; font-size: 18px; margin-bottom: 1.5rem; }
+  .user-box { background: transparent; padding: 0; margin-bottom: 2rem; }
+  .user-name { color: #111827; font-size: 16px; }
+  .account-bar { background: #F15A22; width: 50px; height: 3px; }
+  .user-info { color: #6b7280; font-size: 13px; margin: 4px 0; }
+  .user-info span { color: #111827; }
+
+  .funds-box { background: transparent; padding: 0; display: block; border-top: 1px solid #f3f4f6; padding-top: 1.5rem; }
+  .funds-label { color: #6b7280; font-size: 12px; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .funds-amount { color: #111827; font-size: 36px; margin-bottom: 1.5rem; }
+  .transfer-btn { background: #F15A22; color: white; width: 100%; padding: 14px; font-size: 14px; border-radius: 10px; }
+
+  .kyc-banner { grid-column: 1; margin: 0 !important; }
 
   .transactions-section {
-    grid-column: 2;
-    grid-row: 3 / span 2;
-    margin: 0;
-    border-radius: 12px;
-    height: 100%;
-    min-height: 400px;
+    grid-column: 2; grid-row: 3; margin: 0;
+    background: white; border-radius: 16px; padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;
   }
+  .transactions-title { color: #111827; font-size: 20px; margin-bottom: 1.5rem; }
+  .tab-row { margin-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0; gap: 20px; }
+  .tab { font-size: 14px; color: #6b7280; padding: 10px 0; border-radius: 0; margin-bottom: -1px; }
+  .tab.active { background: transparent; color: #F15A22; border-bottom: 2px solid #F15A22; }
+  .tab:hover:not(.active) { background: transparent; color: #111827; }
+  
+  .tx-table th { background: transparent; color: #6b7280; font-size: 12px; border-bottom: 1px solid #e5e7eb; padding: 12px 10px; border-top: none; }
+  .tx-table td { padding: 18px 10px; font-size: 14px; border-bottom: 1px solid #f3f4f6; color: #111827; }
+  .badge { padding: 4px 10px; font-size: 11px; }
 }

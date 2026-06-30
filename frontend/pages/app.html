@@ -76,8 +76,31 @@
   </div>
 
   <!-- ECRAN DASHBOARD -->
-  <div id="pg-dash" class="page" style="display:none; justify-content:center; align-items:flex-start; padding:2rem 0;">
-    <div class="bank-app">
+  <div id="pg-dash" class="page" style="display:none; padding:0; width: 100%;">
+    
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="desktop-sidebar">
+      <div class="ds-logo">
+        <svg viewBox="0 0 120 105" fill="none" width="36" height="32">
+          <polyline points="2,85 52,5 102,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <polyline points="16,85 52,22 88,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <polyline points="30,85 52,39 74,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
+        </svg>
+        <span>FINTECHIA</span>
+      </div>
+      <nav class="ds-nav">
+        <a href="#" class="active" onclick="showPage('pg-dash')">📊 Tableau de bord</a>
+        <a href="#" onclick="showPage('pg-profile-settings')">👤 Mon Profil</a>
+        <a href="#" onclick="showPage('pg-security-settings')">🔒 Sécurité</a>
+      </nav>
+      <div class="ds-footer">
+        <button class="ds-logout" onclick="logout()">🚪 Se déconnecter</button>
+      </div>
+    </aside>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div class="dash-main-content">
+      <div class="bank-app">
       <!-- Top bar -->
       <div class="top-bar">
         <svg class="logo" viewBox="0 0 40 40" fill="none">
@@ -143,8 +166,10 @@
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
+      
+      </div> <!-- /bank-app -->
+    </div> <!-- /dash-main-content -->
+  </div> <!-- /pg-dash -->
 
   <!-- Drawer Menu Espace Client -->
   <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>
