@@ -27,18 +27,7 @@ async function loadTransactions() {
           <td>${soldeDisplay}</td>
         </tr>
       `;
-    }).join('');
-
-    const pendingRow = `
-      <tr class="tx-row" data-type="traitement">
-        <td>Aujourd'hui</td>
-        <td><span class="badge" style="background:#fff3cd; color:#856404;">En cours</span></td>
-        <td class="amount-neg">-€3.00</td>
-        <td><small style="color:var(--text3); font-size:9px;">Délai: 3-5 jours ouvrables</small></td>
-      </tr>
-    `;
-
-    container.innerHTML = pendingRow + txRows;
+    container.innerHTML = txRows;
   } catch (err) {
     console.error('Erreur chargement transactions:', err);
   }

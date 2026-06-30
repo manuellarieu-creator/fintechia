@@ -83,7 +83,7 @@
           <polygon points="20,4 36,32 4,32" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
           <line x1="20" y1="4" x2="12" y2="18" stroke="white" stroke-width="3"/>
         </svg>
-        <div class="menu-icon" onclick="showPage('pg-notifs')">
+        <div class="menu-icon" onclick="openAppDrawer()">
           <span></span><span></span><span></span>
         </div>
       </div>
@@ -144,6 +144,65 @@
       </div>
     </div>
   </div>
+
+  <!-- Drawer Menu Espace Client -->
+  <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>
+  <div class="mobile-drawer" id="app-drawer" style="display:none; position:fixed; top:0; right:0; width:250px; height:100%; background:white; z-index:9999; padding:20px; box-shadow:-5px 0 15px rgba(0,0,0,0.1); transition:transform 0.3s; font-family:'Nunito', sans-serif;">
+    <button class="drawer-close" onclick="closeAppDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer; float:right;">✕</button>
+    <h3 style="margin-top:40px; color:#1a1a1a;">Menu</h3>
+    <nav style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-profile-settings')" style="color:#555; text-decoration:none; font-weight:700;">👤 Mon Profil</a>
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-security-settings')" style="color:#555; text-decoration:none; font-weight:700;">🔒 Sécurité</a>
+      <a href="#" onclick="logout()" style="color:#c0392b; text-decoration:none; font-weight:700;">🚪 Se déconnecter</a>
+    </nav>
+  </div>
+
+  <!-- ECRAN MON PROFIL -->
+  <div id="pg-profile-settings" class="page flex-col" style="display:none;">
+    <div class="login-container">
+      <h2 class="login-title">Mon Profil</h2>
+      <form id="form-profile" class="login-form">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="prof-prenom" required />
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="prof-nom" required />
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="text" id="prof-tel" />
+        </div>
+        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Enregistrer</button>
+      </form>
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRAN SECURITE (Mot de passe) -->
+  <div id="pg-security-settings" class="page flex-col" style="display:none;">
+    <div class="login-container">
+      <h2 class="login-title">Sécurité</h2>
+      <form id="form-security" class="login-form">
+        <div class="form-group">
+          <label>Mot de passe actuel</label>
+          <input type="password" id="sec-current-pwd" required />
+        </div>
+        <div class="form-group">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="sec-new-pwd" required minlength="6" />
+        </div>
+        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Mettre à jour</button>
+      </form>
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="../assets/js/app.js"></script>

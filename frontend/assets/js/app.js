@@ -1,12 +1,18 @@
 // Base logic for the frontend SPA
 
 document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const action = urlParams.get('action');
+
   const token = localStorage.getItem('fintech_token');
   if (token) {
-    // Validate token
     checkAuth(token);
   } else {
-    showPage('pg-login');
+    if (action === 'register') {
+      showPage('pg-register');
+    } else {
+      showPage('pg-login');
+    }
   }
 });
 
@@ -87,7 +93,62 @@ function initDashboard(user, account, kycStatut = null) {
   if (typeof loadTransactions === 'function') {
     loadTransactions();
   }
+
+  // Pre-fill profile settings
+  if(document.getElementById('prof-prenom')) {
+    document.getElementById('prof-prenom').value = user.prenom || '';
+    document.getElementById('prof-nom').value = user.nom || '';
+    document.getElementById('prof-tel').value = user.telephone || '';
+  }
 }
+
+// Drawer logic
+window.openAppDrawer = function() {
+  document.getElementById('app-overlay').style.display = 'block';
+  document.getElementById('app-drawer').style.display = 'block';
+}
+
+window.closeAppDrawer = function() {
+  document.getElementById('app-overlay').style.display = 'none';
+  document.getElementById('app-drawer').style.display = 'none';
+}
+
+window.logout = function() {
+  localStorage.removeItem('fintech_token');
+  window.location.href = 'index.html';
+}
+
+// Profile update
+document.getElementById('form-profile')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const prenom = document.getElementById('prof-prenom').value;
+  const nom = document.getElementById('prof-nom').value;
+  const telephone = document.getElementById('prof-tel').value;
+  
+  try {
+    await apiCall('/auth/profile', 'PATCH', { prenom, nom, telephone });
+    alert('Profil mis à jour avec succès !');
+    checkAuth(); // Refresh UI with new data
+  } catch(err) {
+    alert(err.message);
+  }
+});
+
+// Security update
+document.getElementById('form-security')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const current_password = document.getElementById('sec-current-pwd').value;
+  const new_password = document.getElementById('sec-new-pwd').value;
+  
+  try {
+    await apiCall('/auth/password', 'PATCH', { current_password, new_password });
+    alert('Mot de passe mis à jour avec succès !');
+    document.getElementById('form-security').reset();
+    showPage('pg-dash');
+  } catch(err) {
+    alert(err.message);
+  }
+});
 
 window.filterTx = function(type, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

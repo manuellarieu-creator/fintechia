@@ -142,6 +142,41 @@ router.get('/me', authMiddleware, async (req, res, next) => {
   }
 });
 
+// PATCH /api/auth/profile
+router.patch('/profile', [
+  authMiddleware,
+  body('prenom').optional().trim().notEmpty(),
+  body('nom').optional().trim().notEmpty(),
+  body('telephone').optional().trim()
+], validateReq, async (req, res, next) => {
+  const { prenom, nom, telephone } = req.body;
+  try {
+    let query = 'UPDATE users SET ';
+    const params = [];
+    
+    if (prenom) { query += 'prenom = ?, '; params.push(prenom); }
+    if (nom) { query += 'nom = ?, '; params.push(nom); }
+    if (telephone !== undefined) { query += 'telephone = ?, '; params.push(telephone); }
+    
+    // Enlever la dernière virgule
+    if (params.length === 0) return res.json({ success: true });
+    query = query.slice(0, -2) + ' WHERE id = ?';
+    params.push(req.user.id);
+
+    await db.query(query, params);
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email,
+      action: audit.ACTIONS.PROFIL_MIS_A_JOUR, categorie: audit.CATEGORIES.compte,
+      cible_type: 'user', cible_id: req.user.id, req
+    });
+
+    res.json({ success: true, message: 'Profil mis à jour' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PATCH /api/auth/password
 router.patch('/password', [
   authMiddleware,
