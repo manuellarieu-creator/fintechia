@@ -68,14 +68,16 @@ async function checkAuth() {
 function initDashboard(user, account, kycStatut = null) {
   showPage('pg-dash');
   document.getElementById('user-prenom').innerText = user.prenom;
+  if(document.getElementById('user-nom')) document.getElementById('user-nom').innerText = user.nom;
   document.getElementById('user-avatar').innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
   
   if (account) {
-    document.getElementById('solde-display').innerText = `€ ${account.solde}`;
-    document.getElementById('iban-display').innerText = account.iban || 'IBAN en attente d\'attribution';
+    document.getElementById('solde-display').innerText = `€ ${parseFloat(account.solde).toFixed(2)}`;
+    document.getElementById('iban-display').innerText = account.iban || 'En attente';
+    if(document.getElementById('type-compte-display')) document.getElementById('type-compte-display').innerText = `Compte ${account.type_compte || 'Crédit'}`;
     
     if (account.statut === 'kyc_requis' || kycStatut === 'en_attente') {
-      document.getElementById('kyc-alert').style.display = 'flex';
+      document.getElementById('kyc-alert').style.display = 'block';
     } else {
       document.getElementById('kyc-alert').style.display = 'none';
     }
@@ -86,3 +88,15 @@ function initDashboard(user, account, kycStatut = null) {
     loadTransactions();
   }
 }
+
+window.filterTx = function(type, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tx-row').forEach(row => {
+    if (type === 'all' || row.dataset.type === type) {
+      row.classList.remove('hidden');
+    } else {
+      row.classList.add('hidden');
+    }
+  });
+};

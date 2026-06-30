@@ -34,41 +34,71 @@
 .login-links { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 10px; text-align: center; }
 .login-links a { font-size: 13px; color: var(--or); text-decoration: none; font-weight: 500; }
 
-/* APP DASHBOARD */
-.app-header {
-  padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;
-  background: var(--white); border-bottom: 1px solid var(--bd);
+/* APP DASHBOARD (Nouvelle Maquette) */
+.bank-app {
+  font-family: 'Nunito', sans-serif;
+  background: #F15A22;
+  min-height: 700px;
+  width: 100%;
+  max-width: 390px;
+  border-radius: 36px;
+  overflow: hidden;
+  padding-bottom: 2rem;
+  margin: 0 auto;
 }
-.app-header-left { display: flex; align-items: center; gap: 10px; }
-.avatar { width: 36px; height: 36px; background: var(--or); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-.greeting { font-size: 14px; color: var(--text2); }
-.icon-btn { background: none; border: none; font-size: 20px; position: relative; cursor: pointer; }
-.badge { position: absolute; top: -5px; right: -5px; background: red; color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 10px; font-weight: 700; }
 
-.app-main { flex: 1; padding: 1.5rem; overflow-y: auto; padding-bottom: 80px; }
-.card { background: var(--white); padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; }
-.balance-card { border: 1px solid var(--or-border); }
-.balance-label { font-size: 13px; color: var(--text3); margin-bottom: 5px; }
-.balance-amount { font-family: var(--fs); font-size: 2.2rem; font-weight: 700; color: var(--or); margin-bottom: 10px; }
-.balance-iban { font-size: 12px; color: var(--text3); font-family: monospace; letter-spacing: 1px; margin-bottom: 1.5rem; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.4rem 0.5rem; }
+.logo { width: 36px; height: 36px; }
+.menu-icon { display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
+.menu-icon span { display: block; height: 2px; background: white; border-radius: 2px; }
+.menu-icon span:nth-child(1) { width: 22px; }
+.menu-icon span:nth-child(2) { width: 22px; }
+.menu-icon span:nth-child(3) { width: 14px; }
 
-.kyc-banner { background: #FEF3C7; color: #92400E; padding: 12px; border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.kyc-banner button { background: none; border: none; font-weight: 700; color: #92400E; cursor: pointer; }
-
-.section-title-sm { font-size: 14px; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
-.tx-list { display: flex; flex-direction: column; gap: 10px; }
-.tx-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--white); border-radius: 10px; border: 1px solid var(--bd); }
-.tx-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-.tx-info p { font-size: 12px; color: var(--text3); }
-.tx-amount { font-weight: 700; font-size: 15px; }
-.tx-amount.credit { color: #16a34a; }
-.tx-amount.debit { color: var(--text); }
-
-/* BOTTOM NAV */
-.bottom-nav {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
-  background: var(--white); border-top: 1px solid var(--bd);
-  display: flex; justify-content: space-around; align-items: center;
+.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 1.4rem 1.2rem; }
+.bienvenue-top { color: white; font-size: 15px; font-weight: 600; }
+.avatar-new {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 14px;
+  cursor: pointer;
 }
-.bottom-nav a { font-size: 22px; text-decoration: none; opacity: 0.5; transition: opacity .2s; }
-.bottom-nav a.active { opacity: 1; }
+
+.bank-card { background: #FFF5F0; border-radius: 20px; margin: 0 0.9rem; padding: 1.2rem; }
+.card-title { font-size: 17px; font-weight: 800; color: #1a1a1a; margin-bottom: 1rem; }
+
+.user-box { background: white; border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 0.9rem; }
+.user-name { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+.account-bar { width: 40px; height: 2.5px; background: #F15A22; border-radius: 2px; margin-bottom: 6px; }
+.user-info { font-size: 12px; color: #555; margin: 2px 0; }
+.user-info span { font-weight: 700; color: #1a1a1a; }
+
+.funds-box { background: #F15A22; border-radius: 12px; padding: 0.9rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.funds-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.08em; text-transform: uppercase; }
+.funds-amount { font-size: 24px; font-weight: 800; color: white; margin-top: 2px; }
+.transfer-btn { background: white; color: #F15A22; border: none; border-radius: 8px; padding: 7px 13px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: 'Nunito', sans-serif; }
+.transfer-btn:hover { opacity: 0.9; }
+
+.transactions-section { background: white; border-radius: 20px 20px 0 0; margin: 0.9rem 0 0; padding: 1.2rem 1rem 0; min-height:300px; }
+.transactions-title { font-size: 17px; font-weight: 800; color: #1a1a1a; margin-bottom: 0.8rem; }
+
+.tab-row { display: flex; gap: 6px; margin-bottom: 0.8rem; }
+.tab { padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: none; background: transparent; color: #999; font-family: 'Nunito', sans-serif; transition: background 0.2s, color 0.2s; }
+.tab.active { background: #F15A22; color: white; }
+.tab:hover:not(.active) { background: #fce8df; color: #F15A22; }
+
+.tx-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.tx-table th { color: #F15A22; font-weight: 700; text-align: left; padding: 6px 4px; border-bottom: 2px solid #F15A22; font-size: 11px; white-space: nowrap; }
+.tx-table td { padding: 8px 4px; border-bottom: 0.5px solid #eee; color: #333; vertical-align: middle; }
+.tx-table tr:last-child td { border-bottom: none; }
+
+.badge { display: inline-block; border-radius: 6px; padding: 2px 7px; font-size: 10px; font-weight: 700; }
+.badge-credit { background: #e6f9f0; color: #1a7a4a; }
+.badge-debit  { background: #fce8e8; color: #c0392b; }
+
+.amount-pos { color: #1a7a4a; font-weight: 700; }
+.amount-neg { color: #c0392b; font-weight: 700; }
+
+.tx-row { display: table-row; }
+.tx-row.hidden { display: none !important; }

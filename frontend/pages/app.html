@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fintechia — Mon Espace Client</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   
   <link rel="stylesheet" href="../assets/css/global.css">
   <link rel="stylesheet" href="../assets/css/app.css">
@@ -74,44 +75,73 @@
   </div>
 
   <!-- ECRAN DASHBOARD -->
-  <div id="pg-dash" class="page" style="display:none;">
-    <header class="app-header">
-      <div class="app-header-left">
-        <div class="avatar" id="user-avatar">JD</div>
-        <span class="greeting">Bonjour, <b id="user-prenom">...</b></span>
-      </div>
-      <div class="app-header-right">
-        <button class="icon-btn" onclick="showPage('pg-notifs')">🔔 <span id="notif-badge" class="badge">0</span></button>
-      </div>
-    </header>
-
-    <main class="app-main">
-      <div class="card balance-card">
-        <div class="balance-label">Solde disponible</div>
-        <div class="balance-amount" id="solde-display">€ 0.00</div>
-        <div class="balance-iban" id="iban-display">IBAN en attente</div>
-        <div class="card-actions">
-          <button class="btn-primary" onclick="showPage('pg-virement')">→ Transférer</button>
+  <div id="pg-dash" class="page" style="display:none; justify-content:center; align-items:flex-start; padding:2rem 0;">
+    <div class="bank-app">
+      <!-- Top bar -->
+      <div class="top-bar">
+        <svg class="logo" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,4 36,32 4,32" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+          <line x1="20" y1="4" x2="12" y2="18" stroke="white" stroke-width="3"/>
+        </svg>
+        <div class="menu-icon" onclick="showPage('pg-notifs')">
+          <span></span><span></span><span></span>
         </div>
       </div>
 
-      <div class="kyc-banner" id="kyc-alert" style="display:none;">
-        ⚠️ Identité non vérifiée <button onclick="showPage('pg-kyc')">Valider maintenant</button>
+      <!-- Nav -->
+      <div class="top-nav">
+        <span class="bienvenue-top">Bienvenue</span>
+        <div class="avatar-new" id="user-avatar" onclick="showPage('pg-profile')"></div>
       </div>
 
+      <!-- Main card -->
+      <div class="bank-card">
+        <div class="card-title">Bienvenue</div>
+        <div class="user-box">
+          <div class="user-name"><span id="user-prenom">...</span> <span id="user-nom"></span></div>
+          <div class="account-bar"></div>
+          <div class="user-info">N° de compte : <span id="iban-display">...</span></div>
+          <div class="user-info">Type de compte : <span id="type-compte-display">Courant</span></div>
+        </div>
+
+        <div class="funds-box">
+          <div>
+            <div class="funds-label">Fonds disponibles</div>
+            <div class="funds-amount" id="solde-display">€ 0.00</div>
+          </div>
+          <button class="transfer-btn" onclick="showPage('pg-virement')">→ Transférer</button>
+        </div>
+      </div>
+
+      <div class="kyc-banner" id="kyc-alert" style="display:none; margin: 10px; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; cursor: pointer;" onclick="showPage('pg-kyc')">
+        ⚠️ Identité non vérifiée. Cliquez pour valider.
+      </div>
+
+      <!-- Transactions -->
       <div class="transactions-section">
-        <div class="section-title-sm">Transactions récentes</div>
-        <div class="tx-list" id="tx-container">
-          <!-- Transactions injectées ici -->
-        </div>
-      </div>
-    </main>
+        <div class="transactions-title">Transactions</div>
 
-    <nav class="bottom-nav">
-      <a href="#" class="active" onclick="showPage('pg-dash')">🏠</a>
-      <a href="#" onclick="showPage('pg-kyc')">🪪</a>
-      <a href="#" onclick="showPage('pg-profile')">👤</a>
-    </nav>
+        <div class="tab-row">
+          <button class="tab active" onclick="filterTx('all', this)">Toutes</button>
+          <button class="tab" onclick="filterTx('credit', this)">Crédit</button>
+          <button class="tab" onclick="filterTx('debit', this)">Débit</button>
+        </div>
+
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Montant</th>
+              <th>Solde</th>
+            </tr>
+          </thead>
+          <tbody id="tx-container">
+            <!-- Transactions injectées ici -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
