@@ -49,6 +49,24 @@
     </div>
   </div>
 
+  <div class="section-eyebrow">Comptes en attente d'activation</div>
+  <table class="data-table" id="pending-accounts-table" style="margin-bottom: 2rem;">
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Email</th>
+        <th>Type de compte</th>
+        <th>Date création</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="5" style="text-align:center; color:var(--text3)">Chargement des comptes...</td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="section-eyebrow">Derniers logs d'audit</div>
   <table class="data-table" id="audit-table">
     <thead>
@@ -88,6 +106,26 @@
         <div class="stat-card"><div class="stat-card-val">${stats.virements_en_attente}</div><div class="stat-card-lbl">Virements en attente</div></div>
       `;
 
+      // Load Pending Accounts
+      const comptes = await apiCall('/admin/comptes?statut=en_attente');
+      const tbodyComptes = document.querySelector('#pending-accounts-table tbody');
+      if (comptes.length === 0) {
+        tbodyComptes.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aucun compte en attente.</td></tr>';
+      } else {
+        tbodyComptes.innerHTML = comptes.map(c => `
+          <tr>
+            <td><b>${c.prenom} ${c.nom}</b></td>
+            <td>${c.email}</td>
+            <td>${c.type_compte}</td>
+            <td>${new Date(c.created_at).toLocaleDateString()}</td>
+            <td>
+              <button class="action-btn" style="background:#27ae60" onclick="activerCompte(${c.id})">✓ Valider</button>
+              <button class="action-btn" style="background:#e74c3c" onclick="rejeterCompte(${c.id})">✕ Rejeter</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
       // Load Audit
       const audits = await apiCall('/admin/audit?limit=10');
       const tbody = document.querySelector('#audit-table tbody');
@@ -105,6 +143,44 @@
       alert('Accès refusé. Vous n\'êtes pas administrateur.');
     }
   }
+
+  window.activerCompte = async function(id) {
+    const iban = prompt("Veuillez saisir le numéro IBAN à attribuer à ce compte (ex: FR76...):");
+    if (!iban) return;
+    
+    try {
+      const token = localStorage.getItem('fintech_token');
+      const res = await fetch('/api/admin/comptes/' + id + '/activer', {
+        method: 'PATCH',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ iban })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur API');
+      alert('Compte activé avec succès !');
+      loadAdmin();
+    } catch(err) {
+      alert(err.message);
+    }
+  };
+
+  window.rejeterCompte = async function(id) {
+    if (!confirm("Voulez-vous vraiment rejeter ce compte ?")) return;
+    try {
+      const token = localStorage.getItem('fintech_token');
+      const res = await fetch('/api/admin/comptes/' + id + '/statut', {
+        method: 'PATCH',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ statut: 'rejete' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur API');
+      alert('Compte rejeté.');
+      loadAdmin();
+    } catch(err) {
+      alert(err.message);
+    }
+  };
 
   document.addEventListener('DOMContentLoaded', loadAdmin);
 </script>
