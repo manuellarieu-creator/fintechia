@@ -141,11 +141,11 @@
           <span>NovaBanque</span>
         </div>
         <nav class="nb-nav">
-          <a href="#" class="active" onclick="showPage('pg-dash')"><span class="nb-icon">🏠</span> Accueil</a>
-          <a href="#"><span class="nb-icon">⇄</span> Virements</a>
-          <a href="#"><span class="nb-icon">💳</span> Cartes</a>
-          <a href="#"><span class="nb-icon">📊</span> Budget</a>
-          <a href="#"><span class="nb-icon">👥</span> Bénéficiaires</a>
+          <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">🏠</span> Accueil</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-virements')"><span class="nb-icon">⇄</span> Virements</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">💳</span> Cartes</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
           <a href="#"><span class="nb-icon">📄</span> Relevés</a>
         </nav>
         <div class="nb-footer">
@@ -177,6 +177,7 @@
           ⚠️ Action requise : Veuillez fournir vos documents d'identité.
         </div>
 
+        <div id="view-dashboard" class="nb-view">
         <div class="nb-grid">
           <!-- Row 1 -->
           <div class="nb-card nb-card-blue nb-solde-card">
@@ -233,6 +234,51 @@
             </div>
           </div>
         </div> <!-- /nb-grid -->
+        </div> <!-- /view-dashboard -->
+
+        <!-- VUE VIREMENTS -->
+        <div id="view-virements" class="nb-view" style="display:none;">
+          <div class="nb-card" style="max-width:600px; margin:0 auto;">
+            <h2 style="margin-bottom:20px;">Effectuer un virement</h2>
+            <form id="form-virement-desktop">
+              <div class="form-group"><label>Montant (€)</label><input type="number" id="vir-montant" required></div>
+              <div class="form-group"><label>Bénéficiaire (IBAN)</label><select id="vir-iban" required><option value="">Chargement...</option></select></div>
+              <div class="form-group"><label>Nom du destinataire</label><input type="text" id="vir-nom" required></div>
+              <div class="form-group"><label>Motif</label><input type="text" id="vir-motif" required></div>
+              <button type="submit" class="nb-btn-primary" style="width:100%; margin-top:10px;">Envoyer le virement</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- VUE CARTES -->
+        <div id="view-cartes" class="nb-view" style="display:none;">
+          <div id="cartes-container">Chargement des cartes...</div>
+        </div>
+
+        <!-- VUE BUDGET -->
+        <div id="view-budget" class="nb-view" style="display:none;">
+          <div class="nb-card">
+            <h2>Gestion du Budget</h2>
+            <div id="budget-page-list"></div>
+          </div>
+        </div>
+
+        <!-- VUE BENEFICIAIRES -->
+        <div id="view-beneficiaires" class="nb-view" style="display:none;">
+          <div class="nb-card" style="max-width:800px; margin:0 auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <h2>Mes Bénéficiaires</h2>
+              <button onclick="openModal('modal-add-beneficiaire')" class="nb-btn-primary">+ Ajouter</button>
+            </div>
+            <table class="nb-tx-table">
+              <thead><tr><th>Nom</th><th>IBAN</th><th>Date d'ajout</th><th>Action</th></tr></thead>
+              <tbody id="beneficiaires-tbody">
+                <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div> <!-- /nb-main -->
     </div> <!-- /desktop-layout -->
   </div> <!-- /pg-dash -->
@@ -316,11 +362,29 @@
     </div>
   </div>
 
+  <!-- Modal Ajout Bénéficiaire -->
+  <div class="modal" id="modal-add-beneficiaire" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
+      <h2 style="font-size:18px; margin-bottom:16px;">Ajouter un bénéficiaire</h2>
+      <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
+        <input type="text" id="new-ben-nom" placeholder="Nom complet (ex: Jean Dupont)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <input type="text" id="new-ben-iban" placeholder="IBAN (FR76...)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <button onclick="ajouterBeneficiaire()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Enregistrer</button>
+      </div>
+      <div style="text-align:right; margin-top:20px;">
+        <button onclick="closeModal('modal-add-beneficiaire')" style="background:none; border:none; color:#64748B; font-weight:600; cursor:pointer; padding:8px 16px;">Annuler</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="../assets/js/app.js"></script>
 <script src="../assets/js/transactions.js"></script>
 <script src="../assets/js/virement.js"></script>
 <script src="../assets/js/kyc.js"></script>
+<script src="../assets/js/beneficiaires.js"></script>
+<script src="../assets/js/cartes.js"></script>
+<script src="../assets/js/budget.js"></script>
 </body>
 </html>

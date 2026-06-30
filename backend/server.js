@@ -14,6 +14,8 @@ const kycRoutes = require('./routes/kyc');
 const transactionsRoutes = require('./routes/transactions');
 const adminRoutes = require('./routes/admin');
 const budgetsRoutes = require('./routes/budgets');
+const beneficiairesRoutes = require('./routes/beneficiaires');
+const cartesRoutes = require('./routes/cartes');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -62,6 +64,8 @@ app.use('/api/kyc', kycRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/budgets', budgetsRoutes);
+app.use('/api/beneficiaires', beneficiairesRoutes);
+app.use('/api/cartes', cartesRoutes);
 
 // Fichiers statiques (en production configuré via Nginx internal)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
