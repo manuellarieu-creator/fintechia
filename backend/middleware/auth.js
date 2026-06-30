@@ -7,7 +7,7 @@ const authMiddleware = (req, res, next) => {
       return res.status(401).json({ error: 'Authentification requise', code: 'UNAUTHORIZED', status: 401 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
     req.user = decoded;
     next();
   } catch (error) {

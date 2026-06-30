@@ -61,7 +61,7 @@ router.post('/register', [
 
     await notifications.envoyer(userId, 'Bienvenue chez Fintechia', 'Votre compte a été créé avec succès.', 'succes');
 
-    const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
     
     res.json({ token, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
   } catch (err) {
@@ -104,7 +104,7 @@ router.post('/login', [
     const [accounts] = await db.query('SELECT id, solde, statut, type_compte FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
       acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
