@@ -10,7 +10,7 @@ async function loadTransactions() {
       return;
     }
 
-    container.innerHTML = txs.map(tx => {
+    const txRows = txs.map(tx => {
       const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
       const typeLabel = isCredit ? 'Crédit' : 'Débit';
       const badgeClass = isCredit ? 'badge-credit' : 'badge-debit';
@@ -28,6 +28,17 @@ async function loadTransactions() {
         </tr>
       `;
     }).join('');
+
+    const pendingRow = `
+      <tr class="tx-row" data-type="traitement">
+        <td>Aujourd'hui</td>
+        <td><span class="badge" style="background:#fff3cd; color:#856404;">En cours</span></td>
+        <td class="amount-neg">-€3.00</td>
+        <td><small style="color:var(--text3); font-size:9px;">Délai: 3-5 jours ouvrables</small></td>
+      </tr>
+    `;
+
+    container.innerHTML = pendingRow + txRows;
   } catch (err) {
     console.error('Erreur chargement transactions:', err);
   }
