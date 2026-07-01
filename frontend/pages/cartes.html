@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes - NovaBanque</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --bottom-nav-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-bottom: calc(var(--bottom-nav-height) + 20px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            padding: 24px 16px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .btn-new {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* Tabs */
+        .card-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .card-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-muted);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Card Graphic */
+        .credit-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            color: white;
+            height: 120px;
+            position: relative;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+            overflow: hidden;
+        }
+
+        .credit-card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .cc-bank {
+            font-weight: 700;
+            font-size: 1rem;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+        }
+
+        .cc-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+
+        /* Section Container */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .section-link {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Quick Actions */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            background: white;
+            transition: 0.2s;
+        }
+        
+        .action-item:hover .action-icon {
+            background: var(--bg-body);
+        }
+
+        .action-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Plafonds (Limits) */
+        .limit-item {
+            margin-bottom: 20px;
+        }
+        .limit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .limit-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .limit-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .limit-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .limit-bar-bg {
+            height: 6px;
+            background: var(--bg-body);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .limit-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .limit-bar-fill.blue { background: var(--primary); }
+        .limit-bar-fill.orange { background: var(--warning); }
+        .limit-bar-fill.green { background: var(--success); }
+
+        .limit-subtext {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Settings */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .setting-item:first-child {
+            padding-top: 0;
+        }
+        .setting-item:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .setting-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .setting-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .setting-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Transactions */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 16px;
+        }
+        .transaction-item:first-child {
+            padding-top: 0;
+        }
+        .transaction-item:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .tx-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .tx-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tx-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .tx-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .tx-amount {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .tx-amount.positive {
+            color: var(--text-main);
+        }
+
+        .tx-amount.negative {
+            color: var(--text-main);
+        }
+
+        /* Info */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 0.9rem;
+        }
+        
+        .info-label {
+            color: var(--text-muted);
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: white;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary);
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.25rem;
+        }
+
+        .nav-fab-container {
+            position: relative;
+            top: -20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .nav-fab {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Mes cartes</h1>
+                <p class="header-subtitle">Gérez vos cartes bancaires</p>
+            </div>
+            <button class="btn-new">
+                <i class="fa-solid fa-plus"></i> Nouvelle
+            </button>
+        </header>
+
+        <!-- Card Tabs -->
+        <div class="card-tabs">
+            <div class="tab active">Platinum **** 4821</div>
+            <div class="tab">Classic **** 7703</div>
+        </div>
+
+        <!-- Visual Card -->
+        <div class="credit-card">
+            <div class="cc-bank">NovaBanque</div>
+            <div class="cc-badge">ACTIVE</div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <h2 class="section-title" style="margin-bottom: 16px;">Actions rapides</h2>
+            <div class="actions-grid">
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-lock"></i></div>
+                    <span class="action-label">Bloquer</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-regular fa-eye"></i></div>
+                    <span class="action-label">Code PIN</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-rotate"></i></div>
+                    <span class="action-label">Renouveler</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-regular fa-trash-can"></i></div>
+                    <span class="action-label" style="font-weight: 700; color: var(--text-main);">Résilier</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plafonds -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Plafonds</h2>
+                <a href="#" class="section-link">Modifier</a>
+            </div>
+            
+            <div class="limit-item">
+                <div class="limit-header">
+                    <span class="limit-name">Paiement mensuel</span>
+                    <span class="limit-value">2 340 / 5 000 €</span>
+                </div>
+                <div class="limit-bar-bg">
+                    <div class="limit-bar-fill blue" style="width: 46%;"></div>
+                </div>
+                <div class="limit-subtext">2 660 € disponibles</div>
+            </div>
+
+            <div class="limit-item">
+                <div class="limit-header">
+                    <span class="limit-name">Retrait hebdomadaire</span>
+                    <span class="limit-value">400 / 500 €</span>
+                </div>
+                <div class="limit-bar-bg">
+                    <div class="limit-bar-fill orange" style="width: 80%;"></div>
+                </div>
+                <div class="limit-subtext">100 € restants · Réinit. lundi</div>
+            </div>
+
+            <div class="limit-item">
+                <div class="limit-header">
+                    <span class="limit-name">Sans contact</span>
+                    <span class="limit-value">87 / 150 €</span>
+                </div>
+                <div class="limit-bar-bg">
+                    <div class="limit-bar-fill green" style="width: 58%;"></div>
+                </div>
+                <div class="limit-subtext">63 € disponibles</div>
+            </div>
+
+            <div class="limit-item">
+                <div class="limit-header">
+                    <span class="limit-name">Paiement en ligne</span>
+                    <span class="limit-value">760 / 3 000 €</span>
+                </div>
+                <div class="limit-bar-bg">
+                    <div class="limit-bar-fill blue" style="width: 25%;"></div>
+                </div>
+                <div class="limit-subtext">2 240 € disponibles</div>
+            </div>
+        </div>
+
+        <!-- Paramètres -->
+        <div class="section">
+            <h2 class="section-title" style="margin-bottom: 20px;">Paramètres</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Paiement sans contact</span>
+                    <span class="setting-desc">NFC activé</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Paiements en ligne</span>
+                    <span class="setting-desc">E-commerce & abonnements</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Paiements à l'étranger</span>
+                    <span class="setting-desc">Hors zone euro</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Retraits DAB</span>
+                    <span class="setting-desc">Distributeurs automatiques</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Notifications de paiement</span>
+                    <span class="setting-desc">Alertes temps réel</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Transactions récentes -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Transactions récentes</h2>
+                <a href="#" class="section-link">Voir tout <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
+            </div>
+
+            <div class="transaction-item">
+                <div class="tx-icon"><i class="fa-solid fa-arrow-down-left"></i></div>
+                <div class="tx-info">
+                    <span class="tx-name">Virement reçu</span>
+                    <span class="tx-date">Auj. 09:14</span>
+                </div>
+                <div class="tx-amount positive">+1 200 €</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="tx-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                <div class="tx-info">
+                    <span class="tx-name">Café Lola</span>
+                    <span class="tx-date">24 juin</span>
+                </div>
+                <div class="tx-amount negative">-4,80 €</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="tx-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="tx-info">
+                    <span class="tx-name">Total Énergie</span>
+                    <span class="tx-date">23 juin</span>
+                </div>
+                <div class="tx-amount negative">-62,00 €</div>
+            </div>
+        </div>
+
+        <!-- Informations carte -->
+        <div class="section">
+            <h2 class="section-title" style="margin-bottom: 12px;">Informations carte</h2>
+            <div class="info-row">
+                <span class="info-label">Type</span>
+                <span class="info-value">Visa Platinum</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Réseau</span>
+                <span class="info-value">Visa International</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Expiration</span>
+                <span class="info-value">06/2029</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Statut</span>
+                <span class="info-value">Active</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Cotisation</span>
+                <span class="info-value">12,00 € / mois</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Accueil</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            <span>Virements</span>
+        </a>
+        <a href="#" class="nav-fab-container">
+            <div class="nav-fab">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+            <span>Payer</span>
+        </a>
+        <a href="#" class="bottom-nav-item active">
+            <i class="fa-regular fa-credit-card"></i>
+            <span>Cartes</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+</body>
+</html>
