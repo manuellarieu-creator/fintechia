@@ -36,8 +36,9 @@ function showView(viewId) {
     target.style.display = 'block';
   }
   
-  if (viewId === 'view-virements' && typeof loadBeneficiairesForSelect === 'function') {
-    loadBeneficiairesForSelect();
+  if (viewId === 'view-virements') {
+    if (typeof loadBeneficiairesForSelect === 'function') loadBeneficiairesForSelect();
+    if (typeof loadVirementHistory === 'function') loadVirementHistory(1);
   } else if (viewId === 'view-beneficiaires' && typeof loadBeneficiaires === 'function') {
     loadBeneficiaires();
   } else if (viewId === 'view-cartes' && typeof loadCartes === 'function') {
@@ -129,12 +130,12 @@ function initDashboard(user, account, kycStatut = null) {
   });
   
   if (account) {
-    ['solde-display-mobile', 'solde-display-desktop'].forEach(id => {
+    ['solde-display-mobile', 'solde-display-desktop', 'virement-solde-display'].forEach(id => {
       const el = document.getElementById(id);
       if(el) el.innerText = `${parseFloat(account.solde).toFixed(2).replace('.', ',')} €`;
     });
     
-    ['iban-display-mobile', 'iban-display-desktop'].forEach(id => {
+    ['iban-display-mobile', 'iban-display-desktop', 'virement-iban-display'].forEach(id => {
       const el = document.getElementById(id);
       if(el) el.innerText = account.iban ? account.iban.replace(/.(?=.{4})/g, '*') : 'En attente';
     });

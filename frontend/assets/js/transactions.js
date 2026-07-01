@@ -193,3 +193,63 @@ async function loadTransactions() {
     console.error('Erreur chargement transactions:', err);
   }
 }
+
+// Logique de pagination spécifique à la page Virements
+let currentVirementPage = 1;
+const VIREMENT_PAGE_SIZE = 10;
+
+async function loadVirementHistory(page = 1) {
+  currentVirementPage = page;
+  const tbody = document.getElementById('virement-tx-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">Chargement...</td></tr>';
+
+  try {
+    const offset = (page - 1) * VIREMENT_PAGE_SIZE;
+    const txs = await apiCall(`/transactions?limit=${VIREMENT_PAGE_SIZE}&offset=${offset}`);
+
+    if (txs.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">Aucune transaction trouvée.</td></tr>';
+      document.getElementById('virement-btn-next').disabled = true;
+    } else {
+      tbody.innerHTML = txs.map(tx => {
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        
+        let libelle = tx.description || 'Transaction';
+        if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
+        if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
+
+        const color = isCredit ? 'var(--success)' : 'var(--text-main)';
+        const sign = isCredit ? '+' : '';
+
+        return `
+          <tr>
+            <td><div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--bg-body); display:flex; align-items:center; justify-content:center;">
+                <i class="${isCredit ? 'ti ti-arrow-down-left' : 'ti ti-shopping-bag'}" style="color:${isCredit ? 'var(--success)' : 'var(--text-muted)'}"></i>
+              </div>
+              <span style="font-weight:600; color:var(--text-main);">${libelle}</span>
+            </div></td>
+            <td style="color:var(--text-muted);">${date}</td>
+            <td><span class="badge ${isCredit ? 'badge-success' : 'badge-neutral'}">${tx.categorie || 'Divers'}</span></td>
+            <td style="text-align:right; font-weight:700; color:${color};">${sign}${parseFloat(tx.montant).toFixed(2)} €</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Gestion des boutons
+      document.getElementById('virement-btn-prev').disabled = (page === 1);
+      document.getElementById('virement-btn-next').disabled = (txs.length < VIREMENT_PAGE_SIZE);
+      document.getElementById('virement-tx-info').innerText = 'Page ' + page;
+    }
+  } catch (err) {
+    console.error('Erreur loadVirementHistory:', err);
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:red;">Erreur lors du chargement.</td></tr>';
+  }
+}
+
+function changeVirementPage(dir) {
+  loadVirementHistory(currentVirementPage + dir);
+}

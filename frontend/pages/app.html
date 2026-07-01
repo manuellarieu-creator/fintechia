@@ -428,7 +428,7 @@
             <p class="nb-date" id="nb-current-date"></p>
           </div>
           <div class="nb-header-right">
-            <button class="nb-btn-primary">+ Nouveau virement ↗</button>
+            <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement ↗</button>
             <button class="nb-btn-icon">🔔</button>
           </div>
         </header>
@@ -498,129 +498,46 @@
 
         <!-- VUE VIREMENTS -->
         <div id="view-virements" class="nb-view" style="display:none; padding-bottom: 40px;">
-          <div class="page-header desktop-only">
-              <div>
-                  <h1 class="page-title">Nouveau virement</h1>
-                  <div class="balance">
-                      Solde disponible : <span class="balance-amount">12 480,32 €</span>
+          <div class="nb-grid" style="margin-top: 24px;">
+            <div class="nb-card nb-card-blue nb-solde-card" style="grid-column: 1 / -1; margin-bottom: 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                      <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
+                      <div class="nb-solde-amount" id="virement-solde-display">0,00 €</div>
+                      <div class="nb-solde-footer">
+                        <span>Compte principal</span>
+                        <span class="nb-iban-masked" id="virement-iban-display">- ****</span>
+                      </div>
                   </div>
+                  <button class="btn-outline desktop-only" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
+                      <i class="ti ti-plus"></i> Faire un virement
+                  </button>
               </div>
-              <button class="btn-outline">
-                  <i class="ti ti-clock"></i> Historique
-              </button>
-          </div>
+            </div>
 
-          <div class="steps-container">
-              <div class="step completed">
-                  <div class="step-circle"><i class="ti ti-check"></i></div>
-                  <span class="desktop-only">Bénéficiaire</span>
+            <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1;">
+              <div class="nb-tx-header">
+                <h2>Mes transactions</h2>
+                <button class="btn-outline desktop-only" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> Télécharger historique</button>
               </div>
-              <div class="step-divider" style="background-color: var(--success); opacity: 1;"></div>
-              <div class="step active">
-                  <div class="step-circle">2</div>
-                  <span class="desktop-only">Détails du virement</span>
-              </div>
-              <div class="step-divider" style="opacity: 0.3;"></div>
-              <div class="step" style="opacity: 0.5;">
-                  <div class="step-circle">3</div>
-                  <span class="desktop-only">Confirmation</span>
-              </div>
-          </div>
-
-          <form id="form-virement-desktop">
-          <div class="grid-layout">
+              <table class="nb-tx-table">
+                <thead>
+                  <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
+                </thead>
+                <tbody id="virement-tx-tbody">
+                  <tr><td colspan="4" style="text-align:center; padding:20px;">Chargement...</td></tr>
+                </tbody>
+              </table>
               
-              <!-- Column 1: Beneficiary -->
-              <div class="card">
-                  <div class="card-header">
-                      <h3 class="card-title">Bénéficiaire</h3>
-                      <a href="#" class="link">Changer &rarr;</a>
-                  </div>
-                  
-                  <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none;">
-                      <div class="avatar-green" id="desktop-ben-avatar">MB</div>
-                      <div class="beneficiary-info">
-                          <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
-                          <p id="desktop-ben-iban">-</p>
-                      </div>
-                  </div>
-
-                  <div id="desktop-recents-container" style="display:none;">
-                      <div class="recents-title">Récents</div>
-                      <div class="recents-grid" id="desktop-recents-grid">
-                          <!-- Dynamique -->
-                      </div>
-                  </div>
-
-                  <div class="recents-title" style="margin-top: 24px;">Tous les bénéficiaires</div>
-                  <div class="recents-grid" id="desktop-all-grid">
-                      <!-- Dynamique -->
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+                  <span style="color:var(--text-muted); font-size:13px;" id="virement-tx-info">Page 1</span>
+                  <div style="display:flex; gap: 8px;">
+                      <button class="btn-outline" id="virement-btn-prev" onclick="changeVirementPage(-1)" disabled style="padding:6px 12px; font-size:13px;">&larr; Précédent</button>
+                      <button class="btn-outline" id="virement-btn-next" onclick="changeVirementPage(1)" style="padding:6px 12px; font-size:13px;">Suivant &rarr;</button>
                   </div>
               </div>
-
-              <!-- Column 2: Details -->
-              <div class="card">
-                  <div class="card-header desktop-only">
-                      <h3 class="card-title">Détails du virement</h3>
-                  </div>
-
-                  <div class="form-group">
-                      <label class="form-label">Type de virement</label>
-                      <div class="segmented-control">
-                          <button type="button" class="segment-btn active">
-                              <i class="ti ti-device-mobile"></i> Immédiat
-                          </button>
-                          <button type="button" class="segment-btn">
-                              <i class="ti ti-calendar"></i> Programmé
-                          </button>
-                      </div>
-                  </div>
-
-                  <div class="desktop-only">
-                      <div class="form-group">
-                          <label class="form-label">Compte débiteur</label>
-                          <select class="form-control">
-                              <option>Compte courant — *** 4821</option>
-                              <option>Livret A — *** 1102</option>
-                          </select>
-                      </div>
-                  </div>
-
-                  <div class="grid-2">
-                      <div class="form-group">
-                          <label class="form-label">Montant</label>
-                          <div class="input-with-icon">
-                              <input type="number" class="form-control" id="vir-montant" value="250" required>
-                              <span class="input-icon">€</span>
-                          </div>
-                          <div class="help-text">Plafond journalier : 5 000 €</div>
-                      </div>
-                      <div class="form-group">
-                          <label class="form-label">Date d'exécution</label>
-                          <input type="text" class="form-control" value="Aujourd'hui" readonly style="background: #f8fafc; color: var(--text-main); font-weight: 500;">
-                      </div>
-                  </div>
-
-                  <div class="form-group">
-                      <label class="form-label">Motif</label>
-                      <input type="text" class="form-control" id="vir-motif" value="Remboursement weekend" required>
-                      <div class="help-text">140 caractères max - Visible par le bénéficiaire</div>
-                  </div>
-
-                  <div class="form-group">
-                      <label class="form-label">Référence (optionnel)</label>
-                      <input type="text" class="form-control" placeholder="Votre référence interne">
-                  </div>
-                  
-                  <div style="margin-top: 24px; text-align: right;">
-                      <button type="button" class="btn-submit" onclick="openTunnelModal()" style="color:white; width: 100%;">Suivant <i class="ti ti-arrow-right"></i></button>
-                  </div>
-              </div>
-
-              <input type="hidden" id="vir-iban" value="">
-              <input type="hidden" id="vir-nom" value="">
+            </div>
           </div>
-          </form>
         </div>
 
         <!-- VUE CARTES -->
@@ -752,10 +669,102 @@
 
   <!-- Modal Tunnel Virement Desktop -->
   <div class="modal" id="modal-virement-tunnel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
-    <div class="modal-content" style="background:white; max-width:450px; width:90%; border-radius:16px; padding:32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+    <div class="modal-content" style="background:white; max-width:900px; width:90%; border-radius:16px; padding:32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;">
       
+      <!-- Vue: Formulaire (Etape 1) -->
+      <div id="tunnel-step-form">
+          <div class="page-header desktop-only" style="margin-bottom: 24px;">
+              <div>
+                  <h1 class="page-title">Nouveau virement</h1>
+                  <div class="balance" style="color: var(--text-muted);">
+                      Saisissez les informations du virement
+                  </div>
+              </div>
+              <button class="btn-outline" onclick="closeModal('modal-virement-tunnel')">
+                  ✕ Fermer
+              </button>
+          </div>
+
+          <form id="form-virement-desktop">
+          <div class="grid-layout">
+              
+              <!-- Column 1: Beneficiary -->
+              <div class="card" style="box-shadow:none;">
+                  <div class="card-header">
+                      <h3 class="card-title">Bénéficiaire</h3>
+                  </div>
+                  
+                  <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none;">
+                      <div class="avatar-green" id="desktop-ben-avatar">MB</div>
+                      <div class="beneficiary-info">
+                          <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
+                          <p id="desktop-ben-iban">-</p>
+                      </div>
+                  </div>
+
+                  <div id="desktop-recents-container" style="display:none;">
+                      <div class="recents-title">Récents</div>
+                      <div class="recents-grid" id="desktop-recents-grid">
+                          <!-- Dynamique -->
+                      </div>
+                  </div>
+
+                  <div class="recents-title" style="margin-top: 24px;">Tous les bénéficiaires</div>
+                  <div class="recents-grid" id="desktop-all-grid">
+                      <!-- Dynamique -->
+                  </div>
+              </div>
+
+              <!-- Column 2: Details -->
+              <div class="card" style="box-shadow:none;">
+                  <div class="card-header desktop-only">
+                      <h3 class="card-title">Détails du virement</h3>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Type de virement</label>
+                      <div class="segmented-control">
+                          <button type="button" class="segment-btn active">
+                              <i class="ti ti-device-mobile"></i> Immédiat
+                          </button>
+                          <button type="button" class="segment-btn">
+                              <i class="ti ti-calendar"></i> Programmé
+                          </button>
+                      </div>
+                  </div>
+
+                  <div class="grid-2">
+                      <div class="form-group">
+                          <label class="form-label">Montant</label>
+                          <div class="input-with-icon">
+                              <input type="number" class="form-control" id="vir-montant" value="" placeholder="0.00" required>
+                              <span class="input-icon">€</span>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Date</label>
+                          <input type="text" class="form-control" value="Aujourd'hui" readonly style="background: #f8fafc;">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Motif</label>
+                      <input type="text" class="form-control" id="vir-motif" placeholder="Remboursement..." required>
+                  </div>
+
+                  <div style="margin-top: 24px; text-align: right;">
+                      <button type="button" class="btn-submit" onclick="goToOtpStep()" style="color:white; width: 100%;">Suivant <i class="ti ti-arrow-right"></i></button>
+                  </div>
+              </div>
+
+              <input type="hidden" id="vir-iban" value="">
+              <input type="hidden" id="vir-nom" value="">
+          </div>
+          </form>
+      </div>
+
       <!-- Vue: OTP -->
-      <div id="tunnel-step-otp">
+      <div id="tunnel-step-otp" style="display:none; max-width:450px; margin: 0 auto;">
           <div class="auth-header" style="justify-content: center; margin-bottom: 16px;">
               <i class="ti ti-shield-check auth-icon"></i> Authentification
           </div>

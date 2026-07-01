@@ -42,10 +42,20 @@ document.getElementById('form-virement-mobile')?.addEventListener('submit', (e) 
 
 // DESKTOP TUNNEL LOGIC
 function openTunnelModal() {
+  // Show the modal and the first step (Form)
+  document.getElementById('modal-virement-tunnel').style.display = 'flex';
+  document.getElementById('tunnel-step-form').style.display = 'block';
+  document.getElementById('tunnel-step-otp').style.display = 'none';
+  document.getElementById('tunnel-step-loading').style.display = 'none';
+  document.getElementById('tunnel-step-recap').style.display = 'none';
+}
+
+function goToOtpStep() {
   const montant = document.getElementById('vir-montant').value;
   const iban = document.getElementById('vir-iban').value;
+  
   if (!montant || !iban) {
-    alert('Veuillez remplir le bénéficiaire et le montant.');
+    alert('Veuillez sélectionner un bénéficiaire et saisir un montant.');
     return;
   }
   
@@ -53,11 +63,9 @@ function openTunnelModal() {
   document.getElementById('recap-montant').innerText = parseFloat(montant).toFixed(2) + ' €';
   document.getElementById('recap-vers').innerText = document.getElementById('vir-nom').value || iban;
   
-  // Show OTP step
-  document.getElementById('modal-virement-tunnel').style.display = 'flex';
+  // Transition to OTP step
+  document.getElementById('tunnel-step-form').style.display = 'none';
   document.getElementById('tunnel-step-otp').style.display = 'block';
-  document.getElementById('tunnel-step-loading').style.display = 'none';
-  document.getElementById('tunnel-step-recap').style.display = 'none';
 }
 
 async function submitTunnelOtp() {
