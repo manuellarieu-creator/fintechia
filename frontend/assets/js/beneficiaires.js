@@ -98,37 +98,68 @@ async function supprimerBeneficiaire(id) {
   }
 }
 
-// Pour le selecteur de la page virement
+// Pour le selecteur de la page virement (Tunnel Desktop et Mobile)
 async function loadBeneficiairesForSelect() {
   try {
     const bens = await apiCall('/beneficiaires');
-    const select = document.getElementById('vir-iban');
-    const selectMobile = document.getElementById('vir-iban-mobile');
     
-    const optionsHTML = '<option value="">Choisir un bénéficiaire...</option>' + bens.map(b => `<option value="${b.iban}" data-nom="${b.nom}">${b.nom} - ${b.iban}</option>`).join('');
+    const desktopGrid = document.getElementById('desktop-recents-grid');
+    const mobileGrid = document.getElementById('mobile-recents-grid');
     
-    if(select) {
-      select.innerHTML = optionsHTML;
-      select.addEventListener('change', (e) => {
-        const opt = select.options[select.selectedIndex];
-        const nomInput = document.getElementById('vir-nom');
-        if(nomInput && opt && opt.dataset.nom) {
-          nomInput.value = opt.dataset.nom;
-        }
-      });
-    }
+    // Fonction d'aide pour générer les cartes
+    const generateCards = (isMobile) => {
+      let html = bens.map(b => {
+        const initials = b.nom.substring(0, 2).toUpperCase();
+        return `
+          <div class="recent-card" onclick="selectBeneficiary('${b.iban}', '${b.nom}', ${isMobile})">
+              <div class="avatar-sm" style="background:var(--primary-light); color:var(--primary); font-weight:bold;">${initials}</div>
+              <div class="recent-info">
+                  <h5>${b.nom}</h5>
+                  <p>${b.iban.substring(0, 8)}...</p>
+              </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Ajouter le bouton "Nouveau"
+      html += `
+        <div class="recent-card" style="border-style: dashed; cursor: pointer;" onclick="openModal('modal-add-beneficiaire')">
+            <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
+            <div class="recent-info">
+                <h5 style="color: var(--text-muted);">Nouveau</h5>
+            </div>
+        </div>
+      `;
+      return html;
+    };
 
-    if(selectMobile) {
-      selectMobile.innerHTML = optionsHTML;
-      selectMobile.addEventListener('change', (e) => {
-        const opt = selectMobile.options[selectMobile.selectedIndex];
-        const nomInput = document.getElementById('vir-nom-mobile');
-        if(nomInput && opt && opt.dataset.nom) {
-          nomInput.value = opt.dataset.nom;
-        }
-      });
-    }
+    if(desktopGrid) desktopGrid.innerHTML = generateCards(false);
+    if(mobileGrid) mobileGrid.innerHTML = generateCards(true);
+
   } catch(err) {
     console.error(err);
   }
+}
+
+// Fonction appelée lors du clic sur une carte bénéficiaire
+window.selectBeneficiary = function(iban, nom, isMobile) {
+  const suffix = isMobile ? '-mobile' : '';
+  const prefix = isMobile ? 'mobile' : 'desktop';
+  
+  // Update hidden inputs
+  const inputIban = document.getElementById('vir-iban' + suffix);
+  const inputNom = document.getElementById('vir-nom' + suffix);
+  if(inputIban) inputIban.value = iban;
+  if(inputNom) inputNom.value = nom;
+
+  // Show selected block
+  const blockSelected = document.getElementById(prefix + '-beneficiary-selected');
+  const avatar = document.getElementById(prefix + '-ben-avatar');
+  const nameLabel = document.getElementById(prefix + '-ben-name');
+  const ibanLabel = document.getElementById(prefix + '-ben-iban');
+
+  if(blockSelected) blockSelected.style.display = 'flex';
+  if(avatar) avatar.innerText = nom.substring(0, 2).toUpperCase();
+  if(nameLabel) nameLabel.innerText = nom;
+  if(ibanLabel) ibanLabel.innerText = iban;
 }

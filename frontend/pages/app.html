@@ -218,36 +218,17 @@
                       <a href="#" class="link">Changer &rarr;</a>
                   </div>
                   
-                  <div class="beneficiary-selected">
-                      <div class="avatar-green">MB</div>
+                  <div class="beneficiary-selected" id="mobile-beneficiary-selected" style="display:none;">
+                      <div class="avatar-green" id="mobile-ben-avatar">MB</div>
                       <div class="beneficiary-info">
-                          <h4>Marc Beaumont</h4>
-                          <p>FR76 3000 4000 0100<br>0000 0000 000</p>
+                          <h4 id="mobile-ben-name">Sélectionnez un bénéficiaire</h4>
+                          <p id="mobile-ben-iban">-</p>
                       </div>
                   </div>
 
-                  <div class="recents-title">Récents</div>
-                  <div class="recents-grid">
-                      <div class="recent-card">
-                          <div class="avatar-sm avatar-blue">SM</div>
-                          <div class="recent-info">
-                              <h5>Sophie M.</h5>
-                              <p>BNP</p>
-                          </div>
-                      </div>
-                      <div class="recent-card">
-                          <div class="avatar-sm avatar-gray">JL</div>
-                          <div class="recent-info">
-                              <h5>Julie L.</h5>
-                              <p>LCL</p>
-                          </div>
-                      </div>
-                      <div class="recent-card mobile-only" style="border-style: dashed;">
-                          <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
-                          <div class="recent-info">
-                              <h5 style="color: var(--text-muted);">Nouveau</h5>
-                          </div>
-                      </div>
+                  <div class="recents-title">Bénéficiaires enregistrés</div>
+                  <div class="recents-grid" id="mobile-recents-grid">
+                      <!-- Dynamique -->
                   </div>
               </div>
 
@@ -367,9 +348,8 @@
                       </div>
                   </div>
               </div>
-              
-              <input type="hidden" id="vir-iban-mobile" value="FR763000400001000000000000">
-              <input type="hidden" id="vir-nom-mobile" value="Marc Beaumont">
+                            <input type="hidden" id="vir-iban-mobile" value="">
+                  <input type="hidden" id="vir-nom-mobile" value="">
 
           </div>
           </form>
@@ -550,30 +530,17 @@
                       <a href="#" class="link">Changer &rarr;</a>
                   </div>
                   
-                  <div class="beneficiary-selected">
-                      <div class="avatar-green">MB</div>
+                  <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none;">
+                      <div class="avatar-green" id="desktop-ben-avatar">MB</div>
                       <div class="beneficiary-info">
-                          <h4>Marc Beaumont</h4>
-                          <p>FR76 3000 4000 0100<br>0000 0000 000</p>
+                          <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
+                          <p id="desktop-ben-iban">-</p>
                       </div>
                   </div>
 
-                  <div class="recents-title">Récents</div>
-                  <div class="recents-grid">
-                      <div class="recent-card">
-                          <div class="avatar-sm avatar-blue">SM</div>
-                          <div class="recent-info">
-                              <h5>Sophie M.</h5>
-                              <p>BNP Paribas</p>
-                          </div>
-                      </div>
-                      <div class="recent-card">
-                          <div class="avatar-sm avatar-gray">JL</div>
-                          <div class="recent-info">
-                              <h5>Julie L.</h5>
-                              <p>LCL</p>
-                          </div>
-                      </div>
+                  <div class="recents-title">Bénéficiaires enregistrés</div>
+                  <div class="recents-grid" id="desktop-recents-grid">
+                      <!-- Dynamique -->
                   </div>
               </div>
 
@@ -636,8 +603,8 @@
                   </div>
               </div>
 
-              <input type="hidden" id="vir-iban" value="FR763000400001000000000000">
-              <input type="hidden" id="vir-nom" value="Marc Beaumont">
+              <input type="hidden" id="vir-iban" value="">
+              <input type="hidden" id="vir-nom" value="">
           </div>
           </form>
         </div>
