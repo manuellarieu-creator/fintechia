@@ -630,60 +630,14 @@
                       <label class="form-label">Référence (optionnel)</label>
                       <input type="text" class="form-control" placeholder="Votre référence interne">
                   </div>
+                  
+                  <div style="margin-top: 24px; text-align: right;">
+                      <button type="button" class="btn-submit" onclick="openTunnelModal()" style="color:white; width: 100%;">Suivant <i class="ti ti-arrow-right"></i></button>
+                  </div>
               </div>
 
-              <!-- Bottom Row: Recap & Auth -->
-                  <div class="recap-card">
-                      <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
-                      
-                      <div class="recap-list">
-                          <div class="recap-item">
-                              <span class="recap-label">De</span>
-                              <span class="recap-value">**** 4821</span>
-                          </div>
-                          <div class="recap-item">
-                              <span class="recap-label">Vers</span>
-                              <span class="recap-value">Marc Beaumont</span>
-                          </div>
-                          <div class="recap-item">
-                              <span class="recap-label">Type</span>
-                              <span class="recap-value">Virement<br>immédiat</span>
-                          </div>
-                      </div>
-
-                      <div class="recap-divider"></div>
-
-                      <div class="amount-summary">
-                          <div class="amount-label">Montant à débiter</div>
-                          <div class="amount-value">250,00 €</div>
-                          <div class="balance-after">Solde après virement : <br><span>12 230,32 €</span></div>
-                      </div>
-                  </div>
-
-                  <div class="auth-card">
-                      <div class="auth-header">
-                          <i class="ti ti-refresh auth-icon"></i> Authentification
-                      </div>
-                      <p class="auth-desc">Confirmez l'opération avec votre code à 6 chiffres ou via l'application mobile.</p>
-                      
-                      <div class="otp-inputs">
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input empty"></div>
-                          <div class="otp-input empty"></div>
-                      </div>
-
-                      <div class="auth-actions">
-                          <button type="button" class="btn-cancel">Annuler</button>
-                          <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
-                      </div>
-                  </div>
-                  
-                  <input type="hidden" id="vir-iban" value="FR763000400001000000000000">
-                  <input type="hidden" id="vir-nom" value="Marc Beaumont">
-
+              <input type="hidden" id="vir-iban" value="FR763000400001000000000000">
+              <input type="hidden" id="vir-nom" value="Marc Beaumont">
           </div>
           </form>
         </div>
@@ -812,6 +766,79 @@
       <div style="text-align:right; margin-top:20px;">
         <button onclick="closeModal('modal-add-beneficiaire')" style="background:none; border:none; color:#64748B; font-weight:600; cursor:pointer; padding:8px 16px;">Annuler</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Tunnel Virement Desktop -->
+  <div class="modal" id="modal-virement-tunnel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; max-width:450px; width:90%; border-radius:16px; padding:32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      
+      <!-- Vue: OTP -->
+      <div id="tunnel-step-otp">
+          <div class="auth-header" style="justify-content: center; margin-bottom: 16px;">
+              <i class="ti ti-shield-check auth-icon"></i> Authentification
+          </div>
+          <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'opération avec le code envoyé au +33 6 ** ** ** 42.</p>
+          
+          <div class="otp-inputs" style="justify-content: center; margin-bottom: 32px;">
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+              <button type="button" class="btn-cancel" onclick="closeModal('modal-virement-tunnel')">Annuler</button>
+              <button type="button" class="btn-submit" onclick="submitTunnelOtp()" style="color:white; padding-left: 24px; padding-right: 24px;">Valider <i class="ti ti-arrow-right"></i></button>
+          </div>
+      </div>
+
+      <!-- Vue: Loading -->
+      <div id="tunnel-step-loading" style="display:none; text-align: center; padding: 40px 0;">
+          <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px;"></div>
+          <h3 style="font-size: 18px; color: var(--text-main);">Virement en cours d'émission...</h3>
+          <p style="color: var(--text-muted); margin-top: 8px;">Veuillez patienter pendant le traitement sécurisé de votre demande.</p>
+          <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+      </div>
+
+      <!-- Vue: Recapitulatif (Succès) -->
+      <div id="tunnel-step-recap" style="display:none;">
+          <div style="text-align: center; margin-bottom: 24px;">
+              <div style="display: inline-flex; justify-content: center; align-items: center; width: 64px; height: 64px; background: var(--success-light); color: var(--success); border-radius: 50%; font-size: 32px; margin-bottom: 16px;">
+                  <i class="ti ti-check"></i>
+              </div>
+              <h2 style="font-size: 22px; color: var(--text-main);">Virement émis avec succès</h2>
+              <p style="color: var(--text-muted); margin-top: 8px;">Votre demande a bien été prise en compte.</p>
+          </div>
+          
+          <div class="recap-card" style="border: none; padding: 0; margin-bottom: 32px; box-shadow: none;">
+              <div class="recap-list">
+                  <div class="recap-item">
+                      <span class="recap-label">De</span>
+                      <span class="recap-value">**** 4821</span>
+                  </div>
+                  <div class="recap-item">
+                      <span class="recap-label">Vers</span>
+                      <span class="recap-value" id="recap-vers">Marc Beaumont</span>
+                  </div>
+                  <div class="recap-item">
+                      <span class="recap-label">Type</span>
+                      <span class="recap-value">Immédiat</span>
+                  </div>
+              </div>
+              <div class="recap-divider"></div>
+              <div class="amount-summary" style="background: var(--bg-body); box-shadow: none;">
+                  <div class="amount-label">Montant débité</div>
+                  <div class="amount-value" id="recap-montant">250,00 €</div>
+                  <div class="balance-after">Solde après virement : <br><span>12 230,32 €</span></div>
+              </div>
+          </div>
+
+          <button type="button" class="btn-submit" onclick="finishTunnel()" style="color:white; width: 100%;">Terminer</button>
+      </div>
+
     </div>
   </div>
 

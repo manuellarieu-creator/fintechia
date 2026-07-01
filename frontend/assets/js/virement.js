@@ -37,5 +37,70 @@ async function handleVirementSubmit(e, isMobile) {
   }
 }
 
-document.getElementById('form-virement-desktop')?.addEventListener('submit', (e) => handleVirementSubmit(e, false));
+// Mobile submit (Standard behavior)
 document.getElementById('form-virement-mobile')?.addEventListener('submit', (e) => handleVirementSubmit(e, true));
+
+// DESKTOP TUNNEL LOGIC
+function openTunnelModal() {
+  const montant = document.getElementById('vir-montant').value;
+  const iban = document.getElementById('vir-iban').value;
+  if (!montant || !iban) {
+    alert('Veuillez remplir le bénéficiaire et le montant.');
+    return;
+  }
+  
+  // Update recap fields with form data
+  document.getElementById('recap-montant').innerText = parseFloat(montant).toFixed(2) + ' €';
+  document.getElementById('recap-vers').innerText = document.getElementById('vir-nom').value || iban;
+  
+  // Show OTP step
+  document.getElementById('modal-virement-tunnel').style.display = 'flex';
+  document.getElementById('tunnel-step-otp').style.display = 'block';
+  document.getElementById('tunnel-step-loading').style.display = 'none';
+  document.getElementById('tunnel-step-recap').style.display = 'none';
+}
+
+async function submitTunnelOtp() {
+  // Show Loading step
+  document.getElementById('tunnel-step-otp').style.display = 'none';
+  document.getElementById('tunnel-step-loading').style.display = 'block';
+  
+  // Call the actual API
+  const payload = {
+    iban_dest: document.getElementById('vir-iban').value,
+    bic_dest: 'N/A',
+    nom_dest: document.getElementById('vir-nom').value,
+    montant: document.getElementById('vir-montant').value,
+    motif: document.getElementById('vir-motif').value
+  };
+
+  try {
+    const res = await apiCall('/transactions/virement', 'POST', payload);
+    
+    // Simulate slight processing delay for realism in the tunnel
+    setTimeout(() => {
+        document.getElementById('tunnel-step-loading').style.display = 'none';
+        document.getElementById('tunnel-step-recap').style.display = 'block';
+    }, 1500);
+    
+    // Refresh backend data
+    loadTransactions();
+    checkAuth();
+  } catch(err) {
+    alert('Erreur lors du virement: ' + err.message);
+    closeModal('modal-virement-tunnel');
+  }
+}
+
+function finishTunnel() {
+  closeModal('modal-virement-tunnel');
+  const formDesktop = document.getElementById('form-virement-desktop');
+  if(formDesktop) formDesktop.reset();
+  showView('view-dashboard');
+}
+
+// Prevent default form submission on Desktop to avoid bypass
+document.getElementById('form-virement-desktop')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    openTunnelModal();
+});
