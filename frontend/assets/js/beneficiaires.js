@@ -102,13 +102,32 @@ async function supprimerBeneficiaire(id) {
 async function loadBeneficiairesForSelect() {
   try {
     const bens = await apiCall('/beneficiaires');
+    const txs = await apiCall('/transactions?limit=50');
     
-    const desktopGrid = document.getElementById('desktop-recents-grid');
-    const mobileGrid = document.getElementById('mobile-recents-grid');
+    // Trouver les IBANs récents
+    const recentIbans = new Set();
+    if (txs && txs.length) {
+      txs.forEach(tx => {
+        if (tx.type === 'virement_emis' && tx.iban_dest) {
+          recentIbans.add(tx.iban_dest);
+        }
+      });
+    }
+
+    const recentBens = bens.filter(b => recentIbans.has(b.iban));
     
+    const desktopRecentGrid = document.getElementById('desktop-recents-grid');
+    const mobileRecentGrid = document.getElementById('mobile-recents-grid');
+    const desktopAllGrid = document.getElementById('desktop-all-grid');
+    const mobileAllGrid = document.getElementById('mobile-all-grid');
+    
+    // Conteneurs à afficher/masquer
+    const desktopRecentContainer = document.getElementById('desktop-recents-container');
+    const mobileRecentContainer = document.getElementById('mobile-recents-container');
+
     // Fonction d'aide pour générer les cartes
-    const generateCards = (isMobile) => {
-      let html = bens.map(b => {
+    const generateCards = (list, isMobile, includeAddButton) => {
+      let html = list.map(b => {
         const initials = b.nom.substring(0, 2).toUpperCase();
         return `
           <div class="recent-card" onclick="selectBeneficiary('${b.iban}', '${b.nom}', ${isMobile})">
@@ -121,20 +140,33 @@ async function loadBeneficiairesForSelect() {
         `;
       }).join('');
       
-      // Ajouter le bouton "Nouveau"
-      html += `
-        <div class="recent-card" style="border-style: dashed; cursor: pointer;" onclick="openModal('modal-add-beneficiaire')">
-            <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
-            <div class="recent-info">
-                <h5 style="color: var(--text-muted);">Nouveau</h5>
-            </div>
-        </div>
-      `;
+      if (includeAddButton) {
+        html += `
+          <div class="recent-card" style="border-style: dashed; cursor: pointer;" onclick="openModal('modal-add-beneficiaire')">
+              <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
+              <div class="recent-info">
+                  <h5 style="color: var(--text-muted);">Nouveau</h5>
+              </div>
+          </div>
+        `;
+      }
       return html;
     };
 
-    if(desktopGrid) desktopGrid.innerHTML = generateCards(false);
-    if(mobileGrid) mobileGrid.innerHTML = generateCards(true);
+    // Populate Récents if any
+    if(recentBens.length > 0) {
+      if(desktopRecentGrid) desktopRecentGrid.innerHTML = generateCards(recentBens, false, false);
+      if(mobileRecentGrid) mobileRecentGrid.innerHTML = generateCards(recentBens, true, false);
+      if(desktopRecentContainer) desktopRecentContainer.style.display = 'block';
+      if(mobileRecentContainer) mobileRecentContainer.style.display = 'block';
+    } else {
+      if(desktopRecentContainer) desktopRecentContainer.style.display = 'none';
+      if(mobileRecentContainer) mobileRecentContainer.style.display = 'none';
+    }
+
+    // Populate Tous
+    if(desktopAllGrid) desktopAllGrid.innerHTML = generateCards(bens, false, true);
+    if(mobileAllGrid) mobileAllGrid.innerHTML = generateCards(bens, true, true);
 
   } catch(err) {
     console.error(err);
