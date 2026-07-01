@@ -372,4 +372,264 @@
     border-radius: 4px;
     opacity: .18;
   }
+
+  /* ── CARTES PAGE SPECIFIC ─────────────────────────── */
+  .cartes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+  }
+  .cartes-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+  }
+  .cartes-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+  }
+  .btn-new {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+  }
+
+  .card-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+  }
+  .card-tabs::-webkit-scrollbar { display: none; }
+  .card-tab {
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-muted);
+  }
+  .card-tab.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+  }
+
+  .credit-card {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      height: 140px;
+      position: relative;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+      overflow: hidden;
+  }
+  .credit-card::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+  }
+  .cc-bank {
+      font-weight: 700;
+      font-size: 1rem;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1;
+  }
+  .cc-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+      z-index: 1;
+      letter-spacing: 0.5px;
+  }
+
+  .c-section {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+  }
+  .c-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  }
+  .c-section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+  }
+  .c-section-link {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+  }
+
+  .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+  }
+  .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+  }
+  .action-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      background: white;
+  }
+  .action-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+  }
+
+  .limit-item {
+      margin-bottom: 20px;
+  }
+  .limit-item:last-child {
+      margin-bottom: 0;
+  }
+  .limit-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+  }
+  .limit-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+  }
+  .limit-value {
+      font-size: 0.9rem;
+      font-weight: 700;
+  }
+  .limit-bar-bg {
+      height: 6px;
+      background: var(--surface-0);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px;
+  }
+  .limit-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+  }
+  .limit-bar-fill.blue { background: var(--accent); }
+  .limit-bar-fill.orange { background: var(--warning); }
+  .limit-bar-fill.green { background: var(--success); }
+  .limit-subtext {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+  }
+
+  .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+  }
+  .setting-item:first-child { padding-top: 0; }
+  .setting-item:last-child { padding-bottom: 0; border-bottom: none; }
+  .setting-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+  }
+  .setting-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+  }
+  .setting-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+  }
+  
+  .c-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+  }
+  .c-switch input { opacity: 0; width: 0; height: 0; }
+  .c-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .3s;
+      border-radius: 26px;
+  }
+  .c-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .c-switch input:checked + .c-slider {
+      background-color: var(--accent);
+  }
+  .c-switch input:checked + .c-slider:before {
+      transform: translateX(22px);
+  }
+
+  .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      font-size: 0.9rem;
+  }
+  .info-label { color: var(--text-secondary); }
+  .info-value { font-weight: 600; }
 }

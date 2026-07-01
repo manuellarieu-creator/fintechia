@@ -6,10 +6,10 @@ async function loadCartes() {
     
     if(!container && !containerMobile) return;
     
-    if(container) {
-      // On fetch les transactions récentes pour cette carte (ou globales ici)
+    let txsHtml = '';
+    try {
       const txs = await apiCall('/transactions?limit=5');
-      const txsHtml = txs.map(tx => {
+      txsHtml = txs.map(tx => {
           const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
           const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
           let libelle = tx.description || 'Transaction';
@@ -33,7 +33,11 @@ async function loadCartes() {
             </div>
           `;
       }).join('');
+    } catch(e) {
+      console.warn('Could not fetch txs for cartes', e);
+    }
 
+    if(container) {
       container.innerHTML = cartes.map(c => `
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; padding-top:20px;">
           <!-- Colonne Gauche -->
@@ -148,25 +152,176 @@ async function loadCartes() {
     }
 
     if(containerMobile) {
-      containerMobile.innerHTML = cartes.map(c => `
-        <div class="bank-card">
-          <div class="bank-card-head">
-            <span class="bank-card-type">NovaBanque ${c.bloquee ? '(BLOQUÉE)' : ''}</span>
-            <i class="ti ti-credit-card" style="font-size:20px;opacity:.75;"></i>
-          </div>
-          <div class="bank-card-num">**** **** **** ${c.pan.slice(-4)}</div>
-          <div class="bank-card-foot">
-            <span>Exp: ${c.exp_date}</span>
-            <span>Plafond: ${parseFloat(c.plafond).toFixed(0)}€</span>
-          </div>
-          <div class="bank-card-actions">
-            <button class="bc-btn" onclick="toggleCardBlock(${c.id}, ${c.bloquee})" style="background:${c.bloquee ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.15)'}">
-              ${c.bloquee ? 'Débloquer' : 'Bloquer'}
-            </button>
-            <button class="bc-btn">Plafonds</button>
-          </div>
+      const tabs = cartes.map((c, i) => \`<div class="card-tab \${i === 0 ? 'active' : ''}">\${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'} **** \${c.pan.slice(-4)}</div>\`).join('');
+      
+      containerMobile.innerHTML = \`
+        <div class="card-tabs">\${tabs}</div>
+        \${cartes.map((c, i) => \`
+        <div class="card-view" style="display: \${i === 0 ? 'block' : 'none'};">
+            <!-- Visual Card -->
+            <div class="credit-card">
+                <div class="cc-bank">NovaBanque</div>
+                <div class="cc-badge">\${c.bloquee ? 'BLOQUÉE' : 'ACTIVE'}</div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="c-section">
+                <h2 class="c-section-title" style="margin-bottom: 16px;">Actions rapides</h2>
+                <div class="actions-grid">
+                    <div class="action-item" onclick="toggleCardBlock(\${c.id}, \${c.bloquee})">
+                        <div class="action-icon"><i class="ti ti-\${c.bloquee ? 'lock-open' : 'lock'}" style="color:\${c.bloquee ? 'var(--success)' : 'inherit'}"></i></div>
+                        <span class="action-label">\${c.bloquee ? 'Débloquer' : 'Bloquer'}</span>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon"><i class="ti ti-eye"></i></div>
+                        <span class="action-label">Code PIN</span>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon"><i class="ti ti-refresh"></i></div>
+                        <span class="action-label">Renouveler</span>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon"><i class="ti ti-trash"></i></div>
+                        <span class="action-label" style="font-weight: 700; color: var(--text-primary);">Résilier</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plafonds -->
+            <div class="c-section">
+                <div class="c-section-header">
+                    <h2 class="c-section-title">Plafonds</h2>
+                    <a href="#" class="c-section-link">Modifier</a>
+                </div>
+                
+                <div class="limit-item">
+                    <div class="limit-header">
+                        <span class="limit-name">Paiement mensuel</span>
+                        <span class="limit-value">\${(parseFloat(c.plafond)/2).toFixed(0)} / \${parseFloat(c.plafond).toFixed(0)} €</span>
+                    </div>
+                    <div class="limit-bar-bg">
+                        <div class="limit-bar-fill blue" style="width: 46%;"></div>
+                    </div>
+                    <div class="limit-subtext">\${(parseFloat(c.plafond)/2).toFixed(0)} € disponibles</div>
+                </div>
+
+                <div class="limit-item">
+                    <div class="limit-header">
+                        <span class="limit-name">Retrait hebdomadaire</span>
+                        <span class="limit-value">400 / 500 €</span>
+                    </div>
+                    <div class="limit-bar-bg">
+                        <div class="limit-bar-fill orange" style="width: 80%;"></div>
+                    </div>
+                    <div class="limit-subtext">100 € restants · Réinit. lundi</div>
+                </div>
+
+                <div class="limit-item">
+                    <div class="limit-header">
+                        <span class="limit-name">Sans contact</span>
+                        <span class="limit-value">87 / 150 €</span>
+                    </div>
+                    <div class="limit-bar-bg">
+                        <div class="limit-bar-fill green" style="width: 58%;"></div>
+                    </div>
+                    <div class="limit-subtext">63 € disponibles</div>
+                </div>
+
+                <div class="limit-item">
+                    <div class="limit-header">
+                        <span class="limit-name">Paiement en ligne</span>
+                        <span class="limit-value">760 / 3 000 €</span>
+                    </div>
+                    <div class="limit-bar-bg">
+                        <div class="limit-bar-fill blue" style="width: 25%;"></div>
+                    </div>
+                    <div class="limit-subtext">2 240 € disponibles</div>
+                </div>
+            </div>
+
+            <!-- Paramètres -->
+            <div class="c-section">
+                <h2 class="c-section-title" style="margin-bottom: 20px;">Paramètres</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Paiement sans contact</span>
+                        <span class="setting-desc">NFC activé</span>
+                    </div>
+                    <label class="c-switch"><input type="checkbox" checked><span class="c-slider"></span></label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Paiements en ligne</span>
+                        <span class="setting-desc">E-commerce & abonnements</span>
+                    </div>
+                    <label class="c-switch"><input type="checkbox" checked><span class="c-slider"></span></label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Paiements à l'étranger</span>
+                        <span class="setting-desc">Hors zone euro</span>
+                    </div>
+                    <label class="c-switch"><input type="checkbox"><span class="c-slider"></span></label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Retraits DAB</span>
+                        <span class="setting-desc">Distributeurs automatiques</span>
+                    </div>
+                    <label class="c-switch"><input type="checkbox" checked><span class="c-slider"></span></label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Notifications de paiement</span>
+                        <span class="setting-desc">Alertes temps réel</span>
+                    </div>
+                    <label class="c-switch"><input type="checkbox" checked><span class="c-slider"></span></label>
+                </div>
+            </div>
+
+            <!-- Transactions récentes -->
+            <div class="c-section">
+                <div class="c-section-header">
+                    <h2 class="c-section-title">Transactions récentes</h2>
+                    <a href="#" class="c-section-link">Voir tout <i class="ti ti-arrow-right" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
+                </div>
+                <div>
+                   \${txsHtml || '<div style="padding:20px; text-align:center; color:var(--text-muted);">Aucune transaction récente</div>'}
+                </div>
+            </div>
+
+            <!-- Informations carte -->
+            <div class="c-section">
+                <h2 class="c-section-title" style="margin-bottom: 12px;">Informations carte</h2>
+                <div class="info-row">
+                    <span class="info-label">Type</span>
+                    <span class="info-value">Visa \${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Réseau</span>
+                    <span class="info-value">Visa International</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Expiration</span>
+                    <span class="info-value">\${c.exp_date}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Statut</span>
+                    <span class="info-value">\${c.bloquee ? 'Bloquée' : 'Active'}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Cotisation</span>
+                    <span class="info-value">12,00 € / mois</span>
+                </div>
+            </div>
         </div>
-      `).join('');
+        \`).join('')}
+      \`;
     }
     
   } catch(err) {
