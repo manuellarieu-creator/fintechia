@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../assets/css/app.css">
   <link rel="stylesheet" href="../assets/css/mobile.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/virement.css">
 </head>
 <body class="app-body">
 
@@ -334,17 +335,184 @@
         </div> <!-- /view-dashboard -->
 
         <!-- VUE VIREMENTS -->
-        <div id="view-virements" class="nb-view" style="display:none;">
-          <div class="nb-card" style="max-width:600px; margin:0 auto;">
-            <h2 style="margin-bottom:20px;">Effectuer un virement</h2>
-            <form id="form-virement-desktop">
-              <div class="form-group"><label>Montant (€)</label><input type="number" id="vir-montant" required></div>
-              <div class="form-group"><label>Bénéficiaire (IBAN)</label><select id="vir-iban" required><option value="">Chargement...</option></select></div>
-              <div class="form-group"><label>Nom du destinataire</label><input type="text" id="vir-nom" required></div>
-              <div class="form-group"><label>Motif</label><input type="text" id="vir-motif" required></div>
-              <button type="submit" class="nb-btn-primary" style="width:100%; margin-top:10px;">Envoyer le virement</button>
-            </form>
+        <div id="view-virements" class="nb-view" style="display:none; padding-bottom: 40px;">
+          <div class="page-header desktop-only">
+              <div>
+                  <h1 class="page-title">Nouveau virement</h1>
+                  <div class="balance">
+                      Solde disponible : <span class="balance-amount">12 480,32 €</span>
+                  </div>
+              </div>
+              <button class="btn-outline">
+                  <i class="ti ti-clock"></i> Historique
+              </button>
           </div>
+
+          <div class="steps-container">
+              <div class="step completed">
+                  <div class="step-circle"><i class="ti ti-check"></i></div>
+                  <span class="desktop-only">Bénéficiaire</span>
+              </div>
+              <div class="step-divider" style="background-color: var(--success); opacity: 1;"></div>
+              <div class="step active">
+                  <div class="step-circle">2</div>
+                  <span class="desktop-only">Détails du virement</span>
+              </div>
+              <div class="step-divider" style="opacity: 0.3;"></div>
+              <div class="step" style="opacity: 0.5;">
+                  <div class="step-circle">3</div>
+                  <span class="desktop-only">Confirmation</span>
+              </div>
+          </div>
+
+          <form id="form-virement-desktop">
+          <div class="grid-layout">
+              
+              <!-- Column 1: Beneficiary -->
+              <div class="card">
+                  <div class="card-header">
+                      <h3 class="card-title">Bénéficiaire</h3>
+                      <a href="#" class="link">Changer &rarr;</a>
+                  </div>
+                  
+                  <div class="beneficiary-selected">
+                      <div class="avatar-green">MB</div>
+                      <div class="beneficiary-info">
+                          <h4>Marc Beaumont</h4>
+                          <p>FR76 3000 4000 0100<br>0000 0000 000</p>
+                      </div>
+                  </div>
+
+                  <div class="recents-title">Récents</div>
+                  <div class="recents-grid">
+                      <div class="recent-card">
+                          <div class="avatar-sm avatar-blue">SM</div>
+                          <div class="recent-info">
+                              <h5>Sophie M.</h5>
+                              <p>BNP Paribas</p>
+                          </div>
+                      </div>
+                      <div class="recent-card">
+                          <div class="avatar-sm avatar-gray">JL</div>
+                          <div class="recent-info">
+                              <h5>Julie L.</h5>
+                              <p>LCL</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Column 2: Details -->
+              <div class="card">
+                  <div class="card-header desktop-only">
+                      <h3 class="card-title">Détails du virement</h3>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Type de virement</label>
+                      <div class="segmented-control">
+                          <button type="button" class="segment-btn active">
+                              <i class="ti ti-device-mobile"></i> Immédiat
+                          </button>
+                          <button type="button" class="segment-btn">
+                              <i class="ti ti-calendar"></i> Programmé
+                          </button>
+                      </div>
+                  </div>
+
+                  <div class="desktop-only">
+                      <div class="form-group">
+                          <label class="form-label">Compte débiteur</label>
+                          <select class="form-control">
+                              <option>Compte courant — *** 4821</option>
+                              <option>Livret A — *** 1102</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="grid-2">
+                      <div class="form-group">
+                          <label class="form-label">Montant</label>
+                          <div class="input-with-icon">
+                              <input type="number" class="form-control" id="vir-montant" value="250" required>
+                              <span class="input-icon">€</span>
+                          </div>
+                          <div class="help-text">Plafond journalier : 5 000 €</div>
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Date d'exécution</label>
+                          <input type="text" class="form-control" value="Aujourd'hui" readonly style="background: #f8fafc; color: var(--text-main); font-weight: 500;">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Motif</label>
+                      <input type="text" class="form-control" id="vir-motif" value="Remboursement weekend" required>
+                      <div class="help-text">140 caractères max - Visible par le bénéficiaire</div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Référence (optionnel)</label>
+                      <input type="text" class="form-control" placeholder="Votre référence interne">
+                  </div>
+              </div>
+
+              <!-- Column 3: Recap & Auth -->
+              <div class="desktop-only" style="flex-direction: column;">
+                  <div class="recap-card">
+                      <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
+                      
+                      <div class="recap-list">
+                          <div class="recap-item">
+                              <span class="recap-label">De</span>
+                              <span class="recap-value">**** 4821</span>
+                          </div>
+                          <div class="recap-item">
+                              <span class="recap-label">Vers</span>
+                              <span class="recap-value">Marc Beaumont</span>
+                          </div>
+                          <div class="recap-item">
+                              <span class="recap-label">Type</span>
+                              <span class="recap-value">Virement<br>immédiat</span>
+                          </div>
+                      </div>
+
+                      <div class="recap-divider"></div>
+
+                      <div class="amount-summary">
+                          <div class="amount-label">Montant à débiter</div>
+                          <div class="amount-value">250,00 €</div>
+                          <div class="balance-after">Solde après virement : <br><span>12 230,32 €</span></div>
+                      </div>
+                  </div>
+
+                  <div class="auth-card">
+                      <div class="auth-header">
+                          <i class="ti ti-refresh auth-icon"></i> Authentification
+                      </div>
+                      <p class="auth-desc">Confirmez l'opération avec votre code à 6 chiffres ou via l'application mobile.</p>
+                      
+                      <div class="otp-inputs">
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input empty"></div>
+                          <div class="otp-input empty"></div>
+                      </div>
+
+                      <div class="auth-actions">
+                          <button type="button" class="btn-cancel">Annuler</button>
+                          <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
+                      </div>
+                  </div>
+                  
+                  <input type="hidden" id="vir-iban" value="FR763000400001000000000000">
+                  <input type="hidden" id="vir-nom" value="Marc Beaumont">
+              </div>
+
+          </div>
+          </form>
         </div>
 
         <!-- VUE CARTES -->
