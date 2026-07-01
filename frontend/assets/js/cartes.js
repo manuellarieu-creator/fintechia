@@ -152,25 +152,25 @@ async function loadCartes() {
     }
 
     if(containerMobile) {
-      const tabs = cartes.map((c, i) => \`<div class="card-tab \${i === 0 ? 'active' : ''}">\${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'} **** \${c.pan.slice(-4)}</div>\`).join('');
+      const tabs = cartes.map((c, i) => `<div class="card-tab ${i === 0 ? 'active' : ''}">${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'} **** ${c.pan.slice(-4)}</div>`).join('');
       
-      containerMobile.innerHTML = \`
-        <div class="card-tabs">\${tabs}</div>
-        \${cartes.map((c, i) => \`
-        <div class="card-view" style="display: \${i === 0 ? 'block' : 'none'};">
+      containerMobile.innerHTML = `
+        <div class="card-tabs">${tabs}</div>
+        ${cartes.map((c, i) => `
+        <div class="card-view" style="display: ${i === 0 ? 'block' : 'none'};">
             <!-- Visual Card -->
             <div class="credit-card">
                 <div class="cc-bank">NovaBanque</div>
-                <div class="cc-badge">\${c.bloquee ? 'BLOQUÉE' : 'ACTIVE'}</div>
+                <div class="cc-badge">${c.bloquee ? 'BLOQUÉE' : 'ACTIVE'}</div>
             </div>
 
             <!-- Quick Actions -->
             <div class="c-section">
                 <h2 class="c-section-title" style="margin-bottom: 16px;">Actions rapides</h2>
                 <div class="actions-grid">
-                    <div class="action-item" onclick="toggleCardBlock(\${c.id}, \${c.bloquee})">
-                        <div class="action-icon"><i class="ti ti-\${c.bloquee ? 'lock-open' : 'lock'}" style="color:\${c.bloquee ? 'var(--success)' : 'inherit'}"></i></div>
-                        <span class="action-label">\${c.bloquee ? 'Débloquer' : 'Bloquer'}</span>
+                    <div class="action-item" onclick="toggleCardBlock(${c.id}, ${c.bloquee})">
+                        <div class="action-icon"><i class="ti ti-${c.bloquee ? 'lock-open' : 'lock'}" style="color:${c.bloquee ? 'var(--success)' : 'inherit'}"></i></div>
+                        <span class="action-label">${c.bloquee ? 'Débloquer' : 'Bloquer'}</span>
                     </div>
                     <div class="action-item">
                         <div class="action-icon"><i class="ti ti-eye"></i></div>
@@ -197,12 +197,12 @@ async function loadCartes() {
                 <div class="limit-item">
                     <div class="limit-header">
                         <span class="limit-name">Paiement mensuel</span>
-                        <span class="limit-value">\${(parseFloat(c.plafond)/2).toFixed(0)} / \${parseFloat(c.plafond).toFixed(0)} €</span>
+                        <span class="limit-value">${(parseFloat(c.plafond)/2).toFixed(0)} / ${parseFloat(c.plafond).toFixed(0)} €</span>
                     </div>
                     <div class="limit-bar-bg">
                         <div class="limit-bar-fill blue" style="width: 46%;"></div>
                     </div>
-                    <div class="limit-subtext">\${(parseFloat(c.plafond)/2).toFixed(0)} € disponibles</div>
+                    <div class="limit-subtext">${(parseFloat(c.plafond)/2).toFixed(0)} € disponibles</div>
                 </div>
 
                 <div class="limit-item">
@@ -291,7 +291,7 @@ async function loadCartes() {
                     <a href="#" class="c-section-link">Voir tout <i class="ti ti-arrow-right" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
                 </div>
                 <div>
-                   \${txsHtml || '<div style="padding:20px; text-align:center; color:var(--text-muted);">Aucune transaction récente</div>'}
+                   ${txsHtml || '<div style="padding:20px; text-align:center; color:var(--text-muted);">Aucune transaction récente</div>'}
                 </div>
             </div>
 
@@ -300,7 +300,7 @@ async function loadCartes() {
                 <h2 class="c-section-title" style="margin-bottom: 12px;">Informations carte</h2>
                 <div class="info-row">
                     <span class="info-label">Type</span>
-                    <span class="info-value">Visa \${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'}</span>
+                    <span class="info-value">Visa ${c.type === 'CLASSIC' ? 'Classic' : 'Platinum'}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Réseau</span>
@@ -308,11 +308,11 @@ async function loadCartes() {
                 </div>
                 <div class="info-row">
                     <span class="info-label">Expiration</span>
-                    <span class="info-value">\${c.exp_date}</span>
+                    <span class="info-value">${c.exp_date}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Statut</span>
-                    <span class="info-value">\${c.bloquee ? 'Bloquée' : 'Active'}</span>
+                    <span class="info-value">${c.bloquee ? 'Bloquée' : 'Active'}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Cotisation</span>
@@ -320,8 +320,8 @@ async function loadCartes() {
                 </div>
             </div>
         </div>
-        \`).join('')}
-      \`;
+        `).join('')}
+      `;
     }
     
   } catch(err) {
