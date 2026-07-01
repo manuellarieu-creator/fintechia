@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../assets/css/mobile.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/virement.css">
+  <link rel="stylesheet" href="../assets/css/budget.css">
 </head>
 <body class="app-body">
 
@@ -553,12 +554,304 @@
 
         <!-- VUE BUDGET -->
         <div id="view-budget" class="nb-view" style="display:none;">
-          <div class="nb-card">
-            <h2>Gestion du Budget</h2>
-            <div id="budget-page-list"></div>
+          
+          <div class="bdg-header">
+            <div>
+              <h1 class="page-title">Budget</h1>
+              <p class="page-subtitle">Suivez et maîtrisez vos dépenses par catégorie</p>
+            </div>
+            <div class="bdg-header-actions">
+              <div class="bdg-month-selector">
+                <button><i class="ti ti-chevron-left"></i></button>
+                <span>Juin 2026</span>
+                <button><i class="ti ti-chevron-right"></i></button>
+              </div>
+              <button class="nb-btn-primary" style="margin-left:16px; padding:8px 16px; border-radius:8px;">
+                <i class="ti ti-plus"></i> Nouvelle enveloppe
+              </button>
+              <button style="margin-left:8px; border:1px solid var(--border); border-radius:8px; background:white; cursor:pointer; padding:8px;"><i class="ti ti-dots"></i></button>
+            </div>
+          </div>
+
+          <div class="bdg-metrics-grid">
+            <div class="bdg-metric-card">
+              <div class="bdg-metric-title">REVENUS JUIN</div>
+              <div class="bdg-metric-val">3 200 €</div>
+              <div class="bdg-metric-sub positive">+8% vs mai</div>
+            </div>
+            <div class="bdg-metric-card">
+              <div class="bdg-metric-title">DÉPENSES JUIN</div>
+              <div class="bdg-metric-val">1 243 €</div>
+              <div class="bdg-metric-sub negative">+12% vs mai</div>
+            </div>
+            <div class="bdg-metric-card">
+              <div class="bdg-metric-title">ÉPARGNE DU MOIS</div>
+              <div class="bdg-metric-val">320 €</div>
+              <div class="bdg-metric-sub">Obj. 400 € - 80%</div>
+            </div>
+            <div class="bdg-metric-card">
+              <div class="bdg-metric-title">RESTE À DÉPENSER</div>
+              <div class="bdg-metric-val">1 637 €</div>
+              <div class="bdg-metric-sub">Budget total: 2 880 €</div>
+            </div>
+          </div>
+
+          <div class="bdg-main-layout">
+             <!-- Left Column -->
+             <div class="bdg-col-left">
+                <!-- Enveloppes -->
+                <div class="nb-card" style="margin-bottom: 24px;">
+                   <div class="bdg-card-header">
+                      <h3>Enveloppes budgétaires</h3>
+                      <div style="display:flex; background:var(--bg-body); border-radius:8px; padding:2px;">
+                          <button style="padding:4px 12px; font-size:12px; border:none; border-radius:6px; background:var(--primary); color:white; font-weight:600; cursor:pointer;">Mois</button>
+                          <button style="padding:4px 12px; font-size:12px; border:none; border-radius:6px; background:transparent; color:var(--text-muted); cursor:pointer;">Année</button>
+                      </div>
+                   </div>
+
+                   <div class="bdg-env-list">
+                      <!-- Env Item -->
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-home"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Logement</span>
+                               <span class="bdg-env-amounts">750 / 750 €</span>
+                               <span class="bdg-env-percent" style="color:var(--text-main);">Atteint</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:100%; background:var(--danger);"></div></div>
+                         </div>
+                      </div>
+                      
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-shopping-cart"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Courses</span>
+                               <span class="bdg-env-amounts">246 / 300 €</span>
+                               <span class="bdg-env-percent">82%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:82%; background:var(--warning);"></div></div>
+                         </div>
+                      </div>
+
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--primary); background:#EFF6FF;"><i class="ti ti-car"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Transports</span>
+                               <span class="bdg-env-amounts">68 / 150 €</span>
+                               <span class="bdg-env-percent">45%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:45%; background:var(--success);"></div></div>
+                         </div>
+                      </div>
+
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-refresh"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Abonnements</span>
+                               <span class="bdg-env-amounts">90 / 100 €</span>
+                               <span class="bdg-env-percent">90%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:90%; background:var(--warning);"></div></div>
+                         </div>
+                      </div>
+
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--primary); background:#EFF6FF;"><i class="ti ti-ticket"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Loisirs</span>
+                               <span class="bdg-env-amounts">89 / 200 €</span>
+                               <span class="bdg-env-percent">44%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:44%; background:var(--primary);"></div></div>
+                         </div>
+                      </div>
+
+                      <div class="bdg-env-item">
+                         <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-heart"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Santé</span>
+                               <span class="bdg-env-amounts">0 / 80 €</span>
+                               <span class="bdg-env-percent">0%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:0%; background:var(--text-muted);"></div></div>
+                         </div>
+                      </div>
+
+                      <div class="bdg-env-item" style="border-bottom:none; padding-bottom:0;">
+                         <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-cutlery"></i></div>
+                         <div class="bdg-env-details">
+                            <div class="bdg-env-top">
+                               <span class="bdg-env-name">Restaurants</span>
+                               <span class="bdg-env-amounts">60 / 150 €</span>
+                               <span class="bdg-env-percent">40%</span>
+                            </div>
+                            <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:40%; background:var(--success);"></div></div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Evolution -->
+                <div class="nb-card" style="display:flex; justify-content:space-between;">
+                   <div style="flex:1;">
+                       <h3 style="font-size:16px; margin-bottom:4px; margin-top:0;">Évolution des<br>dépenses</h3>
+                   </div>
+                   <div style="font-size:12px; color:var(--text-muted); text-align:right;">
+                       6 derniers<br>mois
+                   </div>
+                </div>
+                <!-- Mini bar chart below -->
+                <div class="nb-card" style="padding-top:20px; margin-top:-16px; border-top:none; border-top-left-radius:0; border-top-right-radius:0;">
+                   <div class="bdg-chart-mini">
+                       <div class="bdg-bar-col"><div class="bdg-bar-val">980€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:40%;"></div></div><div class="bdg-bar-lbl">Jan</div></div>
+                       <div class="bdg-bar-col"><div class="bdg-bar-val">1120€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:55%;"></div></div><div class="bdg-bar-lbl">Fév</div></div>
+                       <div class="bdg-bar-col"><div class="bdg-bar-val">890€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:35%;"></div></div><div class="bdg-bar-lbl">Mar</div></div>
+                       <div class="bdg-bar-col"><div class="bdg-bar-val">1240€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:70%;"></div></div><div class="bdg-bar-lbl">Avr</div></div>
+                       <div class="bdg-bar-col"><div class="bdg-bar-val">1100€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:50%;"></div></div><div class="bdg-bar-lbl">Mai</div></div>
+                       <div class="bdg-bar-col active"><div class="bdg-bar-val">1 243€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:75%;"></div></div><div class="bdg-bar-lbl">Juin</div></div>
+                   </div>
+                </div>
+             </div>
+
+             <!-- Right Column -->
+             <div class="bdg-col-right">
+                
+                <!-- Repartition -->
+                <div class="nb-card" style="margin-bottom:24px;">
+                   <div class="bdg-card-header" style="margin-bottom:16px;">
+                      <h3 style="margin:0;">Répartition</h3>
+                      <span style="font-size:12px; color:var(--text-muted);">Juin 2026</span>
+                   </div>
+                   <div style="display:flex; align-items:center; gap:20px;">
+                       <div class="bdg-donut-wrap">
+                          <svg viewBox="0 0 36 36" class="bdg-donut">
+                             <!-- Donut segments -->
+                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#DC2626" stroke-width="4" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
+                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#F59E0B" stroke-width="4" stroke-dasharray="25 75" stroke-dashoffset="-15"></circle>
+                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#2563EB" stroke-width="4" stroke-dasharray="15 85" stroke-dashoffset="-40"></circle>
+                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#10B981" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-55"></circle>
+                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#94A3B8" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-65"></circle>
+                          </svg>
+                          <div class="bdg-donut-inner">
+                             <div class="val">1 243€</div>
+                             <div class="lbl">total</div>
+                          </div>
+                       </div>
+                       <div class="bdg-legend">
+                          <div class="leg-item"><span class="dot" style="background:#DC2626;"></span>Logement</div>
+                          <div class="leg-item"><span class="dot" style="background:#F59E0B;"></span>Courses</div>
+                          <div class="leg-item"><span class="dot" style="background:#2563EB;"></span>Transports</div>
+                          <div class="leg-item"><span class="dot" style="background:#10B981;"></span>Abonnements</div>
+                          <div class="leg-item"><span class="dot" style="background:#94A3B8;"></span>Autres</div>
+                       </div>
+                   </div>
+                </div>
+
+                <!-- Objectif Epargne -->
+                <div class="nb-card" style="margin-bottom:24px;">
+                   <div class="bdg-card-header" style="margin-bottom:12px;">
+                      <h3 style="margin:0;">Objectif épargne</h3>
+                      <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Modifier</a>
+                   </div>
+                   <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
+                      <div style="font-size:13px; color:var(--text-muted);">320 / 400 € ce mois</div>
+                      <div style="font-size:14px; font-weight:700;">80%</div>
+                   </div>
+                   <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:80%; background:var(--success);"></div></div>
+                   <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:20px;">
+                      <span>Il reste 80 €<br>à épargner</span>
+                      <span style="text-align:right;">Objectif<br>annuel: 4 800 €</span>
+                   </div>
+                   <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:16px;">
+                      <div>
+                         <div style="font-size:16px; font-weight:700; margin-bottom:2px;">2 840 €</div>
+                         <div style="font-size:11px; color:var(--text-muted);">Épargné en 2026</div>
+                      </div>
+                      <div style="text-align:right;">
+                         <div style="font-size:16px; font-weight:700; margin-bottom:2px;">1 960 €</div>
+                         <div style="font-size:11px; color:var(--text-muted);">Restant à atteindre</div>
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Alertes -->
+                <div class="nb-card" style="margin-bottom:24px;">
+                   <div class="bdg-card-header" style="margin-bottom:12px;">
+                      <h3 style="margin:0;">Alertes budget</h3>
+                      <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Configurer</a>
+                   </div>
+                   <div class="bdg-alerts">
+                      <div class="bdg-alert-item">
+                         <div class="bdg-alert-icon"><i class="ti ti-clock"></i></div>
+                         <div class="bdg-alert-text">
+                            <strong>Logement — Plafond atteint</strong>
+                            <span>750 € / 750 € consommés</span>
+                         </div>
+                      </div>
+                      <div class="bdg-alert-item">
+                         <div class="bdg-alert-icon"><i class="ti ti-alert-triangle"></i></div>
+                         <div class="bdg-alert-text">
+                            <strong>Abonnements — 90% atteint</strong>
+                            <span>90 € / 100 € — 10 € restants</span>
+                         </div>
+                      </div>
+                      <div class="bdg-alert-item">
+                         <div class="bdg-alert-icon"><i class="ti ti-alert-triangle"></i></div>
+                         <div class="bdg-alert-text">
+                            <strong>Courses — 82% atteint</strong>
+                            <span>246 € / 300 € — 54 € restants</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Dernières dépenses -->
+                <div class="nb-card">
+                   <div class="bdg-card-header">
+                      <h3 style="margin:0;">Dernières dépenses</h3>
+                      <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Voir tout &rarr;</a>
+                   </div>
+                   <div class="bdg-recent-tx">
+                      <div class="bdg-tx-item">
+                         <div class="bdg-tx-icon"><i class="ti ti-shopping-bag"></i></div>
+                         <div class="bdg-tx-info">
+                            <strong>Carrefour</strong><span>Courses - Hier</span>
+                         </div>
+                         <div class="bdg-tx-amt">-64,20 €</div>
+                      </div>
+                      <div class="bdg-tx-item">
+                         <div class="bdg-tx-icon"><i class="ti ti-bolt"></i></div>
+                         <div class="bdg-tx-info">
+                            <strong>EDF Énergie</strong><span>Factures - 26 juin</span>
+                         </div>
+                         <div class="bdg-tx-amt">-89,50 €</div>
+                      </div>
+                      <div class="bdg-tx-item">
+                         <div class="bdg-tx-icon"><i class="ti ti-device-tv"></i></div>
+                         <div class="bdg-tx-info">
+                            <strong>Netflix</strong><span>Abonnements - 25 juin</span>
+                         </div>
+                         <div class="bdg-tx-amt">-17,99 €</div>
+                      </div>
+                      <div class="bdg-tx-item">
+                         <div class="bdg-tx-icon"><i class="ti ti-coffee"></i></div>
+                         <div class="bdg-tx-info">
+                            <strong>Café Lola</strong><span>Restaurants - 24 juin</span>
+                         </div>
+                         <div class="bdg-tx-amt">-4,80 €</div>
+                      </div>
+                   </div>
+                </div>
+
+             </div>
           </div>
         </div>
-
         <!-- VUE BENEFICIAIRES -->
         <div id="view-beneficiaires" class="nb-view" style="display:none;">
           <div class="nb-card" style="max-width:800px; margin:0 auto;">

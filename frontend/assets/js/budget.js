@@ -8,11 +8,11 @@ async function loadBudgetsPage() {
     return;
   }
   
-  // Reuse the dashboard's rendered content for consistency
-  const dashBudget = document.getElementById('budget-list-desktop');
-  if(container && dashBudget) {
-    container.innerHTML = dashBudget.innerHTML + '<br><br><button onclick="openModal(\'modal-budgets\')" class="nb-btn-primary">Gérer mes enveloppes</button>';
-  }
+  // Comment out the old logic that overwrites the page with the dashboard view
+  // const dashBudget = document.getElementById('budget-list-desktop');
+  // if(container && dashBudget) {
+  //   container.innerHTML = dashBudget.innerHTML + '<br><br><button onclick="openModal(\'modal-budgets\')" class="nb-btn-primary">Gérer mes enveloppes</button>';
+  // }
 
   const dashBudgetMobile = document.getElementById('budget-list-mobile');
   if(containerMobile && dashBudgetMobile) {
