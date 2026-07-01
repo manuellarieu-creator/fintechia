@@ -180,24 +180,199 @@
           <button onclick="openModal('modal-budgets')" class="nb-btn-primary" style="width:100%; margin-top:20px; padding:12px; background:var(--accent); color:white; border:none; border-radius:12px; font-weight:600;">Configurer</button>
         </div>
 
-        <div id="m-view-virements" class="m-view" style="display:none;">
-          <h2 style="margin-bottom:15px; font-weight:600;">Virements & Bénéficiaires</h2>
-          <div class="mobile-card" style="margin-bottom:15px;">
-            <h3>Bénéficiaires</h3>
-            <div class="bene-list" id="beneficiaires-mobile-full-list" style="margin-top:15px;"></div>
-            <button onclick="openModal('modal-add-beneficiaire')" class="nb-btn-primary" style="width:100%; margin-top:15px; padding:8px; background:var(--surface-1); color:var(--text-primary); border:none; border-radius:8px; font-weight:600;">+ Ajouter un bénéficiaire</button>
+        <div id="m-view-virements" class="m-view" style="display:none; position:absolute; top:0; left:0; width:100%; min-height:100vh; background:var(--bg-body); z-index:50; padding:16px; padding-bottom:100px;">
+          <!-- Mobile Header -->
+          <div class="mobile-header mobile-only" style="display:flex;">
+              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
+              <div class="mobile-title-area">
+                  <div class="mobile-title">Nouveau virement</div>
+                  <div class="mobile-subtitle">Solde : 12 480,32 €</div>
+              </div>
+              <div class="user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">MR</div>
           </div>
-          
-          <div class="mobile-card">
-            <h3>Nouveau Virement</h3>
-            <form id="form-virement-mobile" style="margin-top:15px;">
-              <select id="vir-iban-mobile" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required><option value="">Bénéficiaire...</option></select>
-              <input type="number" id="vir-montant-mobile" placeholder="Montant (€)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required>
-              <input type="text" id="vir-motif-mobile" placeholder="Motif" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border);" required>
-              <input type="hidden" id="vir-nom-mobile">
-              <button type="submit" class="nb-btn-primary" style="width:100%; padding:12px; background:var(--accent); color:white; border:none; border-radius:8px; font-weight:600;">Envoyer</button>
-            </form>
+
+          <!-- Progress Steps -->
+          <div class="steps-container" style="padding: 16px 0; border: none; background: transparent; margin-bottom: 16px;">
+              <div class="step completed">
+                  <div class="step-circle"><i class="ti ti-check"></i></div>
+                  <span class="mobile-only" style="color: var(--success);">Bénéficiaire</span>
+              </div>
+              <div class="step-divider" style="background-color: var(--success); opacity: 1;"></div>
+              <div class="step active">
+                  <div class="step-circle">2</div>
+                  <span class="mobile-only" style="color: var(--primary);">Détails</span>
+              </div>
+              <div class="step-divider" style="opacity: 0.3;"></div>
+              <div class="step" style="opacity: 0.5;">
+                  <div class="step-circle">3</div>
+                  <span class="mobile-only">Confirmation</span>
+              </div>
           </div>
+
+          <form id="form-virement-mobile">
+          <div class="grid-layout">
+              <!-- Column 1: Beneficiary -->
+              <div class="card" style="margin-bottom: 16px;">
+                  <div class="card-header">
+                      <h3 class="card-title">Bénéficiaire</h3>
+                      <a href="#" class="link">Changer &rarr;</a>
+                  </div>
+                  
+                  <div class="beneficiary-selected">
+                      <div class="avatar-green">MB</div>
+                      <div class="beneficiary-info">
+                          <h4>Marc Beaumont</h4>
+                          <p>FR76 3000 4000 0100<br>0000 0000 000</p>
+                      </div>
+                  </div>
+
+                  <div class="recents-title">Récents</div>
+                  <div class="recents-grid">
+                      <div class="recent-card">
+                          <div class="avatar-sm avatar-blue">SM</div>
+                          <div class="recent-info">
+                              <h5>Sophie M.</h5>
+                              <p>BNP</p>
+                          </div>
+                      </div>
+                      <div class="recent-card">
+                          <div class="avatar-sm avatar-gray">JL</div>
+                          <div class="recent-info">
+                              <h5>Julie L.</h5>
+                              <p>LCL</p>
+                          </div>
+                      </div>
+                      <div class="recent-card mobile-only" style="border-style: dashed;">
+                          <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
+                          <div class="recent-info">
+                              <h5 style="color: var(--text-muted);">Nouveau</h5>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Column 2: Details -->
+              <div class="card" style="margin-bottom: 16px;">
+                  <div class="form-group">
+                      <label class="form-label">Type de virement</label>
+                      <div class="segmented-control">
+                          <button type="button" class="segment-btn active">
+                              <i class="ti ti-device-mobile"></i> Immédiat
+                          </button>
+                          <button type="button" class="segment-btn">
+                              <i class="ti ti-calendar"></i> Programmé
+                          </button>
+                          <button type="button" class="segment-btn mobile-only">
+                              <i class="ti ti-repeat"></i> Récurrent
+                          </button>
+                      </div>
+                  </div>
+
+                  <div class="mobile-only" style="flex-direction: column;">
+                      <div class="card-header" style="margin-top: 8px;">
+                          <h3 class="card-title">Détails</h3>
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Compte débiteur</label>
+                          <select class="form-control" style="background-color: white;">
+                              <option>Courant **** 4821 — 12 480.32 €</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="grid-2">
+                      <div class="form-group">
+                          <label class="form-label">Montant</label>
+                          <div class="input-with-icon">
+                              <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;">
+                              <span class="input-icon">€</span>
+                          </div>
+                          <div class="help-text">Plafond : 5 000 €/j</div>
+                      </div>
+                      <div class="form-group">
+                          <label class="form-label">Date</label>
+                          <input type="text" class="form-control" value="Aujourd'hui" readonly style="background: white; color: var(--text-main); font-weight: 500;">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Motif</label>
+                      <input type="text" class="form-control" id="vir-motif-mobile" value="Remboursement weekend" required style="background-color: white;">
+                      <div class="help-text">Visible par le bénéficiaire - 140 car. max</div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Référence (optionnel)</label>
+                      <input type="text" class="form-control" placeholder="Référence interne" style="background-color: white;">
+                  </div>
+              </div>
+
+              <!-- Column 3: Recap & Auth -->
+              <div class="mobile-only" style="flex-direction: column;">
+                  <div class="recap-card" style="margin-bottom: 16px;">
+                      <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
+                      
+                      <div class="recap-list">
+                          <div class="recap-item">
+                              <span class="recap-label">De</span>
+                              <span class="recap-value">**** 4821</span>
+                          </div>
+                          <div class="recap-item">
+                              <span class="recap-label">Vers</span>
+                              <span class="recap-value">Marc Beaumont</span>
+                          </div>
+                          <div class="recap-item">
+                              <span class="recap-label">Type</span>
+                              <span class="recap-value">Immédiat</span>
+                          </div>
+                          <div class="recap-item">
+                              <span class="recap-label">Motif</span>
+                              <span class="recap-value">Remboursement weekend</span>
+                          </div>
+                      </div>
+
+                      <div class="recap-divider"></div>
+
+                      <div class="amount-summary" style="background: transparent; box-shadow: none; padding: 0;">
+                          <div class="amount-label">Montant à débiter</div>
+                          <div class="amount-value">250,00 €</div>
+                          <div class="balance-after">Solde après : <span>12 230,32 €</span></div>
+                      </div>
+                  </div>
+
+                  <div class="auth-card" style="margin-bottom: 16px;">
+                      <div class="auth-header">
+                          <i class="ti ti-shield-check auth-icon"></i> Authentification
+                      </div>
+                      <p class="auth-desc">Code envoyé au +33 6 ** ** ** 42</p>
+                      
+                      <div class="otp-inputs">
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input filled"><div class="otp-dot"></div></div>
+                          <div class="otp-input empty"></div>
+                          <div class="otp-input empty"></div>
+                      </div>
+                      <div class="auth-phone" style="margin-top: -8px; color: var(--primary); font-weight: 500; cursor: pointer;">Renvoyer le code</div>
+
+                      <div class="footer-note" style="margin-top: 16px; margin-bottom: 24px;">
+                          <i class="ti ti-info-circle"></i>
+                          <div>Virement immédiat exécuté sous <strong>10 secondes</strong>, 24h/24 et 7j/7.</div>
+                      </div>
+
+                      <div class="auth-actions">
+                          <button type="button" class="btn-cancel" onclick="showMobileView('m-view-dashboard')">Annuler</button>
+                          <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
+                      </div>
+                  </div>
+              </div>
+              
+              <input type="hidden" id="vir-iban-mobile" value="FR763000400001000000000000">
+              <input type="hidden" id="vir-nom-mobile" value="Marc Beaumont">
+
+          </div>
+          </form>
         </div>
 
       </div>
