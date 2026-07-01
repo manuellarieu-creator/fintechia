@@ -269,10 +269,10 @@
             background-color: var(--border);
         }
 
-        /* 3-Column Layout */
+        /* 2-Column Layout */
         .grid-layout {
             display: grid;
-            grid-template-columns: 1fr 1.3fr 1fr;
+            grid-template-columns: 1fr 1.3fr;
             gap: 24px;
             align-items: start;
         }
