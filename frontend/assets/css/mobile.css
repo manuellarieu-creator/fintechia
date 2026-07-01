@@ -632,4 +632,72 @@
   }
   .info-label { color: var(--text-secondary); }
   .info-value { font-weight: 600; }
+
+  /* ── BUDGET PAGE SPECIFIC ─────────────────────────── */
+  .m-bdg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+  }
+  .m-bdg-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+  }
+  .m-bdg-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+  }
+  .m-bdg-month {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm, 8px);
+      background: white;
+      padding: 4px 8px;
+  }
+  .m-bdg-month button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+  }
+  .m-bdg-month span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin: 0 8px;
+  }
+  .m-bdg-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+  }
+  .m-bdg-metric {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius, 12px);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+  }
+  .m-bdg-metric-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+  }
+  .m-bdg-metric-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+  }
+  .m-bdg-metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+  }
+  .m-bdg-metric-sub.pos { color: var(--success); }
+  .m-bdg-metric-sub.neg { color: var(--danger); }
 }
