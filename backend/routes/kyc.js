@@ -7,21 +7,51 @@ const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const uploadDir = process.env.UPLOAD_DIR || './uploads';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Configuration Cloudinary (si présente dans .env)
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
 }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `kyc_${req.user.id}_${file.fieldname}_${Date.now()}${ext}`);
+let storage;
+
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+  // Stockage Cloudinary
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'fintechia_kyc',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+      public_id: (req, file) => `kyc_${req.user.id}_${file.fieldname}_${Date.now()}`
+    }
+  });
+} else {
+  // Stockage local (Fallback)
+  const uploadDir = process.env.UPLOAD_DIR || (process.env.VERCEL ? '/tmp/uploads' : './uploads');
+  try {
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+  } catch (err) {
+    console.warn("Impossible de créer le dossier d'upload (lecture seule ?) :", err.message);
   }
-});
+
+  storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+      const ext = path.extname(file.originalname);
+      cb(null, `kyc_${req.user.id}_${file.fieldname}_${Date.now()}${ext}`);
+    }
+  });
+}
 
 const upload = multer({
   storage: storage,
@@ -44,8 +74,9 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
       return res.status(400).json({ error: 'Document et selfie requis', code: 'MISSING_FILES', status: 400 });
     }
 
-    const docUrl = `/uploads/${req.files['document'][0].filename}`;
-    const selfieUrl = `/uploads/${req.files['selfie'][0].filename}`;
+    // Récupérer l'URL Cloudinary ou l'URL locale
+    const docUrl = req.files['document'][0].path || `/uploads/${req.files['document'][0].filename}`;
+    const selfieUrl = req.files['selfie'][0].path || `/uploads/${req.files['selfie'][0].filename}`;
     const { type_document } = req.body; // cni, passeport, permis, sejour
 
     if (!['cni', 'passeport', 'permis', 'sejour'].includes(type_document)) {
