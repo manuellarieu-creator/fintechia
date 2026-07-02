@@ -1,3 +1,8 @@
+window.changeBudgetMonth = function(dir) {
+    window.currentMonthOffset = (window.currentMonthOffset || 0) + dir;
+    loadBudgetsPage();
+};
+
 async function loadBudgetsPage() {
   const container = document.getElementById('budget-page-list');
   const containerMobile = document.getElementById('budget-page-list-mobile');
@@ -8,12 +13,6 @@ async function loadBudgetsPage() {
     return;
   }
   
-  // Comment out the old logic that overwrites the page with the dashboard view
-  // const dashBudget = document.getElementById('budget-list-desktop');
-  // if(container && dashBudget) {
-  //   container.innerHTML = dashBudget.innerHTML + '<br><br><button onclick="openModal(\'modal-budgets\')" class="nb-btn-primary">Gérer mes enveloppes</button>';
-  // }
-
   // Desktop & Mobile logic
   let txs = [];
   try {
@@ -25,11 +24,17 @@ async function loadBudgetsPage() {
   let revenusPrev = 0;
   let depensesPrev = 0;
   
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-  let prevMonth = currentMonth - 1;
-  let prevYear = currentYear;
-  if (prevMonth < 0) { prevMonth = 11; prevYear--; }
+  const offset = window.currentMonthOffset || 0;
+  
+  let targetDate = new Date();
+  targetDate.setMonth(targetDate.getMonth() + offset);
+  const currentMonth = targetDate.getMonth();
+  const currentYear = targetDate.getFullYear();
+  
+  let prevDate = new Date();
+  prevDate.setMonth(prevDate.getMonth() + offset - 1);
+  let prevMonth = prevDate.getMonth();
+  let prevYear = prevDate.getFullYear();
   
   const categoriesDepenses = {};
   
@@ -68,10 +73,32 @@ async function loadBudgetsPage() {
      }
   });
 
+  // Dynamic Epargne logic
+  let totalEpargne = 0;
+  let currentYearEpargne = 0;
+  let epargneCurrentMonth = 0;
+  
+  txs.forEach(tx => {
+     if (tx.categorie === 'Epargne' || (tx.description && tx.description.toLowerCase().includes('épargne'))) {
+         let amt = Math.abs(parseFloat(tx.montant));
+         if (tx.type === 'virement_emis' || parseFloat(tx.montant) < 0) {
+             totalEpargne += amt;
+             const txDate = new Date(tx.created_at);
+             if (txDate.getFullYear() === currentYear) {
+                 currentYearEpargne += amt;
+             }
+             if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
+                 epargneCurrentMonth += amt;
+             }
+         }
+     }
+  });
+
   const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0) || 2880;
   const reste = Math.max(0, budgetTotal - depenses);
-  const epargne = revenus - depenses > 0 ? (revenus - depenses) * 0.2 : 0; 
-  const epargnePct = Math.min(100, Math.round((epargne/400)*100));
+  const epargneObjMensuel = 400; 
+  const epargneObjAnnuel = epargneObjMensuel * 12;
+  const epargnePct = Math.min(100, Math.round((epargneCurrentMonth/epargneObjMensuel)*100));
 
   let revDiff = 0;
   if (revenusPrev > 0) revDiff = Math.round(((revenus - revenusPrev) / revenusPrev) * 100);
@@ -118,6 +145,15 @@ async function loadBudgetsPage() {
   
   // Array for donut chart
   let chartData = [];
+  let otherSpent = 0;
+  let usedCategories = new Set(userBudgets.map(b => b.categorie));
+  usedCategories.add('Epargne');
+  
+  Object.keys(categoriesDepenses).forEach(cat => {
+      if (!usedCategories.has(cat)) {
+          otherSpent += categoriesDepenses[cat];
+      }
+  });
 
   userBudgets.forEach((b, idx) => {
      const spent = categoriesDepenses[b.categorie] || 0;
@@ -128,9 +164,7 @@ async function loadBudgetsPage() {
      else if (pct >= 80) color = 'var(--warning)';
      else color = 'var(--success)';
      
-     if (spent > 0) {
-        chartData.push({ category: b.categorie, amount: spent, color: chartColors[idx % chartColors.length] });
-     }
+     chartData.push({ category: b.categorie, amount: spent, color: spent > 0 ? chartColors[idx % chartColors.length] : '#E2E8F0' });
      
      const icon = icons[b.categorie] || 'ti-tag';
      
@@ -174,6 +208,10 @@ async function loadBudgetsPage() {
      }
   });
 
+  if (otherSpent > 0) {
+      chartData.push({ category: 'Autre', amount: otherSpent, color: '#94A3B8' });
+  }
+
   if (userBudgets.length === 0) {
      envHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune enveloppe définie.</div>';
      envHtmlDesktop = envHtml;
@@ -186,14 +224,22 @@ async function loadBudgetsPage() {
   // --- Generate Donut Chart ---
   let donutSvg = '';
   let donutLegend = '';
+  const totalRealSpent = chartData.reduce((sum, d) => sum + d.amount, 0);
+
   if (chartData.length > 0) {
      let currentOffset = 25; 
-     const totalSpent = chartData.reduce((sum, d) => sum + d.amount, 0);
+     let drawTotal = totalRealSpent === 0 ? chartData.length : totalRealSpent;
      
      donutSvg = '<svg viewBox="0 0 36 36" class="bdg-donut">';
      chartData.forEach(d => {
-         const percentage = (d.amount / totalSpent) * 100;
-         const dashArray = `${percentage} ${100 - percentage}`;
+         let drawAmt = totalRealSpent === 0 ? 1 : (d.amount === 0 ? (drawTotal * 0.01) : d.amount);
+         let drawTotalWithMin = totalRealSpent === 0 ? chartData.length : (drawTotal + (chartData.filter(x => x.amount===0).length * (drawTotal * 0.01)));
+         const percentage = (drawAmt / drawTotalWithMin) * 100;
+         
+         const spacing = 0.5;
+         const visiblePct = Math.max(0, percentage - spacing);
+         const dashArray = `${visiblePct} ${100 - visiblePct}`;
+         
          donutSvg += `<circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="${d.color}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${currentOffset}"></circle>`;
          currentOffset -= percentage;
          
@@ -227,7 +273,7 @@ async function loadBudgetsPage() {
       recentTxsHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune dépense récente.</div>';
   }
 
-  const monthStr = new Date().toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+  const monthStr = targetDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
   const capitalizedMonthStr = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
   
   /* --- UPDATE DESKTOP DOM --- */
@@ -252,8 +298,8 @@ async function loadBudgetsPage() {
         </div>
         <div class="bdg-metric-card">
           <div class="bdg-metric-title">ÉPARGNE DU MOIS</div>
-          <div class="bdg-metric-val">${epargne.toFixed(0)} €</div>
-          <div class="bdg-metric-sub">Obj. 400 € - ${epargnePct}%</div>
+          <div class="bdg-metric-val">${epargneCurrentMonth.toFixed(0)} €</div>
+          <div class="bdg-metric-sub">Obj. ${epargneObjMensuel} € - ${epargnePct}%</div>
         </div>
         <div class="bdg-metric-card">
           <div class="bdg-metric-title">RESTE À DÉPENSER</div>
@@ -290,21 +336,21 @@ async function loadBudgetsPage() {
   if (desktopEpargne) {
       desktopEpargne.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
-           <div style="font-size:13px; color:var(--text-muted);">${epargne.toFixed(0)} / 400 € ce mois</div>
+           <div style="font-size:13px; color:var(--text-muted);">${epargneCurrentMonth.toFixed(0)} / ${epargneObjMensuel} € ce mois</div>
            <div style="font-size:14px; font-weight:700;">${epargnePct}%</div>
         </div>
         <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${epargnePct}%; background:var(--success);"></div></div>
         <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:20px;">
-           <span>Il reste ${(400 - epargne).toFixed(0)} €<br>à épargner</span>
-           <span style="text-align:right;">Objectif<br>annuel: 4 800 €</span>
+           <span>Il reste ${(epargneObjMensuel - epargneCurrentMonth).toFixed(0)} €<br>à épargner</span>
+           <span style="text-align:right;">Objectif<br>annuel: ${epargneObjAnnuel} €</span>
         </div>
         <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:16px;">
            <div>
-              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">2 840 €</div>
+              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">${currentYearEpargne} €</div>
               <div style="font-size:11px; color:var(--text-muted);">Épargné en ${currentYear}</div>
            </div>
            <div style="text-align:right;">
-              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">1 960 €</div>
+              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">${epargneObjAnnuel - currentYearEpargne} €</div>
               <div style="font-size:11px; color:var(--text-muted);">Restant à atteindre</div>
            </div>
         </div>
@@ -320,9 +366,9 @@ async function loadBudgetsPage() {
           <div class="m-bdg-subtitle">Suivez vos dépenses</div>
         </div>
         <div class="m-bdg-month">
-          <button><i class="ti ti-chevron-left"></i></button>
+          <button onclick="changeBudgetMonth(-1)"><i class="ti ti-chevron-left"></i></button>
           <span>${capitalizedMonthStr}</span>
-          <button><i class="ti ti-chevron-right"></i></button>
+          <button onclick="changeBudgetMonth(1)"><i class="ti ti-chevron-right"></i></button>
         </div>
       </div>
 
@@ -339,8 +385,8 @@ async function loadBudgetsPage() {
         </div>
         <div class="m-bdg-metric">
           <div class="m-bdg-metric-title">ÉPARGNE DU MOIS</div>
-          <div class="m-bdg-metric-val">${epargne.toFixed(0)} €</div>
-          <div class="m-bdg-metric-sub">Obj. 400 € - ${epargnePct}%</div>
+          <div class="m-bdg-metric-val">${epargneCurrentMonth.toFixed(0)} €</div>
+          <div class="m-bdg-metric-sub">Obj. ${epargneObjMensuel} € - ${epargnePct}%</div>
         </div>
         <div class="m-bdg-metric">
           <div class="m-bdg-metric-title">RESTE À DÉPENSER</div>
@@ -371,7 +417,7 @@ async function loadBudgetsPage() {
       <div class="nb-card" style="margin-bottom: 24px; padding: 16px;">
           <div class="bdg-card-header" style="margin-bottom:12px;">
             <h3 style="margin:0; font-size:1.1rem;">Alertes budget</h3>
-            <a href="#" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Configurer</a>
+            <a href="#" onclick="openModal('modal-budgets')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Configurer</a>
           </div>
           <div class="bdg-alerts">
             ${alertsHtmlDesktop}
@@ -397,21 +443,21 @@ async function loadBudgetsPage() {
       <div class="nb-card" style="margin-bottom: 24px; padding: 16px;">
           <div class="bdg-card-header" style="margin-bottom:12px;">
             <h3 style="margin:0; font-size:1.1rem;">Objectif épargne</h3>
-            <a href="#" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Modifier</a>
+            <a href="#" onclick="openModal('modal-budgets')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Modifier</a>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
-            <div style="font-size:0.8rem; color:var(--text-muted);">${epargne.toFixed(0)} / 400 € ce mois</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">${epargneCurrentMonth.toFixed(0)} / ${epargneObjMensuel} € ce mois</div>
             <div style="font-size:0.85rem; font-weight:700;">${epargnePct}%</div>
           </div>
           <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${epargnePct}%; background:var(--success);"></div></div>
           
           <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px; margin-top:16px;">
             <div>
-                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">2 840 €</div>
+                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">${currentYearEpargne} €</div>
                 <div style="font-size:0.7rem; color:var(--text-muted);">Épargné en ${currentYear}</div>
             </div>
             <div style="text-align:right;">
-                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">1 960 €</div>
+                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">${epargneObjAnnuel - currentYearEpargne} €</div>
                 <div style="font-size:0.7rem; color:var(--text-muted);">Restant à atteindre</div>
             </div>
           </div>

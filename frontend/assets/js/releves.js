@@ -1,3 +1,11 @@
+
+function $(id) {
+    const isMobile = window.innerWidth <= 768;
+    const parent = isMobile ? document.getElementById('m-view-releves') : document.getElementById('view-releves');
+    if (!parent) return document.getElementById(id);
+    const el = parent.querySelector('[id="' + id + '"]');
+    return el ? el : document.getElementById(id);
+}
 // releves.js - Logique dynamique de la page des relevés
 
 let allTransactions = [];
@@ -85,7 +93,7 @@ function processTransactions() {
 }
 
 function renderKPIs() {
-    document.getElementById('kpi-dispo-val').textContent = sortedMonths.length;
+    document.querySelectorAll(`[id=${'kpi-dispo-val'}]`).forEach(el => el.textContent = sortedMonths.length);
     
     if (sortedMonths.length > 0) {
         const oldest = new Date(groupedByMonth[sortedMonths[sortedMonths.length-1]].year, groupedByMonth[sortedMonths[sortedMonths.length-1]].month);
@@ -94,24 +102,24 @@ function renderKPIs() {
         let diffMonths = (newest.getMonth() - oldest.getMonth());
         let totalMonths = diffYears * 12 + diffMonths + 1;
         
-        document.getElementById('kpi-dispo-sub').textContent = `${totalMonths} mois d'historique`;
+        document.querySelectorAll(`[id=${'kpi-dispo-sub'}]`).forEach(el => el.textContent = `${totalMonths} mois d'historique`);
     }
     
     // Prochain relevé (1er du mois suivant)
     const nextDate = new Date();
     nextDate.setMonth(nextDate.getMonth() + 1);
     nextDate.setDate(1);
-    document.getElementById('kpi-next-val').textContent = "01";
-    document.getElementById('kpi-next-sub').textContent = nextDate.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+    document.querySelectorAll(`[id=${'kpi-next-val'}]`).forEach(el => el.textContent = "01");
+    document.querySelectorAll(`[id=${'kpi-next-sub'}]`).forEach(el => el.textContent = nextDate.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }));
     
-    document.getElementById('kpi-email-val').textContent = 'Activé';
-    document.getElementById('kpi-email-sub').textContent = currentUser.email;
+    document.querySelectorAll(`[id=${'kpi-email-val'}]`).forEach(el => el.textContent = 'Activé');
+    document.querySelectorAll(`[id=${'kpi-email-sub'}]`).forEach(el => el.textContent = currentUser.email);
 }
 
 function renderHistory() {
-    const listContainer = document.getElementById('releves-history-list');
-    const selectDesktop = document.getElementById('history-select-desktop');
-    const pillsMobile = document.getElementById('history-pills-mobile');
+    const listContainer = ('releves-history-list');
+    const selectDesktop = ('history-select-desktop');
+    const pillsMobile = ('history-pills-mobile');
     
     listContainer.innerHTML = '';
     selectDesktop.innerHTML = '';
@@ -160,10 +168,10 @@ function renderHistory() {
 }
 
 function renderHistoryListForYear(year, byYearMap) {
-    const listContainer = document.getElementById('releves-history-list');
+    const listContainer = ('releves-history-list');
     listContainer.innerHTML = `<div class="history-year">${year}</div><div class="history-list" id="active-history-list"></div>`;
     
-    const ul = document.getElementById('active-history-list');
+    const ul = ('active-history-list');
     
     byYearMap[year].forEach((mKey, index) => {
         const group = groupedByMonth[mKey];
@@ -205,10 +213,10 @@ function selectMonth(mKey) {
     const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     const isCurrent = mKey === sortedMonths[0];
     
-    document.getElementById('center-title').innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`;
+    document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px); padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`;
     
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
-    document.getElementById('center-meta').textContent = `Compte courant • **** ${currentAccount.id.toString().slice(-4) || '4821'} • Du 01 au ${lastDay} ${monthNameFull}`;
+    document.querySelectorAll(`[id=${'center-meta'}]`).forEach(el => el.textContent = `Compte courant • **** ${currentAccount.id.toString().slice(-4) || '4821'} • Du 01 au ${lastDay} ${monthNameFull}`);
     
     const balancesHtml = `
         <div class="balance-item">
@@ -229,9 +237,9 @@ function selectMonth(mKey) {
           <div class="balance-date">${lastDay}/${String(group.month+1).padStart(2,'0')}</div>
         </div>
     `;
-    document.getElementById('releves-balances').innerHTML = balancesHtml;
+    document.querySelectorAll(`[id=${'releves-balances'}]`).forEach(el => el.innerHTML = balancesHtml);
     
-    const txContainer = document.getElementById('releves-tx-list');
+    const txContainer = ('releves-tx-list');
     
     if (group.txs.length === 0) {
         txContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Aucune transaction sur cette période.</div>';
@@ -280,8 +288,8 @@ function selectMonth(mKey) {
 }
 
 function renderExportForm() {
-    const selPeriode = document.getElementById('export-periode-select');
-    const selCompte = document.getElementById('export-compte-select');
+    const selPeriode = ('export-periode-select');
+    const selCompte = ('export-compte-select');
     
     if (selPeriode) {
         selPeriode.innerHTML = '';
@@ -304,13 +312,13 @@ function openExportModal(format, period) {
     currentExportFormat = format;
     currentExportPeriod = period || (sortedMonths.length > 0 ? sortedMonths[0] : null);
     
-    document.getElementById('export-email-input').value = currentUser ? currentUser.email : '';
-    document.getElementById('modal-export-settings').style.display = 'flex';
+    document.querySelectorAll(`[id=${'export-email-input'}]`).forEach(el => el.value = currentUser ? currentUser.email : '');
+    ('modal-export-settings').style.display = 'flex';
 }
 
 function handleExportConfirm() {
-    const action = document.getElementById('export-action').value;
-    const email = document.getElementById('export-email-input').value;
+    const action = ('export-action').value;
+    const email = ('export-email-input').value;
     
     if (action === 'email' && !email) {
         alert("Veuillez saisir une adresse email.");
@@ -323,7 +331,7 @@ function handleExportConfirm() {
         generatePDF(currentExportPeriod, action, email);
     }
     
-    document.getElementById('modal-export-settings').style.display = 'none';
+    ('modal-export-settings').style.display = 'none';
 }
 
 function generateCSV(mKey, action, email) {
@@ -369,19 +377,19 @@ function generatePDF(mKey, action, email) {
     const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
     
-    document.getElementById('pdf-month-title').textContent = `Relevé ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)}`;
-    document.getElementById('pdf-date-range').textContent = `Période du 01 au ${lastDay} ${monthNameFull}`;
+    document.querySelectorAll(`[id=${'pdf-month-title'}]`).forEach(el => el.textContent = `Relevé ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)}`);
+    document.querySelectorAll(`[id=${'pdf-date-range'}]`).forEach(el => el.textContent = `Période du 01 au ${lastDay} ${monthNameFull}`);
     
-    document.getElementById('pdf-user-name').textContent = `${currentUser.prenom} ${currentUser.nom}`;
-    document.getElementById('pdf-user-email').textContent = currentUser.email;
-    document.getElementById('pdf-account-id').textContent = `Identifiant: **** ${currentAccount.id.toString().slice(-4)}`;
+    document.querySelectorAll(`[id=${'pdf-user-name'}]`).forEach(el => el.textContent = `${currentUser.prenom} ${currentUser.nom}`);
+    document.querySelectorAll(`[id=${'pdf-user-email'}]`).forEach(el => el.textContent = currentUser.email);
+    document.querySelectorAll(`[id=${'pdf-account-id'}]`).forEach(el => el.textContent = `Identifiant: **** ${currentAccount.id.toString().slice(-4)}`);
     
-    document.getElementById('pdf-balance-start').textContent = `${group.startBalance.toFixed(2).replace('.', ',')} €`;
-    document.getElementById('pdf-balance-credits').textContent = `+${group.credits.toFixed(2).replace('.', ',')} €`;
-    document.getElementById('pdf-balance-debits').textContent = `-${group.debits.toFixed(2).replace('.', ',')} €`;
-    document.getElementById('pdf-balance-end').textContent = `${group.endBalance.toFixed(2).replace('.', ',')} €`;
+    document.querySelectorAll(`[id=${'pdf-balance-start'}]`).forEach(el => el.textContent = `${group.startBalance.toFixed(2).replace('.', ',')} €`);
+    document.querySelectorAll(`[id=${'pdf-balance-credits'}]`).forEach(el => el.textContent = `+${group.credits.toFixed(2).replace('.', ',')} €`);
+    document.querySelectorAll(`[id=${'pdf-balance-debits'}]`).forEach(el => el.textContent = `-${group.debits.toFixed(2).replace('.', ',')} €`);
+    document.querySelectorAll(`[id=${'pdf-balance-end'}]`).forEach(el => el.textContent = `${group.endBalance.toFixed(2).replace('.', ',')} €`);
     
-    const tbody = document.getElementById('pdf-tx-tbody');
+    const tbody = ('pdf-tx-tbody');
     tbody.innerHTML = '';
     
     group.txs.forEach((tx, idx) => {
@@ -410,7 +418,7 @@ function generatePDF(mKey, action, email) {
     });
     
     // 2. Generate PDF
-    const element = document.getElementById('pdf-content');
+    const element = ('pdf-content');
     element.parentElement.style.display = 'block'; // Make it visible temporarily for rendering
     
     const opt = {
@@ -478,39 +486,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Export button (Form)
-    const btnExport = document.getElementById('btn-export');
+    const btnExport = ('btn-export');
     if (btnExport) {
         btnExport.addEventListener('click', () => {
-            const periode = document.getElementById('export-periode-select').value;
-            const format = document.getElementById('export-format-select').value;
+            const periode = ('export-periode-select').value;
+            const format = ('export-format-select').value;
             openExportModal(format, periode);
         });
     }
     
     // Column buttons
-    const btnDownloadCsv = document.getElementById('btn-download-csv');
+    const btnDownloadCsv = ('btn-download-csv');
     if (btnDownloadCsv) {
         btnDownloadCsv.addEventListener('click', () => openExportModal('csv', currentExportPeriod));
     }
     
-    const btnDownloadPdf = document.getElementById('btn-download-pdf');
+    const btnDownloadPdf = ('btn-download-pdf');
     if (btnDownloadPdf) {
         btnDownloadPdf.addEventListener('click', () => openExportModal('pdf', currentExportPeriod));
     }
     
     // Modal events
-    const actionSelect = document.getElementById('export-action');
+    const actionSelect = ('export-action');
     if (actionSelect) {
         actionSelect.addEventListener('change', (e) => {
             if (e.target.value === 'email') {
-                document.getElementById('export-email-group').style.display = 'block';
+                ('export-email-group').style.display = 'block';
             } else {
-                document.getElementById('export-email-group').style.display = 'none';
+                ('export-email-group').style.display = 'none';
             }
         });
     }
     
-    const btnConfirmExport = document.getElementById('btn-confirm-export');
+    const btnConfirmExport = ('btn-confirm-export');
     if (btnConfirmExport) {
         btnConfirmExport.addEventListener('click', handleExportConfirm);
     }

@@ -1,99 +1,164 @@
 const fs = require('fs');
 let code = fs.readFileSync('frontend/assets/js/budget.js', 'utf8');
 
-const replacementBlock = `
-  let revenus = 0;
-  let depenses = 0;
-  let revenusPrev = 0;
-  let depensesPrev = 0;
-  
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-  let prevMonth = currentMonth - 1;
-  let prevYear = currentYear;
-  if (prevMonth < 0) { prevMonth = 11; prevYear--; }
-  
-  const categoriesDepenses = {};
-  
-  let monthlyDepenses = {};
-  for(let i=5; i>=0; i--) {
-      let m = currentMonth - i;
-      let y = currentYear;
-      if (m < 0) { m += 12; y--; }
-      monthlyDepenses[y+'-'+m] = 0;
-  }
+// Replace mobile month buttons
+code = code.replace(/<button><i class="ti ti-chevron-left"><\/i><\/button>\s*<span>\$\{capitalizedMonthStr\}<\/span>\s*<button><i class="ti ti-chevron-right"><\/i><\/button>/g, 
+  '<button onclick="changeBudgetMonth(-1)"><i class="ti ti-chevron-left"></i></button>\\n          <span>${capitalizedMonthStr}</span>\\n          <button onclick="changeBudgetMonth(1)"><i class="ti ti-chevron-right"></i></button>');
 
+// Replace mobile epargne and alertes 'Modifier'/'Configurer' buttons
+code = code.replace(/<a href="#" style="font-size:0.8rem; color:var\(--primary\); font-weight:600; text-decoration:none;">Configurer<\/a>/g, 
+  '<a href="#" onclick="openModal(\\'modal-budgets\\')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Configurer</a>');
+code = code.replace(/<a href="#" style="font-size:0.8rem; color:var\(--primary\); font-weight:600; text-decoration:none;">Modifier<\/a>/g, 
+  '<a href="#" onclick="openModal(\\'modal-budgets\\')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Modifier</a>');
+
+// Dynamic Epargne logic
+const epargneReplacement = `
+  let totalEpargne = 0;
+  let currentYearEpargne = 0;
+  let epargneCurrentMonth = 0;
+  
   txs.forEach(tx => {
-     const txDate = new Date(tx.created_at);
-     const m = txDate.getMonth();
-     const y = txDate.getFullYear();
-     const key = y+'-'+m;
-     const montant = parseFloat(tx.montant);
-     
-     if (m === currentMonth && y === currentYear) {
-         if (montant > 0 && tx.type !== 'virement_emis') revenus += montant;
-         else depenses += Math.abs(montant);
-         
-         if (montant < 0 || tx.type === 'virement_emis') {
-             const cat = tx.categorie || 'Divers';
-             categoriesDepenses[cat] = (categoriesDepenses[cat] || 0) + Math.abs(montant);
-         }
-     } else if (m === prevMonth && y === prevYear) {
-         if (montant > 0 && tx.type !== 'virement_emis') revenusPrev += montant;
-         else depensesPrev += Math.abs(montant);
-     }
-     
-     if (monthlyDepenses[key] !== undefined) {
-         if (montant < 0 || tx.type === 'virement_emis') {
-             monthlyDepenses[key] += Math.abs(montant);
+     if (tx.categorie === 'Epargne' || (tx.libelle && tx.libelle.toLowerCase().includes('épargne'))) {
+         let amt = Math.abs(parseFloat(tx.montant));
+         if (tx.type === 'virement_emis' || parseFloat(tx.montant) < 0) {
+             totalEpargne += amt;
+             const txDate = new Date(tx.created_at);
+             if (txDate.getFullYear() === currentYear) {
+                 currentYearEpargne += amt;
+             }
+             if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
+                 epargneCurrentMonth += amt;
+             }
          }
      }
   });
 
   const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0) || 2880;
   const reste = Math.max(0, budgetTotal - depenses);
-  const epargne = revenus - depenses > 0 ? (revenus - depenses) * 0.2 : 0; 
-  const epargnePct = Math.min(100, Math.round((epargne/400)*100));
-
-  let revDiff = 0;
-  if (revenusPrev > 0) revDiff = Math.round(((revenus - revenusPrev) / revenusPrev) * 100);
-  let revClass = revDiff >= 0 ? 'positive' : 'negative';
-  let revSign = revDiff > 0 ? '+' : '';
-
-  let depDiff = 0;
-  if (depensesPrev > 0) depDiff = Math.round(((depenses - depensesPrev) / depensesPrev) * 100);
-  let depClass = depDiff > 0 ? 'negative' : 'positive';
-  let depSign = depDiff > 0 ? '+' : '';
-
-  const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-  let chartMax = Math.max(...Object.values(monthlyDepenses));
-  if(chartMax === 0) chartMax = 1;
-  let evolDesktopHtml = '';
-  let evolMobileHtml = '';
-  Object.keys(monthlyDepenses).forEach((key, idx) => {
-      let [y, mStr] = key.split('-');
-      let m = parseInt(mStr);
-      let val = monthlyDepenses[key];
-      let pct = (val / chartMax) * 100;
-      let isActive = (idx === 5) ? 'active' : '';
-      evolDesktopHtml += \`<div class="bdg-bar-col \${isActive}"><div class="bdg-bar-val">\${val.toFixed(0)}€</div><div class="bdg-bar-track"><div class="bdg-bar-fill" style="height:\${pct}%;"></div></div><div class="bdg-bar-lbl">\${monthNames[m]}</div></div>\`;
-      evolMobileHtml += \`<div class="bdg-bar-col \${isActive}"><div class="bdg-bar-track" style="height:50px;"><div class="bdg-bar-fill" style="height:\${pct}%;"></div></div><div class="bdg-bar-lbl" style="font-size:0.65rem;">\${monthNames[m]}</div></div>\`;
-  });
+  const epargneObjMensuel = 400;
+  const epargneObjAnnuel = epargneObjMensuel * 12;
+  const epargnePct = Math.min(100, Math.round((epargneCurrentMonth/epargneObjMensuel)*100));
 `;
 
-code = code.replace(/let revenus = 0;[\s\S]*?const epargnePct = Math\.min\(100, Math\.round\(\(epargne\/400\)\*100\)\);/, replacementBlock);
+code = code.replace(/const budgetTotal = userBudgets[\s\S]*?const epargnePct = Math\.min\(100, Math\.round\(\(epargne\/400\)\*100\)\);/, epargneReplacement);
 
-code = code.replace(/<div class="bdg-metric-sub positive">\+8% vs préc\.<\/div>/g, \`<div class="bdg-metric-sub \${revClass}">\${revSign}\${revDiff}% vs préc.</div>\`);
-code = code.replace(/<div class="bdg-metric-sub negative">\+12% vs préc\.<\/div>/g, \`<div class="bdg-metric-sub \${depClass}">\${depSign}\${depDiff}% vs préc.</div>\`);
-code = code.replace(/<div class="m-bdg-metric-sub pos">\+8% vs préc\.<\/div>/g, \`<div class="m-bdg-metric-sub \${revClass === 'positive' ? 'pos' : 'neg'}">\${revSign}\${revDiff}% vs préc.</div>\`);
-code = code.replace(/<div class="m-bdg-metric-sub neg">\+12% vs préc\.<\/div>/g, \`<div class="m-bdg-metric-sub \${depClass === 'negative' ? 'neg' : 'pos'}">\${depSign}\${depDiff}% vs préc.</div>\`);
+// Donut logic
+const donutReplacement = `
+  let envHtml = '';
+  let envHtmlDesktop = '';
+  let alertsHtmlDesktop = '';
+  
+  let chartData = [];
+  let otherSpent = 0;
+  let usedCategories = new Set(userBudgets.map(b => b.categorie));
+  usedCategories.add('Epargne'); // Exclude epargne from budget donut ? Yes
+  Object.keys(categoriesDepenses).forEach(cat => {
+      if (!usedCategories.has(cat)) {
+          otherSpent += categoriesDepenses[cat];
+      }
+  });
 
-// Update Desktop Evolution Chart inject
-code = code.replace(/const desktopEpargne = document\.getElementById\('bdg-epargne-desktop'\);/, \`const desktopEvol = document.getElementById('bdg-evolution-desktop');
-  if(desktopEvol) desktopEvol.innerHTML = evolDesktopHtml;
-  const desktopEpargne = document.getElementById('bdg-epargne-desktop');\`);
+  userBudgets.forEach((b, idx) => {
+     const spent = categoriesDepenses[b.categorie] || 0;
+     const limit = parseFloat(b.limite);
+     const pct = Math.min(100, Math.round((spent / limit) * 100));
+     let color = 'var(--primary)';
+     if (pct >= 100) color = 'var(--danger)';
+     else if (pct >= 80) color = 'var(--warning)';
+     else color = 'var(--success)';
+     
+     chartData.push({ category: b.categorie, amount: spent, color: spent > 0 ? chartColors[idx % chartColors.length] : '#E2E8F0' });
+     
+     const icon = icons[b.categorie] || 'ti-tag';
+     
+     const itemHtml = \`
+        <div class="bdg-env-item">
+           <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti \${icon}"></i></div>
+           <div class="bdg-env-details">
+              <div class="bdg-env-top">
+                 <span class="bdg-env-name">\${b.categorie}</span>
+                 <span class="bdg-env-amounts">\${spent.toFixed(0)} / \${limit.toFixed(0)} €</span>
+                 <span class="bdg-env-percent" style="color:\${pct >= 100 ? 'var(--danger)' : (pct >= 80 ? 'var(--warning)' : 'inherit')}">\${pct >= 100 ? 'Atteint' : pct + '%'}</span>
+              </div>
+              <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:\${pct}%; background:\${color};"></div></div>
+           </div>
+        </div>
+     \`;
+     envHtml += itemHtml;
+     envHtmlDesktop += itemHtml;
+     
+     if (pct >= 100) {
+        alertsHtmlDesktop += \`
+           <div class="bdg-alert-item">
+              <div class="bdg-alert-icon" style="color:var(--danger); background:#FEF2F2;"><i class="ti ti-alert-triangle"></i></div>
+              <div class="bdg-alert-text">
+                 <strong style="color:var(--danger);">\${b.categorie} — Plafond dépassé</strong>
+                 <span>\${spent.toFixed(0)} € / \${limit.toFixed(0)} € consommés</span>
+              </div>
+           </div>
+        \`;
+     } else if (pct >= 80) {
+        alertsHtmlDesktop += \`
+           <div class="bdg-alert-item">
+              <div class="bdg-alert-icon" style="color:var(--warning); background:#FFFBEB;"><i class="ti ti-clock"></i></div>
+              <div class="bdg-alert-text">
+                 <strong style="color:var(--warning);">\${b.categorie} — Bientôt atteint (\${pct}%)</strong>
+                 <span>Il reste \${(limit - spent).toFixed(0)} €</span>
+              </div>
+           </div>
+        \`;
+     }
+  });
 
-// Update Mobile Evolution Chart
-code = code.replace(/<div class="bdg-bar-col"><div class="bdg-bar-track" style="height:50px;"><div class="bdg-bar-fill" style="height:40%;">[\s\S]*?Juin<\/div><\/div>/, '\${evolMobileHtml}');
+  if (otherSpent > 0) {
+      chartData.push({ category: 'Autre', amount: otherSpent, color: '#94A3B8' });
+  }
+
+  if (userBudgets.length === 0) {
+     envHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune enveloppe définie.</div>';
+     envHtmlDesktop = envHtml;
+  }
+  
+  if (alertsHtmlDesktop === '') {
+      alertsHtmlDesktop = '<div style="padding:16px; color:var(--text-muted); text-align:center;">Aucune alerte ce mois-ci.</div>';
+  }
+
+  let donutSvg = '';
+  let donutLegend = '';
+  const totalRealSpent = chartData.reduce((sum, d) => sum + d.amount, 0);
+  
+  if (chartData.length > 0) {
+     let currentOffset = 25; 
+     let drawTotal = totalRealSpent === 0 ? chartData.length : totalRealSpent;
+     
+     donutSvg = '<svg viewBox="0 0 36 36" class="bdg-donut">';
+     chartData.forEach(d => {
+         let drawAmt = totalRealSpent === 0 ? 1 : (d.amount === 0 ? (drawTotal * 0.01) : d.amount);
+         let drawTotalWithMin = totalRealSpent === 0 ? chartData.length : (drawTotal + (chartData.filter(x => x.amount===0).length * (drawTotal * 0.01)));
+         const percentage = (drawAmt / drawTotalWithMin) * 100;
+         const dashArray = \`\${percentage} \${100 - percentage}\`;
+         const spacing = 0.5;
+         const dashArraySpaced = \`\${Math.max(0, percentage - spacing)} \${100 - Math.max(0, percentage - spacing) + spacing}\`;
+         donutSvg += \`<circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="\${d.color}" stroke-width="4" stroke-dasharray="\${dashArraySpaced}" stroke-dashoffset="\${currentOffset}"></circle>\`;
+         currentOffset -= percentage;
+         
+         donutLegend += \`<div class="leg-item"><span class="dot" style="background:\${d.color};"></span>\${d.category}</div>\`;
+     });
+     donutSvg += '</svg>';
+  } else {
+     donutSvg = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#F1F5F9; border-radius:50%;"><i class="ti ti-wallet" style="color:#94A3B8; font-size:24px;"></i></div>';
+     donutLegend = '<div style="color:var(--text-muted); font-size:12px;">Aucune dépense.</div>';
+  }
+`;
+
+code = code.replace(/let envHtml = '';[\s\S]*?(?=\/\/ --- Recent Txs ---)/, donutReplacement + '\\n  ');
+
+// Update UI Epargne vars
+code = code.replace(/\$\{epargne\.toFixed\(0\)\}/g, '${epargneCurrentMonth.toFixed(0)}');
+code = code.replace(/\(400 - epargne\)/g, '(epargneObjMensuel - epargneCurrentMonth)');
+code = code.replace(/4 800 €/g, '${epargneObjAnnuel} €');
+code = code.replace(/2 840 €/g, '${currentYearEpargne} €');
+code = code.replace(/1 960 €/g, '${(epargneObjAnnuel - currentYearEpargne)} €');
+code = code.replace(/400 € ce mois/g, '${epargneObjMensuel} € ce mois');
 
 fs.writeFileSync('frontend/assets/js/budget.js', code);

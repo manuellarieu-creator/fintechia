@@ -193,7 +193,7 @@ function initDashboard(user, account, kycStatut = null) {
       });
   }
   
-  if (mview && typeof showMobileView === 'function') {
+  if (mview && typeof showMobileView === 'function' && window.innerWidth <= 768) {
       showMobileView(mview);
       document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
           i.classList.remove('active');
