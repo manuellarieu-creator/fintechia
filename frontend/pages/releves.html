@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
   
   <link rel="stylesheet" href="../assets/css/releves.css">
+  
+  <!-- html2pdf.js pour la génération PDF côté client -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -112,7 +115,7 @@
             </h3>
             <div class="releve-meta" id="center-meta">Chargement...</div>
         </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;" onclick="alert('Export CSV généré')"><i class="ti ti-file-spreadsheet"></i> CSV</button>
+        <button class="btn btn-outline" style="padding: 6px 12px;" id="btn-download-csv"><i class="ti ti-file-spreadsheet"></i> CSV</button>
       </div>
 
       <div class="balances-grid" id="releves-balances">
@@ -167,8 +170,8 @@
             </div>
           </div>
           <div class="preview-actions">
-            <button class="btn btn-outline"><i class="ti ti-eye"></i> Aperçu</button>
-            <button class="btn btn-primary"><i class="ti ti-download"></i> PDF</button>
+            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
+            <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
           </div>
         </div>
       </div>
@@ -278,6 +281,102 @@
       <i class="ti ti-file-text"></i>
       Relevés
     </a>
+  </div>
+</div>
+
+<!-- Modal Export Settings -->
+<div id="modal-export-settings" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+  <div class="modal-content" style="background: white; border-radius: 12px; width: 100%; max-width: 400px; padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3 style="margin: 0; font-size: 18px;">Paramètres d'export</h3>
+      <button onclick="document.getElementById('modal-export-settings').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+    </div>
+    
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label class="form-label">Action</label>
+      <div class="select-wrapper">
+        <select class="form-select" id="export-action">
+          <option value="download">Télécharger sur l'appareil</option>
+          <option value="email">Envoyer par Email</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="export-email-group" style="margin-bottom: 16px; display: none;">
+      <label class="form-label">Adresse Email</label>
+      <input type="email" id="export-email-input" class="form-control" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px;" placeholder="votre@email.com">
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      <button class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('modal-export-settings').style.display='none'">Annuler</button>
+      <button class="btn btn-primary" style="flex: 1; justify-content: center;" id="btn-confirm-export">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden PDF Template -->
+<div id="pdf-template-container" style="display: none;">
+  <div id="pdf-content" style="padding: 40px; background: white; color: black; font-family: 'Inter', sans-serif; width: 800px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2563EB; padding-bottom: 20px; margin-bottom: 20px;">
+      <div>
+        <h1 style="color: #2563EB; margin: 0; font-size: 24px; font-family: 'Playfair Display', serif;">NovaBanque</h1>
+        <p style="margin: 4px 0 0; font-size: 12px; color: #666;">La banque qui vous comprend</p>
+      </div>
+      <div style="text-align: right; font-size: 14px;">
+        <h2 style="margin: 0; font-size: 18px;" id="pdf-month-title">Relevé Mensuel</h2>
+        <p style="margin: 4px 0 0;" id="pdf-date-range">Période du -- au --</p>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+      <div>
+        <h3 style="margin: 0 0 8px; font-size: 14px; color: #666;">Titulaire du compte</h3>
+        <p style="margin: 0; font-size: 16px; font-weight: 600;" id="pdf-user-name">Prénom Nom</p>
+        <p style="margin: 4px 0 0; font-size: 14px;" id="pdf-user-email">email@domain.com</p>
+      </div>
+      <div style="text-align: right;">
+        <h3 style="margin: 0 0 8px; font-size: 14px; color: #666;">Informations du compte</h3>
+        <p style="margin: 0; font-size: 16px; font-weight: 600;">Compte Courant</p>
+        <p style="margin: 4px 0 0; font-size: 14px;" id="pdf-account-id">Identifiant: --</p>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; background: #F8FAFC; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+      <div style="text-align: center;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Solde Initial</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600;" id="pdf-balance-start">0,00 €</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total Crédits</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #16a34a;" id="pdf-balance-credits">+0,00 €</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total Débits</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #dc2626;" id="pdf-balance-debits">-0,00 €</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Solde Final</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #2563EB;" id="pdf-balance-end">0,00 €</p>
+      </div>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+      <thead>
+        <tr style="border-bottom: 2px solid #E2E8F0;">
+          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Date</th>
+          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Libellé</th>
+          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Catégorie</th>
+          <th style="text-align: right; padding: 12px 8px; color: #64748b;">Montant</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-tx-tbody">
+        <!-- TX générées ici -->
+      </tbody>
+    </table>
+    
+    <div style="margin-top: 40px; text-align: center; font-size: 10px; color: #94A3B8;">
+      <p>NovaBanque - Document généré électroniquement - Ne peut servir de justificatif officiel sans signature.</p>
+    </div>
   </div>
 </div>
 

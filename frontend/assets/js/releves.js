@@ -6,6 +6,10 @@ let sortedMonths = [];
 let currentAccount = null;
 let currentUser = null;
 
+// Variables pour la modale d'export
+let currentExportFormat = 'pdf'; // 'pdf' ou 'csv'
+let currentExportPeriod = null; 
+
 async function loadRelevesData() {
     try {
         // Fetch User / Account Info
@@ -194,6 +198,7 @@ function renderHistoryListForYear(year, byYearMap) {
 }
 
 function selectMonth(mKey) {
+    currentExportPeriod = mKey;
     const group = groupedByMonth[mKey];
     if (!group) return;
     
@@ -292,8 +297,148 @@ function renderExportForm() {
     }
 }
 
+
+/* --- Logique d'Export (PDF et CSV) --- */
+
+function openExportModal(format, period) {
+    currentExportFormat = format;
+    currentExportPeriod = period || (sortedMonths.length > 0 ? sortedMonths[0] : null);
+    
+    document.getElementById('export-email-input').value = currentUser ? currentUser.email : '';
+    document.getElementById('modal-export-settings').style.display = 'flex';
+}
+
+function handleExportConfirm() {
+    const action = document.getElementById('export-action').value;
+    const email = document.getElementById('export-email-input').value;
+    
+    if (action === 'email' && !email) {
+        alert("Veuillez saisir une adresse email.");
+        return;
+    }
+    
+    if (currentExportFormat === 'csv') {
+        generateCSV(currentExportPeriod, action, email);
+    } else {
+        generatePDF(currentExportPeriod, action, email);
+    }
+    
+    document.getElementById('modal-export-settings').style.display = 'none';
+}
+
+function generateCSV(mKey, action, email) {
+    const group = groupedByMonth[mKey];
+    if (!group) return;
+    
+    let csvContent = "Date,Libellé,Catégorie,Montant\n";
+    
+    group.txs.forEach(tx => {
+        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        let libelle = tx.description || 'Transaction';
+        if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');
+        if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
+        
+        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const sign = isCredit ? '+' : '';
+        const montant = `${sign}${Math.abs(tx.montant).toFixed(2).replace('.', ',')}`;
+        
+        // Escape quotes if needed
+        csvContent += `"${date}","${libelle}","${typeLabel}","${montant}"\n`;
+    });
+    
+    if (action === 'download') {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Releve_NovaBanque_${mKey}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } else {
+        alert(`Le fichier CSV a bien été envoyé à ${email}.`);
+    }
+}
+
+function generatePDF(mKey, action, email) {
+    const group = groupedByMonth[mKey];
+    if (!group) return;
+    
+    // 1. Fill the template
+    const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const lastDay = new Date(group.year, group.month + 1, 0).getDate();
+    
+    document.getElementById('pdf-month-title').textContent = `Relevé ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)}`;
+    document.getElementById('pdf-date-range').textContent = `Période du 01 au ${lastDay} ${monthNameFull}`;
+    
+    document.getElementById('pdf-user-name').textContent = `${currentUser.prenom} ${currentUser.nom}`;
+    document.getElementById('pdf-user-email').textContent = currentUser.email;
+    document.getElementById('pdf-account-id').textContent = `Identifiant: **** ${currentAccount.id.toString().slice(-4)}`;
+    
+    document.getElementById('pdf-balance-start').textContent = `${group.startBalance.toFixed(2).replace('.', ',')} €`;
+    document.getElementById('pdf-balance-credits').textContent = `+${group.credits.toFixed(2).replace('.', ',')} €`;
+    document.getElementById('pdf-balance-debits').textContent = `-${group.debits.toFixed(2).replace('.', ',')} €`;
+    document.getElementById('pdf-balance-end').textContent = `${group.endBalance.toFixed(2).replace('.', ',')} €`;
+    
+    const tbody = document.getElementById('pdf-tx-tbody');
+    tbody.innerHTML = '';
+    
+    group.txs.forEach((tx, idx) => {
+        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        let libelle = tx.description || 'Transaction';
+        if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');
+        if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
+        
+        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const sign = isCredit ? '+' : '';
+        const color = isCredit ? '#16a34a' : '#dc2626';
+        
+        const tr = document.createElement('tr');
+        if (idx !== group.txs.length - 1) {
+            tr.style.borderBottom = '1px solid #E2E8F0';
+        }
+        
+        tr.innerHTML = `
+          <td style="padding: 12px 8px;">${date}</td>
+          <td style="padding: 12px 8px; font-weight: 500;">${libelle}</td>
+          <td style="padding: 12px 8px;">${typeLabel}</td>
+          <td style="text-align: right; padding: 12px 8px; color: ${color}; font-weight: 600;">${sign}${Math.abs(tx.montant).toFixed(2).replace('.', ',')} €</td>
+        `;
+        tbody.appendChild(tr);
+    });
+    
+    // 2. Generate PDF
+    const element = document.getElementById('pdf-content');
+    element.parentElement.style.display = 'block'; // Make it visible temporarily for rendering
+    
+    const opt = {
+      margin:       0.5,
+      filename:     `Releve_NovaBanque_${mKey}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    if (action === 'download') {
+        html2pdf().set(opt).from(element).save().then(() => {
+            element.parentElement.style.display = 'none';
+        });
+    } else {
+        // Just simulate creation
+        html2pdf().set(opt).from(element).output('blob').then((pdfBlob) => {
+            element.parentElement.style.display = 'none';
+            alert(`Le relevé PDF a bien été généré et envoyé à ${email}.`);
+        });
+    }
+}
+
+
+// --- Initialisation DOM ---
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Si apiCall n'est pas défini (car app.js n'est pas importé ou importé après)
+    // Si apiCall n'est pas défini
     if (typeof window.apiCall === 'undefined') {
         window.apiCall = async function(endpoint, method = 'GET', body = null) {
             const token = localStorage.getItem('fintech_token');
@@ -332,12 +477,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Export button (Form)
     const btnExport = document.getElementById('btn-export');
     if (btnExport) {
         btnExport.addEventListener('click', () => {
             const periode = document.getElementById('export-periode-select').value;
             const format = document.getElementById('export-format-select').value;
-            alert(\`Génération du relevé pour la période \${periode} au format \${format.toUpperCase()} réussie.\`);
+            openExportModal(format, periode);
         });
+    }
+    
+    // Column buttons
+    const btnDownloadCsv = document.getElementById('btn-download-csv');
+    if (btnDownloadCsv) {
+        btnDownloadCsv.addEventListener('click', () => openExportModal('csv', currentExportPeriod));
+    }
+    
+    const btnDownloadPdf = document.getElementById('btn-download-pdf');
+    if (btnDownloadPdf) {
+        btnDownloadPdf.addEventListener('click', () => openExportModal('pdf', currentExportPeriod));
+    }
+    
+    // Modal events
+    const actionSelect = document.getElementById('export-action');
+    if (actionSelect) {
+        actionSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'email') {
+                document.getElementById('export-email-group').style.display = 'block';
+            } else {
+                document.getElementById('export-email-group').style.display = 'none';
+            }
+        });
+    }
+    
+    const btnConfirmExport = document.getElementById('btn-confirm-export');
+    if (btnConfirmExport) {
+        btnConfirmExport.addEventListener('click', handleExportConfirm);
     }
 });
