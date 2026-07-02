@@ -34,14 +34,6 @@ router.post('/register', [
   const type_compte = req.body.type_compte || 'courant';
   const connection = await db.getConnection();
   try {
-    // Migration à la volée (silencieuse si déjà présente)
-    // Migration à la volée (silencieuse si déjà présente) - séparée par colonne
-    try { await connection.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL"); } catch(e) {}
-    try { await connection.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL"); } catch(e) {}
-    try { await connection.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL"); } catch(e) {}
-    try { await connection.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
-    try { await connection.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
-
     await connection.beginTransaction();
     const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [email]);
     if (existing.length > 0) {
@@ -89,10 +81,12 @@ router.post('/register', [
     
     res.json({ token, telephone_code, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
   } catch (err) {
-    await connection.rollback();
+    if (connection) {
+      try { await connection.rollback(); } catch (e) {}
+    }
     next(err);
   } finally {
-    connection.release();
+    if (connection) connection.release();
   }
 });
 

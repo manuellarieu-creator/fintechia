@@ -94,7 +94,20 @@ module.exports = app;
 
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 3001;
-  server.listen(PORT, () => {
+  server.listen(PORT, async () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
+    
+    // Auto-migration de la base de données au démarrage
+    const db = require('./config/db');
+    try {
+      await db.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE").catch(() => {});
+      console.log("Auto-migration DB terminée.");
+    } catch (err) {
+      console.error("Erreur lors de l'auto-migration :", err.message);
+    }
   });
 }
