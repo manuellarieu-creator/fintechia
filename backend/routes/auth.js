@@ -24,12 +24,21 @@ router.post('/register', [
   body('nom').trim().notEmpty().withMessage('Le nom est requis'),
   body('email').isEmail().normalizeEmail().withMessage('Email invalide'),
   body('telephone').optional().trim(),
+  body('adresse').optional().trim(),
+  body('profession').optional().trim(),
+  body('revenus').optional().trim(),
   body('password').isLength({ min: 6 }).withMessage('Minimum 6 caractères'),
-  body('type_compte').isIn(['credit', 'epargne', 'courant']).withMessage('Type de compte invalide')
+  body('type_compte').optional().isIn(['credit', 'epargne', 'courant']).withMessage('Type de compte invalide')
 ], validateReq, async (req, res, next) => {
-  const { prenom, nom, email, telephone, password, type_compte } = req.body;
+  const { prenom, nom, email, telephone, adresse, profession, revenus, password } = req.body;
+  const type_compte = req.body.type_compte || 'courant';
   const connection = await db.getConnection();
   try {
+    // Migration à la volée (silencieuse si déjà présente)
+    try {
+      await connection.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL, ADD COLUMN profession VARCHAR(100) DEFAULT NULL, ADD COLUMN revenus VARCHAR(100) DEFAULT NULL, ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL, ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE;");
+    } catch(e) {} // Ignore error if columns already exist
+
     await connection.beginTransaction();
     const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [email]);
     if (existing.length > 0) {
@@ -38,9 +47,11 @@ router.post('/register', [
     }
 
     const password_hash = await bcrypt.hash(password, 10);
+    const telephone_code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, telephone, password_hash) VALUES (?, ?, ?, ?, ?)',
-      [prenom, nom, email, telephone, password_hash]
+      'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash]
     );
     const userId = userRes.insertId;
 
@@ -63,12 +74,40 @@ router.post('/register', [
 
     const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
     
-    res.json({ token, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
+    res.json({ token, telephone_code, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
   } catch (err) {
     await connection.rollback();
     next(err);
   } finally {
     connection.release();
+  }
+});
+
+// POST /api/auth/verify-phone
+router.post('/verify-phone', authMiddleware, async (req, res, next) => {
+  try {
+    const { code } = req.body;
+    const [users] = await db.query('SELECT telephone_code FROM users WHERE id = ?', [req.user.id]);
+    
+    if (users.length === 0) return res.status(404).json({ error: 'Utilisateur introuvable', status: 404 });
+    
+    if (users[0].telephone_code !== code) {
+      return res.status(400).json({ error: 'Code incorrect', code: 'INVALID_CODE', status: 400 });
+    }
+
+    // Le code n'est pas effacé, comme demandé
+    await db.query('UPDATE users SET telephone_verifie = TRUE WHERE id = ?', [req.user.id]);
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: req.user.role,
+      action: 'telephone_verifie', categorie: audit.CATEGORIES.securite,
+      cible_type: 'user', cible_id: req.user.id,
+      cible_detail: `Téléphone vérifié avec le code ${code}`, req
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
   }
 });
 

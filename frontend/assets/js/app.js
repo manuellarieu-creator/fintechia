@@ -271,9 +271,111 @@ window.closeAppDrawer = function() {
   document.getElementById('app-drawer').style.transform = 'translateX(100%)';
 };
 
-window.logout = function() {
+// Logout
+function logout() {
   localStorage.removeItem('fintech_token');
-  window.location.href = 'index.html';
+  window.location.reload();
+}
+
+// ==========================================
+// TUNNEL ONBOARDING (MULTI-ETAPES)
+// ==========================================
+document.getElementById('form-step-1')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const payload = {
+    prenom: document.getElementById('reg-prenom').value,
+    nom: document.getElementById('reg-nom').value,
+    email: document.getElementById('reg-email').value,
+    password: document.getElementById('reg-pwd').value,
+    telephone: document.getElementById('reg-tel').value,
+    adresse: document.getElementById('reg-adresse').value,
+    profession: document.getElementById('reg-profession').value,
+    revenus: document.getElementById('reg-revenus').value
+  };
+
+  try {
+    const res = await apiCall('/auth/register', 'POST', payload);
+    localStorage.setItem('fintech_token', res.token);
+    
+    // Si le backend renvoie le code simulé (telephone_code)
+    if (res.telephone_code) {
+      document.getElementById('display-tel').innerText = payload.telephone;
+      document.getElementById('simulated-sms-code').innerText = res.telephone_code;
+    }
+
+    // Passer à l'étape 2 (Vérification Téléphone)
+    document.getElementById('form-step-1').style.display = 'none';
+    document.getElementById('form-step-2').style.display = 'block';
+    
+    document.getElementById('step-icon-1').classList.remove('active');
+    document.getElementById('step-icon-1').style.background = 'var(--success)';
+    document.getElementById('step-icon-1').innerHTML = '<i class="ti ti-check"></i>';
+    document.getElementById('step-icon-2').classList.add('active');
+    document.getElementById('stepper-desc').innerText = 'Étape 2 sur 3';
+
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+document.getElementById('form-step-2')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = document.getElementById('reg-sms-code').value;
+
+  try {
+    const res = await apiCall('/auth/verify-phone', 'POST', { code });
+    if (res.success) {
+      // Passer à l'étape 3 (KYC)
+      document.getElementById('form-step-2').style.display = 'none';
+      document.getElementById('form-step-3').style.display = 'block';
+      
+      document.getElementById('step-icon-2').classList.remove('active');
+      document.getElementById('step-icon-2').style.background = 'var(--success)';
+      document.getElementById('step-icon-2').innerHTML = '<i class="ti ti-check"></i>';
+      document.getElementById('step-icon-3').classList.add('active');
+      document.getElementById('stepper-desc').innerText = 'Étape 3 sur 3';
+    }
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const token = localStorage.getItem('fintech_token');
+  const typeDoc = document.getElementById('reg-kyc-type').value;
+  const docFile = document.getElementById('reg-kyc-doc').files[0];
+  const selfieFile = document.getElementById('reg-kyc-selfie').files[0];
+
+  if (!docFile || !selfieFile) {
+    return alert('Veuillez fournir les deux documents.');
+  }
+
+  const formData = new FormData();
+  formData.append('type_document', typeDoc);
+  formData.append('document', docFile);
+  formData.append('selfie', selfieFile);
+
+  try {
+    const res = await fetch('/api/kyc/submit', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur lors du KYC');
+
+    alert('Inscription terminée ! Bienvenue sur NovaBanque.');
+    window.location.reload(); // Va charger le dashboard automatiquement grâce au token
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+window.finishOnboardingWithoutKYC = function() {
+  alert('Inscription terminée ! Vous pourrez fournir vos documents plus tard.');
+  window.location.reload();
 }
 
 // Profile update
