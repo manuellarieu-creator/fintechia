@@ -59,23 +59,23 @@
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">RELEVÉS DISPO</div>
-      <div class="kpi-value">24</div>
-      <div class="kpi-sub">2 ans d'historique</div>
+      <div class="kpi-value" id="kpi-dispo-val">-</div>
+      <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">PROCHAIN RELEVÉ</div>
-      <div class="kpi-value">31</div>
-      <div class="kpi-sub">juillet 2026</div>
+      <div class="kpi-value" id="kpi-next-val">-</div>
+      <div class="kpi-sub" id="kpi-next-sub">-</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">FORMAT</div>
-      <div class="kpi-value">PDF</div>
-      <div class="kpi-sub">+ CSV disponible</div>
+      <div class="kpi-value" id="kpi-format-val">PDF</div>
+      <div class="kpi-sub" id="kpi-format-sub">+ CSV disponible</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">ENVOI EMAIL</div>
-      <div class="kpi-value" style="font-size: 20px;">Activé</div>
-      <div class="kpi-sub">manuela@email.fr</div>
+      <div class="kpi-value" id="kpi-email-val" style="font-size: 20px;">-</div>
+      <div class="kpi-sub" id="kpi-email-sub">-</div>
     </div>
   </div>
 
@@ -86,93 +86,19 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Historique</h3>
-        <div class="pill-tabs mobile-only" style="display:flex;">
-            <div class="pill-tab active">2026</div>
-            <div class="pill-tab">2025</div>
+        <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
+            <!-- Généré par JS -->
         </div>
         <div class="select-wrapper desktop-only" style="display:none;">
-            <select class="form-select" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
-                <option value="2026">2026</option>
-                <option value="2025">2025</option>
+            <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
+                <!-- Généré par JS -->
             </select>
         </div>
       </div>
       
-      <div class="history-year">2026</div>
-      <div class="history-list">
-        <div class="history-item active">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Juin 2026</div>
-            <div class="history-status">En cours - 30 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-        
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Mai 2026</div>
-            <div class="history-status">Clôturé - 28 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Avril 2026</div>
-            <div class="history-status">Clôturé - 34 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Mars 2026</div>
-            <div class="history-status">Clôturé - 22 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-        
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Fév. 2026</div>
-            <div class="history-status">Clôturé - 19 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Jan. 2026</div>
-            <div class="history-status">Clôturé - 25 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-      </div>
-
-      <div class="history-year" style="border-top: 1px solid var(--border);">2025</div>
-      <div class="history-list">
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Déc. 2025</div>
-            <div class="history-status">Clôturé - 31 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
-        <div class="history-item">
-          <div class="history-icon"><i class="ti ti-file-text"></i></div>
-          <div class="history-info">
-            <div class="history-month">Nov. 2025</div>
-            <div class="history-status">Clôturé - 27 tx</div>
-          </div>
-          <div class="history-action"><i class="ti ti-download"></i></div>
-        </div>
+      <div id="releves-history-list">
+        <!-- Contenu injecté par JS -->
+        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
       </div>
     </div>
 
@@ -180,33 +106,17 @@
     <div class="card center-card">
       <div class="card-header">
         <div>
-            <h3 class="card-title" style="display:flex; align-items:center; gap:8px;">
-                Relevé — Juin 2026 
-                <span style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600;">En cours</span>
+            <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
+                Relevé 
+                <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
             </h3>
-            <div class="releve-meta">Compte courant • **** 4821 • Du 01 au 30 juin 2026</div>
+            <div class="releve-meta" id="center-meta">Chargement...</div>
         </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;"><i class="ti ti-file-spreadsheet"></i> CSV</button>
+        <button class="btn btn-outline" style="padding: 6px 12px;" onclick="alert('Export CSV généré')"><i class="ti ti-file-spreadsheet"></i> CSV</button>
       </div>
 
-      <div class="balances-grid">
-        <div class="balance-item">
-          <div class="balance-label">INITIAL</div>
-          <div class="balance-value">10 780 €</div>
-          <div class="balance-date">01/06</div>
-        </div>
-        <div class="balance-item">
-          <div class="balance-label">MVTS</div>
-          <div class="movements-list">
-            <div style="color:var(--text-main);">+3 200 €</div>
-            <div style="color:var(--text-main);">-1 500 €</div>
-          </div>
-        </div>
-        <div class="balance-item">
-          <div class="balance-label">ACTUEL</div>
-          <div class="balance-value blue">12 480 €</div>
-          <div class="balance-date">30/06</div>
-        </div>
+      <div class="balances-grid" id="releves-balances">
+        <!-- Rempli par JS -->
       </div>
 
       <div class="filters-bar">
@@ -224,42 +134,9 @@
         <div class="tx-header-cat">Catégorie</div>
       </div>
 
-      <div class="tx-list">
-        <div class="tx-item">
-          <div class="tx-icon" style="transform: rotate(45deg);"><i class="ti ti-arrow-down" style="transform: rotate(-45deg);"></i></div>
-          <div class="tx-info">
-            <div class="tx-name">Virement Freelance</div>
-            <div class="tx-type">Virement entrant</div>
-          </div>
-          <div class="tx-date">30/06</div>
-          <div class="tx-amount credit">+3 200,00 €</div>
-        </div>
-        
-        <div class="tx-item">
-          <div class="tx-icon"><i class="ti ti-shopping-cart"></i></div>
-          <div class="tx-info">
-            <div class="tx-name">Carrefour Market</div>
-            <div class="tx-type">Paiement carte</div>
-          </div>
-          <div class="tx-date">29/06</div>
-          <div class="tx-amount">-145,20 €</div>
-        </div>
-
-        <div class="tx-item">
-          <div class="tx-icon"><i class="ti ti-bolt"></i></div>
-          <div class="tx-info">
-            <div class="tx-name">EDF Énergie</div>
-            <div class="tx-type">Prélèvement</div>
-          </div>
-          <div class="tx-date desktop-only">26/06</div>
-          <div class="tx-amount-col">
-            <div class="tx-amount debit">-85,00 €</div>
-            <div class="tx-balance-after mobile-only">11 344,52 €</div>
-          </div>
-        </div>
-        <div class="tx-footer-action">
-            <a href="#">Voir les 24 transactions restantes &rarr;</a>
-        </div>
+      <div class="tx-list" id="releves-tx-list">
+        <!-- Rempli par JS -->
+        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement des transactions...</div>
       </div>
     </div>
 
@@ -344,9 +221,8 @@
           <div class="form-group" style="margin-bottom: 12px;">
             <label class="form-label">Période</label>
             <div class="select-wrapper">
-              <select class="form-select">
-                <option>Juin 2026</option>
-                <option>Mai 2026</option>
+              <select class="form-select" id="export-periode-select">
+                <!-- Rempli par JS -->
               </select>
             </div>
           </div>
@@ -354,23 +230,22 @@
               <div class="form-group">
                 <label class="form-label">Format</label>
                 <div class="select-wrapper">
-                  <select class="form-select">
-                    <option>PDF</option>
-                    <option>CSV</option>
+                  <select class="form-select" id="export-format-select">
+                    <option value="pdf">PDF</option>
+                    <option value="csv">CSV</option>
                   </select>
                 </div>
               </div>
               <div class="form-group">
                 <label class="form-label">Compte</label>
                 <div class="select-wrapper">
-                  <select class="form-select">
-                    <option>**** 4821</option>
-                    <option>**** 9032</option>
+                  <select class="form-select" id="export-compte-select">
+                    <!-- Rempli par JS -->
                   </select>
                 </div>
               </div>
           </div>
-          <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">
+          <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
             <i class="ti ti-file-export"></i> Générer l'export
           </button>
         </div>
