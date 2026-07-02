@@ -1,216 +1,339 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Administration — Fintechia</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <style>
-    body { background: var(--bg2); display: flex; }
-    .sidebar { width: 250px; background: var(--white); height: 100vh; border-right: 1px solid var(--bd); padding: 1.5rem; position: fixed; }
-    .sidebar-logo { font-family: var(--fs); font-size: 20px; font-weight: 700; color: var(--or); margin-bottom: 3rem; }
-    .nav-item { display: block; padding: 10px 15px; margin-bottom: 5px; color: var(--text2); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; }
-    .nav-item:hover, .nav-item.active { background: var(--bg); color: var(--or); }
-    .main-content { margin-left: 250px; flex: 1; padding: 2.5rem; }
-    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--bd); }
-    .stat-card-val { font-family: var(--fs); font-size: 28px; font-weight: 700; color: var(--text); }
-    .stat-card-lbl { font-size: 12px; color: var(--text3); }
-    
-    .data-table { width: 100%; border-collapse: collapse; background: var(--white); box-shadow: var(--shadow-sm); border-radius: 12px; overflow: hidden; }
-    .data-table th, .data-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--bd); font-size: 14px; }
-    .data-table th { background: var(--bg); font-size: 12px; text-transform: uppercase; color: var(--text3); }
-    .action-btn { background: var(--or); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-
-    /* MOBILE RESPONSIVE (Admin) */
-    @media (max-width: 768px) {
-      body { flex-direction: column; }
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--bd);
-        padding: 1rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-      }
-      .sidebar-logo { margin-bottom: 0; margin-right: 1rem; }
-      .nav-item { margin-bottom: 0; padding: 8px 12px; }
-      .main-content { margin-left: 0; padding: 1rem; width: 100%; }
-      .admin-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-      .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 2rem; }
-      .data-table { min-width: 700px; box-shadow: none; border-radius: 0; margin-bottom: 0 !important; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administration — NovaBanque</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
-
-<div class="sidebar">
-  <div class="sidebar-logo">FINTECHIA Admin</div>
-  <a href="#" class="nav-item active">Tableau de bord</a>
-  <a href="#" class="nav-item">Comptes & KYC</a>
-  <a href="#" class="nav-item">Virements</a>
-  <a href="#" class="nav-item">Audit légal</a>
-</div>
-
-<div class="main-content">
-  <div class="admin-header">
-    <h1 class="section-title" style="margin:0">Administration</h1>
-    <button class="btn-secondary" onclick="localStorage.removeItem('fintech_token'); window.location.href='app.html'">Déconnexion</button>
-  </div>
-
-  <div class="dashboard-grid" id="stats-grid">
-    <div class="stat-card">
-      <div class="stat-card-val">...</div>
-      <div class="stat-card-lbl">Clients</div>
-    </div>
-  </div>
-
-  <div class="section-eyebrow">Comptes en attente d'activation</div>
-  <div class="table-responsive">
-    <table class="data-table" id="pending-accounts-table">
-      <thead>
-        <tr>
-          <th>Client</th>
-          <th>Email</th>
-          <th>Type de compte</th>
-          <th>Date création</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colspan="5" style="text-align:center; color:var(--text3)">Chargement des comptes...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="section-eyebrow">Derniers logs d'audit</div>
-  <div class="table-responsive">
-    <table class="data-table" id="audit-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Admin / Acteur</th>
-          <th>Catégorie</th>
-          <th>Action</th>
-          <th>Détails</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colspan="5" style="text-align:center; color:var(--text3)">Chargement des audits...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-  async function apiCall(endpoint) {
-    const token = localStorage.getItem('fintech_token');
-    if(!token) { window.location.href='app.html'; return; }
-    const res = await fetch('/api' + endpoint, { headers: { 'Authorization': 'Bearer ' + token }});
-    if(!res.ok) throw new Error('Auth failed');
-    return res.json();
-  }
-
-  async function loadAdmin() {
-    try {
-      // Load Stats
-      const stats = await apiCall('/admin/dashboard');
-      document.getElementById('stats-grid').innerHTML = `
-        <div class="stat-card"><div class="stat-card-val">${stats.total_clients}</div><div class="stat-card-lbl">Clients</div></div>
-        <div class="stat-card"><div class="stat-card-val">${stats.comptes_actifs}</div><div class="stat-card-lbl">Comptes Actifs</div></div>
-        <div class="stat-card"><div class="stat-card-val">${stats.kyc_en_attente}</div><div class="stat-card-lbl">KYC en attente</div></div>
-        <div class="stat-card"><div class="stat-card-val">${stats.virements_en_attente}</div><div class="stat-card-lbl">Virements en attente</div></div>
-      `;
-
-      // Load Pending Accounts
-      const comptes = await apiCall('/admin/comptes?statut=en_attente');
-      const tbodyComptes = document.querySelector('#pending-accounts-table tbody');
-      if (comptes.length === 0) {
-        tbodyComptes.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aucun compte en attente.</td></tr>';
-      } else {
-        tbodyComptes.innerHTML = comptes.map(c => `
-          <tr>
-            <td><b>${c.prenom} ${c.nom}</b></td>
-            <td>${c.email}</td>
-            <td>${c.type_compte}</td>
-            <td>${new Date(c.created_at).toLocaleDateString()}</td>
-            <td>
-              <button class="action-btn" style="background:#27ae60" onclick="activerCompte(${c.id})">✓ Valider</button>
-              <button class="action-btn" style="background:#e74c3c" onclick="rejeterCompte(${c.id})">✕ Rejeter</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      // Load Audit
-      const audits = await apiCall('/admin/audit?limit=10');
-      const tbody = document.querySelector('#audit-table tbody');
-      tbody.innerHTML = audits.map(a => `
-        <tr>
-          <td>${new Date(a.created_at).toLocaleString()}</td>
-          <td>${a.acteur_email}</td>
-          <td><span style="background:var(--bg3);padding:3px 8px;border-radius:10px;font-size:11px;">${a.categorie}</span></td>
-          <td><b>${a.action}</b></td>
-          <td>${a.cible_detail || '-'}</td>
-        </tr>
-      `).join('');
-    } catch(err) {
-      console.error(err);
-      alert('Accès refusé. Vous n\'êtes pas administrateur.');
-    }
-  }
-
-  window.activerCompte = async function(id) {
-    const iban = prompt("Veuillez saisir le numéro IBAN à attribuer à ce compte (ex: FR76...):");
-    if (!iban) return;
     
-    try {
-      const token = localStorage.getItem('fintech_token');
-      const res = await fetch('/api/admin/comptes/' + id + '/activer', {
-        method: 'PATCH',
-        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ iban })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur API');
-      alert('Compte activé avec succès !');
-      loadAdmin();
-    } catch(err) {
-      alert(err.message);
-    }
-  };
+    <div class="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon">N</div>
+                <div class="admin-logo-text">
+                    <span class="logo-title">NovaBanque</span>
+                    <span class="logo-subtitle">Admin Console</span>
+                </div>
+            </div>
 
-  window.rejeterCompte = async function(id) {
-    if (!confirm("Voulez-vous vraiment rejeter ce compte ?")) return;
-    try {
-      const token = localStorage.getItem('fintech_token');
-      const res = await fetch('/api/admin/comptes/' + id + '/statut', {
-        method: 'PATCH',
-        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ statut: 'rejete' })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur API');
-      alert('Compte rejeté.');
-      loadAdmin();
-    } catch(err) {
-      alert(err.message);
-    }
-  };
+            <nav class="admin-nav">
+                <a href="#" class="nav-item active">
+                    <i class="ti ti-layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
 
-  document.addEventListener('DOMContentLoaded', loadAdmin);
-</script>
+                <div class="nav-section">CLIENTS</div>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-users"></i>
+                    <span>Comptes clients</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-id"></i>
+                    <span>KYC / Vérification</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-user-cancel"></i>
+                    <span>Clients bloqués</span>
+                </a>
+
+                <div class="nav-section">TRANSACTIONS</div>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-arrows-exchange"></i>
+                    <span>Virements</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-flag"></i>
+                    <span>Fraudes & alertes</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-eye"></i>
+                    <span>Supervision live</span>
+                </a>
+
+                <div class="nav-section">PRODUITS</div>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-credit-card"></i>
+                    <span>Cartes émises</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-building-bank"></i>
+                    <span>Comptes & IBAN</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-report-analytics"></i>
+                    <span>Reporting</span>
+                </a>
+
+                <div class="nav-section">SYSTÈME</div>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-shield-lock"></i>
+                    <span>Sécurité & accès</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-settings"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="ti ti-file-text"></i>
+                    <span>Logs système</span>
+                </a>
+            </nav>
+
+            <div class="admin-user">
+                <div class="admin-user-avatar">AD</div>
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin</span>
+                    <span class="admin-user-role">Super Admin</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <div class="header-titles">
+                    <h1>Dashboard Administration</h1>
+                    <p id="admin-date-display">Chargement de la date...</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="ti ti-search"></i>
+                        <input type="text" placeholder="Rechercher client, IBAN...">
+                    </div>
+                    <button class="icon-btn" id="btn-notifications">
+                        <i class="ti ti-bell"></i>
+                    </button>
+                    <div class="header-avatar" onclick="localStorage.removeItem('fintech_token'); window.location.href='index.html'" style="cursor:pointer;" title="Déconnexion">AD</div>
+                </div>
+            </header>
+
+            <!-- KPIS GRID -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">CLIENTS ACTIFS</div>
+                    <div class="kpi-value" id="kpi-clients-actifs">--</div>
+                    <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> <span id="kpi-clients-actifs-sub">--</span> ce mois</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">TX AUJOURD'HUI</div>
+                    <div class="kpi-value" id="kpi-tx-jour">--</div>
+                    <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> +8% vs hier</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">VOLUME (JOUR)</div>
+                    <div class="kpi-value" id="kpi-volume-jour">--</div>
+                    <div class="kpi-sub neutral">Moy. 2,1M €/j</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">KYC EN ATTENTE</div>
+                    <div class="kpi-value warning" id="kpi-kyc-attente">--</div>
+                    <div class="kpi-sub warning"><i class="ti ti-alert-triangle"></i> <span id="kpi-kyc-attente-sub">-- urgents</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">ALERTES FRAUDE</div>
+                    <div class="kpi-value danger" id="kpi-alertes-fraude">--</div>
+                    <div class="kpi-sub danger"><i class="ti ti-alert-circle"></i> <span id="kpi-alertes-fraude-sub">-- nouvelles</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">UPTIME SYSTÈME</div>
+                    <div class="kpi-value success" id="kpi-uptime">99,98%</div>
+                    <div class="kpi-sub neutral">Latence 42ms</div>
+                </div>
+            </div>
+
+            <!-- CONTENT GRID -->
+            <div class="content-grid">
+                
+                <!-- MIDDLE COLUMN -->
+                <div class="middle-column">
+                    <!-- Filters -->
+                    <div class="filters-card">
+                        <div class="filters-header">Filtrer :</div>
+                        <div class="filters-body">
+                            <div class="select-wrapper">
+                                <select id="filter-statut" onchange="loadClientsTable()">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="actif">Actif</option>
+                                    <option value="en_attente">En attente</option>
+                                    <option value="bloque">Bloqué</option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="filter-offre" onchange="loadClientsTable()">
+                                    <option value="">Toutes les offres</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Premium">Premium</option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="filter-tri" onchange="loadClientsTable()">
+                                    <option value="date_desc">Trier par : Date inscription</option>
+                                    <option value="solde_desc">Trier par : Solde décroissant</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary full-width" onclick="alert('Création de client manuelle - Bientôt disponible')">
+                                <i class="ti ti-user-plus"></i> Nouveau client
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Clients Table -->
+                    <div class="clients-card">
+                        <div class="card-header">
+                            <h2>Comptes clients (<span id="clients-count">0</span>)</h2>
+                            <a href="#" class="export-link" id="btn-export-csv" onclick="exportCSV()">Exporter CSV <i class="ti ti-arrow-right"></i></a>
+                        </div>
+                        <div class="table-container">
+                            <table class="admin-table" id="clients-table">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>IBAN</th>
+                                        <th>Offre</th>
+                                        <th>Solde</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clients-tbody">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">Chargement des données...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="right-column">
+                    
+                    <!-- Alertes Fraude -->
+                    <div class="alerts-card">
+                        <div class="card-header border-bottom">
+                            <h2 class="danger-text"><i class="ti ti-alert-triangle"></i> Alertes fraude (<span id="alert-count">0</span>)</h2>
+                            <a href="#" class="export-link text-muted">Tout voir <i class="ti ti-arrow-right"></i></a>
+                        </div>
+                        <div class="alerts-list" id="alerts-container">
+                            <!-- Alertes injectées via JS -->
+                            <div class="text-center text-muted p-3">Chargement des alertes...</div>
+                        </div>
+                    </div>
+
+                    <!-- Santé système -->
+                    <div class="system-health-card">
+                        <div class="card-header">
+                            <h2>Santé système</h2>
+                            <span class="status-badge success"><i class="ti ti-point-filled"></i> Tous systèmes OK</span>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-info">
+                                <span>API Gateway</span>
+                                <span>99,98%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill success" style="width: 99.98%;"></div></div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-info">
+                                <span>Base de données</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-info">
+                                <span>Moteur virements</span>
+                                <span>99,9%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill success" style="width: 99.9%;"></div></div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-info">
+                                <span>Module KYC</span>
+                                <span class="warning-text">97,2%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill warning" style="width: 97.2%;"></div></div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-info">
+                                <span>Notifications</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Répartition clients -->
+                    <div class="repartition-card">
+                        <h2>Répartition clients</h2>
+                        <div class="repart-item">
+                            <div class="repart-dot blue"></div>
+                            <div class="repart-label">Standard</div>
+                            <div class="repart-value" id="repart-standard">--</div>
+                            <div class="repart-bar-container"><div class="repart-bar blue" id="bar-standard" style="width: 0%;"></div></div>
+                        </div>
+                        <div class="repart-item">
+                            <div class="repart-dot purple"></div>
+                            <div class="repart-label">Premium</div>
+                            <div class="repart-value" id="repart-premium">--</div>
+                            <div class="repart-bar-container"><div class="repart-bar purple" id="bar-premium" style="width: 0%;"></div></div>
+                        </div>
+                        <div class="repart-item">
+                            <div class="repart-dot cyan"></div>
+                            <div class="repart-label">Business</div>
+                            <div class="repart-value" id="repart-business">--</div>
+                            <div class="repart-bar-container"><div class="repart-bar cyan" id="bar-business" style="width: 0%;"></div></div>
+                        </div>
+
+                        <div class="chart-section-title mt-4">
+                            <h2>Volume transactions</h2>
+                            <span class="text-muted">7 jours</span>
+                        </div>
+                        <div class="mini-chart-placeholder">
+                            <!-- SVG Placeholder for chart -->
+                            <svg viewBox="0 0 200 60" preserveAspectRatio="none" style="width:100%; height:60px;">
+                                <path d="M0,60 L0,50 C20,40 40,60 60,30 C80,0 100,20 120,40 C140,60 160,20 180,30 C190,35 200,20 200,20 L200,60 Z" fill="rgba(37, 99, 235, 0.1)"></path>
+                                <path d="M0,50 C20,40 40,60 60,30 C80,0 100,20 120,40 C140,60 160,20 180,30 C190,35 200,20 200,20" fill="none" stroke="#2563EB" stroke-width="2"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="modal-block-client" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Bloquer le client</h3>
+            <p>Êtes-vous sûr de vouloir bloquer ce client ? Son compte sera gelé immédiatement.</p>
+            <input type="hidden" id="block-client-id">
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-block-client').style.display='none'">Annuler</button>
+                <button class="btn-danger" style="flex:1;" onclick="confirmBlockClient()">Bloquer</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal-verify-kyc" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Vérification KYC</h3>
+            <div id="kyc-details"></div>
+            <input type="hidden" id="verify-kyc-id">
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-danger" style="flex:1;" onclick="rejectKyc()">Rejeter</button>
+                <button class="btn-primary" style="flex:1;" onclick="validateKyc()">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
 </body>
 </html>
