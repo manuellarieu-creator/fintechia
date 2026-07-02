@@ -111,26 +111,27 @@ async function submitTunnelOtp() {
 }
 
 function showRulePopup(message) {
-  let modal = document.getElementById('modal-rule-popup');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'modal-rule-popup';
-    modal.className = 'modal';
-    modal.innerHTML = `
-      <div class="modal-content" style="max-width: 450px; text-align: center;">
-          <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 28px;">
-              <i class="ti ti-alert-triangle"></i>
-          </div>
-          <h3 style="margin-bottom: 12px; color: #1e293b;">Information importante</h3>
-          <p id="rule-popup-message" style="color: #475569; margin-bottom: 24px; font-size: 14px; line-height: 1.5;"></p>
-          <button class="btn-primary" style="width: 100%;" onclick="document.getElementById('modal-rule-popup').style.display='none'">Compris</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
+    let modal = document.getElementById('modal-rule-popup');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'modal-rule-popup';
+      modal.className = 'modal';
+      modal.setAttribute('style', 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; justify-content: center; align-items: center;');
+      modal.innerHTML = `
+        <div class="modal-content" style="background: white; max-width: 450px; width: 90%; border-radius: 16px; padding: 32px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 28px;">
+                <i class="ti ti-alert-triangle"></i>
+            </div>
+            <h3 style="margin-bottom: 12px; color: #1e293b; font-size: 1.25rem;">Information importante</h3>
+            <p id="rule-popup-message" style="color: #475569; margin-bottom: 24px; font-size: 15px; line-height: 1.5;"></p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="document.getElementById('modal-rule-popup').style.display='none'">J'ai compris</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    document.getElementById('rule-popup-message').innerText = message;
+    modal.style.display = 'flex';
   }
-  document.getElementById('rule-popup-message').innerText = message;
-  modal.style.display = 'flex';
-}
 
 function finishTunnel() {
   closeModal('modal-virement-tunnel');
