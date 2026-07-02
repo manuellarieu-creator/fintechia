@@ -9,7 +9,7 @@ async function loadBudgetsPage() {
   
   // On affiche le message vide dans l'enveloppe, mais on ne return pas pour pouvoir calculer le reste.
   if(userBudgets.length === 0) {
-    if(container) container.innerHTML = '<p style="color:#64748B;">Aucun budget mensuel défini.</p><br><button onclick="openModal(\\'modal-budgets\\')" class="nb-btn-primary">Créer mon premier budget</button>';
+    if(container) container.innerHTML = '<p style="color:#64748B;">Aucun budget mensuel défini.</p><br><button onclick="openModal(\'modal-budgets\')" class="nb-btn-primary">Créer mon premier budget</button>';
     if(containerMobile) containerMobile.innerHTML = '<p style="color:var(--text-muted); font-size:12px;">Aucun budget mensuel défini.</p>';
   }
   
