@@ -560,14 +560,68 @@
     </div>
 
     <!-- Modals -->
+    <div class="modal" id="modal-manage-client" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3>Gestion du compte <span id="manage-client-name" class="client-name"></span></h3>
+                <button class="icon-btn" onclick="document.getElementById('modal-manage-client').style.display='none'"><i class="ti ti-x"></i></button>
+            </div>
+            <input type="hidden" id="manage-client-id">
+            <input type="hidden" id="manage-client-iban">
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('activer')">
+                    <i class="ti ti-check" style="margin-right:8px; color:var(--success);"></i> Attribuer IBAN / Activer
+                </button>
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('crediter')">
+                    <i class="ti ti-arrow-down-left" style="margin-right:8px; color:var(--success);"></i> Créditer le compte
+                </button>
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('debiter')">
+                    <i class="ti ti-arrow-up-right" style="margin-right:8px; color:var(--danger);"></i> Débiter le compte
+                </button>
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('restreindre')">
+                    <i class="ti ti-hand-stop" style="margin-right:8px; color:var(--warning);"></i> Restreindre (Bloquer virements)
+                </button>
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('bloquer')">
+                    <i class="ti ti-lock" style="margin-right:8px; color:var(--danger);"></i> Bloquer le compte (Empêcher connexion)
+                </button>
+                <div style="border-top:1px solid var(--card-border); margin:8px 0;"></div>
+                <button class="btn-danger" style="justify-content:flex-start; background:transparent; color:var(--danger); border:1px solid var(--danger);" onclick="manageAction('supprimer')">
+                    <i class="ti ti-trash" style="margin-right:8px;"></i> Supprimer définitivement (Irreversible)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-montant" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 id="modal-montant-title">Action</h3>
+            <p id="modal-montant-desc" class="text-muted" style="margin-bottom:16px;">Veuillez saisir le montant et un libellé.</p>
+            <input type="hidden" id="montant-action-type">
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Montant (€)</label>
+                <input type="number" id="montant-valeur" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 500">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Libellé</label>
+                <input type="text" id="montant-libelle" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: Geste commercial">
+            </div>
+            <div style="display:flex; gap:12px;">
+                <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-montant').style.display='none'">Annuler</button>
+                <button class="btn-primary" style="flex:1;" onclick="confirmMontantAction()">Valider</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="modal-block-client" style="display:none;">
         <div class="modal-content" style="max-width: 400px;">
-            <h3>Bloquer le client</h3>
-            <p>Êtes-vous sûr de vouloir bloquer ce client ? Son compte sera gelé immédiatement.</p>
+            <h3 id="modal-block-title">Confirmer l'action</h3>
+            <p id="modal-block-desc">Êtes-vous sûr de vouloir bloquer ce client ?</p>
             <input type="hidden" id="block-client-id">
+            <input type="hidden" id="block-client-action">
             <div style="display:flex; gap:12px; margin-top:24px;">
                 <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-block-client').style.display='none'">Annuler</button>
-                <button class="btn-danger" style="flex:1;" onclick="confirmBlockClient()">Bloquer</button>
+                <button class="btn-danger" style="flex:1;" id="btn-confirm-block" onclick="confirmBlockClient()">Confirmer</button>
             </div>
         </div>
     </div>

@@ -27,8 +27,13 @@ router.get('/dashboard', guard, async (req, res, next) => {
         (SELECT COUNT(*) FROM kyc WHERE statut = 'en_attente') as kyc_en_attente,
         (SELECT COUNT(*) FROM transactions WHERE statut = 'en_attente') as virements_en_attente,
         (SELECT COUNT(*) FROM beneficiaires WHERE statut = 'en_attente') as beneficiaires_en_attente,
-        (SELECT SUM(solde) FROM accounts) as total_soldes
+        (SELECT SUM(solde) FROM accounts) as total_soldes,
+        (SELECT COUNT(*) FROM transactions WHERE DATE(created_at) = CURDATE()) as tx_jour,
+        (SELECT SUM(montant) FROM transactions WHERE DATE(created_at) = CURDATE()) as volume_jour,
+        (SELECT COUNT(*) FROM audit_logs WHERE categorie = 'securite' AND statut = 'echec' AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)) as alertes_fraude
     `);
+    
+    // Si la DB n'a pas encore la modif ENUM pour 'restreint', on gère l'erreur silencieusement à l'usage
     res.json(stats[0]);
   } catch (err) {
     next(err);
@@ -119,7 +124,7 @@ router.post('/comptes/:accountId/crediter', [guard, body('montant').isFloat({ gt
     await connection.beginTransaction();
 
     const [accounts] = await connection.query('SELECT * FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
-    if (accounts.length === 0 || accounts[0].statut !== 'actif') {
+    if (accounts.length === 0 || (accounts[0].statut !== 'actif' && accounts[0].statut !== 'restreint')) {
       await connection.rollback();
       return res.status(400).json({ error: 'Compte inactif', code: 'ACCOUNT_INVALID', status: 400 });
     }
@@ -131,21 +136,106 @@ router.post('/comptes/:accountId/crediter', [guard, body('montant').isFloat({ gt
     await connection.query(
       `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
        VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')`,
-      [accountId, montant, soldeAvant, soldeApres, libelle || 'Crédit', libelle]
+      [accountId, montant, soldeAvant, soldeApres, libelle || 'Crédit Admin', libelle || 'Crédit Admin']
     );
 
     await connection.commit();
 
     await audit.log({
       acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
-      action: audit.ACTIONS.COMPTE_CREDITE, categorie: audit.CATEGORIES.admin,
+      action: audit.ACTIONS.COMPTE_CREDITE || 'compte_credite', categorie: audit.CATEGORIES.admin,
       cible_type: 'account', cible_id: accountId,
       cible_detail: `Crédit de ${montant}€ — nouveau solde : ${soldeApres}€`,
       detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres }, req
     });
 
     await notifications.envoyer(accounts[0].user_id, 'Crédit reçu', `Vous avez reçu un crédit de ${montant}€.`, 'succes');
-    res.json({ success: true });
+    res.json({ success: true, nouveau_solde: soldeApres });
+  } catch (err) {
+    await connection.rollback();
+    next(err);
+  } finally {
+    connection.release();
+  }
+});
+
+// POST /api/admin/comptes/:id/debiter
+router.post('/comptes/:accountId/debiter', [guard, body('montant').isFloat({ gt: 0 })], validateReq, async (req, res, next) => {
+  const connection = await db.getConnection();
+  try {
+    const { montant, libelle } = req.body;
+    const { accountId } = req.params;
+    await connection.beginTransaction();
+
+    const [accounts] = await connection.query('SELECT * FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
+    if (accounts.length === 0 || (accounts[0].statut !== 'actif' && accounts[0].statut !== 'restreint')) {
+      await connection.rollback();
+      return res.status(400).json({ error: 'Compte inactif', code: 'ACCOUNT_INVALID', status: 400 });
+    }
+
+    const soldeAvant = accounts[0].solde;
+    if (parseFloat(soldeAvant) < parseFloat(montant)) {
+      await connection.rollback();
+      return res.status(400).json({ error: 'Solde insuffisant pour ce débit', code: 'NO_FUNDS', status: 400 });
+    }
+
+    const soldeApres = parseFloat(soldeAvant) - parseFloat(montant);
+
+    await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [soldeApres, accountId]);
+    await connection.query(
+      `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
+       VALUES (?, 'debit', ?, ?, ?, ?, ?, 'valide')`,
+      [accountId, montant, soldeAvant, soldeApres, libelle || 'Débit Admin', libelle || 'Débit Admin']
+    );
+
+    await connection.commit();
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'compte_debite', categorie: audit.CATEGORIES.admin,
+      cible_type: 'account', cible_id: accountId,
+      cible_detail: `Débit de ${montant}€ — nouveau solde : ${soldeApres}€`,
+      detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres }, req
+    });
+
+    await notifications.envoyer(accounts[0].user_id, 'Débit effectué', `Un débit de ${montant}€ a été effectué sur votre compte.`, 'alerte');
+    res.json({ success: true, nouveau_solde: soldeApres });
+  } catch (err) {
+    await connection.rollback();
+    next(err);
+  } finally {
+    connection.release();
+  }
+});
+
+// DELETE /api/admin/comptes/:id
+router.delete('/comptes/:accountId', guard, async (req, res, next) => {
+  const connection = await db.getConnection();
+  try {
+    const { accountId } = req.params;
+    await connection.beginTransaction();
+
+    const [accounts] = await connection.query('SELECT user_id FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
+    if (accounts.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ error: 'Compte introuvable', status: 404 });
+    }
+
+    const userId = accounts[0].user_id;
+
+    // Supprimer l'utilisateur. La contrainte ON DELETE CASCADE va supprimer les comptes, kyc, transactions, etc.
+    await connection.query('DELETE FROM users WHERE id = ?', [userId]);
+
+    await connection.commit();
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'utilisateur_supprime', categorie: audit.CATEGORIES.admin,
+      cible_type: 'user', cible_id: userId,
+      cible_detail: `Suppression complète de l'utilisateur ${userId} et de ses comptes associés.`, req
+    });
+
+    res.json({ success: true, message: "Utilisateur supprimé" });
   } catch (err) {
     await connection.rollback();
     next(err);
@@ -357,6 +447,29 @@ router.get('/audit', guard, async (req, res, next) => {
 
     sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
     params.push(limit, offset);
+
+    const [rows] = await db.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/alertes
+router.get('/alertes', guard, async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    
+    let sql = `
+      SELECT id, created_at, action, cible_detail as description, acteur_email as utilisateur, detail 
+      FROM audit_logs 
+      WHERE (categorie = 'securite' AND statut = 'echec')
+         OR action LIKE '%bloque%'
+         OR action LIKE '%rejet%'
+      ORDER BY created_at DESC 
+      LIMIT ?
+    `;
+    const params = [limit];
 
     const [rows] = await db.query(sql, params);
     res.json(rows);

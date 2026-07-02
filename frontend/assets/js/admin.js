@@ -213,9 +213,7 @@ async function renderClientsTable() {
             <td><span class="offre-badge ${c.offre.toLowerCase()}">${c.offre}</span></td>
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
-                ${c.statut !== 'bloque' ? 
-                    `<button class="btn-alert-action bloquer" onclick="promptBlockClient(${c.id})">Bloquer</button>` : 
-                    `<button class="btn-alert-action verifier" onclick="activerCompte(${c.id}, '${c.iban}')">Activer</button>`}
+                <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer</button>
             </td>
         </tr>
     `).join('');
@@ -266,9 +264,7 @@ async function renderFullClientsTable() {
             <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR')}</td>
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
-                ${c.statut !== 'bloque' ? 
-                    `<button class="btn-alert-action bloquer" onclick="promptBlockClient(${c.id})">Bloquer</button>` : 
-                    `<button class="btn-alert-action verifier" onclick="activerCompte(${c.id}, '${c.iban}')">Débloquer</button>`}
+                <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer <i class="ti ti-chevron-down"></i></button>
             </td>
         </tr>
     `}).join('');
@@ -515,38 +511,44 @@ async function loadCartesTable() {
 }
 
 // --- Fraudes (Page 5 & Dashboard) ---
-const fraudesMock = [
-    { type: 'danger', title: 'TX suspecte - 4 200 €', desc: 'Vers IP Étrangère', user: 'Karim Douiri', time: 'Il y a 12 min', action: 'Bloquer' },
-    { type: 'warning', title: 'Connexion inhabituelle', desc: 'Nouvel appareil - Maroc', user: 'Sophie Martin', time: '14:18', action: 'Vérifier' },
-    { type: 'warning', title: 'Plafond carte atteint', desc: 'Tentative de paiement refusée', user: 'Marc Beaumont', time: 'Hier', action: 'Analyser' },
-    { type: 'danger', title: 'Multiples échecs PIN', desc: 'Carte bloquée par sécurité', user: 'Jean Dupont', time: 'Il y a 2h', action: 'Contacter' }
-];
-
 async function loadAlertes() {
+    const fraudesList = await fetchAPI('/admin/alertes?limit=10') || [];
     const container = document.getElementById('alerts-container');
-    document.getElementById('alert-count').innerText = fraudesMock.length;
-    container.innerHTML = fraudesMock.slice(0, 3).map(renderAlerteItem).join('');
+    document.getElementById('alert-count').innerText = fraudesList.length;
+    
+    if (fraudesList.length === 0) {
+        container.innerHTML = `<div class="text-center text-muted p-3">Aucune alerte.</div>`;
+        return;
+    }
+    
+    container.innerHTML = fraudesList.slice(0, 3).map(renderAlerteItem).join('');
 }
 
 async function renderFraudesFullTable() {
+    const fraudesList = await fetchAPI('/admin/alertes?limit=50') || [];
     const container = document.getElementById('fraudes-full-container');
-    container.innerHTML = fraudesMock.map(renderAlerteItem).join('');
+    if (fraudesList.length === 0) {
+        container.innerHTML = `<div class="text-center text-muted p-3">Aucune alerte fraude ou sécurité.</div>`;
+        return;
+    }
+    container.innerHTML = fraudesList.map(renderAlerteItem).join('');
 }
 
 function renderAlerteItem(a) {
+    const type = a.description?.toLowerCase().includes('bloqu') ? 'danger' : 'warning';
     return `
         <div class="alert-item">
-            <div class="alert-icon ${a.type}">
-                <i class="ti ${a.type === 'danger' ? 'ti-alert-circle' : 'ti-alert-triangle'}"></i>
+            <div class="alert-icon ${type}">
+                <i class="ti ${type === 'danger' ? 'ti-alert-circle' : 'ti-alert-triangle'}"></i>
             </div>
             <div class="alert-content">
-                <div class="alert-title">${a.title}</div>
-                <div class="alert-desc">${a.desc} <br><span class="client-name" style="font-size:11px;">${a.user}</span></div>
-                <div class="alert-time">${a.time}</div>
+                <div class="alert-title">${a.action}</div>
+                <div class="alert-desc">${a.description || ''} <br><span class="client-name" style="font-size:11px;">${a.utilisateur}</span></div>
+                <div class="alert-time">${new Date(a.created_at).toLocaleString('fr-FR')}</div>
             </div>
             <div class="alert-actions">
-                <button class="btn-alert-action ${a.action.toLowerCase() === 'bloquer' ? 'bloquer' : 'verifier'}">
-                    ${a.action}
+                <button class="btn-alert-action ${type === 'danger' ? 'bloquer' : 'verifier'}">
+                    Examiner
                 </button>
             </div>
         </div>
@@ -568,44 +570,113 @@ function startSupervisionLive() {
         "[SECURITY] 3 tentatives de login échouées IP: 192.168.1.55"
     ];
     
-    supervisionInterval = setInterval(() => {
-        const randomEvent = events[Math.floor(Math.random() * events.length)];
-        const time = new Date().toLocaleTimeString('fr-FR');
-        
-        const div = document.createElement('div');
-        div.style.color = randomEvent.includes('[SECURITY]') ? '#ef4444' : '#cbd5e1';
-        div.innerText = `[${time}] ${randomEvent}`;
-        
-        terminal.appendChild(div);
-        terminal.scrollTop = terminal.scrollHeight;
-        
-        // Randomly update KPIs
-        document.getElementById('sup-req').innerText = formatNumber(Math.floor(Math.random() * 500) + 2000);
-        document.getElementById('sup-cpu').innerText = Math.floor(Math.random() * 20 + 10) + "%";
-        
-    }, 1500);
+    supervisionInterval = setInterval(async () => {
+        // En vrai, un WebSocket serait mieux. Ici on poll les derniers logs
+        const logs = await fetchAPI('/admin/audit?limit=1');
+        if (logs && logs.length > 0) {
+            const latest = logs[0];
+            const time = new Date(latest.created_at).toLocaleTimeString('fr-FR');
+            
+            const div = document.createElement('div');
+            div.style.color = latest.categorie === 'securite' ? '#ef4444' : '#cbd5e1';
+            div.innerText = `[${time}] [${latest.categorie.toUpperCase()}] ${latest.action} - ${latest.cible_detail || ''}`;
+            
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    }, 3000);
 }
 
 
 // ============================
 // ACTIONS CLIENTS
 // ============================
-window.promptBlockClient = function(id) {
-    document.getElementById('block-client-id').value = id;
-    document.getElementById('modal-block-client').style.display = 'flex';
+window.openManageClient = function(id, iban, nom) {
+    document.getElementById('manage-client-id').value = id;
+    document.getElementById('manage-client-iban').value = iban;
+    document.getElementById('manage-client-name').innerText = `- ${nom}`;
+    document.getElementById('modal-manage-client').style.display = 'flex';
+}
+
+window.manageAction = function(actionType) {
+    const id = document.getElementById('manage-client-id').value;
+    const iban = document.getElementById('manage-client-iban').value;
+    
+    document.getElementById('modal-manage-client').style.display = 'none';
+
+    if (actionType === 'activer') {
+        activerCompte(id, iban);
+    } 
+    else if (actionType === 'crediter' || actionType === 'debiter') {
+        document.getElementById('montant-action-type').value = actionType;
+        document.getElementById('modal-montant-title').innerText = actionType === 'crediter' ? 'Créditer le compte' : 'Débiter le compte';
+        document.getElementById('montant-valeur').value = '';
+        document.getElementById('montant-libelle').value = '';
+        document.getElementById('modal-montant').style.display = 'flex';
+    }
+    else if (actionType === 'restreindre' || actionType === 'bloquer' || actionType === 'supprimer') {
+        document.getElementById('block-client-action').value = actionType;
+        document.getElementById('block-client-id').value = id;
+        
+        const titleMap = {
+            'restreindre': 'Restreindre le compte',
+            'bloquer': 'Bloquer le compte',
+            'supprimer': 'Supprimer DÉFINITIVEMENT'
+        };
+        const descMap = {
+            'restreindre': 'Le client pourra se connecter mais ne pourra plus faire de virements.',
+            'bloquer': 'Le client ne pourra plus se connecter.',
+            'supprimer': 'ATTENTION: Cette action effacera l\'utilisateur, son compte, et tout son historique. Êtes-vous sûr ?'
+        };
+        
+        document.getElementById('modal-block-title').innerText = titleMap[actionType];
+        document.getElementById('modal-block-desc').innerText = descMap[actionType];
+        
+        const btn = document.getElementById('btn-confirm-block');
+        btn.innerText = actionType === 'supprimer' ? 'Supprimer' : 'Confirmer';
+        
+        document.getElementById('modal-block-client').style.display = 'flex';
+    }
+}
+
+window.confirmMontantAction = async function() {
+    const actionType = document.getElementById('montant-action-type').value;
+    const id = document.getElementById('manage-client-id').value;
+    const montant = document.getElementById('montant-valeur').value;
+    const libelle = document.getElementById('montant-libelle').value;
+
+    if(!montant || montant <= 0) return alert('Montant invalide');
+
+    const endpoint = `/admin/comptes/${id}/${actionType}`;
+    const res = await fetchAPI(endpoint, 'POST', { montant, libelle });
+    
+    if (res && res.success) {
+        document.getElementById('modal-montant').style.display = 'none';
+        allClients = await fetchAPI('/admin/comptes') || []; 
+        showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
+    } else {
+        alert("Erreur lors de l'opération : " + (res?.error || "Inconnue"));
+    }
 }
 
 window.confirmBlockClient = async function() {
     const id = document.getElementById('block-client-id').value;
-    const res = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { statut: 'bloque', commentaire: 'Bloqué via console Admin' });
+    const action = document.getElementById('block-client-action').value;
+    
+    let res;
+    if (action === 'supprimer') {
+        res = await fetchAPI(`/admin/comptes/${id}`, 'DELETE');
+    } else {
+        res = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { statut: action, commentaire: `Action via console Admin: ${action}` });
+    }
+
     if (res && res.success) {
         document.getElementById('modal-block-client').style.display = 'none';
-        allClients = await fetchAPI('/admin/comptes') || []; // Force refresh
-        
-        // Reload active views intelligently, but for simplicity:
+        allClients = await fetchAPI('/admin/comptes') || [];
         showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
+        loadDashboardStats();
     } else {
-        alert("Erreur lors du blocage du compte.");
+        alert("Erreur lors de l'opération.");
     }
 }
 

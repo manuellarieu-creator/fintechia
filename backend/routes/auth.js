@@ -104,6 +104,15 @@ router.post('/login', [
     const [accounts] = await db.query('SELECT id, solde, statut, type_compte FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
+    if (account && account.statut === 'bloque') {
+      await audit.log({
+        acteur_email: email, acteur_role: 'client',
+        action: audit.ACTIONS.CONNEXION_ECHOUEE, categorie: audit.CATEGORIES.securite,
+        statut: 'echec', detail: `Connexion refusée (compte bloqué) pour ${email}`, req
+      });
+      return res.status(403).json({ error: 'Votre compte est bloqué. Veuillez contacter le support.', code: 'ACCOUNT_BLOCKED', status: 403 });
+    }
+
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
