@@ -453,15 +453,39 @@ function renderVirementsTable() {
         return `
         <tr>
             <td style="font-size:12px;" class="text-muted">${new Date(v.created_at).toLocaleString('fr-FR')}</td>
-            <td><span class="client-name">Compte #${v.account_id}</span></td>
+            <td><span class="client-name">${v.prenom ? v.prenom + ' ' + v.nom : 'Compte #' + v.account_id}</span></td>
             <td>${typeBadge}</td>
             <td><span class="text-muted">${v.motif || v.libelle || '-'}</span></td>
             <td class="solde-cell ${v.type==='credit' ? 'success-text' : 'danger-text'}">
                 ${v.type==='credit'?'+':'-'}${formatMontant(v.montant)}
             </td>
             <td>${statBadge}</td>
+            <td style="text-align:right;">
+                ${v.statut === 'en_attente' ? `
+                    <div style="display:flex; gap:4px; justify-content:flex-end;">
+                        <button class="icon-btn text-success" title="Valider" onclick="gererVirement(${v.id}, 'valide')"><i class="ti ti-check"></i></button>
+                        <button class="icon-btn text-danger" title="Rejeter" onclick="gererVirement(${v.id}, 'rejete')"><i class="ti ti-x"></i></button>
+                    </div>
+                ` : '-'}
+            </td>
         </tr>
     `}).join('');
+}
+
+window.gererVirement = async function(id, decision) {
+    if (!confirm(decision === 'valide' ? 'Valider ce virement ?' : 'Rejeter ce virement ?')) return;
+    try {
+        const res = await fetchAPI(`/admin/virements/${id}`, 'PATCH', { decision });
+        if (res && res.success) {
+            loadVirementsTable();
+            loadDashboardStats();
+        } else {
+            alert("Erreur lors de l'opération.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Erreur réseau ou serveur.");
+    }
 }
 
 
