@@ -564,7 +564,7 @@
             <div class="bdg-header-actions">
               <div class="bdg-month-selector">
                 <button><i class="ti ti-chevron-left"></i></button>
-                <span>Juin 2026</span>
+                <span id="bdg-month-selector-text">Chargement...</span>
                 <button><i class="ti ti-chevron-right"></i></button>
               </div>
               <button class="nb-btn-primary" style="margin-left:16px; padding:8px 16px; border-radius:8px;">
@@ -574,7 +574,7 @@
             </div>
           </div>
 
-          <div class="bdg-metrics-grid">
+          <div class="bdg-metrics-grid" id="bdg-metrics-desktop">
             <div class="bdg-metric-card">
               <div class="bdg-metric-title">REVENUS JUIN</div>
               <div class="bdg-metric-val">3 200 €</div>
@@ -610,7 +610,7 @@
                       </div>
                    </div>
 
-                   <div class="bdg-env-list">
+                   <div class="bdg-env-list" id="bdg-env-list-desktop">
                       <!-- Env Item -->
                       <div class="bdg-env-item">
                          <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ti-home"></i></div>
@@ -727,24 +727,13 @@
                 <div class="nb-card" style="margin-bottom:24px;">
                    <div class="bdg-card-header" style="margin-bottom:16px;">
                       <h3 style="margin:0;">Répartition</h3>
-                      <span style="font-size:12px; color:var(--text-muted);">Juin 2026</span>
+                      <span style="font-size:12px; color:var(--text-muted);" id="bdg-repartition-month">Chargement...</span>
                    </div>
                    <div style="display:flex; align-items:center; gap:20px;">
-                       <div class="bdg-donut-wrap">
-                          <svg viewBox="0 0 36 36" class="bdg-donut">
-                             <!-- Donut segments -->
-                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#DC2626" stroke-width="4" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
-                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#F59E0B" stroke-width="4" stroke-dasharray="25 75" stroke-dashoffset="-15"></circle>
-                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#2563EB" stroke-width="4" stroke-dasharray="15 85" stroke-dashoffset="-40"></circle>
-                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#10B981" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-55"></circle>
-                             <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#94A3B8" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-65"></circle>
-                          </svg>
-                          <div class="bdg-donut-inner">
-                             <div class="val">1 243€</div>
-                             <div class="lbl">total</div>
-                          </div>
+                       <div class="bdg-donut-wrap" id="bdg-repartition-chart">
+                          <!-- Donut généré par JS -->
                        </div>
-                       <div class="bdg-legend">
+                       <div class="bdg-legend" id="bdg-repartition-legend">
                           <div class="leg-item"><span class="dot" style="background:#DC2626;"></span>Logement</div>
                           <div class="leg-item"><span class="dot" style="background:#F59E0B;"></span>Courses</div>
                           <div class="leg-item"><span class="dot" style="background:#2563EB;"></span>Transports</div>
@@ -760,24 +749,26 @@
                       <h3 style="margin:0;">Objectif épargne</h3>
                       <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Modifier</a>
                    </div>
-                   <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
-                      <div style="font-size:13px; color:var(--text-muted);">320 / 400 € ce mois</div>
-                      <div style="font-size:14px; font-weight:700;">80%</div>
-                   </div>
-                   <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:80%; background:var(--success);"></div></div>
-                   <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:20px;">
-                      <span>Il reste 80 €<br>à épargner</span>
-                      <span style="text-align:right;">Objectif<br>annuel: 4 800 €</span>
-                   </div>
-                   <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:16px;">
-                      <div>
-                         <div style="font-size:16px; font-weight:700; margin-bottom:2px;">2 840 €</div>
-                         <div style="font-size:11px; color:var(--text-muted);">Épargné en 2026</div>
-                      </div>
-                      <div style="text-align:right;">
-                         <div style="font-size:16px; font-weight:700; margin-bottom:2px;">1 960 €</div>
-                         <div style="font-size:11px; color:var(--text-muted);">Restant à atteindre</div>
-                      </div>
+                   <div id="bdg-epargne-desktop">
+                     <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
+                        <div style="font-size:13px; color:var(--text-muted);">320 / 400 € ce mois</div>
+                        <div style="font-size:14px; font-weight:700;">80%</div>
+                     </div>
+                     <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:80%; background:var(--success);"></div></div>
+                     <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:20px;">
+                        <span>Il reste 80 €<br>à épargner</span>
+                        <span style="text-align:right;">Objectif<br>annuel: 4 800 €</span>
+                     </div>
+                     <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:16px;">
+                        <div>
+                           <div style="font-size:16px; font-weight:700; margin-bottom:2px;">2 840 €</div>
+                           <div style="font-size:11px; color:var(--text-muted);">Épargné en 2026</div>
+                        </div>
+                        <div style="text-align:right;">
+                           <div style="font-size:16px; font-weight:700; margin-bottom:2px;">1 960 €</div>
+                           <div style="font-size:11px; color:var(--text-muted);">Restant à atteindre</div>
+                        </div>
+                     </div>
                    </div>
                 </div>
 
@@ -787,7 +778,7 @@
                       <h3 style="margin:0;">Alertes budget</h3>
                       <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Configurer</a>
                    </div>
-                   <div class="bdg-alerts">
+                   <div class="bdg-alerts" id="bdg-alerts-desktop">
                       <div class="bdg-alert-item">
                          <div class="bdg-alert-icon"><i class="ti ti-clock"></i></div>
                          <div class="bdg-alert-text">
@@ -818,7 +809,7 @@
                       <h3 style="margin:0;">Dernières dépenses</h3>
                       <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Voir tout &rarr;</a>
                    </div>
-                   <div class="bdg-recent-tx">
+                   <div class="bdg-recent-tx" id="bdg-recent-tx-desktop">
                       <div class="bdg-tx-item">
                          <div class="bdg-tx-icon"><i class="ti ti-shopping-bag"></i></div>
                          <div class="bdg-tx-info">

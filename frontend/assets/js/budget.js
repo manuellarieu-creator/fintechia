@@ -14,91 +14,239 @@ async function loadBudgetsPage() {
   //   container.innerHTML = dashBudget.innerHTML + '<br><br><button onclick="openModal(\'modal-budgets\')" class="nb-btn-primary">Gérer mes enveloppes</button>';
   // }
 
-  if(containerMobile) {
-    let txs = [];
-    try {
-      txs = await apiCall('/transactions?limit=100');
-    } catch(e) {}
+  // Desktop & Mobile logic
+  let txs = [];
+  try {
+    txs = await apiCall('/transactions?limit=100');
+  } catch(e) {}
 
-    let revenus = 0;
-    let depenses = 0;
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const categoriesDepenses = {};
+  let revenus = 0;
+  let depenses = 0;
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const categoriesDepenses = {};
 
-    txs.forEach(tx => {
-       const txDate = new Date(tx.created_at);
-       if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
-           const montant = parseFloat(tx.montant);
-           if (montant > 0 && tx.type !== 'virement_emis') revenus += montant;
-           else depenses += Math.abs(montant);
-           
-           if (montant < 0 || tx.type === 'virement_emis') {
-               const cat = tx.categorie || 'Divers';
-               categoriesDepenses[cat] = (categoriesDepenses[cat] || 0) + Math.abs(montant);
-           }
-       }
-    });
+  txs.forEach(tx => {
+     const txDate = new Date(tx.created_at);
+     if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
+         const montant = parseFloat(tx.montant);
+         if (montant > 0 && tx.type !== 'virement_emis') revenus += montant;
+         else depenses += Math.abs(montant);
+         
+         if (montant < 0 || tx.type === 'virement_emis') {
+             const cat = tx.categorie || 'Divers';
+             categoriesDepenses[cat] = (categoriesDepenses[cat] || 0) + Math.abs(montant);
+         }
+     }
+  });
 
-    const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0) || 2880;
-    const reste = Math.max(0, budgetTotal - depenses);
-    const epargne = revenus - depenses > 0 ? (revenus - depenses) * 0.2 : 0; // Simulate 20% savings
+  const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0) || 2880;
+  const reste = Math.max(0, budgetTotal - depenses);
+  const epargne = revenus - depenses > 0 ? (revenus - depenses) * 0.2 : 0; 
+  const epargnePct = Math.min(100, Math.round((epargne/400)*100));
 
-    const icons = { 'Logement': 'ti-home', 'Courses': 'ti-shopping-cart', 'Transports': 'ti-car', 'Abonnements': 'ti-refresh', 'Loisirs': 'ti-ticket', 'Santé': 'ti-heart', 'Restaurants': 'ti-cutlery', 'Divers': 'ti-wallet' };
-    
-    let envHtml = '';
-    userBudgets.forEach(b => {
-       const spent = categoriesDepenses[b.categorie] || 0;
-       const limit = parseFloat(b.limite);
-       const pct = Math.min(100, Math.round((spent / limit) * 100));
-       let color = 'var(--primary)';
-       if (pct >= 100) color = 'var(--danger)';
-       else if (pct >= 80) color = 'var(--warning)';
-       else color = 'var(--success)';
-       
-       const icon = icons[b.categorie] || 'ti-tag';
-       envHtml += `
-          <div class="bdg-env-item">
-             <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ${icon}"></i></div>
-             <div class="bdg-env-details">
-                <div class="bdg-env-top">
-                   <span class="bdg-env-name">${b.categorie}</span>
-                   <span class="bdg-env-amounts">${spent.toFixed(0)} / ${limit.toFixed(0)} €</span>
-                   <span class="bdg-env-percent" style="color:${pct >= 100 ? 'var(--danger)' : 'inherit'}">${pct}%</span>
-                </div>
-                <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:${pct}%; background:${color};"></div></div>
-             </div>
-          </div>
-       `;
-    });
+  const icons = { 'Logement': 'ti-home', 'Courses': 'ti-shopping-cart', 'Transports': 'ti-car', 'Abonnements': 'ti-refresh', 'Loisirs': 'ti-ticket', 'Santé': 'ti-heart', 'Restaurants': 'ti-cutlery', 'Divers': 'ti-wallet' };
+  const chartColors = ['#DC2626', '#F59E0B', '#2563EB', '#10B981', '#94A3B8', '#8B5CF6', '#EC4899'];
+  
+  let envHtml = '';
+  let envHtmlDesktop = '';
+  let alertsHtmlDesktop = '';
+  
+  // Array for donut chart
+  let chartData = [];
 
-    if (userBudgets.length === 0) {
-       envHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune enveloppe définie.</div>';
-    }
-
-    let recentTxsHtml = txs.slice(0, 4).map(tx => {
-        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
-        let libelle = tx.description || 'Transaction';
-        if(tx.type === 'virement_recu') libelle = 'Virement reçu';
-        if(tx.type === 'virement_emis') libelle = 'Virement émis';
-        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-shopping-bag';
-        const sign = isCredit ? '+' : '';
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
-        
-        return `
-          <div class="bdg-tx-item">
-             <div class="bdg-tx-icon"><i class="ti ${icon}"></i></div>
-             <div class="bdg-tx-info">
-                <strong>${libelle}</strong><span>${tx.categorie || 'Divers'} - ${date}</span>
-             </div>
-             <div class="bdg-tx-amt" style="color: ${isCredit ? 'var(--success)' : 'inherit'}">${sign}${parseFloat(tx.montant).toFixed(2).replace('.',',')} €</div>
-          </div>
+  userBudgets.forEach((b, idx) => {
+     const spent = categoriesDepenses[b.categorie] || 0;
+     const limit = parseFloat(b.limite);
+     const pct = Math.min(100, Math.round((spent / limit) * 100));
+     let color = 'var(--primary)';
+     if (pct >= 100) color = 'var(--danger)';
+     else if (pct >= 80) color = 'var(--warning)';
+     else color = 'var(--success)';
+     
+     if (spent > 0) {
+        chartData.push({ category: b.categorie, amount: spent, color: chartColors[idx % chartColors.length] });
+     }
+     
+     const icon = icons[b.categorie] || 'ti-tag';
+     
+     const itemHtml = `
+        <div class="bdg-env-item">
+           <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ${icon}"></i></div>
+           <div class="bdg-env-details">
+              <div class="bdg-env-top">
+                 <span class="bdg-env-name">${b.categorie}</span>
+                 <span class="bdg-env-amounts">${spent.toFixed(0)} / ${limit.toFixed(0)} €</span>
+                 <span class="bdg-env-percent" style="color:${pct >= 100 ? 'var(--danger)' : (pct >= 80 ? 'var(--warning)' : 'inherit')}">${pct >= 100 ? 'Atteint' : pct + '%'}</span>
+              </div>
+              <div class="bdg-progress-bg"><div class="bdg-progress-fill" style="width:${pct}%; background:${color};"></div></div>
+           </div>
+        </div>
+     `;
+     envHtml += itemHtml;
+     envHtmlDesktop += itemHtml;
+     
+     // Generate alerts
+     if (pct >= 100) {
+        alertsHtmlDesktop += `
+           <div class="bdg-alert-item">
+              <div class="bdg-alert-icon" style="color:var(--danger); background:#FEF2F2;"><i class="ti ti-alert-triangle"></i></div>
+              <div class="bdg-alert-text">
+                 <strong style="color:var(--danger);">${b.categorie} — Plafond dépassé</strong>
+                 <span>${spent.toFixed(0)} € / ${limit.toFixed(0)} € consommés</span>
+              </div>
+           </div>
         `;
-    }).join('');
+     } else if (pct >= 80) {
+        alertsHtmlDesktop += `
+           <div class="bdg-alert-item">
+              <div class="bdg-alert-icon" style="color:var(--warning); background:#FFFBEB;"><i class="ti ti-clock"></i></div>
+              <div class="bdg-alert-text">
+                 <strong style="color:var(--warning);">${b.categorie} — Bientôt atteint (${pct}%)</strong>
+                 <span>Il reste ${(limit - spent).toFixed(0)} €</span>
+              </div>
+           </div>
+        `;
+     }
+  });
 
-    const monthStr = new Date().toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
-    const capitalizedMonthStr = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
+  if (userBudgets.length === 0) {
+     envHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune enveloppe définie.</div>';
+     envHtmlDesktop = envHtml;
+  }
+  
+  if (alertsHtmlDesktop === '') {
+      alertsHtmlDesktop = '<div style="padding:16px; color:var(--text-muted); text-align:center;">Aucune alerte ce mois-ci.</div>';
+  }
 
+  // --- Generate Donut Chart ---
+  let donutSvg = '';
+  let donutLegend = '';
+  if (chartData.length > 0) {
+     let currentOffset = 25; 
+     const totalSpent = chartData.reduce((sum, d) => sum + d.amount, 0);
+     
+     donutSvg = '<svg viewBox="0 0 36 36" class="bdg-donut">';
+     chartData.forEach(d => {
+         const percentage = (d.amount / totalSpent) * 100;
+         const dashArray = `${percentage} ${100 - percentage}`;
+         donutSvg += `<circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="${d.color}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${currentOffset}"></circle>`;
+         currentOffset -= percentage;
+         
+         donutLegend += `<div class="leg-item"><span class="dot" style="background:${d.color};"></span>${d.category}</div>`;
+     });
+     donutSvg += '</svg>';
+  } else {
+     donutSvg = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#F1F5F9; border-radius:50%;"><i class="ti ti-wallet" style="color:#94A3B8; font-size:24px;"></i></div>';
+     donutLegend = '<div style="color:var(--text-muted); font-size:12px;">Aucune dépense.</div>';
+  }
+
+  // --- Recent Txs ---
+  const filteredDépenses = txs.filter(tx => parseFloat(tx.montant) < 0 || tx.type === 'virement_emis').slice(0, 4);
+  let recentTxsHtml = filteredDépenses.map(tx => {
+      let libelle = tx.description || 'Transaction';
+      if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
+      const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+      
+      return `
+        <div class="bdg-tx-item">
+           <div class="bdg-tx-icon"><i class="ti ti-shopping-bag"></i></div>
+           <div class="bdg-tx-info">
+              <strong>${libelle}</strong><span>${tx.categorie || 'Divers'} - ${date}</span>
+           </div>
+           <div class="bdg-tx-amt" style="color: inherit">${parseFloat(tx.montant).toFixed(2).replace('.',',')} €</div>
+        </div>
+      `;
+  }).join('');
+
+  if (filteredDépenses.length === 0) {
+      recentTxsHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune dépense récente.</div>';
+  }
+
+  const monthStr = new Date().toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+  const capitalizedMonthStr = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
+  
+  /* --- UPDATE DESKTOP DOM --- */
+  const desktopMonthLabel = document.getElementById('bdg-month-selector-text');
+  if (desktopMonthLabel) desktopMonthLabel.textContent = capitalizedMonthStr;
+  
+  const desktopRepartMonth = document.getElementById('bdg-repartition-month');
+  if (desktopRepartMonth) desktopRepartMonth.textContent = capitalizedMonthStr;
+
+  const desktopMetrics = document.getElementById('bdg-metrics-desktop');
+  if (desktopMetrics) {
+      desktopMetrics.innerHTML = `
+        <div class="bdg-metric-card">
+          <div class="bdg-metric-title">REVENUS MOIS</div>
+          <div class="bdg-metric-val">${revenus.toFixed(0)} €</div>
+          <div class="bdg-metric-sub positive">+8% vs préc.</div>
+        </div>
+        <div class="bdg-metric-card">
+          <div class="bdg-metric-title">DÉPENSES MOIS</div>
+          <div class="bdg-metric-val">${depenses.toFixed(0)} €</div>
+          <div class="bdg-metric-sub negative">+12% vs préc.</div>
+        </div>
+        <div class="bdg-metric-card">
+          <div class="bdg-metric-title">ÉPARGNE DU MOIS</div>
+          <div class="bdg-metric-val">${epargne.toFixed(0)} €</div>
+          <div class="bdg-metric-sub">Obj. 400 € - ${epargnePct}%</div>
+        </div>
+        <div class="bdg-metric-card">
+          <div class="bdg-metric-title">RESTE À DÉPENSER</div>
+          <div class="bdg-metric-val">${reste.toFixed(0)} €</div>
+          <div class="bdg-metric-sub">Budget total: ${budgetTotal.toFixed(0)} €</div>
+        </div>
+      `;
+  }
+  
+  const desktopEnvList = document.getElementById('bdg-env-list-desktop');
+  if (desktopEnvList) desktopEnvList.innerHTML = envHtmlDesktop;
+  
+  const desktopChart = document.getElementById('bdg-repartition-chart');
+  if (desktopChart) {
+      desktopChart.innerHTML = donutSvg + `
+      <div class="bdg-donut-inner">
+         <div class="val">${depenses.toFixed(0)}€</div>
+         <div class="lbl">total</div>
+      </div>`;
+  }
+  
+  const desktopLegend = document.getElementById('bdg-repartition-legend');
+  if (desktopLegend) desktopLegend.innerHTML = donutLegend;
+  
+  const desktopAlerts = document.getElementById('bdg-alerts-desktop');
+  if (desktopAlerts) desktopAlerts.innerHTML = alertsHtmlDesktop;
+  
+  const desktopRecentTx = document.getElementById('bdg-recent-tx-desktop');
+  if (desktopRecentTx) desktopRecentTx.innerHTML = recentTxsHtml;
+  
+  const desktopEpargne = document.getElementById('bdg-epargne-desktop');
+  if (desktopEpargne) {
+      desktopEpargne.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
+           <div style="font-size:13px; color:var(--text-muted);">${epargne.toFixed(0)} / 400 € ce mois</div>
+           <div style="font-size:14px; font-weight:700;">${epargnePct}%</div>
+        </div>
+        <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${epargnePct}%; background:var(--success);"></div></div>
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:20px;">
+           <span>Il reste ${(400 - epargne).toFixed(0)} €<br>à épargner</span>
+           <span style="text-align:right;">Objectif<br>annuel: 4 800 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:16px;">
+           <div>
+              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">2 840 €</div>
+              <div style="font-size:11px; color:var(--text-muted);">Épargné en ${currentYear}</div>
+           </div>
+           <div style="text-align:right;">
+              <div style="font-size:16px; font-weight:700; margin-bottom:2px;">1 960 €</div>
+              <div style="font-size:11px; color:var(--text-muted);">Restant à atteindre</div>
+           </div>
+        </div>
+      `;
+  }
+
+  /* --- UPDATE MOBILE DOM --- */
+  if(containerMobile) {
     containerMobile.innerHTML = `
       <div class="m-bdg-header">
         <div>
@@ -126,7 +274,7 @@ async function loadBudgetsPage() {
         <div class="m-bdg-metric">
           <div class="m-bdg-metric-title">ÉPARGNE DU MOIS</div>
           <div class="m-bdg-metric-val">${epargne.toFixed(0)} €</div>
-          <div class="m-bdg-metric-sub">Obj. 400 € - ${Math.min(100, Math.round((epargne/400)*100))}%</div>
+          <div class="m-bdg-metric-sub">Obj. 400 € - ${epargnePct}%</div>
         </div>
         <div class="m-bdg-metric">
           <div class="m-bdg-metric-title">RESTE À DÉPENSER</div>
@@ -142,24 +290,14 @@ async function loadBudgetsPage() {
           </div>
           <div style="display:flex; align-items:center; gap:16px;">
               <div class="bdg-donut-wrap" style="width:100px; height:100px;">
-                <svg viewBox="0 0 36 36" class="bdg-donut">
-                    <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#DC2626" stroke-width="4" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
-                    <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#F59E0B" stroke-width="4" stroke-dasharray="20 80" stroke-dashoffset="-15"></circle>
-                    <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#2563EB" stroke-width="4" stroke-dasharray="15 85" stroke-dashoffset="-35"></circle>
-                    <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#10B981" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-50"></circle>
-                    <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#94A3B8" stroke-width="4" stroke-dasharray="15 85" stroke-dashoffset="-60"></circle>
-                </svg>
+                ${donutSvg}
                 <div class="bdg-donut-inner">
                     <div class="val" style="font-size:1rem;">${depenses.toFixed(0)}€</div>
                     <div class="lbl" style="font-size:0.65rem;">total</div>
                 </div>
               </div>
               <div class="bdg-legend" style="flex:1;">
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;"><div style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; background:#DC2626; border-radius:2px;"></span>Logement</div><strong>40%</strong></div>
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;"><div style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; background:#F59E0B; border-radius:2px;"></span>Courses</div><strong>20%</strong></div>
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;"><div style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; background:#2563EB; border-radius:2px;"></span>Transports</div><strong>15%</strong></div>
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;"><div style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; background:#10B981; border-radius:2px;"></span>Abo.</div><strong>10%</strong></div>
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><div style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; background:#94A3B8; border-radius:2px;"></span>Autres</div><strong>15%</strong></div>
+                ${donutLegend}
               </div>
           </div>
       </div>
@@ -170,13 +308,7 @@ async function loadBudgetsPage() {
             <a href="#" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Configurer</a>
           </div>
           <div class="bdg-alerts">
-            <div class="bdg-alert-item">
-                <div class="bdg-alert-icon" style="font-size:1rem;"><i class="ti ti-clock"></i></div>
-                <div class="bdg-alert-text">
-                  <strong style="font-size:0.8rem;">Logement — Plafond atteint</strong>
-                  <span style="font-size:0.7rem;">750 € / 750 € consommés</span>
-                </div>
-            </div>
+            ${alertsHtmlDesktop}
           </div>
       </div>
 
@@ -203,9 +335,9 @@ async function loadBudgetsPage() {
           </div>
           <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
             <div style="font-size:0.8rem; color:var(--text-muted);">${epargne.toFixed(0)} / 400 € ce mois</div>
-            <div style="font-size:0.85rem; font-weight:700;">${Math.min(100, Math.round((epargne/400)*100))}%</div>
+            <div style="font-size:0.85rem; font-weight:700;">${epargnePct}%</div>
           </div>
-          <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${Math.min(100, Math.round((epargne/400)*100))}%; background:var(--success);"></div></div>
+          <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${epargnePct}%; background:var(--success);"></div></div>
           
           <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px; margin-top:16px;">
             <div>
@@ -240,7 +372,7 @@ async function loadBudgetsPage() {
             <a href="#" onclick="showView('view-virements')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Voir tout &rarr;</a>
           </div>
           <div class="bdg-recent-tx">
-            ${recentTxsHtml || '<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Aucune dépense.</div>'}
+            ${recentTxsHtml}
           </div>
       </div>
     `;
