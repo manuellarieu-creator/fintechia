@@ -6,6 +6,27 @@ const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 
+// Auto-migration pour les nouvelles colonnes accounts et account_rules
+(async () => {
+  try {
+    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE").catch(()=>{});
+    await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(()=>{});
+    await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(()=>{});
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS account_rules (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        account_id INT NOT NULL,
+        trigger_min_balance DECIMAL(15,2),
+        trigger_min_transfer DECIMAL(15,2),
+        popup_message TEXT NOT NULL,
+        is_active BOOLEAN DEFAULT TRUE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+      )
+    `);
+  } catch(e) {}
+})();
+
 const guard = [authMiddleware, adminMiddleware];
 
 const validateReq = (req, res, next) => {
@@ -88,15 +109,24 @@ router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], v
 });
 
 // PATCH /api/admin/comptes/:id/activer
-router.patch('/comptes/:accountId/activer', [guard, body('iban').trim().notEmpty()], validateReq, async (req, res, next) => {
+router.patch('/comptes/:accountId/activer', [
+  guard, 
+  body('iban').trim().notEmpty(),
+  body('bic').trim().notEmpty(),
+  body('numero_compte').trim().notEmpty()
+], validateReq, async (req, res, next) => {
   try {
     const ibanClean = req.body.iban.replace(/\s+/g, '').toUpperCase();
+    const bicClean = req.body.bic.replace(/\s+/g, '').toUpperCase();
+    const numeroCompteClean = req.body.numero_compte.trim();
     const { accountId } = req.params;
     
-    const [existing] = await db.query('SELECT id FROM accounts WHERE iban = ? AND id != ?', [ibanClean, accountId]);
-    if (existing.length > 0) return res.status(400).json({ error: 'IBAN déjà utilisé', code: 'IBAN_EXISTS', status: 400 });
+    // Vérifier l'unicité de l'IBAN et Numéro de compte
+    const [existing] = await db.query('SELECT id FROM accounts WHERE (iban = ? OR numero_compte = ?) AND id != ?', [ibanClean, numeroCompteClean, accountId]);
+    if (existing.length > 0) return res.status(400).json({ error: 'IBAN ou Numéro de compte déjà utilisé', code: 'ALREADY_EXISTS', status: 400 });
 
-    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = "FINTEFR22XXX" WHERE id = ?', [ibanClean, accountId]);
+    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ? WHERE id = ?', 
+      [ibanClean, bicClean, numeroCompteClean, accountId]);
     
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     if (accounts.length > 0) {
@@ -104,8 +134,8 @@ router.patch('/comptes/:accountId/activer', [guard, body('iban').trim().notEmpty
         acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
         action: audit.ACTIONS.IBAN_ATTRIBUE, categorie: audit.CATEGORIES.admin,
         cible_type: 'account', cible_id: accountId,
-        cible_detail: `IBAN ${ibanClean} attribué au compte #${accountId}`,
-        detail: { iban: ibanClean, admin: req.user.email }, req
+        cible_detail: `Activation du compte #${accountId}`,
+        detail: { iban: ibanClean, bic: bicClean, numero_compte: numeroCompteClean, admin: req.user.email }, req
       });
       await notifications.envoyer(accounts[0].user_id, 'Compte activé', `Votre compte est activé. Votre IBAN : ${ibanClean}`, 'succes');
     }
@@ -116,10 +146,15 @@ router.patch('/comptes/:accountId/activer', [guard, body('iban').trim().notEmpty
 });
 
 // POST /api/admin/comptes/:id/crediter
-router.post('/comptes/:accountId/crediter', [guard, body('montant').isFloat({ gt: 0 })], validateReq, async (req, res, next) => {
+router.post('/comptes/:accountId/crediter', [
+  guard, 
+  body('montant').isFloat({ gt: 0 }),
+  body('transfer_allowed').optional().isBoolean(),
+  body('max_transfer_amount').optional()
+], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { montant, libelle } = req.body;
+    const { montant, libelle, transfer_allowed, max_transfer_amount } = req.body;
     const { accountId } = req.params;
     await connection.beginTransaction();
 
@@ -132,7 +167,24 @@ router.post('/comptes/:accountId/crediter', [guard, body('montant').isFloat({ gt
     const soldeAvant = accounts[0].solde;
     const soldeApres = parseFloat(soldeAvant) + parseFloat(montant);
 
-    await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [soldeApres, accountId]);
+    // Mettre à jour le solde et éventuellement les limites
+    let updateQuery = 'UPDATE accounts SET solde = ?';
+    let queryParams = [soldeApres];
+    
+    if (transfer_allowed !== undefined) {
+      updateQuery += ', transfer_allowed = ?';
+      queryParams.push(transfer_allowed);
+    }
+    if (max_transfer_amount !== undefined) {
+      updateQuery += ', max_transfer_amount = ?';
+      queryParams.push(max_transfer_amount !== '' ? max_transfer_amount : null);
+    }
+    
+    updateQuery += ' WHERE id = ?';
+    queryParams.push(accountId);
+
+    await connection.query(updateQuery, queryParams);
+    
     await connection.query(
       `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
        VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')`,
@@ -146,7 +198,7 @@ router.post('/comptes/:accountId/crediter', [guard, body('montant').isFloat({ gt
       action: audit.ACTIONS.COMPTE_CREDITE || 'compte_credite', categorie: audit.CATEGORIES.admin,
       cible_type: 'account', cible_id: accountId,
       cible_detail: `Crédit de ${montant}€ — nouveau solde : ${soldeApres}€`,
-      detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres }, req
+      detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres, transfer_allowed, max_transfer_amount }, req
     });
 
     await notifications.envoyer(accounts[0].user_id, 'Crédit reçu', `Vous avez reçu un crédit de ${montant}€.`, 'succes');
@@ -205,6 +257,49 @@ router.post('/comptes/:accountId/debiter', [guard, body('montant').isFloat({ gt:
     next(err);
   } finally {
     connection.release();
+  }
+});
+
+// ============================================
+// ACCOUNT RULES (POPUPS DYNAMIQUES)
+// ============================================
+
+// GET /api/admin/comptes/:id/rules
+router.get('/comptes/:accountId/rules', guard, async (req, res, next) => {
+  try {
+    const [rules] = await db.query('SELECT * FROM account_rules WHERE account_id = ? ORDER BY created_at DESC', [req.params.accountId]);
+    res.json(rules);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/admin/comptes/:id/rules
+router.post('/comptes/:accountId/rules', [
+  guard,
+  body('popup_message').trim().notEmpty(),
+  body('trigger_min_balance').optional().isFloat({ min: 0 }),
+  body('trigger_min_transfer').optional().isFloat({ min: 0 })
+], validateReq, async (req, res, next) => {
+  try {
+    const { trigger_min_balance, trigger_min_transfer, popup_message } = req.body;
+    await db.query(
+      'INSERT INTO account_rules (account_id, trigger_min_balance, trigger_min_transfer, popup_message) VALUES (?, ?, ?, ?)',
+      [req.params.accountId, trigger_min_balance || null, trigger_min_transfer || null, popup_message]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /api/admin/rules/:id
+router.delete('/rules/:ruleId', guard, async (req, res, next) => {
+  try {
+    await db.query('DELETE FROM account_rules WHERE id = ?', [req.params.ruleId]);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
   }
 });
 

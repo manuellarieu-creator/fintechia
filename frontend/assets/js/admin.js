@@ -290,7 +290,10 @@ async function renderBloquesTable() {
             <td>
                 <div class="client-cell">
                     ${getClientAvatar(c)}
-                    <span class="client-name">${c.prenom} ${c.nom}</span>
+                    <div class="client-info">
+                        <span class="client-name">${c.prenom} ${c.nom}</span>
+                        <span class="client-email"><small>Client #${c.numero_client || c.id}</small></span>
+                    </div>
                 </div>
             </td>
             <td class="text-muted">${c.email}</td>
@@ -599,63 +602,79 @@ window.openManageClient = function(id, iban, nom) {
 }
 
 window.manageAction = function(actionType) {
-    const id = document.getElementById('manage-client-id').value;
-    const iban = document.getElementById('manage-client-iban').value;
-    
-    document.getElementById('modal-manage-client').style.display = 'none';
+  const id = document.getElementById('manage-client-id').value;
+  const iban = document.getElementById('manage-client-iban').value;
+  
+  document.getElementById('modal-manage-client').style.display = 'none';
 
-    if (actionType === 'activer') {
-        activerCompte(id, iban);
-    } 
-    else if (actionType === 'crediter' || actionType === 'debiter') {
-        document.getElementById('montant-action-type').value = actionType;
-        document.getElementById('modal-montant-title').innerText = actionType === 'crediter' ? 'Créditer le compte' : 'Débiter le compte';
-        document.getElementById('montant-valeur').value = '';
-        document.getElementById('montant-libelle').value = '';
-        document.getElementById('modal-montant').style.display = 'flex';
-    }
-    else if (actionType === 'restreindre' || actionType === 'bloquer' || actionType === 'supprimer') {
-        document.getElementById('block-client-action').value = actionType;
-        document.getElementById('block-client-id').value = id;
-        
-        const titleMap = {
-            'restreindre': 'Restreindre le compte',
-            'bloquer': 'Bloquer le compte',
-            'supprimer': 'Supprimer DÉFINITIVEMENT'
-        };
-        const descMap = {
-            'restreindre': 'Le client pourra se connecter mais ne pourra plus faire de virements.',
-            'bloquer': 'Le client ne pourra plus se connecter.',
-            'supprimer': 'ATTENTION: Cette action effacera l\'utilisateur, son compte, et tout son historique. Êtes-vous sûr ?'
-        };
-        
-        document.getElementById('modal-block-title').innerText = titleMap[actionType];
-        document.getElementById('modal-block-desc').innerText = descMap[actionType];
-        
-        const btn = document.getElementById('btn-confirm-block');
-        btn.innerText = actionType === 'supprimer' ? 'Supprimer' : 'Confirmer';
-        
-        document.getElementById('modal-block-client').style.display = 'flex';
-    }
+  if (actionType === 'activer') {
+      document.getElementById('activer-client-id').value = id;
+      document.getElementById('activer-iban').value = iban && iban !== 'null' && iban !== '-' ? iban : '';
+      document.getElementById('activer-bic').value = 'FINTEFR22XXX';
+      document.getElementById('activer-numero').value = '';
+      document.getElementById('modal-activer-compte').style.display = 'flex';
+  } 
+  else if (actionType === 'rules') {
+      document.getElementById('rules-client-id').value = id;
+      document.getElementById('modal-rules').style.display = 'flex';
+      loadRules(id);
+  }
+  else if (actionType === 'crediter' || actionType === 'debiter') {
+      document.getElementById('montant-action-type').value = actionType;
+      document.getElementById('modal-montant-title').innerText = actionType === 'crediter' ? 'Créditer le compte' : 'Débiter le compte';
+      document.getElementById('montant-valeur').value = '';
+      document.getElementById('montant-libelle').value = '';
+      document.getElementById('credit-options-container').style.display = actionType === 'crediter' ? 'block' : 'none';
+      document.getElementById('modal-montant').style.display = 'flex';
+  }
+  else if (actionType === 'restreindre' || actionType === 'bloquer' || actionType === 'supprimer') {
+      document.getElementById('block-client-action').value = actionType;
+      document.getElementById('block-client-id').value = id;
+      
+      const titleMap = {
+          'restreindre': 'Restreindre le compte',
+          'bloquer': 'Bloquer le compte',
+          'supprimer': 'Supprimer DÉFINITIVEMENT'
+      };
+      const descMap = {
+          'restreindre': 'Le client pourra se connecter mais ne pourra plus faire de virements.',
+          'bloquer': 'Le client ne pourra plus se connecter.',
+          'supprimer': 'ATTENTION: Cette action effacera l\'utilisateur, son compte, et tout son historique. Êtes-vous sûr ?'
+      };
+      
+      document.getElementById('modal-block-title').innerText = titleMap[actionType];
+      document.getElementById('modal-block-desc').innerText = descMap[actionType];
+      
+      const btn = document.getElementById('btn-confirm-block');
+      btn.innerText = actionType === 'supprimer' ? 'Supprimer' : 'Confirmer';
+      
+      document.getElementById('modal-block-client').style.display = 'flex';
+  }
 }
 
 window.confirmMontantAction = async function() {
-    const actionType = document.getElementById('montant-action-type').value;
+    const type = document.getElementById('montant-action-type').value;
     const id = document.getElementById('manage-client-id').value;
-    const montant = document.getElementById('montant-valeur').value;
-    const libelle = document.getElementById('montant-libelle').value;
-
-    if(!montant || montant <= 0) return alert('Montant invalide');
-
-    const endpoint = `/admin/comptes/${id}/${actionType}`;
-    const res = await fetchAPI(endpoint, 'POST', { montant, libelle });
+    const val = parseFloat(document.getElementById('montant-valeur').value);
+    const libelle = document.getElementById('montant-libelle').value || (type==='crediter' ? 'Crédit Admin' : 'Débit Admin');
     
-    if (res && res.success) {
-        document.getElementById('modal-montant').style.display = 'none';
-        allClients = await fetchAPI('/admin/comptes') || []; 
-        showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
-    } else {
-        alert("Erreur lors de l'opération : " + (res?.error || "Inconnue"));
+    const payload = { montant: val, libelle: libelle };
+    
+    if (type === 'crediter') {
+        payload.transfer_allowed = document.getElementById('montant-transfer-allowed').checked;
+        const maxTransfer = document.getElementById('montant-max-transfer').value;
+        if (maxTransfer) payload.max_transfer_amount = parseFloat(maxTransfer);
+        else payload.max_transfer_amount = null;
+    }
+
+    if (val > 0) {
+        const res = await fetchAPI(`/admin/comptes/${id}/${type}`, 'POST', payload);
+        if (res && res.success) {
+            document.getElementById('modal-montant').style.display = 'none';
+            allClients = await fetchAPI('/admin/comptes') || [];
+            showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
+            loadDashboardStats();
+        }
     }
 }
 
@@ -681,23 +700,83 @@ window.confirmBlockClient = async function() {
 }
 
 window.activerCompte = async function(id, currentIban) {
-    let iban = currentIban;
-    if (!iban || iban === 'undefined' || iban === 'null' || iban === '-') {
-        iban = 'FR7630004' + Math.floor(Math.random() * 100000000000);
-    }
-    
-    const res = await fetchAPI(`/admin/comptes/${id}/activer`, 'PATCH', { iban: iban });
+    // Pour une réactivation silencieuse (ex: depuis les alertes de fraude)
+    const res = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { statut: 'actif', commentaire: 'Débloqué via console Admin' });
     if (res && res.success) {
         allClients = await fetchAPI('/admin/comptes') || [];
         showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
     } else {
-        const res2 = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { statut: 'actif', commentaire: 'Débloqué via console Admin' });
-        if (res2 && res2.success) {
-            allClients = await fetchAPI('/admin/comptes') || [];
-            showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
-        } else {
-            alert("Erreur lors de l'activation.");
-        }
+        alert("Erreur lors de l'activation.");
+    }
+}
+
+window.confirmActiverCompte = async function() {
+    const id = document.getElementById('activer-client-id').value;
+    const iban = document.getElementById('activer-iban').value;
+    const bic = document.getElementById('activer-bic').value;
+    const numero = document.getElementById('activer-numero').value;
+
+    if (!iban || !bic || !numero) {
+        alert('Veuillez remplir tous les champs (IBAN, BIC, Numéro).');
+        return;
+    }
+
+    const res = await fetchAPI(`/admin/comptes/${id}/activer`, 'PATCH', { iban, bic, numero_compte: numero });
+    if (res && res.success) {
+        document.getElementById('modal-activer-compte').style.display = 'none';
+        allClients = await fetchAPI('/admin/comptes') || [];
+        showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
+    }
+}
+
+// --- Règles et Popups ---
+async function loadRules(accountId) {
+    const tbody = document.getElementById('rules-list');
+    tbody.innerHTML = '<div class="text-muted text-center">Chargement...</div>';
+    const rules = await fetchAPI(`/admin/comptes/${accountId}/rules`) || [];
+    if (rules.length === 0) {
+        tbody.innerHTML = '<div class="text-muted text-center" style="font-size:13px;">Aucune règle configurée.</div>';
+        return;
+    }
+    tbody.innerHTML = rules.map(r => `
+        <div style="background:var(--bg-light); border:1px solid var(--card-border); padding:10px; border-radius:6px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-weight:600; margin-bottom:4px;">${r.popup_message}</div>
+                <div class="text-muted">
+                    ${r.trigger_min_balance ? `Solde &ge; ${r.trigger_min_balance}€` : 'Tous soldes'} | 
+                    ${r.trigger_min_transfer ? `Virement &ge; ${r.trigger_min_transfer}€` : 'Tous montants'}
+                </div>
+            </div>
+            <button class="icon-btn text-danger" onclick="deleteRule(${r.id}, ${accountId})"><i class="ti ti-trash"></i></button>
+        </div>
+    `).join('');
+}
+
+window.confirmAddRule = async function() {
+    const id = document.getElementById('rules-client-id').value;
+    const minBalance = document.getElementById('rule-min-balance').value;
+    const minTransfer = document.getElementById('rule-min-transfer').value;
+    const message = document.getElementById('rule-message').value;
+
+    if (!message) { alert('Veuillez définir un message pour le popup.'); return; }
+
+    const payload = { popup_message: message };
+    if (minBalance) payload.trigger_min_balance = parseFloat(minBalance);
+    if (minTransfer) payload.trigger_min_transfer = parseFloat(minTransfer);
+
+    const res = await fetchAPI(`/admin/comptes/${id}/rules`, 'POST', payload);
+    if (res && res.success) {
+        document.getElementById('rule-message').value = '';
+        document.getElementById('rule-min-balance').value = '';
+        document.getElementById('rule-min-transfer').value = '';
+        loadRules(id);
+    }
+}
+
+window.deleteRule = async function(ruleId, accountId) {
+    if(confirm('Supprimer cette règle ?')) {
+        const res = await fetchAPI(`/admin/rules/${ruleId}`, 'DELETE');
+        if(res && res.success) loadRules(accountId);
     }
 }
 

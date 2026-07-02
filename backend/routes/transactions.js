@@ -56,16 +56,43 @@ router.post('/virement', [
     
     await connection.beginTransaction();
 
-    const [accounts] = await connection.query('SELECT id, solde, statut FROM accounts WHERE user_id = ? FOR UPDATE', [req.user.id]);
+    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? FOR UPDATE', [req.user.id]);
     if (accounts.length === 0 || accounts[0].statut !== 'actif') {
       await connection.rollback();
       return res.status(400).json({ error: 'Compte inactif ou inexistant', code: 'ACCOUNT_INVALID', status: 400 });
     }
 
     const account = accounts[0];
+    
+    // 1. Vérifier si les transferts sont autorisés
+    if (!account.transfer_allowed) {
+      await connection.rollback();
+      return res.status(403).json({ error: 'Les transferts sont temporairement désactivés sur ce compte.', code: 'TRANSFER_DISABLED', status: 403 });
+    }
+
+    // 2. Vérifier la limite de montant
+    if (account.max_transfer_amount !== null && parseFloat(montant) > parseFloat(account.max_transfer_amount)) {
+      await connection.rollback();
+      return res.status(403).json({ error: `Vous ne pouvez pas virer plus de ${account.max_transfer_amount}€ en une seule fois.`, code: 'TRANSFER_LIMIT_EXCEEDED', status: 403 });
+    }
+
+    // 3. Vérifier le solde
     if (parseFloat(account.solde) < parseFloat(montant)) {
       await connection.rollback();
       return res.status(400).json({ error: 'Solde insuffisant', code: 'INSUFFICIENT_FUNDS', status: 400 });
+    }
+
+    // 4. Vérifier les règles dynamiques de popup (account_rules)
+    const [rules] = await connection.query('SELECT * FROM account_rules WHERE account_id = ? AND is_active = TRUE', [account.id]);
+    for (const rule of rules) {
+      const isBalanceTriggered = rule.trigger_min_balance === null || parseFloat(account.solde) >= parseFloat(rule.trigger_min_balance);
+      const isTransferTriggered = rule.trigger_min_transfer === null || parseFloat(montant) >= parseFloat(rule.trigger_min_transfer);
+      
+      if (isBalanceTriggered && isTransferTriggered) {
+        await connection.rollback();
+        // On renvoie un code 403 avec un flag isPopupRule pour l'afficher en popup front-end
+        return res.status(403).json({ error: rule.popup_message, code: 'ADMIN_POPUP_RULE', isPopupRule: true, status: 403 });
+      }
     }
 
     const reference = 'VIR-' + crypto.randomUUID().slice(0, 12).toUpperCase().replace(/-/g, '');

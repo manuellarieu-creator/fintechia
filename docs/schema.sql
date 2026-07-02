@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   prenom        VARCHAR(80)  NOT NULL,
   nom           VARCHAR(80)  NOT NULL,
   email         VARCHAR(160) NOT NULL UNIQUE,
+  numero_client VARCHAR(50)  UNIQUE,
   telephone     VARCHAR(30),
   adresse       VARCHAR(255),
   profession    VARCHAR(100),
@@ -19,13 +20,27 @@ CREATE TABLE IF NOT EXISTS accounts (
   id           INT AUTO_INCREMENT PRIMARY KEY,
   user_id      INT NOT NULL,
   iban         VARCHAR(34) UNIQUE,
-  bic          VARCHAR(12) DEFAULT 'FINTEFR22XXX',
+  bic          VARCHAR(12),
+  numero_compte VARCHAR(50) UNIQUE,
   type_compte  ENUM('credit','epargne','courant') DEFAULT 'credit',
   solde        DECIMAL(15,2) DEFAULT 0.00,
+  transfer_allowed BOOLEAN DEFAULT TRUE,
+  max_transfer_amount DECIMAL(15,2) DEFAULT NULL,
   statut       ENUM('en_attente','actif','kyc_requis','bloque','cloture') DEFAULT 'en_attente',
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS account_rules (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  account_id INT NOT NULL,
+  trigger_min_balance DECIMAL(15,2),
+  trigger_min_transfer DECIMAL(15,2),
+  popup_message TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS kyc (

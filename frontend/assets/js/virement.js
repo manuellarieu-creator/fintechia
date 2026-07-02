@@ -33,7 +33,11 @@ async function handleVirementSubmit(e, isMobile) {
     loadTransactions();
     checkAuth(); // Rafraichir le solde
   } catch (err) {
-    alert(err.message);
+    if (err.isPopupRule) {
+      showRulePopup(err.message);
+    } else {
+      alert(err.message);
+    }
   }
 }
 
@@ -95,9 +99,37 @@ async function submitTunnelOtp() {
     loadTransactions();
     checkAuth();
   } catch(err) {
-    alert('Erreur lors du virement: ' + err.message);
-    closeModal('modal-virement-tunnel');
+    document.getElementById('tunnel-step-loading').style.display = 'none';
+    if (err.isPopupRule) {
+      closeModal('modal-virement-tunnel');
+      showRulePopup(err.message);
+    } else {
+      alert('Erreur lors du virement: ' + err.message);
+      closeModal('modal-virement-tunnel');
+    }
   }
+}
+
+function showRulePopup(message) {
+  let modal = document.getElementById('modal-rule-popup');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-rule-popup';
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width: 450px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 28px;">
+              <i class="ti ti-alert-triangle"></i>
+          </div>
+          <h3 style="margin-bottom: 12px; color: #1e293b;">Information importante</h3>
+          <p id="rule-popup-message" style="color: #475569; margin-bottom: 24px; font-size: 14px; line-height: 1.5;"></p>
+          <button class="btn-primary" style="width: 100%;" onclick="document.getElementById('modal-rule-popup').style.display='none'">Compris</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('rule-popup-message').innerText = message;
+  modal.style.display = 'flex';
 }
 
 function finishTunnel() {

@@ -39,6 +39,7 @@ router.post('/register', [
   try { await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50) UNIQUE"); } catch(e) {}
 
   const connection = await db.getConnection();
   try {
@@ -51,9 +52,14 @@ router.post('/register', [
 
     const password_hash = await bcrypt.hash(password, 10);
     const telephone_code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+    
+    // Générer le numéro client
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(1000 + Math.random() * 9000).toString();
+    const numero_client = `CL-${timestamp}-${random}`;
 
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash, numero_client) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         prenom || null, 
         nom || null, 
@@ -63,7 +69,8 @@ router.post('/register', [
         profession || null, 
         revenus || null, 
         telephone_code, 
-        password_hash
+        password_hash,
+        numero_client
       ]
     );
     const userId = userRes.insertId;
@@ -189,7 +196,7 @@ router.post('/login', [
 // GET /api/auth/me
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, created_at FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) return res.status(404).json({ error: 'User not found', code: 'NOT_FOUND', status: 404 });
     const user = users[0];
     

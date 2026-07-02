@@ -83,7 +83,12 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   }
 
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Erreur API');
+  if (!res.ok) {
+    const err = new Error(data.error || 'Erreur API');
+    err.isPopupRule = data.isPopupRule;
+    err.code = data.code;
+    throw err;
+  }
   return data;
 }
 

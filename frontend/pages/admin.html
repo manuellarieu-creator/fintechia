@@ -579,6 +579,9 @@
                 <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('debiter')">
                     <i class="ti ti-arrow-up-right" style="margin-right:8px; color:var(--danger);"></i> Débiter le compte
                 </button>
+                <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('rules')">
+                    <i class="ti ti-message-2" style="margin-right:8px; color:var(--admin-sidebar-active);"></i> Configurer Règles & Popups
+                </button>
                 <button class="btn-outline" style="justify-content:flex-start; font-weight:500;" onclick="manageAction('restreindre')">
                     <i class="ti ti-hand-stop" style="margin-right:8px; color:var(--warning);"></i> Restreindre (Bloquer virements)
                 </button>
@@ -606,9 +609,77 @@
                 <label style="font-size:13px; font-weight:500;">Libellé</label>
                 <input type="text" id="montant-libelle" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: Geste commercial">
             </div>
-            <div style="display:flex; gap:12px;">
-                <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-montant').style.display='none'">Annuler</button>
-                <button class="btn-primary" style="flex:1;" onclick="confirmMontantAction()">Valider</button>
+            
+            <div id="credit-options-container" style="display:none; margin-bottom:24px; padding:12px; background:var(--admin-bg); border-radius:8px;">
+                <h4 style="margin-top:0; margin-bottom:12px; font-size:14px;">Options de transfert</h4>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; cursor:pointer;">
+                    <input type="checkbox" id="montant-transfer-allowed" checked>
+                    Autoriser les transferts de fonds pour ce compte
+                </label>
+                <label style="font-size:13px; font-weight:500; display:block; margin-top:12px;">Limiter le montant maximum transférable (€)</label>
+                <input type="number" id="montant-max-transfer" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Laissez vide pour aucune limite">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-montant').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="confirmMontantAction()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-activer-compte" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Activer le compte</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Veuillez renseigner manuellement les informations bancaires.</p>
+            <input type="hidden" id="activer-client-id">
+            
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">IBAN</label>
+                <input type="text" id="activer-iban" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: FR76...">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Code BIC</label>
+                <input type="text" id="activer-bic" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: FINTEFR22XXX">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Numéro de Compte</label>
+                <input type="text" id="activer-numero" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 00012345678">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-activer-compte').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="confirmActiverCompte()">Activer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-rules" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Règles et Popups</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Configurez un message popup qui s'affichera au client lors d'un virement sous certaines conditions.</p>
+            <input type="hidden" id="rules-client-id">
+            
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Déclencher si Solde Supérieur ou égal à (€)</label>
+                <input type="number" id="rule-min-balance" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 10000 (Optionnel)">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Déclencher si Montant du Virement Supérieur ou égal à (€)</label>
+                <input type="number" id="rule-min-transfer" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 5000 (Optionnel)">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Message du Popup</label>
+                <textarea id="rule-message" class="admin-input" style="width:100%; margin-top:4px; min-height:80px;" placeholder="Ex: Votre compte est en cours d'audit, merci de contacter votre conseiller..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn-outline" onclick="document.getElementById('modal-rules').style.display='none'">Fermer</button>
+                <button class="btn-primary" onclick="confirmAddRule()">Ajouter la règle</button>
+            </div>
+            
+            <div style="margin-top:24px; border-top:1px solid var(--card-border); padding-top:16px;">
+                <h4 style="margin-top:0; margin-bottom:12px; font-size:14px;">Règles existantes</h4>
+                <div id="rules-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
         </div>
     </div>
