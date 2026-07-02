@@ -22,64 +22,64 @@
                 </div>
             </div>
 
-            <nav class="admin-nav">
-                <a href="#" class="nav-item active">
+            <nav class="admin-nav" id="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="showAdminView('view-dashboard', this)">
                     <i class="ti ti-layout-dashboard"></i>
                     <span>Dashboard</span>
                 </a>
 
                 <div class="nav-section">CLIENTS</div>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-comptes', this)">
                     <i class="ti ti-users"></i>
                     <span>Comptes clients</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-kyc', this)">
                     <i class="ti ti-id"></i>
                     <span>KYC / Vérification</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-bloques', this)">
                     <i class="ti ti-user-cancel"></i>
                     <span>Clients bloqués</span>
                 </a>
 
                 <div class="nav-section">TRANSACTIONS</div>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-virements', this)">
                     <i class="ti ti-arrows-exchange"></i>
                     <span>Virements</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-fraudes', this)">
                     <i class="ti ti-flag"></i>
                     <span>Fraudes & alertes</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-supervision', this)">
                     <i class="ti ti-eye"></i>
                     <span>Supervision live</span>
                 </a>
 
                 <div class="nav-section">PRODUITS</div>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-cartes', this)">
                     <i class="ti ti-credit-card"></i>
                     <span>Cartes émises</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-iban', this)">
                     <i class="ti ti-building-bank"></i>
                     <span>Comptes & IBAN</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-reporting', this)">
                     <i class="ti ti-report-analytics"></i>
                     <span>Reporting</span>
                 </a>
 
                 <div class="nav-section">SYSTÈME</div>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-securite', this)">
                     <i class="ti ti-shield-lock"></i>
                     <span>Sécurité & accès</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-parametres', this)">
                     <i class="ti ti-settings"></i>
                     <span>Paramètres</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" onclick="showAdminView('view-logs', this)">
                     <i class="ti ti-file-text"></i>
                     <span>Logs système</span>
                 </a>
@@ -99,7 +99,7 @@
             <!-- HEADER -->
             <header class="admin-header">
                 <div class="header-titles">
-                    <h1>Dashboard Administration</h1>
+                    <h1 id="top-title">Dashboard Administration</h1>
                     <p id="admin-date-display">Chargement de la date...</p>
                 </div>
                 <div class="header-actions">
@@ -114,198 +114,448 @@
                 </div>
             </header>
 
-            <!-- KPIS GRID -->
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-title">CLIENTS ACTIFS</div>
-                    <div class="kpi-value" id="kpi-clients-actifs">--</div>
-                    <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> <span id="kpi-clients-actifs-sub">--</span> ce mois</div>
+            <!-- =============================== -->
+            <!-- VUE 1 : DASHBOARD               -->
+            <!-- =============================== -->
+            <div id="view-dashboard" class="admin-view" style="display: block;">
+                <!-- KPIS GRID -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-title">CLIENTS ACTIFS</div>
+                        <div class="kpi-value" id="kpi-clients-actifs">--</div>
+                        <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> <span id="kpi-clients-actifs-sub">--</span> ce mois</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">TX AUJOURD'HUI</div>
+                        <div class="kpi-value" id="kpi-tx-jour">--</div>
+                        <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> +8% vs hier</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">VOLUME (JOUR)</div>
+                        <div class="kpi-value" id="kpi-volume-jour">--</div>
+                        <div class="kpi-sub neutral">Moy. 2,1M €/j</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">KYC EN ATTENTE</div>
+                        <div class="kpi-value warning" id="kpi-kyc-attente">--</div>
+                        <div class="kpi-sub warning"><i class="ti ti-alert-triangle"></i> <span id="kpi-kyc-attente-sub">-- urgents</span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">ALERTES FRAUDE</div>
+                        <div class="kpi-value danger" id="kpi-alertes-fraude">--</div>
+                        <div class="kpi-sub danger"><i class="ti ti-alert-circle"></i> <span id="kpi-alertes-fraude-sub">-- nouvelles</span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">UPTIME SYSTÈME</div>
+                        <div class="kpi-value success" id="kpi-uptime">99,98%</div>
+                        <div class="kpi-sub neutral">Latence 42ms</div>
+                    </div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">TX AUJOURD'HUI</div>
-                    <div class="kpi-value" id="kpi-tx-jour">--</div>
-                    <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> +8% vs hier</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">VOLUME (JOUR)</div>
-                    <div class="kpi-value" id="kpi-volume-jour">--</div>
-                    <div class="kpi-sub neutral">Moy. 2,1M €/j</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">KYC EN ATTENTE</div>
-                    <div class="kpi-value warning" id="kpi-kyc-attente">--</div>
-                    <div class="kpi-sub warning"><i class="ti ti-alert-triangle"></i> <span id="kpi-kyc-attente-sub">-- urgents</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">ALERTES FRAUDE</div>
-                    <div class="kpi-value danger" id="kpi-alertes-fraude">--</div>
-                    <div class="kpi-sub danger"><i class="ti ti-alert-circle"></i> <span id="kpi-alertes-fraude-sub">-- nouvelles</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">UPTIME SYSTÈME</div>
-                    <div class="kpi-value success" id="kpi-uptime">99,98%</div>
-                    <div class="kpi-sub neutral">Latence 42ms</div>
+
+                <!-- CONTENT GRID -->
+                <div class="content-grid" style="margin-top:24px;">
+                    <!-- MIDDLE COLUMN -->
+                    <div class="middle-column">
+                        <div class="filters-card">
+                            <div class="filters-header">Filtrer :</div>
+                            <div class="filters-body">
+                                <div class="select-wrapper">
+                                    <select id="filter-statut" onchange="loadClientsTable()">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="actif">Actif</option>
+                                        <option value="en_attente">En attente</option>
+                                        <option value="bloque">Bloqué</option>
+                                    </select>
+                                </div>
+                                <div class="select-wrapper">
+                                    <select id="filter-offre" onchange="loadClientsTable()">
+                                        <option value="">Toutes les offres</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Premium">Premium</option>
+                                    </select>
+                                </div>
+                                <div class="select-wrapper">
+                                    <select id="filter-tri" onchange="loadClientsTable()">
+                                        <option value="date_desc">Trier par : Date inscription</option>
+                                        <option value="solde_desc">Trier par : Solde décroissant</option>
+                                    </select>
+                                </div>
+                                <button class="btn-primary full-width" onclick="alert('Création manuelle - Bientôt')">
+                                    <i class="ti ti-user-plus"></i> Nouveau client
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="clients-card">
+                            <div class="card-header">
+                                <h2>Comptes clients (<span id="clients-count">0</span>)</h2>
+                                <a href="#" class="export-link" onclick="exportCSV()">Exporter CSV <i class="ti ti-arrow-right"></i></a>
+                            </div>
+                            <div class="table-container">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>IBAN</th>
+                                            <th>Offre</th>
+                                            <th>Solde</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clients-tbody">
+                                        <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="right-column">
+                        <!-- Alertes Fraude -->
+                        <div class="alerts-card">
+                            <div class="card-header border-bottom">
+                                <h2 class="danger-text"><i class="ti ti-alert-triangle"></i> Alertes fraude (<span id="alert-count">0</span>)</h2>
+                                <a href="#" class="export-link text-muted" onclick="showAdminView('view-fraudes', document.querySelectorAll('.nav-item')[5])">Tout voir <i class="ti ti-arrow-right"></i></a>
+                            </div>
+                            <div class="alerts-list" id="alerts-container">
+                                <div class="text-center text-muted p-3">Chargement des alertes...</div>
+                            </div>
+                        </div>
+
+                        <!-- Santé système -->
+                        <div class="system-health-card">
+                            <div class="card-header">
+                                <h2>Santé système</h2>
+                                <span class="status-badge success"><i class="ti ti-point-filled"></i> Tous systèmes OK</span>
+                            </div>
+                            <!-- Static content... -->
+                            <div class="health-item"><div class="health-info"><span>API Gateway</span><span>99,98%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 99.98%;"></div></div></div>
+                            <div class="health-item"><div class="health-info"><span>Base de données</span><span>100%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div></div>
+                            <div class="health-item"><div class="health-info"><span>Moteur virements</span><span>99,9%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 99.9%;"></div></div></div>
+                            <div class="health-item"><div class="health-info"><span>Module KYC</span><span class="warning-text">97,2%</span></div><div class="progress-bar"><div class="progress-fill warning" style="width: 97.2%;"></div></div></div>
+                            <div class="health-item"><div class="health-info"><span>Notifications</span><span>100%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div></div>
+                        </div>
+
+                        <!-- Répartition clients -->
+                        <div class="repartition-card">
+                            <h2>Répartition clients</h2>
+                            <div class="repart-item"><div class="repart-dot blue"></div><div class="repart-label">Standard</div><div class="repart-value" id="repart-standard">--</div><div class="repart-bar-container"><div class="repart-bar blue" id="bar-standard" style="width: 0%;"></div></div></div>
+                            <div class="repart-item"><div class="repart-dot purple"></div><div class="repart-label">Premium</div><div class="repart-value" id="repart-premium">--</div><div class="repart-bar-container"><div class="repart-bar purple" id="bar-premium" style="width: 0%;"></div></div></div>
+                            <div class="repart-item"><div class="repart-dot cyan"></div><div class="repart-label">Business</div><div class="repart-value" id="repart-business">--</div><div class="repart-bar-container"><div class="repart-bar cyan" id="bar-business" style="width: 0%;"></div></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- CONTENT GRID -->
-            <div class="content-grid">
-                
-                <!-- MIDDLE COLUMN -->
-                <div class="middle-column">
-                    <!-- Filters -->
-                    <div class="filters-card">
-                        <div class="filters-header">Filtrer :</div>
-                        <div class="filters-body">
-                            <div class="select-wrapper">
-                                <select id="filter-statut" onchange="loadClientsTable()">
-                                    <option value="">Tous les statuts</option>
-                                    <option value="actif">Actif</option>
-                                    <option value="en_attente">En attente</option>
-                                    <option value="bloque">Bloqué</option>
-                                </select>
-                            </div>
-                            <div class="select-wrapper">
-                                <select id="filter-offre" onchange="loadClientsTable()">
-                                    <option value="">Toutes les offres</option>
-                                    <option value="Standard">Standard</option>
-                                    <option value="Premium">Premium</option>
-                                </select>
-                            </div>
-                            <div class="select-wrapper">
-                                <select id="filter-tri" onchange="loadClientsTable()">
-                                    <option value="date_desc">Trier par : Date inscription</option>
-                                    <option value="solde_desc">Trier par : Solde décroissant</option>
-                                </select>
-                            </div>
-                            <button class="btn-primary full-width" onclick="alert('Création de client manuelle - Bientôt disponible')">
-                                <i class="ti ti-user-plus"></i> Nouveau client
-                            </button>
+            <!-- =============================== -->
+            <!-- VUE 2 : COMPTES CLIENTS         -->
+            <!-- =============================== -->
+            <div id="view-comptes" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Base complète des comptes (<span id="comptes-full-count">0</span>)</h2>
+                        <div class="header-actions">
+                            <input type="text" id="search-comptes" class="admin-input" placeholder="Rechercher par nom, email..." onkeyup="filterComptesList()" style="padding: 6px 12px; border:1px solid #e2e8f0; border-radius: 6px;">
+                            <a href="#" class="export-link" onclick="exportCSV()">Exporter CSV</a>
                         </div>
                     </div>
-
-                    <!-- Clients Table -->
-                    <div class="clients-card">
-                        <div class="card-header">
-                            <h2>Comptes clients (<span id="clients-count">0</span>)</h2>
-                            <a href="#" class="export-link" id="btn-export-csv" onclick="exportCSV()">Exporter CSV <i class="ti ti-arrow-right"></i></a>
-                        </div>
-                        <div class="table-container">
-                            <table class="admin-table" id="clients-table">
-                                <thead>
-                                    <tr>
-                                        <th>Client</th>
-                                        <th>IBAN</th>
-                                        <th>Offre</th>
-                                        <th>Solde</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clients-tbody">
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted">Chargement des données...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>IBAN</th>
+                                    <th>Offre</th>
+                                    <th>Statut</th>
+                                    <th>Date d'inscription</th>
+                                    <th>Solde</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comptes-full-tbody">
+                                <tr><td colspan="7" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-
-                <!-- RIGHT COLUMN -->
-                <div class="right-column">
-                    
-                    <!-- Alertes Fraude -->
-                    <div class="alerts-card">
-                        <div class="card-header border-bottom">
-                            <h2 class="danger-text"><i class="ti ti-alert-triangle"></i> Alertes fraude (<span id="alert-count">0</span>)</h2>
-                            <a href="#" class="export-link text-muted">Tout voir <i class="ti ti-arrow-right"></i></a>
-                        </div>
-                        <div class="alerts-list" id="alerts-container">
-                            <!-- Alertes injectées via JS -->
-                            <div class="text-center text-muted p-3">Chargement des alertes...</div>
-                        </div>
-                    </div>
-
-                    <!-- Santé système -->
-                    <div class="system-health-card">
-                        <div class="card-header">
-                            <h2>Santé système</h2>
-                            <span class="status-badge success"><i class="ti ti-point-filled"></i> Tous systèmes OK</span>
-                        </div>
-                        <div class="health-item">
-                            <div class="health-info">
-                                <span>API Gateway</span>
-                                <span>99,98%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill success" style="width: 99.98%;"></div></div>
-                        </div>
-                        <div class="health-item">
-                            <div class="health-info">
-                                <span>Base de données</span>
-                                <span>100%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div>
-                        </div>
-                        <div class="health-item">
-                            <div class="health-info">
-                                <span>Moteur virements</span>
-                                <span>99,9%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill success" style="width: 99.9%;"></div></div>
-                        </div>
-                        <div class="health-item">
-                            <div class="health-info">
-                                <span>Module KYC</span>
-                                <span class="warning-text">97,2%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill warning" style="width: 97.2%;"></div></div>
-                        </div>
-                        <div class="health-item">
-                            <div class="health-info">
-                                <span>Notifications</span>
-                                <span>100%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div>
-                        </div>
-                    </div>
-
-                    <!-- Répartition clients -->
-                    <div class="repartition-card">
-                        <h2>Répartition clients</h2>
-                        <div class="repart-item">
-                            <div class="repart-dot blue"></div>
-                            <div class="repart-label">Standard</div>
-                            <div class="repart-value" id="repart-standard">--</div>
-                            <div class="repart-bar-container"><div class="repart-bar blue" id="bar-standard" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="repart-item">
-                            <div class="repart-dot purple"></div>
-                            <div class="repart-label">Premium</div>
-                            <div class="repart-value" id="repart-premium">--</div>
-                            <div class="repart-bar-container"><div class="repart-bar purple" id="bar-premium" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="repart-item">
-                            <div class="repart-dot cyan"></div>
-                            <div class="repart-label">Business</div>
-                            <div class="repart-value" id="repart-business">--</div>
-                            <div class="repart-bar-container"><div class="repart-bar cyan" id="bar-business" style="width: 0%;"></div></div>
-                        </div>
-
-                        <div class="chart-section-title mt-4">
-                            <h2>Volume transactions</h2>
-                            <span class="text-muted">7 jours</span>
-                        </div>
-                        <div class="mini-chart-placeholder">
-                            <!-- SVG Placeholder for chart -->
-                            <svg viewBox="0 0 200 60" preserveAspectRatio="none" style="width:100%; height:60px;">
-                                <path d="M0,60 L0,50 C20,40 40,60 60,30 C80,0 100,20 120,40 C140,60 160,20 180,30 C190,35 200,20 200,20 L200,60 Z" fill="rgba(37, 99, 235, 0.1)"></path>
-                                <path d="M0,50 C20,40 40,60 60,30 C80,0 100,20 120,40 C140,60 160,20 180,30 C190,35 200,20 200,20" fill="none" stroke="#2563EB" stroke-width="2"></path>
-                            </svg>
-                        </div>
-                    </div>
-
                 </div>
             </div>
+
+            <!-- =============================== -->
+            <!-- VUE 3 : KYC / VERIFICATION      -->
+            <!-- =============================== -->
+            <div id="view-kyc" class="admin-view" style="display: none;">
+                <div class="kpi-grid" style="margin-bottom:24px;">
+                    <div class="kpi-card"><div class="kpi-title">EN ATTENTE</div><div class="kpi-value warning" id="kyc-stats-attente">0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">VALIDÉS (30j)</div><div class="kpi-value success" id="kyc-stats-valides">0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">REJETÉS (30j)</div><div class="kpi-value danger" id="kyc-stats-rejetes">0</div></div>
+                </div>
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Dossiers KYC en attente de modération</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Document ID</th>
+                                    <th>Selfie</th>
+                                    <th>Date de soumission</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kyc-tbody">
+                                <tr><td colspan="6" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 4 : CLIENTS BLOQUES         -->
+            <!-- =============================== -->
+            <div id="view-bloques" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2 class="danger-text"><i class="ti ti-user-cancel"></i> Comptes suspendus ou bloqués</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Email</th>
+                                    <th>Motif (Dernier statut)</th>
+                                    <th>Solde gelé</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bloques-tbody">
+                                <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 5 : VIREMENTS               -->
+            <!-- =============================== -->
+            <div id="view-virements" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Historique des transactions réseau</h2>
+                        <div class="select-wrapper" style="width:200px;">
+                            <select id="filter-virement-type" onchange="loadVirementsTable()">
+                                <option value="">Tous les types</option>
+                                <option value="virement">Virement externe</option>
+                                <option value="interne">Virement interne</option>
+                                <option value="recharge">Recharge / Dépôt</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Client (Émetteur)</th>
+                                    <th>Type</th>
+                                    <th>Bénéficiaire / Motif</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody id="virements-tbody">
+                                <tr><td colspan="6" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 6 : FRAUDES ET ALERTES      -->
+            <!-- =============================== -->
+            <div id="view-fraudes" class="admin-view" style="display: none;">
+                <div class="alerts-card">
+                    <div class="card-header border-bottom">
+                        <h2 class="danger-text">Gestionnaire d'incidents de fraude</h2>
+                    </div>
+                    <div class="alerts-list" id="fraudes-full-container">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 7 : SUPERVISION LIVE        -->
+            <!-- =============================== -->
+            <div id="view-supervision" class="admin-view" style="display: none;">
+                <div class="kpi-grid" style="margin-bottom:24px;">
+                    <div class="kpi-card"><div class="kpi-title">REQUÊTES API / MIN</div><div class="kpi-value" id="sup-req">2,450</div></div>
+                    <div class="kpi-card"><div class="kpi-title">TAUX D'ERREUR 500</div><div class="kpi-value success" id="sup-err">0.01%</div></div>
+                    <div class="kpi-card"><div class="kpi-title">CHARGE SERVEUR DB</div><div class="kpi-value" id="sup-cpu">14%</div></div>
+                </div>
+                <div class="clients-card bg-dark text-light" style="background:#0f172a; color:#cbd5e1;">
+                    <div class="card-header border-bottom" style="border-color:#1e293b;">
+                        <h2 style="color:white;"><i class="ti ti-terminal"></i> Terminal Supervision Temps Réel</h2>
+                    </div>
+                    <div id="terminal-live" style="font-family:monospace; font-size:12px; padding:20px; height:400px; overflow-y:auto; line-height:1.6;">
+                        <div style="color:#10b981;">[SYS] Service de supervision connecté. Écoute des événements...</div>
+                        <div style="color:#64748b;">[DB] Nettoyage des tokens expirés terminé (12 ms)</div>
+                        <!-- Simulated lines appended via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 8 : CARTES EMISES           -->
+            <!-- =============================== -->
+            <div id="view-cartes" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Parc de Cartes Bancaires</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Propriétaire</th>
+                                    <th>Numéro (Masqué)</th>
+                                    <th>Type</th>
+                                    <th>Expiration</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartes-tbody">
+                                <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 9 : COMPTES & IBAN          -->
+            <!-- =============================== -->
+            <div id="view-iban" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Registre des IBANs Alloués</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>IBAN</th>
+                                    <th>BIC</th>
+                                    <th>Client Lié</th>
+                                    <th>Date d'allocation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iban-tbody">
+                                <tr><td colspan="4" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 10 : REPORTING              -->
+            <!-- =============================== -->
+            <div id="view-reporting" class="admin-view" style="display: none;">
+                <div class="system-health-card" style="padding:24px; text-align:center;">
+                    <i class="ti ti-chart-bar" style="font-size:48px; color:var(--admin-sidebar-active); margin-bottom:16px;"></i>
+                    <h2>Module de Reporting Avancé</h2>
+                    <p class="text-muted" style="max-width:400px; margin: 0 auto 24px auto;">Générez des rapports comptables et réglementaires détaillés. (PDF, CSV, JSON).</p>
+                    <button class="btn-primary" style="margin: 0 auto;">Générer Rapport Mensuel</button>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 11 : SECURITE               -->
+            <!-- =============================== -->
+            <div id="view-securite" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Administrateurs et Accès</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Dernière connexion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="client-cell"><div class="client-avatar">AD</div>Admin Console</div></td>
+                                    <td>admin@novabanque.fr</td>
+                                    <td><span class="offre-badge premium">Super Admin</span></td>
+                                    <td>Aujourd'hui</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 12 : PARAMETRES             -->
+            <!-- =============================== -->
+            <div id="view-parametres" class="admin-view" style="display: none;">
+                <div class="clients-card" style="padding:24px;">
+                    <h2>Paramètres Plateforme</h2>
+                    <div style="margin-top:24px; display:flex; flex-direction:column; gap:16px; max-width:500px;">
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:500; margin-bottom:8px;">Frais virement externe standard (€)</label>
+                            <input type="number" value="0.00" class="admin-input" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:6px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:500; margin-bottom:8px;">Limite journalière par défaut (€)</label>
+                            <input type="number" value="2000.00" class="admin-input" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:6px;">
+                        </div>
+                        <button class="btn-primary">Enregistrer les paramètres</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =============================== -->
+            <!-- VUE 13 : LOGS SYSTÈME           -->
+            <!-- =============================== -->
+            <div id="view-logs" class="admin-view" style="display: none;">
+                <div class="clients-card">
+                    <div class="card-header border-bottom">
+                        <h2>Audit Trail & Logs Système</h2>
+                        <a href="#" class="export-link" onclick="alert('Export log')">Exporter JSON</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Catégorie</th>
+                                    <th>Action</th>
+                                    <th>Acteur</th>
+                                    <th>Cible</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-tbody">
+                                <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -323,13 +573,13 @@
     </div>
     
     <div class="modal" id="modal-verify-kyc" style="display:none;">
-        <div class="modal-content" style="max-width: 500px;">
-            <h3>Vérification KYC</h3>
-            <div id="kyc-details"></div>
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Vérification Documentaire (KYC)</h3>
+            <div id="kyc-details" style="margin-top:16px;"></div>
             <input type="hidden" id="verify-kyc-id">
             <div style="display:flex; gap:12px; margin-top:24px;">
-                <button class="btn-danger" style="flex:1;" onclick="rejectKyc()">Rejeter</button>
-                <button class="btn-primary" style="flex:1;" onclick="validateKyc()">Valider</button>
+                <button class="btn-danger" style="flex:1;" onclick="rejectKyc()">Refuser le document</button>
+                <button class="btn-primary" style="flex:1;" onclick="validateKyc()">Valider (Activer le compte)</button>
             </div>
         </div>
     </div>
