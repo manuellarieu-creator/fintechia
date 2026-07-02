@@ -86,7 +86,11 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Historique</h3>
-        <div class="select-wrapper">
+        <div class="pill-tabs mobile-only" style="display:flex;">
+            <div class="pill-tab active">2026</div>
+            <div class="pill-tab">2025</div>
+        </div>
+        <div class="select-wrapper desktop-only" style="display:none;">
             <select class="form-select" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
                 <option value="2026">2026</option>
                 <option value="2025">2025</option>
@@ -187,16 +191,21 @@
 
       <div class="balances-grid">
         <div class="balance-item">
-          <div class="balance-label">SOLDE INITIAL</div>
-          <div class="balance-value">10 780,32 €</div>
-          <div class="balance-date">01 juin 2026</div>
+          <div class="balance-label">INITIAL</div>
+          <div class="balance-value">10 780 €</div>
+          <div class="balance-date">01/06</div>
         </div>
         <div class="balance-item">
-          <div class="balance-label">MOUVEMENTS</div>
+          <div class="balance-label">MVTS</div>
           <div class="movements-list">
-            <div style="color:var(--text-main);"><i class="ti ti-arrow-up" style="color:var(--text-main);"></i> +3 200,00 €</div>
-            <div style="color:var(--text-main);"><i class="ti ti-arrow-down" style="color:var(--text-main);"></i> -1 500,00 €</div>
+            <div style="color:var(--text-main);">+3 200 €</div>
+            <div style="color:var(--text-main);">-1 500 €</div>
           </div>
+        </div>
+        <div class="balance-item">
+          <div class="balance-label">ACTUEL</div>
+          <div class="balance-value blue">12 480 €</div>
+          <div class="balance-date">30/06</div>
         </div>
       </div>
 
@@ -242,8 +251,14 @@
             <div class="tx-name">EDF Énergie</div>
             <div class="tx-type">Prélèvement</div>
           </div>
-          <div class="tx-date">26/06</div>
-          <div class="tx-amount">-85,00 €</div>
+          <div class="tx-date desktop-only">26/06</div>
+          <div class="tx-amount-col">
+            <div class="tx-amount debit">-85,00 €</div>
+            <div class="tx-balance-after mobile-only">11 344,52 €</div>
+          </div>
+        </div>
+        <div class="tx-footer-action">
+            <a href="#">Voir les 24 transactions restantes &rarr;</a>
         </div>
       </div>
     </div>
@@ -326,24 +341,34 @@
           <h3 class="card-title">Export personnalisé</h3>
         </div>
         <div class="card-body">
-          <div class="form-group">
-            <label class="form-label">Format</label>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Période</label>
             <div class="select-wrapper">
               <select class="form-select">
-                <option>PDF</option>
-                <option>CSV</option>
-                <option>Excel</option>
+                <option>Juin 2026</option>
+                <option>Mai 2026</option>
               </select>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Compte</label>
-            <div class="select-wrapper">
-              <select class="form-select">
-                <option>Courant **** 4821</option>
-                <option>Épargne **** 9032</option>
-              </select>
-            </div>
+          <div class="export-form-row">
+              <div class="form-group">
+                <label class="form-label">Format</label>
+                <div class="select-wrapper">
+                  <select class="form-select">
+                    <option>PDF</option>
+                    <option>CSV</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Compte</label>
+                <div class="select-wrapper">
+                  <select class="form-select">
+                    <option>**** 4821</option>
+                    <option>**** 9032</option>
+                  </select>
+                </div>
+              </div>
           </div>
           <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">
             <i class="ti ti-file-export"></i> Générer l'export
@@ -353,6 +378,31 @@
 
     </div>
 
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="app.html" class="b-nav-item">
+      <i class="ti ti-home"></i>
+      Accueil
+    </a>
+    <a href="virement.html" class="b-nav-item">
+      <i class="ti ti-arrows-right-left"></i>
+      Virements
+    </a>
+    <a href="#" class="b-nav-fab">
+      <i class="ti ti-plus"></i>
+    </a>
+    <a href="budget.html" class="b-nav-item">
+      <i class="ti ti-chart-pie"></i>
+      Budget
+    </a>
+    <a href="releves.html" class="b-nav-item active">
+      <i class="ti ti-file-text"></i>
+      Relevés
+    </a>
   </div>
 </div>
 
