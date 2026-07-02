@@ -32,6 +32,14 @@ router.post('/register', [
 ], validateReq, async (req, res, next) => {
   const { prenom, nom, email, telephone, adresse, profession, revenus, password } = req.body;
   const type_compte = req.body.type_compte || 'courant';
+
+  // Auto-migration silencieuse via le pool (ne casse pas la transaction)
+  try { await db.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
+
   const connection = await db.getConnection();
   try {
     await connection.beginTransaction();
