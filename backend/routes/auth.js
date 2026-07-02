@@ -35,9 +35,12 @@ router.post('/register', [
   const connection = await db.getConnection();
   try {
     // Migration à la volée (silencieuse si déjà présente)
-    try {
-      await connection.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL, ADD COLUMN profession VARCHAR(100) DEFAULT NULL, ADD COLUMN revenus VARCHAR(100) DEFAULT NULL, ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL, ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE;");
-    } catch(e) {} // Ignore error if columns already exist
+    // Migration à la volée (silencieuse si déjà présente) - séparée par colonne
+    try { await connection.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL"); } catch(e) {}
+    try { await connection.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL"); } catch(e) {}
+    try { await connection.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL"); } catch(e) {}
+    try { await connection.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
+    try { await connection.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
 
     await connection.beginTransaction();
     const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [email]);
@@ -51,7 +54,17 @@ router.post('/register', [
 
     const [userRes] = await connection.query(
       'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash]
+      [
+        prenom || null, 
+        nom || null, 
+        email || null, 
+        telephone || null, 
+        adresse || null, 
+        profession || null, 
+        revenus || null, 
+        telephone_code, 
+        password_hash
+      ]
     );
     const userId = userRes.insertId;
 
