@@ -176,6 +176,32 @@ function initDashboard(user, account, kycStatut = null) {
     document.getElementById('prof-nom').value = user.nom || '';
     document.getElementById('prof-tel').value = user.telephone || '';
   }
+
+  // Restore view from URL if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const view = urlParams.get('view');
+  const mview = urlParams.get('mview');
+  
+  if (view && typeof showView === 'function') {
+      showView(view);
+      // Highlight the correct menu item
+      document.querySelectorAll('.nb-nav a').forEach(a => {
+          a.classList.remove('active');
+          if(a.getAttribute('onclick') && a.getAttribute('onclick').includes(view)) {
+              a.classList.add('active');
+          }
+      });
+  }
+  
+  if (mview && typeof showMobileView === 'function') {
+      showMobileView(mview);
+      document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
+          i.classList.remove('active');
+          if(i.getAttribute('onclick') && i.getAttribute('onclick').includes(mview)) {
+              i.classList.add('active');
+          }
+      });
+  }
 }
 
 /* === GESTION DES BUDGETS === */
