@@ -213,7 +213,7 @@ function selectMonth(mKey) {
     const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     const isCurrent = mKey === sortedMonths[0];
     
-    document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px); padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`;
+    document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`);
     
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
     document.querySelectorAll(`[id=${'center-meta'}]`).forEach(el => el.textContent = `Compte courant • **** ${currentAccount.id.toString().slice(-4) || '4821'} • Du 01 au ${lastDay} ${monthNameFull}`);

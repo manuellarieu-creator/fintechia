@@ -374,7 +374,232 @@
 
       </div>
 
-      <!-- Bottom nav -->
+      
+<div id="m-view-releves" class="m-view" style="display:none; background:var(--bg-body); position:absolute; top:0; left:0; width:100%; min-height:100vh; z-index:50; padding:16px; padding-bottom:100px;">
+          <div class="mobile-header mobile-only" style="display:flex; margin-bottom: 24px;">
+              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
+              <div class="mobile-title-area">
+                  <div class="mobile-title">Relevés</div>
+              </div>
+          </div>
+          
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Relevés de compte</h1>
+      <p class="page-subtitle">Consultez et téléchargez vos relevés mensuels</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline"><i class="ti ti-mail"></i> Envoi auto</button>
+      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout télécharger</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">RELEVÉS DISPO</div>
+      <div class="kpi-value" id="kpi-dispo-val">-</div>
+      <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">PROCHAIN RELEVÉ</div>
+      <div class="kpi-value" id="kpi-next-val">-</div>
+      <div class="kpi-sub" id="kpi-next-sub">-</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">FORMAT</div>
+      <div class="kpi-value" id="kpi-format-val">PDF</div>
+      <div class="kpi-sub" id="kpi-format-sub">+ CSV disponible</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ENVOI EMAIL</div>
+      <div class="kpi-value" id="kpi-email-val" style="font-size: 20px;">-</div>
+      <div class="kpi-sub" id="kpi-email-sub">-</div>
+    </div>
+  </div>
+
+  <!-- Layout 3 colonnes -->
+  <div class="layout-grid">
+    
+    <!-- Left Column: Historique -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Historique</h3>
+        <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
+            <!-- Généré par JS -->
+        </div>
+        <div class="select-wrapper desktop-only" style="display:none;">
+            <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
+                <!-- Généré par JS -->
+            </select>
+        </div>
+      </div>
+      
+      <div id="releves-history-list">
+        <!-- Contenu injecté par JS -->
+        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
+      </div>
+    </div>
+
+    <!-- Center Column: Relevé Détail -->
+    <div class="card center-card">
+      <div class="card-header">
+        <div>
+            <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
+                Relevé 
+                <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
+            </h3>
+            <div class="releve-meta" id="center-meta">Chargement...</div>
+        </div>
+        <button class="btn btn-outline" style="padding: 6px 12px;" id="btn-download-csv"><i class="ti ti-file-spreadsheet"></i> CSV</button>
+      </div>
+
+      <div class="balances-grid" id="releves-balances">
+        <!-- Rempli par JS -->
+      </div>
+
+      <div class="filters-bar">
+        <div class="search-input">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Rechercher..." />
+        </div>
+        <button class="btn btn-outline" style="padding: 6px 12px;">Toutes <i class="ti ti-filter"></i></button>
+        <button class="btn btn-outline" style="padding: 6px 12px;">Tous <i class="ti ti-arrows-sort"></i></button>
+      </div>
+
+      <div class="tx-header">
+        <div class="tx-header-libelle">Libellé</div>
+        <div class="tx-header-date">Date</div>
+        <div class="tx-header-cat">Catégorie</div>
+      </div>
+
+      <div class="tx-list" id="releves-tx-list">
+        <!-- Rempli par JS -->
+        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement des transactions...</div>
+      </div>
+    </div>
+
+    <!-- Right Column: Settings & Export -->
+    <div style="display:flex; flex-direction: column; gap:24px;">
+        
+      <!-- Aperçu PDF -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Aperçu PDF</h3>
+        </div>
+        <div class="card-body">
+          <div class="pdf-preview-box">
+            <div class="pdf-mock">
+              <div class="pdf-line w-half" style="height: 6px; background:#2563EB;"></div>
+              <div style="display:flex; justify-content:space-between; margin-top:4px;">
+                  <div class="pdf-line w-third"></div>
+                  <div class="pdf-line w-third"></div>
+              </div>
+              <div class="pdf-line w-full" style="margin-top:12px;"></div>
+              <div class="pdf-block">
+                  <div class="pdf-block-blue"></div>
+                  <div class="pdf-block-green"></div>
+                  <div class="pdf-block-red"></div>
+              </div>
+              <div class="pdf-line w-full" style="margin-top:12px;"></div>
+              <div class="pdf-line w-full"></div>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
+            <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Envoi Automatique -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Envoi automatique</h3>
+        </div>
+        <div class="settings-list">
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Email mensuel</div>
+              <div class="setting-desc">manuela@email.fr</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Archivage cloud</div>
+              <div class="setting-desc">Google Drive</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Format CSV inclus</div>
+              <div class="setting-desc">Avec le PDF</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export personnalisé -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Export personnalisé</h3>
+        </div>
+        <div class="card-body">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Période</label>
+            <div class="select-wrapper">
+              <select class="form-select" id="export-periode-select">
+                <!-- Rempli par JS -->
+              </select>
+            </div>
+          </div>
+          <div class="export-form-row">
+              <div class="form-group">
+                <label class="form-label">Format</label>
+                <div class="select-wrapper">
+                  <select class="form-select" id="export-format-select">
+                    <option value="pdf">PDF</option>
+                    <option value="csv">CSV</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Compte</label>
+                <div class="select-wrapper">
+                  <select class="form-select" id="export-compte-select">
+                    <!-- Rempli par JS -->
+                  </select>
+                </div>
+              </div>
+          </div>
+          <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
+            <i class="ti ti-file-export"></i> Générer l'export
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+        </div>
+
+
+<!-- Bottom nav -->
       <div class="bottom-nav">
         <div class="nb-item active" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-dashboard')">
           <i class="ti ti-home"></i>
@@ -391,6 +616,10 @@
         <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-budget')">
           <i class="ti ti-chart-pie"></i>
           <span>Budget</span>
+        </div>
+        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-releves')">
+          <i class="ti ti-file-text"></i>
+          <span>Relevés</span>
         </div>
         <div class="nb-item" onclick="showPage('pg-profile-settings')">
           <i class="ti ti-user"></i>
@@ -857,93 +1086,8 @@
           </div>
         </div>
 
-      </div> <!-- /nb-main -->
-    </div> <!-- /desktop-layout -->
-  </div> <!-- /pg-dash -->
-
-  <!-- Modal Budgets -->
-  <div class="modal" id="modal-budgets" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
-    <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
-      <h2 style="font-size:18px; margin-bottom:16px;">Mes Budgets</h2>
-      <div id="budgets-manage-list" style="margin-bottom:20px; max-height:200px; overflow-y:auto;">
-        <!-- Dynamique -->
-      </div>
       
-      <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
-        <h4 style="margin-bottom:10px; font-size:14px; color:#0F172A;">Ajouter une enveloppe</h4>
-        <input type="text" id="new-budget-cat" placeholder="Catégorie (ex: Casino)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
-        <input type="number" id="new-budget-limite" placeholder="Limite (€)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
-        <button onclick="ajouterBudget()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Ajouter</button>
-      </div>
-
-      <div style="text-align:right; margin-top:20px;">
-        <button onclick="closeModal('modal-budgets')" style="background:none; border:none; color:#64748B; font-weight:600; cursor:pointer; padding:8px 16px;">Fermer</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Drawer Menu Espace Client -->
-  <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>
-  <div class="mobile-drawer" id="app-drawer" style="display:none; position:fixed; top:0; right:0; width:250px; height:100%; background:white; z-index:9999; padding:20px; box-shadow:-5px 0 15px rgba(0,0,0,0.1); transition:transform 0.3s; font-family:'Nunito', sans-serif;">
-    <button class="drawer-close" onclick="closeAppDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer; float:right;">✕</button>
-    <h3 style="margin-top:40px; color:#1a1a1a;">Menu</h3>
-    <nav style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
-      <a href="#" onclick="closeAppDrawer(); showPage('pg-profile-settings')" style="color:#555; text-decoration:none; font-weight:700;">👤 Mon Profil</a>
-      <a href="#" onclick="closeAppDrawer(); showMobileView('m-view-releves')" style="color:#555; text-decoration:none; font-weight:700;">📄 Relevés</a>
-      <a href="#" onclick="closeAppDrawer(); showPage('pg-security-settings')" style="color:#555; text-decoration:none; font-weight:700;">🔒 Sécurité</a>
-      <a href="#" onclick="logout()" style="color:#c0392b; text-decoration:none; font-weight:700;">🚪 Se déconnecter</a>
-    </nav>
-  </div>
-
-  <!-- ECRAN MON PROFIL -->
-  <div id="pg-profile-settings" class="page flex-col" style="display:none;">
-    <div class="login-container">
-      <h2 class="login-title">Mon Profil</h2>
-      <form id="form-profile" class="login-form">
-        <div class="form-group">
-          <label>Prénom</label>
-          <input type="text" id="prof-prenom" required />
-        </div>
-        <div class="form-group">
-          <label>Nom</label>
-          <input type="text" id="prof-nom" required />
-        </div>
-        <div class="form-group">
-          <label>Téléphone</label>
-          <input type="text" id="prof-tel" />
-        </div>
-        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Enregistrer</button>
-      </form>
-      <div class="login-links">
-        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ECRAN SECURITE (Mot de passe) -->
-  <div id="pg-security-settings" class="page flex-col" style="display:none;">
-    <div class="login-container">
-      <h2 class="login-title">Sécurité</h2>
-      <form id="form-security" class="login-form">
-        <div class="form-group">
-          <label>Mot de passe actuel</label>
-          <input type="password" id="sec-current-pwd" required />
-        </div>
-        <div class="form-group">
-          <label>Nouveau mot de passe</label>
-          <input type="password" id="sec-new-pwd" required minlength="6" />
-        </div>
-        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Mettre à jour</button>
-      </form>
-      <div class="login-links">
-        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
-      </div>
-    </div>
-  </div>
-
-  
-
-        <!-- VUE RELEVES DESKTOP & MOBILE -->
+<!-- VUE RELEVES DESKTOP & MOBILE -->
         <div id="view-releves" class="nb-view" style="display:none; padding-bottom: 60px;">
           
   
@@ -1161,230 +1305,94 @@
 
         </div>
 
-        <div id="m-view-releves" class="m-view" style="display:none; background:var(--bg-body); position:absolute; top:0; left:0; width:100%; min-height:100vh; z-index:50; padding:16px; padding-bottom:100px;">
-          <div class="mobile-header mobile-only" style="display:flex; margin-bottom: 24px;">
-              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
-              <div class="mobile-title-area">
-                  <div class="mobile-title">Relevés</div>
-              </div>
-          </div>
-          
-  
-  <!-- Header -->
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Relevés de compte</h1>
-      <p class="page-subtitle">Consultez et téléchargez vos relevés mensuels</p>
-    </div>
-    <div class="header-actions">
-      <button class="btn btn-outline"><i class="ti ti-mail"></i> Envoi auto</button>
-      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout télécharger</button>
-    </div>
-  </div>
+        
+</div> <!-- /nb-main -->
+    </div> <!-- /desktop-layout -->
+  </div> <!-- /pg-dash -->
 
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">RELEVÉS DISPO</div>
-      <div class="kpi-value" id="kpi-dispo-val">-</div>
-      <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">PROCHAIN RELEVÉ</div>
-      <div class="kpi-value" id="kpi-next-val">-</div>
-      <div class="kpi-sub" id="kpi-next-sub">-</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">FORMAT</div>
-      <div class="kpi-value" id="kpi-format-val">PDF</div>
-      <div class="kpi-sub" id="kpi-format-sub">+ CSV disponible</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">ENVOI EMAIL</div>
-      <div class="kpi-value" id="kpi-email-val" style="font-size: 20px;">-</div>
-      <div class="kpi-sub" id="kpi-email-sub">-</div>
-    </div>
-  </div>
-
-  <!-- Layout 3 colonnes -->
-  <div class="layout-grid">
-    
-    <!-- Left Column: Historique -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Historique</h3>
-        <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
-            <!-- Généré par JS -->
-        </div>
-        <div class="select-wrapper desktop-only" style="display:none;">
-            <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
-                <!-- Généré par JS -->
-            </select>
-        </div>
+  <!-- Modal Budgets -->
+  <div class="modal" id="modal-budgets" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
+      <h2 style="font-size:18px; margin-bottom:16px;">Mes Budgets</h2>
+      <div id="budgets-manage-list" style="margin-bottom:20px; max-height:200px; overflow-y:auto;">
+        <!-- Dynamique -->
       </div>
       
-      <div id="releves-history-list">
-        <!-- Contenu injecté par JS -->
-        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
+      <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
+        <h4 style="margin-bottom:10px; font-size:14px; color:#0F172A;">Ajouter une enveloppe</h4>
+        <input type="text" id="new-budget-cat" placeholder="Catégorie (ex: Casino)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <input type="number" id="new-budget-limite" placeholder="Limite (€)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <button onclick="ajouterBudget()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Ajouter</button>
+      </div>
+
+      <div style="text-align:right; margin-top:20px;">
+        <button onclick="closeModal('modal-budgets')" style="background:none; border:none; color:#64748B; font-weight:600; cursor:pointer; padding:8px 16px;">Fermer</button>
       </div>
     </div>
-
-    <!-- Center Column: Relevé Détail -->
-    <div class="card center-card">
-      <div class="card-header">
-        <div>
-            <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
-                Relevé 
-                <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
-            </h3>
-            <div class="releve-meta" id="center-meta">Chargement...</div>
-        </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;" id="btn-download-csv"><i class="ti ti-file-spreadsheet"></i> CSV</button>
-      </div>
-
-      <div class="balances-grid" id="releves-balances">
-        <!-- Rempli par JS -->
-      </div>
-
-      <div class="filters-bar">
-        <div class="search-input">
-          <i class="ti ti-search"></i>
-          <input type="text" placeholder="Rechercher..." />
-        </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;">Toutes <i class="ti ti-filter"></i></button>
-        <button class="btn btn-outline" style="padding: 6px 12px;">Tous <i class="ti ti-arrows-sort"></i></button>
-      </div>
-
-      <div class="tx-header">
-        <div class="tx-header-libelle">Libellé</div>
-        <div class="tx-header-date">Date</div>
-        <div class="tx-header-cat">Catégorie</div>
-      </div>
-
-      <div class="tx-list" id="releves-tx-list">
-        <!-- Rempli par JS -->
-        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement des transactions...</div>
-      </div>
-    </div>
-
-    <!-- Right Column: Settings & Export -->
-    <div style="display:flex; flex-direction: column; gap:24px;">
-        
-      <!-- Aperçu PDF -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Aperçu PDF</h3>
-        </div>
-        <div class="card-body">
-          <div class="pdf-preview-box">
-            <div class="pdf-mock">
-              <div class="pdf-line w-half" style="height: 6px; background:#2563EB;"></div>
-              <div style="display:flex; justify-content:space-between; margin-top:4px;">
-                  <div class="pdf-line w-third"></div>
-                  <div class="pdf-line w-third"></div>
-              </div>
-              <div class="pdf-line w-full" style="margin-top:12px;"></div>
-              <div class="pdf-block">
-                  <div class="pdf-block-blue"></div>
-                  <div class="pdf-block-green"></div>
-                  <div class="pdf-block-red"></div>
-              </div>
-              <div class="pdf-line w-full" style="margin-top:12px;"></div>
-              <div class="pdf-line w-full"></div>
-            </div>
-          </div>
-          <div class="preview-actions">
-            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
-            <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Envoi Automatique -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Envoi automatique</h3>
-        </div>
-        <div class="settings-list">
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Email mensuel</div>
-              <div class="setting-desc">manuela@email.fr</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Archivage cloud</div>
-              <div class="setting-desc">Google Drive</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Format CSV inclus</div>
-              <div class="setting-desc">Avec le PDF</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Export personnalisé -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Export personnalisé</h3>
-        </div>
-        <div class="card-body">
-          <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label">Période</label>
-            <div class="select-wrapper">
-              <select class="form-select" id="export-periode-select">
-                <!-- Rempli par JS -->
-              </select>
-            </div>
-          </div>
-          <div class="export-form-row">
-              <div class="form-group">
-                <label class="form-label">Format</label>
-                <div class="select-wrapper">
-                  <select class="form-select" id="export-format-select">
-                    <option value="pdf">PDF</option>
-                    <option value="csv">CSV</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Compte</label>
-                <div class="select-wrapper">
-                  <select class="form-select" id="export-compte-select">
-                    <!-- Rempli par JS -->
-                  </select>
-                </div>
-              </div>
-          </div>
-          <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
-            <i class="ti ti-file-export"></i> Générer l'export
-          </button>
-        </div>
-      </div>
-
-    </div>
-
   </div>
 
-        </div>
+  <!-- Drawer Menu Espace Client -->
+  <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>
+  <div class="mobile-drawer" id="app-drawer" style="display:none; position:fixed; top:0; right:0; width:250px; height:100%; background:white; z-index:9999; padding:20px; box-shadow:-5px 0 15px rgba(0,0,0,0.1); transition:transform 0.3s; font-family:'Nunito', sans-serif;">
+    <button class="drawer-close" onclick="closeAppDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer; float:right;">✕</button>
+    <h3 style="margin-top:40px; color:#1a1a1a;">Menu</h3>
+    <nav style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-profile-settings')" style="color:#555; text-decoration:none; font-weight:700;">👤 Mon Profil</a>
+      <a href="#" onclick="closeAppDrawer(); showMobileView('m-view-releves')" style="color:#555; text-decoration:none; font-weight:700;">📄 Relevés</a>
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-security-settings')" style="color:#555; text-decoration:none; font-weight:700;">🔒 Sécurité</a>
+      <a href="#" onclick="logout()" style="color:#c0392b; text-decoration:none; font-weight:700;">🚪 Se déconnecter</a>
+    </nav>
+  </div>
 
-<!-- Modal Ajout Bénéficiaire -->
+  <!-- ECRAN MON PROFIL -->
+  <div id="pg-profile-settings" class="page flex-col" style="display:none;">
+    <div class="login-container">
+      <h2 class="login-title">Mon Profil</h2>
+      <form id="form-profile" class="login-form">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="prof-prenom" required />
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="prof-nom" required />
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="text" id="prof-tel" />
+        </div>
+        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Enregistrer</button>
+      </form>
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRAN SECURITE (Mot de passe) -->
+  <div id="pg-security-settings" class="page flex-col" style="display:none;">
+    <div class="login-container">
+      <h2 class="login-title">Sécurité</h2>
+      <form id="form-security" class="login-form">
+        <div class="form-group">
+          <label>Mot de passe actuel</label>
+          <input type="password" id="sec-current-pwd" required />
+        </div>
+        <div class="form-group">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="sec-new-pwd" required minlength="6" />
+        </div>
+        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Mettre à jour</button>
+      </form>
+      <div class="login-links">
+        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+      </div>
+    </div>
+  </div>
+
+  
+
+        <!-- Modal Ajout Bénéficiaire -->
   <div class="modal" id="modal-add-beneficiaire" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
     <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
       <h2 style="font-size:18px; margin-bottom:16px;">Ajouter un bénéficiaire</h2>
