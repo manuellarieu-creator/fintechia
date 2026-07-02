@@ -103,6 +103,9 @@
           <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
         </div>
         <div class="topbar-right">
+          <div class="notif-wrap" onclick="window.location.href='releves.html'" title="Relevés">
+            <i class="ti ti-file-text"></i>
+          </div>
           <div class="notif-wrap" onclick="showPage('pg-profile-settings')">
             <i class="ti ti-settings"></i>
           </div>
@@ -411,7 +414,7 @@
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">💳</span> Cartes</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
-          <a href="#"><span class="nb-icon">📄</span> Relevés</a>
+          <a href="releves.html"><span class="nb-icon">📄</span> Relevés</a>
         </nav>
         <div class="nb-footer">
           <a href="#" class="nb-settings" onclick="showPage('pg-profile-settings')"><span class="nb-icon">⚙️</span> Paramètres</a>
