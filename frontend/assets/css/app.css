@@ -26,20 +26,18 @@
 /* LOGIN SPLIT DESIGN */
 .login-split-card {
   display: flex;
-  width: 900px;
-  max-width: 95%;
+  width: 100vw;
+  min-height: 100vh;
   background: white;
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  border: 1px solid var(--bd2);
-  margin: auto;
+  margin: 0;
 }
 .login-left {
   background: #2563EB;
   color: white;
   width: 45%;
-  padding: 40px;
+  padding: 60px 80px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -93,24 +91,31 @@
 }
 .login-right-header {
   text-align: right;
-  padding: 20px 30px;
+  padding: 30px 40px;
   font-size: 13px;
   color: #94A3B8;
   font-weight: 500;
 }
 .login-right-body {
-  padding: 20px 60px 40px;
+  padding: 20px 80px 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 }
 .login-right-body h2 {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 800;
   color: #0F172A;
   margin-bottom: 8px;
 }
 .login-right-body .subtitle {
   color: #64748B;
-  font-size: 15px;
-  margin-bottom: 24px;
+  font-size: 16px;
+  margin-bottom: 32px;
 }
 .btn-google {
   display: flex;
