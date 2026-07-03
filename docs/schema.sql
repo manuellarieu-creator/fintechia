@@ -3,20 +3,22 @@ CREATE TABLE IF NOT EXISTS users (
   prenom        VARCHAR(80)  NOT NULL,
   nom           VARCHAR(80)  NOT NULL,
   email         VARCHAR(160) NOT NULL UNIQUE,
-  numero_client VARCHAR(50)  UNIQUE,
   telephone     VARCHAR(30),
-  adresse       VARCHAR(255),
-  profession    VARCHAR(100),
-  revenus       VARCHAR(100),
   telephone_code VARCHAR(10),
-  telephone_verifie BOOLEAN DEFAULT FALSE,
-  date_naissance DATE,
-  pin_code      VARCHAR(10),
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('client','admin') DEFAULT 'client',
   created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+ALTER TABLE users ADD COLUMN adresse VARCHAR(255);
+ALTER TABLE users ADD COLUMN profession VARCHAR(100);
+ALTER TABLE users ADD COLUMN revenus VARCHAR(100);
+ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE;
+ALTER TABLE users ADD COLUMN numero_client VARCHAR(50);
+CREATE UNIQUE INDEX idx_numero_client ON users(numero_client);
+ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL;
+ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS accounts (
   id           INT AUTO_INCREMENT PRIMARY KEY,

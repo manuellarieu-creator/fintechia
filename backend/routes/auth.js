@@ -39,9 +39,11 @@ router.post('/register', [
   try { await db.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50) UNIQUE"); } catch(e) {}
+  try { 
+    await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50)"); 
+    await db.query("CREATE UNIQUE INDEX idx_numero_client ON users(numero_client)");
+  } catch(e) {}
   try { await db.query("CREATE TABLE IF NOT EXISTS user_devices (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, device_token VARCHAR(255) NOT NULL UNIQUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
