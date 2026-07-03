@@ -50,46 +50,25 @@
           <h2>Connexion</h2>
           <p class="subtitle">Accédez à votre espace personnel</p>
           
-          <button type="button" class="btn-google">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" />
-            Continuer avec Google
-          </button>
-          
-          <div class="divider"><span>ou par email</span></div>
-          
-          <form id="form-login" class="login-form" onsubmit="event.preventDefault(); showPage('pg-dash');">
+          <form id="form-login-dynamic" class="login-form">
             <div class="form-group">
-              <label>Adresse email</label>
-              <input type="email" id="login-email" value="manuela@email.fr" required />
+              <label>ID client</label>
+              <input type="text" id="login-id-client" required placeholder="Saisissez votre ID client" oninput="handleLoginDynamic()" />
             </div>
-            <div class="form-group">
+            <div class="form-group" id="login-pwd-group" style="display:none; opacity:0; transition: opacity 0.3s ease;">
               <label>Mot de passe</label>
-              <input type="password" id="login-pwd" value="••••••••••" required />
+              <input type="password" id="login-pwd" required placeholder="••••••••" oninput="handleLoginDynamic()" />
             </div>
             
-            <div class="form-options">
+            <div class="form-options" id="login-options-group" style="display:none;">
               <label class="checkbox-label">
                 <input type="checkbox" checked />
                 <span>Rester connecté sur cet appareil</span>
               </label>
             </div>
             
-            <button type="submit" class="btn-primary w-full" style="margin-top: 10px;">Se connecter</button>
+            <button type="submit" id="btn-login-submit" class="btn-primary w-full" style="margin-top: 10px; display:none;">Continuer</button>
           </form>
-          
-          <div class="auth-panel">
-            <div class="auth-title">Double authentification</div>
-            <p>Code envoyé au +33 6 ** ** ** 42</p>
-            <div class="otp-inputs">
-              <input type="text" value="3" class="otp-box" readonly>
-              <input type="text" value="7" class="otp-box" readonly>
-              <input type="text" value="4" class="otp-box" readonly>
-              <input type="text" value="" class="otp-box empty" readonly>
-              <input type="text" value="" class="otp-box empty" readonly>
-              <input type="text" value="" class="otp-box empty" readonly>
-            </div>
-            <div class="resend-link">Renvoyer le code</div>
-          </div>
           
           <div class="login-footer">
              Pas encore client ? <a href="#" onclick="showPage('pg-register')">Ouvrir un compte</a>
@@ -1861,6 +1840,99 @@
   </div>
 </div>
 
+
+<!-- Modale 2FA centrée -->
+<div id="modal-2fa-login" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
+  <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:400px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
+    <div class="auth-title" style="font-size:22px; margin-bottom:12px;">Double authentification</div>
+    <p style="margin-bottom:24px; font-size:15px; color:#64748B;">Code envoyé par SMS au +33 6 ** ** ** 42</p>
+    <div class="otp-inputs" style="justify-content:center; gap:12px; margin-bottom:30px;">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 1)">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 2)">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 3)">
+      <input type="text" class="otp-box empty" maxlength="1" onkeyup="moveOtpFocus(this, 4)">
+      <input type="text" class="otp-box empty" maxlength="1" onkeyup="moveOtpFocus(this, 5)">
+      <input type="text" class="otp-box empty" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
+    </div>
+    <div class="resend-link" style="text-align:center; margin-bottom:24px;">Renvoyer le code</div>
+    <button type="button" class="btn-primary w-full" onclick="forceLogin()">Valider</button>
+  </div>
+</div>
+
+<script>
+  function handleLoginDynamic() {
+    const idClient = document.getElementById('login-id-client').value;
+    const pwdInput = document.getElementById('login-pwd').value;
+    
+    const pwdGroup = document.getElementById('login-pwd-group');
+    const optionsGroup = document.getElementById('login-options-group');
+    const btnSubmit = document.getElementById('btn-login-submit');
+    
+    if (idClient.length > 0) {
+      pwdGroup.style.display = 'block';
+      setTimeout(() => pwdGroup.style.opacity = '1', 10);
+      optionsGroup.style.display = 'block';
+    } else {
+      pwdGroup.style.opacity = '0';
+      setTimeout(() => { if(idClient.length === 0) pwdGroup.style.display = 'none'; }, 300);
+      optionsGroup.style.display = 'none';
+      btnSubmit.style.display = 'none';
+    }
+    
+    if (pwdInput.length >= 8) {
+      btnSubmit.style.display = 'block';
+    } else {
+      btnSubmit.style.display = 'none';
+    }
+  }
+
+  // Intercepter la soumission du formulaire pour afficher la modale
+  document.getElementById('form-login-dynamic').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const pwd = document.getElementById('login-pwd').value;
+    if (pwd.length >= 8) { // Validation TRUE simulée
+      document.getElementById('modal-2fa-login').style.display = 'flex';
+      // Focus le premier input OTP
+      setTimeout(() => document.querySelector('#modal-2fa-login .otp-box').focus(), 100);
+    }
+  });
+
+  function moveOtpFocus(el, index) {
+    if (el.value.length === 1) {
+      el.classList.remove('empty');
+      const next = el.nextElementSibling;
+      if (next) next.focus();
+    } else if (el.value.length === 0) {
+      el.classList.add('empty');
+      const prev = el.previousElementSibling;
+      if (prev && event.key === "Backspace") prev.focus();
+    }
+  }
+
+  function checkOtpAndLogin(el, e) {
+    el.classList.remove('empty');
+    if (el.value.length === 1) {
+      setTimeout(() => {
+        forceLogin();
+      }, 300);
+    } else if (el.value.length === 0 && e && e.key === "Backspace") {
+      el.classList.add('empty');
+      const prev = el.previousElementSibling;
+      if (prev) prev.focus();
+    }
+  }
+
+  function forceLogin() {
+    document.getElementById('modal-2fa-login').style.display = 'none';
+    // Pour que la page ne recharge pas bêtement, on checkAuth() ou initDashboard
+    if (typeof initDashboard === 'function') {
+      // Mock data pour la demo si l'api n'est pas dispo
+      initDashboard({ prenom: 'Marie', nom: 'Fontaine' }, { solde: 8450.00, iban: 'FR76 1234 5678 4821', type_compte: 'Courant' });
+    } else {
+      showPage('pg-dash');
+    }
+  }
+</script>
 
 </body>
 </html>
