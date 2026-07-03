@@ -285,86 +285,102 @@ function logout() {
 // ==========================================
 // TUNNEL ONBOARDING (MULTI-ETAPES)
 // ==========================================
-document.getElementById('form-step-1')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const payload = {
-    prenom: document.getElementById('reg-prenom').value,
-    nom: document.getElementById('reg-nom').value,
-    email: document.getElementById('reg-email').value,
-    password: document.getElementById('reg-pwd').value,
-    telephone: document.getElementById('reg-tel').value,
-    adresse: document.getElementById('reg-adresse').value,
-    profession: document.getElementById('reg-profession').value,
-    revenus: document.getElementById('reg-revenus').value
-  };
+let regData = {};
 
-  try {
-    const res = await apiCall('/auth/register', 'POST', payload);
-    localStorage.setItem('fintech_token', res.token);
-    
-    // Si le backend renvoie le code simulé (telephone_code)
-    if (res.telephone_code) {
-      document.getElementById('display-tel').innerText = payload.telephone;
-      document.getElementById('simulated-sms-code').innerText = res.telephone_code;
+function setStep(num) {
+  for(let i=1; i<=5; i++) {
+    const sForm = document.getElementById('form-step-'+i);
+    const sNav = document.getElementById('step-nav-'+i);
+    if(sForm) sForm.style.display = (i === num) ? 'block' : 'none';
+    if(sNav) {
+      if(i < num) {
+        sNav.className = 'register-step completed';
+      } else if (i === num) {
+        sNav.className = 'register-step active';
+      } else {
+        sNav.className = 'register-step';
+      }
     }
-
-    if (res.numero_client) {
-      alert(`Félicitations ! Votre compte est créé.\\n\\nIMPORTANT : Votre identifiant client (ID Client) pour vous connecter est le : ${res.numero_client}\\n\\nVeuillez le noter précieusement.`);
-    }
-
-    // Passer à l'étape 2 (Vérification Téléphone)
-    document.getElementById('form-step-1').style.display = 'none';
-    document.getElementById('form-step-2').style.display = 'block';
-    
-    document.getElementById('step-icon-1').classList.remove('active');
-    document.getElementById('step-icon-1').style.background = 'var(--success)';
-    document.getElementById('step-icon-1').innerHTML = '<i class="ti ti-check"></i>';
-    document.getElementById('step-icon-2').classList.add('active');
-    document.getElementById('stepper-desc').innerText = 'Étape 2 sur 3';
-
-  } catch (err) {
-    alert(err.message);
   }
+}
+
+document.getElementById('form-step-1')?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  regData.prenom = document.getElementById('reg-prenom').value;
+  regData.nom = document.getElementById('reg-nom').value;
+  regData.date_naissance = document.getElementById('reg-dob').value;
+  regData.telephone = document.getElementById('reg-tel').value;
+  regData.email = document.getElementById('reg-email').value;
+  setStep(2);
 });
+
+window.movePinFocus = function(el, num) {
+  if (el.value.length === 1 && num < 4) {
+    document.getElementById('reg-pin-' + (num + 1)).focus();
+  }
+}
 
 document.getElementById('form-step-2')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const code = document.getElementById('reg-sms-code').value;
+  const pwd = document.getElementById('reg-pwd').value;
+  const pwdConf = document.getElementById('reg-pwd-confirm').value;
+  if(pwd !== pwdConf) {
+    return alert('Les mots de passe ne correspondent pas');
+  }
+  const pin = document.getElementById('reg-pin-1').value + 
+              document.getElementById('reg-pin-2').value + 
+              document.getElementById('reg-pin-3').value + 
+              document.getElementById('reg-pin-4').value;
+  
+  if(pin.length !== 4) return alert('Le code PIN doit comporter 4 chiffres');
+
+  regData.password = pwd;
+  regData.pin_code = pin;
+
+  const btn = document.getElementById('btn-step-2');
+  const prevText = btn.innerText;
+  btn.innerText = 'Création en cours...';
+  btn.disabled = true;
 
   try {
-    const res = await apiCall('/auth/verify-phone', 'POST', { code });
-    if (res.success) {
-      // Passer à l'étape 3 (KYC)
-      document.getElementById('form-step-2').style.display = 'none';
-      document.getElementById('form-step-3').style.display = 'block';
-      
-      document.getElementById('step-icon-2').classList.remove('active');
-      document.getElementById('step-icon-2').style.background = 'var(--success)';
-      document.getElementById('step-icon-2').innerHTML = '<i class="ti ti-check"></i>';
-      document.getElementById('step-icon-3').classList.add('active');
-      document.getElementById('stepper-desc').innerText = 'Étape 3 sur 3';
+    const res = await apiCall('/auth/register', 'POST', regData);
+    localStorage.setItem('fintech_token', res.token);
+    
+    if (res.numero_client) {
+      alert(`Votre identifiant client est : ${res.numero_client}. Notez-le bien !`);
     }
+
+    setStep(3);
   } catch (err) {
     alert(err.message);
+  } finally {
+    btn.innerText = prevText;
+    btn.disabled = false;
   }
 });
 
 document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const token = localStorage.getItem('fintech_token');
+  if(!token) return alert('Vous devez d\'abord créer le compte.');
+
   const typeDoc = document.getElementById('reg-kyc-type').value;
-  const docFile = document.getElementById('reg-kyc-doc').files[0];
+  const rectoFile = document.getElementById('reg-kyc-recto').files[0];
   const selfieFile = document.getElementById('reg-kyc-selfie').files[0];
 
-  if (!docFile || !selfieFile) {
-    return alert('Veuillez fournir les deux documents.');
+  if (!rectoFile || !selfieFile) {
+    return alert('Veuillez fournir au moins la pièce d\'identité et le selfie.');
   }
 
   const formData = new FormData();
   formData.append('type_document', typeDoc);
-  formData.append('document', docFile);
+  formData.append('document', rectoFile);
   formData.append('selfie', selfieFile);
+
+  const btn = document.getElementById('btn-step-3');
+  const prevText = btn.innerText;
+  btn.innerText = 'Envoi...';
+  btn.disabled = true;
 
   try {
     const res = await fetch('/api/kyc/submit', {
@@ -375,17 +391,33 @@ document.getElementById('form-step-3')?.addEventListener('submit', async (e) => 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur lors du KYC');
 
-    alert('Inscription terminée ! Bienvenue sur NovaBanque.');
-    window.location.reload(); // Va charger le dashboard automatiquement grâce au token
+    setStep(4);
+    const btnFinal = document.getElementById('btn-final-kyc');
+    btnFinal.disabled = false;
+    btnFinal.style.background = '#2563EB';
+    btnFinal.style.color = '#fff';
+
   } catch (err) {
     alert(err.message);
+  } finally {
+    btn.innerText = prevText;
+    btn.disabled = false;
   }
 });
 
-window.finishOnboardingWithoutKYC = function() {
-  alert('Inscription terminée ! Vous pourrez fournir vos documents plus tard.');
-  window.location.reload();
-}
+window.selectPlan = function(el, type) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  regData.plan = type;
+};
+
+document.getElementById('form-step-4')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if(!document.getElementById('reg-cgu').checked) {
+    return alert('Veuillez accepter les CGU');
+  }
+  setStep(5);
+});
 
 // Profile update
 document.getElementById('form-profile')?.addEventListener('submit', async (e) => {

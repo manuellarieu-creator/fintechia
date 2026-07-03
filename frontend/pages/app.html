@@ -79,168 +79,222 @@
   </div>
 
   <!-- ECRAN REGISTER (ONBOARDING) -->
-  <div id="pg-register" class="page flex-col" style="display:none; background-color:#f8fafc;">
-    <div class="onboarding-container" style="max-width: 600px; width:100%; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden;">
-      
-      <!-- Stepper Header -->
-      <div class="stepper-header" style="background: var(--primary); padding: 24px; color: white; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <h2 style="margin:0; font-size: 20px; font-weight: 600;">Ouvrir un compte</h2>
-          <p id="stepper-desc" style="margin: 4px 0 0; opacity: 0.8; font-size: 14px;">Étape 1 sur 3</p>
-        </div>
-        <div class="stepper-icons" style="display: flex; gap: 12px; align-items: center;">
-          <div class="step-icon active" id="step-icon-1">1</div>
-          <div class="step-line" style="width: 20px; height: 2px; background: rgba(255,255,255,0.3);"></div>
-          <div class="step-icon" id="step-icon-2">2</div>
-          <div class="step-line" style="width: 20px; height: 2px; background: rgba(255,255,255,0.3);"></div>
-          <div class="step-icon" id="step-icon-3">3</div>
+  <div id="pg-register" class="page" style="display:none; background: #f3f4f6; align-items: center; justify-content: center; height: 100vh;">
+    <div class="login-split-card">
+      <div class="login-left" style="width: 30%;">
+        <div class="login-left-content">
+          <div class="logo-box">N</div>
+          <h1>Ouvrez votre<br/>compte en 5<br/>minutes</h1>
+          <p>100% en ligne, sans frais<br/>de dossier.</p>
         </div>
       </div>
-
-      <div class="stepper-body" style="padding: 32px;">
+      <div class="login-right" style="width: 70%; background: #F8FAFC;">
         
-        <!-- ÉTAPE 1: Informations personnelles -->
-        <form id="form-step-1" class="step-form">
-          <h3 style="margin-bottom: 20px; font-size: 18px; color: var(--text);">Informations personnelles</h3>
-          
-          <div class="grid-2">
-            <div class="form-group">
-              <label>Prénom</label>
-              <input type="text" id="reg-prenom" required class="admin-input" style="width:100%;" />
+        <div class="login-right-body" style="padding: 40px 60px; max-width: 900px;">
+          <!-- Stepper -->
+          <div class="register-stepper">
+            <div class="register-step active" id="step-nav-1">
+              <div class="register-step-num">1</div>
+              <span>Informations personnelles</span>
             </div>
-            <div class="form-group">
-              <label>Nom</label>
-              <input type="text" id="reg-nom" required class="admin-input" style="width:100%;" />
+            <div class="register-step-line"></div>
+            <div class="register-step" id="step-nav-2">
+              <div class="register-step-num">2</div>
+              <span>Sécurité & mot de passe</span>
             </div>
-          </div>
-          
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="reg-email" required class="admin-input" style="width:100%;" />
-          </div>
-          
-          <div class="form-group">
-            <label>Mot de passe</label>
-            <input type="password" id="reg-pwd" required minlength="6" class="admin-input" style="width:100%;" />
-          </div>
-
-          <div class="form-group">
-            <label>Numéro de téléphone</label>
-            <input type="tel" id="reg-tel" required placeholder="+33 6 12 34 56 78" class="admin-input" style="width:100%;" />
-          </div>
-
-          <h3 style="margin: 24px 0 16px; font-size: 16px; color: var(--text);">Informations réglementaires</h3>
-
-          <div class="form-group">
-            <label>Adresse postale complète</label>
-            <input type="text" id="reg-adresse" required class="admin-input" style="width:100%;" />
-          </div>
-
-          <div class="grid-2">
-            <div class="form-group">
-              <label>Profession</label>
-              <select id="reg-profession" required class="admin-input" style="width:100%;">
-                <option value="">Sélectionner</option>
-                <option value="Employé">Employé</option>
-                <option value="Indépendant">Indépendant / Freelance</option>
-                <option value="Étudiant">Étudiant</option>
-                <option value="Retraité">Retraité</option>
-                <option value="Sans emploi">Sans emploi</option>
-              </select>
+            <div class="register-step-line"></div>
+            <div class="register-step" id="step-nav-3">
+              <div class="register-step-num">3</div>
+              <span>Vérification KYC</span>
             </div>
-            <div class="form-group">
-              <label>Revenus mensuels nets</label>
-              <select id="reg-revenus" required class="admin-input" style="width:100%;">
-                <option value="">Sélectionner</option>
-                <option value="-1500">Moins de 1 500 €</option>
-                <option value="1500-2500">1 500 € - 2 500 €</option>
-                <option value="2500-4000">2 500 € - 4 000 €</option>
-                <option value="4000+">Plus de 4 000 €</option>
-              </select>
+            <div class="register-step-line"></div>
+            <div class="register-step" id="step-nav-4">
+              <div class="register-step-num">4</div>
+              <span>Offre & confirmation</span>
+            </div>
+            <div class="register-step-line"></div>
+            <div class="register-step" id="step-nav-5">
+              <div class="register-step-num">5</div>
+              <span>Compte activé</span>
             </div>
           </div>
 
-          <div style="margin-top: 24px;">
-            <button type="submit" class="btn-primary w-full">Suivant <i class="ti ti-arrow-right" style="margin-left:8px;"></i></button>
-          </div>
-          
-          <div class="login-links" style="margin-top: 16px; text-align:center;">
-            <a href="#" onclick="showPage('pg-login')" style="color:var(--primary);">Déjà un compte ? Se connecter</a>
-          </div>
-        </form>
+          <!-- Forms Container -->
+          <div class="nb-card" style="padding: 30px 40px;">
+            
+            <!-- ETAPE 1 -->
+            <form id="form-step-1" class="step-form">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+                <div class="register-step-num" style="background:#2563EB; color:white;">1</div>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">1 — Informations personnelles</h2>
+              </div>
+              
+              <div class="nb-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
+                <div class="form-group">
+                  <label>Prénom</label>
+                  <input type="text" id="reg-prenom" required class="admin-input" placeholder="Manuela" style="width:100%;" />
+                </div>
+                <div class="form-group">
+                  <label>Nom</label>
+                  <input type="text" id="reg-nom" required class="admin-input" placeholder="Rodriguez" style="width:100%;" />
+                </div>
+                <div class="form-group">
+                  <label>Date de naissance</label>
+                  <input type="text" id="reg-dob" required class="admin-input" placeholder="JJ/MM/AAAA" style="width:100%;" />
+                </div>
+                <div class="form-group">
+                  <label>Téléphone</label>
+                  <input type="tel" id="reg-tel" required class="admin-input" placeholder="+33 6 12 34 56 78" style="width:100%;" />
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 30px;">
+                <label>Email</label>
+                <input type="email" id="reg-email" required class="admin-input" placeholder="manuela@email.fr" style="width:100%;" />
+              </div>
+              
+              <button type="submit" class="btn-primary" id="btn-step-1">Valider cette étape</button>
+              
+              <div class="login-links" style="margin-top: 24px; text-align:center;">
+                <a href="#" onclick="showPage('pg-login')" style="color:var(--primary); font-size:14px;">Déjà un compte ? Se connecter</a>
+              </div>
+            </form>
 
-        <!-- ÉTAPE 2: Vérification Téléphone -->
-        <form id="form-step-2" class="step-form" style="display:none; text-align: center;">
-          <div style="width:64px; height:64px; border-radius:50%; background:#eff6ff; color:var(--primary); display:flex; align-items:center; justify-content:center; margin: 0 auto 16px; font-size: 32px;">
-            <i class="ti ti-device-mobile-message"></i>
-          </div>
-          <h3 style="margin-bottom: 8px; font-size: 18px; color: var(--text);">Vérification de votre numéro</h3>
-          <p class="text-muted" style="margin-bottom: 24px;">
-            Nous avons simulé l'envoi d'un SMS au <strong id="display-tel"></strong>.<br>
-            Veuillez saisir le code ci-dessous :
-          </p>
+            <!-- ETAPE 2 -->
+            <form id="form-step-2" class="step-form" style="display:none;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+                <div class="register-step-num" style="background:#2563EB; color:white;">2</div>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">2 — Sécurité & mot de passe</h2>
+              </div>
 
-          <div id="simulated-sms-code" style="background:#f1f5f9; border:1px dashed #cbd5e1; padding: 12px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 4px; color: var(--text); margin-bottom: 24px;">
-            ------
-          </div>
+              <div class="nb-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 8px;">
+                <div class="form-group">
+                  <label>Mot de passe</label>
+                  <input type="password" id="reg-pwd" required class="admin-input" placeholder="••••••••" style="width:100%;" />
+                </div>
+                <div class="form-group">
+                  <label>Confirmer le mot de passe</label>
+                  <input type="password" id="reg-pwd-confirm" required class="admin-input" placeholder="••••••••" style="width:100%;" />
+                </div>
+              </div>
+              <div style="font-size:12px; color:#64748B; margin-bottom: 30px;">
+                Trop faible · 0/4 critères
+              </div>
 
-          <div class="form-group" style="max-width: 300px; margin: 0 auto 24px;">
-            <input type="text" id="reg-sms-code" required placeholder="Tapez le code à 6 chiffres" maxlength="6" class="admin-input" style="width:100%; text-align:center; font-size: 18px; letter-spacing: 2px;" />
-          </div>
+              <div class="form-group" style="margin-bottom: 30px;">
+                <label>Code PIN (4 chiffres)</label>
+                <div class="pin-inputs">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-1" onkeyup="movePinFocus(this, 1)">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-2" onkeyup="movePinFocus(this, 2)">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-3" onkeyup="movePinFocus(this, 3)">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-4" onkeyup="movePinFocus(this, 4)">
+                </div>
+              </div>
 
-          <div class="alert alert-warning" style="background: #fffbeb; color: #b45309; border:1px solid #fde68a; padding: 12px; border-radius: 8px; font-size: 13px; text-align:left; margin-bottom: 24px;">
-            <i class="ti ti-info-circle" style="vertical-align: middle; margin-right: 4px;"></i> 
-            <strong>Important :</strong> Conservez précieusement ce code validé, il pourra vous être redemandé ultérieurement pour confirmer des opérations.
-          </div>
+              <button type="submit" class="btn-primary" id="btn-step-2">Valider cette étape</button>
+            </form>
 
-          <button type="submit" class="btn-primary w-full">Vérifier le numéro</button>
-        </form>
+            <!-- ETAPE 3 -->
+            <form id="form-step-3" class="step-form" style="display:none;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom: 16px;">
+                <div class="register-step-num" style="background:#2563EB; color:white;">3</div>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">3 — Vérification KYC</h2>
+              </div>
+              <p style="color:#64748B; font-size:14px; margin-bottom: 24px;">Identifiez-vous pour activer votre compte. Requis par la réglementation bancaire.</p>
 
-        <!-- ÉTAPE 3: KYC -->
-        <form id="form-step-3" class="step-form" style="display:none;">
-          <h3 style="margin-bottom: 8px; font-size: 18px; color: var(--text);">Vérification d'identité (KYC)</h3>
-          <p class="text-muted" style="margin-bottom: 24px;">
-            Dernière étape avant d'accéder à votre compte. Vos documents sont traités de manière sécurisée.
-          </p>
+              <div class="form-group" style="max-width: 300px; margin-bottom: 24px;">
+                <label>Type de pièce d'identité</label>
+                <select id="reg-kyc-type" required class="admin-input" style="width:100%;">
+                  <option value="cni">Carte Nationale d'Identité</option>
+                  <option value="passeport">Passeport</option>
+                  <option value="permis">Permis de conduire</option>
+                  <option value="sejour">Titre de séjour</option>
+                </select>
+              </div>
 
-          <div class="form-group">
-            <label>Type de document</label>
-            <select id="reg-kyc-type" required class="admin-input" style="width:100%;">
-              <option value="cni">Carte Nationale d'Identité</option>
-              <option value="passeport">Passeport</option>
-              <option value="permis">Permis de conduire</option>
-              <option value="sejour">Titre de séjour</option>
-            </select>
-          </div>
+              <div style="display:flex; gap: 16px; margin-bottom: 30px;">
+                <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-recto').click()">
+                  <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
+                  <div style="font-weight:600; color:#0F172A; font-size:14px;">Recto de votre CNI</div>
+                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF · max 5 Mo</div>
+                  <input type="file" id="reg-kyc-recto" style="display:none;" onchange="document.getElementById('recto-name').innerText = this.files[0].name" />
+                  <div id="recto-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
+                </div>
+                <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-verso').click()">
+                  <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
+                  <div style="font-weight:600; color:#0F172A; font-size:14px;">Verso</div>
+                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF · max 5 Mo</div>
+                  <input type="file" id="reg-kyc-verso" style="display:none;" onchange="document.getElementById('verso-name').innerText = this.files[0].name" />
+                  <div id="verso-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
+                </div>
+                <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-selfie').click()">
+                  <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
+                  <div style="font-weight:600; color:#0F172A; font-size:14px;">Selfie avec le document</div>
+                  <div style="font-size:12px; color:#94A3B8;">Capture via webcam ou mobile</div>
+                  <input type="file" id="reg-kyc-selfie" style="display:none;" onchange="document.getElementById('selfie-name').innerText = this.files[0].name" />
+                  <div id="selfie-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
+                </div>
+              </div>
 
-          <div class="form-group" style="margin-top: 16px;">
-            <label>Photo du document d'identité</label>
-            <div style="border: 2px dashed #cbd5e1; padding: 24px; text-align: center; border-radius: 8px; background: #f8fafc; cursor: pointer;" onclick="document.getElementById('reg-kyc-doc').click()">
-              <i class="ti ti-upload" style="font-size:24px; color:var(--primary); margin-bottom:8px;"></i>
-              <div style="font-size:14px; font-weight:500;">Cliquez pour uploader</div>
-              <div style="font-size:12px; color:#64748b;">Format PNG, JPG ou PDF (Max 5Mo)</div>
-              <input type="file" id="reg-kyc-doc" required accept="image/*,.pdf" style="display:none;" onchange="document.getElementById('doc-name').innerText = this.files[0].name" />
-              <div id="doc-name" style="margin-top:8px; font-size:13px; color:var(--success); font-weight:600;"></div>
+              <button type="submit" class="btn-primary" id="btn-step-3">Soumettre pour vérification →</button>
+            </form>
+
+            <!-- ETAPE 4 -->
+            <form id="form-step-4" class="step-form" style="display:none;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+                <div class="register-step-num" style="background:#2563EB; color:white;">4</div>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">4 — Offre & finalisation</h2>
+              </div>
+
+              <div style="display:flex; gap: 16px; margin-bottom: 24px;">
+                <div class="plan-card" onclick="selectPlan(this, 'standard')">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <div style="font-weight:700;">Standard</div>
+                    <div style="font-weight:700;">Gratuit</div>
+                  </div>
+                  <div style="font-size:13px; color:#64748B;">Compte courant + carte Visa Classic</div>
+                </div>
+                <div class="plan-card active" onclick="selectPlan(this, 'premium')">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <div style="font-weight:700;"><i class="ti ti-star" style="color:#F59E0B; margin-right:4px;"></i>Premium</div>
+                    <div style="font-weight:700;">9,90 €/mois</div>
+                  </div>
+                  <div style="font-size:13px; color:#64748B;">Visa Platinum + assurances + 0 € frais intl.</div>
+                </div>
+                <div class="plan-card" onclick="selectPlan(this, 'business')">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <div style="font-weight:700;">Business</div>
+                    <div style="font-weight:700;">24,90 €/mois</div>
+                  </div>
+                  <div style="font-size:13px; color:#64748B;">Multi-comptes + API + comptabilité</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 24px;">
+                <label class="checkbox-label" style="margin-bottom: 8px;">
+                  <input type="checkbox" id="reg-cgu" required />
+                  <span>J'accepte les <a href="#" style="color:#2563EB;">CGU</a> et la <a href="#" style="color:#2563EB;">politique de confidentialité</a></span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" />
+                  <span>J'accepte de recevoir les communications commerciales</span>
+                </label>
+              </div>
+
+              <button type="submit" id="btn-final-kyc" class="btn-primary"><i class="ti ti-lock" style="margin-right:8px;"></i>Valider et créer le compte</button>
+            </form>
+
+            <!-- ETAPE 5 -->
+            <div id="form-step-5" class="step-form" style="display:none; text-align:center; padding: 40px 0;">
+              <div style="width:80px; height:80px; border-radius:50%; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 40px;">
+                <i class="ti ti-check"></i>
+              </div>
+              <h2 style="font-size: 24px; color: #0F172A; margin-bottom: 12px;">Compte activé !</h2>
+              <p style="color:#64748B; font-size:15px; margin-bottom: 30px;">Votre compte est désormais ouvert. Vous pouvez y accéder et commander votre carte.</p>
+              <button type="button" class="btn-primary" onclick="window.location.reload()">Accéder à mon espace</button>
             </div>
-          </div>
 
-          <div class="form-group" style="margin-top: 16px;">
-            <label>Selfie (Pour vérification faciale)</label>
-            <div style="border: 2px dashed #cbd5e1; padding: 24px; text-align: center; border-radius: 8px; background: #f8fafc; cursor: pointer;" onclick="document.getElementById('reg-kyc-selfie').click()">
-              <i class="ti ti-camera" style="font-size:24px; color:var(--primary); margin-bottom:8px;"></i>
-              <div style="font-size:14px; font-weight:500;">Cliquez pour prendre un selfie</div>
-              <div style="font-size:12px; color:#64748b;">Visage dégagé et bien éclairé</div>
-              <input type="file" id="reg-kyc-selfie" required accept="image/*" capture="user" style="display:none;" onchange="document.getElementById('selfie-name').innerText = this.files[0].name" />
-              <div id="selfie-name" style="margin-top:8px; font-size:13px; color:var(--success); font-weight:600;"></div>
-            </div>
           </div>
-
-          <div style="margin-top: 32px; display:flex; gap:12px;">
-            <button type="button" class="btn-outline" style="flex:1;" onclick="finishOnboardingWithoutKYC()">Plus tard</button>
-            <button type="submit" class="btn-primary" style="flex:2;">Soumettre et terminer</button>
-          </div>
-        </form>
-
+        </div>
       </div>
     </div>
   </div>
@@ -1850,9 +1904,7 @@
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 1)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 2)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 3)">
-      <input type="text" class="otp-box empty" maxlength="1" onkeyup="moveOtpFocus(this, 4)">
-      <input type="text" class="otp-box empty" maxlength="1" onkeyup="moveOtpFocus(this, 5)">
-      <input type="text" class="otp-box empty" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
     </div>
     <div class="resend-link" style="text-align:center; margin-bottom:24px;">Renvoyer le code</div>
     <button type="button" class="btn-primary w-full" onclick="forceLogin()">Valider</button>
