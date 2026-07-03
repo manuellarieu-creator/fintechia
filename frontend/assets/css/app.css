@@ -36,8 +36,9 @@
 .login-left {
   background: #2563EB;
   color: white;
-  width: 45%;
-  padding: 60px 80px;
+  width: 35%;
+  max-width: 500px;
+  padding: 60px 50px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -208,7 +209,7 @@
 }
 .login-footer {
   margin-top: 32px;
-  text-align: right;
+  text-align: left;
   font-size: 14px;
   color: #64748B;
 }
