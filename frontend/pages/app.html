@@ -1899,15 +1899,14 @@
 <div id="modal-2fa-login" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
   <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:400px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
     <div class="auth-title" style="font-size:22px; margin-bottom:12px;">Double authentification</div>
-    <p style="margin-bottom:24px; font-size:15px; color:#64748B;">Code envoyé par SMS au +33 6 ** ** ** 42</p>
+    <p style="margin-bottom:24px; font-size:15px; color:#64748B;">Valider votre code d'authentification</p>
     <div class="otp-inputs" style="justify-content:center; gap:12px; margin-bottom:30px;">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 1)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 2)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 3)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
     </div>
-    <div class="resend-link" style="text-align:center; margin-bottom:24px;">Renvoyer le code</div>
-    <button type="button" class="btn-primary w-full" onclick="forceLogin()">Valider</button>
+    <button type="button" class="btn-primary w-full" style="justify-content: center; text-align: center;" onclick="forceLogin()">Valider</button>
   </div>
 </div>
 
@@ -1992,7 +1991,7 @@
     let code = '';
     inputs.forEach(i => code += i.value);
     
-    if (code.length < 6) return;
+    if (code.length < 4) return;
 
     try {
       const res = await apiCall('/auth/login/2fa', 'POST', { tempToken: tempToken2FA, code });
