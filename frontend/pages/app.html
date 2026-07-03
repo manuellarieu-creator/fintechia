@@ -1886,14 +1886,29 @@
     }
   }
 
-  // Intercepter la soumission du formulaire pour afficher la modale
-  document.getElementById('form-login-dynamic').addEventListener('submit', function(e) {
+  let tempToken2FA = null;
+
+  // Intercepter la soumission du formulaire pour afficher la modale ou connecter directement
+  document.getElementById('form-login-dynamic').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const pwd = document.getElementById('login-pwd').value;
-    if (pwd.length >= 8) { // Validation TRUE simulée
-      document.getElementById('modal-2fa-login').style.display = 'flex';
-      // Focus le premier input OTP
-      setTimeout(() => document.querySelector('#modal-2fa-login .otp-box').focus(), 100);
+    const idClient = document.getElementById('login-id-client').value;
+    const password = document.getElementById('login-pwd').value;
+    const trustedDeviceToken = localStorage.getItem('fintech_device_token');
+
+    try {
+      const res = await apiCall('/auth/login', 'POST', { idClient, password, trustedDeviceToken });
+      
+      if (res.require2FA) {
+        tempToken2FA = res.tempToken;
+        document.getElementById('modal-2fa-login').style.display = 'flex';
+        // Focus le premier input OTP
+        setTimeout(() => document.querySelector('#modal-2fa-login .otp-box').focus(), 100);
+      } else {
+        localStorage.setItem('fintech_token', res.token);
+        if (typeof initDashboard === 'function') initDashboard(res.user, res.account);
+      }
+    } catch (err) {
+      alert(err.message);
     }
   });
 
@@ -1909,12 +1924,10 @@
     }
   }
 
-  function checkOtpAndLogin(el, e) {
+  async function checkOtpAndLogin(el, e) {
     el.classList.remove('empty');
     if (el.value.length === 1) {
-      setTimeout(() => {
-        forceLogin();
-      }, 300);
+      await forceLogin();
     } else if (el.value.length === 0 && e && e.key === "Backspace") {
       el.classList.add('empty');
       const prev = el.previousElementSibling;
@@ -1922,14 +1935,23 @@
     }
   }
 
-  function forceLogin() {
-    document.getElementById('modal-2fa-login').style.display = 'none';
-    // Pour que la page ne recharge pas bêtement, on checkAuth() ou initDashboard
-    if (typeof initDashboard === 'function') {
-      // Mock data pour la demo si l'api n'est pas dispo
-      initDashboard({ prenom: 'Marie', nom: 'Fontaine' }, { solde: 8450.00, iban: 'FR76 1234 5678 4821', type_compte: 'Courant' });
-    } else {
-      showPage('pg-dash');
+  async function forceLogin() {
+    const inputs = document.querySelectorAll('#modal-2fa-login .otp-box');
+    let code = '';
+    inputs.forEach(i => code += i.value);
+    
+    if (code.length < 6) return;
+
+    try {
+      const res = await apiCall('/auth/login/2fa', 'POST', { tempToken: tempToken2FA, code });
+      localStorage.setItem('fintech_token', res.token);
+      localStorage.setItem('fintech_device_token', res.deviceToken);
+      document.getElementById('modal-2fa-login').style.display = 'none';
+      if (typeof initDashboard === 'function') initDashboard(res.user, res.account);
+    } catch(err) {
+      alert('Erreur: ' + err.message);
+      inputs.forEach(i => { i.value = ''; i.classList.add('empty'); });
+      inputs[0].focus();
     }
   }
 </script>

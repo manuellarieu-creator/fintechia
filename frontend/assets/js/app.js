@@ -309,6 +309,10 @@ document.getElementById('form-step-1')?.addEventListener('submit', async (e) => 
       document.getElementById('simulated-sms-code').innerText = res.telephone_code;
     }
 
+    if (res.numero_client) {
+      alert(`Félicitations ! Votre compte est créé.\\n\\nIMPORTANT : Votre identifiant client (ID Client) pour vous connecter est le : ${res.numero_client}\\n\\nVeuillez le noter précieusement.`);
+    }
+
     // Passer à l'étape 2 (Vérification Téléphone)
     document.getElementById('form-step-1').style.display = 'none';
     document.getElementById('form-step-2').style.display = 'block';

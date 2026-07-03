@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
   revenus       VARCHAR(100),
   telephone_code VARCHAR(10),
   telephone_verifie BOOLEAN DEFAULT FALSE,
+  date_naissance DATE,
+  pin_code      VARCHAR(10),
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('client','admin') DEFAULT 'client',
   created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -149,5 +151,14 @@ CREATE TABLE IF NOT EXISTS budgets (
   limite DECIMAL(15,2) NOT NULL,
   couleur VARCHAR(20) DEFAULT 'blue',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_devices (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  device_token VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -28,9 +28,11 @@ router.post('/register', [
   body('profession').optional().trim(),
   body('revenus').optional().trim(),
   body('password').isLength({ min: 6 }).withMessage('Minimum 6 caractères'),
-  body('type_compte').optional().isIn(['credit', 'epargne', 'courant']).withMessage('Type de compte invalide')
+  body('type_compte').optional().isIn(['credit', 'epargne', 'courant']).withMessage('Type de compte invalide'),
+  body('date_naissance').optional().trim(),
+  body('pin_code').optional().trim()
 ], validateReq, async (req, res, next) => {
-  const { prenom, nom, email, telephone, adresse, profession, revenus, password } = req.body;
+  const { prenom, nom, email, telephone, adresse, profession, revenus, password, date_naissance, pin_code } = req.body;
   const type_compte = req.body.type_compte || 'courant';
 
   // Auto-migration silencieuse via le pool (ne casse pas la transaction)
@@ -40,6 +42,9 @@ router.post('/register', [
   try { await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50) UNIQUE"); } catch(e) {}
+  try { await db.query("CREATE TABLE IF NOT EXISTS user_devices (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, device_token VARCHAR(255) NOT NULL UNIQUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
 
   const connection = await db.getConnection();
   try {
@@ -51,15 +56,15 @@ router.post('/register', [
     }
 
     const password_hash = await bcrypt.hash(password, 10);
-    const telephone_code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+    const telephone_code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits backward compatibility
     
-    // Générer le numéro client
-    const timestamp = Date.now().toString().slice(-6);
-    const random = Math.floor(1000 + Math.random() * 9000).toString();
-    const numero_client = `CL-${timestamp}-${random}`;
+    // Générer le numéro client à 12 chiffres
+    const timestamp = Date.now().toString().slice(-7);
+    const random = Math.floor(10000 + Math.random() * 90000).toString(); // 5 chiffres
+    const numero_client = `${timestamp}${random}`; // 7 + 5 = 12 chiffres
 
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash, numero_client) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash, numero_client, date_naissance, pin_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         prenom || null, 
         nom || null, 
@@ -70,7 +75,9 @@ router.post('/register', [
         revenus || null, 
         telephone_code, 
         password_hash,
-        numero_client
+        numero_client,
+        date_naissance || null,
+        pin_code || null
       ]
     );
     const userId = userRes.insertId;
@@ -94,7 +101,7 @@ router.post('/register', [
 
     const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
     
-    res.json({ token, telephone_code, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
+    res.json({ token, telephone_code, numero_client, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
   } catch (err) {
     if (connection) {
       try { await connection.rollback(); } catch (e) {}
@@ -135,17 +142,17 @@ router.post('/verify-phone', authMiddleware, async (req, res, next) => {
 
 // POST /api/auth/login
 router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
+  body('idClient').notEmpty(),
   body('password').notEmpty()
 ], validateReq, async (req, res, next) => {
-  const { email, password } = req.body;
+  const { idClient, password, trustedDeviceToken } = req.body;
   try {
-    const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [users] = await db.query('SELECT * FROM users WHERE numero_client = ?', [idClient]);
     if (users.length === 0) {
       await audit.log({
-        acteur_email: email, acteur_role: 'client',
+        acteur_email: idClient, acteur_role: 'client',
         action: audit.ACTIONS.CONNEXION_ECHOUEE, categorie: audit.CATEGORIES.securite,
-        statut: 'echec', detail: `Tentative échouée pour ${email}`, req
+        statut: 'echec', detail: `Tentative échouée pour ID Client ${idClient}`, req
       });
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
@@ -155,9 +162,9 @@ router.post('/login', [
     
     if (!match) {
       await audit.log({
-        acteur_email: email, acteur_role: 'client',
+        acteur_email: user.email, acteur_role: 'client',
         action: audit.ACTIONS.CONNEXION_ECHOUEE, categorie: audit.CATEGORIES.securite,
-        statut: 'echec', detail: `Mot de passe incorrect pour ${email}`, req
+        statut: 'echec', detail: `Mot de passe incorrect pour ID Client ${idClient}`, req
       });
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
@@ -167,13 +174,34 @@ router.post('/login', [
 
     if (account && account.statut === 'bloque') {
       await audit.log({
-        acteur_email: email, acteur_role: 'client',
+        acteur_email: user.email, acteur_role: 'client',
         action: audit.ACTIONS.CONNEXION_ECHOUEE, categorie: audit.CATEGORIES.securite,
-        statut: 'echec', detail: `Connexion refusée (compte bloqué) pour ${email}`, req
+        statut: 'echec', detail: `Connexion refusée (compte bloqué) pour ID Client ${idClient}`, req
       });
       return res.status(403).json({ error: 'Votre compte est bloqué. Veuillez contacter le support.', code: 'ACCOUNT_BLOCKED', status: 403 });
     }
 
+    // Verification 2FA / Device
+    const isLocalhost = req.headers.host && req.headers.host.includes('localhost');
+    let deviceKnown = false;
+
+    if (trustedDeviceToken) {
+      const [devices] = await db.query('SELECT * FROM user_devices WHERE device_token = ? AND user_id = ?', [trustedDeviceToken, user.id]);
+      if (devices.length > 0) {
+        deviceKnown = true;
+        await db.query('UPDATE user_devices SET last_used = CURRENT_TIMESTAMP WHERE id = ?', [devices[0].id]);
+      }
+    }
+
+    if (!deviceKnown && !isLocalhost) {
+      // Create a temporary token for the 2FA flow
+      const tempToken = jwt.sign({ id: user.id, intent: '2fa' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      // We don't send the telephone_code, the user must provide it
+      const obfuscatedPhone = user.telephone ? user.telephone.replace(/(.{3}).*(.{2})/, '$1 *** ** $2') : '+33 6 ** ** ** 42';
+      return res.json({ require2FA: true, obfuscatedPhone, tempToken });
+    }
+
+    // Direct Login (Device Known)
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
@@ -189,6 +217,58 @@ router.post('/login', [
       account
     });
   } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/login/2fa
+router.post('/login/2fa', [
+  body('tempToken').notEmpty(),
+  body('code').notEmpty()
+], validateReq, async (req, res, next) => {
+  const { tempToken, code } = req.body;
+  try {
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    if (decoded.intent !== '2fa') {
+      return res.status(401).json({ error: 'Token invalide', status: 401 });
+    }
+
+    const [users] = await db.query('SELECT * FROM users WHERE id = ?', [decoded.id]);
+    if (users.length === 0) return res.status(401).json({ error: 'Utilisateur introuvable', status: 401 });
+    
+    const user = users[0];
+
+    // Check code statique (pin_code ou telephone_code de la db)
+    if (user.pin_code !== code && user.telephone_code !== code) {
+      return res.status(401).json({ error: 'Code incorrect', code: 'INVALID_2FA', status: 401 });
+    }
+
+    // Enregistrer l'appareil de confiance
+    const deviceToken = crypto.randomBytes(32).toString('hex');
+    await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
+
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte FROM accounts WHERE user_id = ?', [user.id]);
+    const account = accounts.length > 0 ? accounts[0] : null;
+
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+
+    await audit.log({
+      acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
+      action: audit.ACTIONS.CONNEXION_REUSSIE, categorie: audit.CATEGORIES.auth,
+      cible_type: 'user', cible_id: user.id,
+      cible_detail: `Connexion avec 2FA validé depuis ${req.headers['x-forwarded-for'] || 'IP inconnue'}`, req
+    });
+
+    res.json({
+      token,
+      deviceToken, // The frontend will store this and send it on next login
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
+      account
+    });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ error: 'Session 2FA expirée ou invalide', status: 401 });
+    }
     next(err);
   }
 });
