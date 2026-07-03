@@ -28,32 +28,73 @@
   </div>
 
   <!-- ECRAN LOGIN -->
-  <div id="pg-login" class="page flex-col" style="display:none;">
-    <div class="login-container">
-      <div class="login-logo">
-        <svg viewBox="0 0 120 105" fill="none" width="60" height="52">
-          <polyline points="2,85 52,5 102,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-          <polyline points="16,85 52,22 88,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-          <polyline points="30,85 52,39 74,85" stroke="#E84E0F" stroke-width="10" fill="none" stroke-linejoin="round"/>
-        </svg>
+  <div id="pg-login" class="page" style="display:none; background: #f3f4f6; align-items: center; justify-content: center; height: 100vh;">
+    <div class="login-split-card">
+      <div class="login-left">
+        <div class="login-left-content">
+          <div class="logo-box">N</div>
+          <h1>Bienvenue sur<br/>NovaBanque</h1>
+          <p>Votre banque 100% en ligne,<br/>sécurisée et disponible 24h/24.</p>
+        </div>
+        <div class="login-left-features">
+          <div class="feature-item"><div class="feature-icon"></div> Connexion sécurisée SSL</div>
+          <div class="feature-item"><div class="feature-icon"></div> Double authentification</div>
+          <div class="feature-item"><div class="feature-icon"></div> Données chiffrées</div>
+        </div>
       </div>
-      <h2 class="login-title">Connexion à votre espace</h2>
-      
-      <form id="form-login" class="login-form">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="login-email" required />
+      <div class="login-right">
+        <div class="login-right-header">
+           <span class="url-text">novabanque.fr/login</span>
         </div>
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" id="login-pwd" required />
+        <div class="login-right-body">
+          <h2>Connexion</h2>
+          <p class="subtitle">Accédez à votre espace personnel</p>
+          
+          <button type="button" class="btn-google">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" />
+            Continuer avec Google
+          </button>
+          
+          <div class="divider"><span>ou par email</span></div>
+          
+          <form id="form-login" class="login-form" onsubmit="event.preventDefault(); showPage('pg-dash');">
+            <div class="form-group">
+              <label>Adresse email</label>
+              <input type="email" id="login-email" value="manuela@email.fr" required />
+            </div>
+            <div class="form-group">
+              <label>Mot de passe</label>
+              <input type="password" id="login-pwd" value="••••••••••" required />
+            </div>
+            
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" checked />
+                <span>Rester connecté sur cet appareil</span>
+              </label>
+            </div>
+            
+            <button type="submit" class="btn-primary w-full" style="margin-top: 10px;">Se connecter</button>
+          </form>
+          
+          <div class="auth-panel">
+            <div class="auth-title">Double authentification</div>
+            <p>Code envoyé au +33 6 ** ** ** 42</p>
+            <div class="otp-inputs">
+              <input type="text" value="3" class="otp-box" readonly>
+              <input type="text" value="7" class="otp-box" readonly>
+              <input type="text" value="4" class="otp-box" readonly>
+              <input type="text" value="" class="otp-box empty" readonly>
+              <input type="text" value="" class="otp-box empty" readonly>
+              <input type="text" value="" class="otp-box empty" readonly>
+            </div>
+            <div class="resend-link">Renvoyer le code</div>
+          </div>
+          
+          <div class="login-footer">
+             Pas encore client ? <a href="#" onclick="showPage('pg-register')">Ouvrir un compte</a>
+          </div>
         </div>
-        <button type="submit" class="btn-primary w-full">Se connecter</button>
-      </form>
-      
-      <div class="login-links">
-        <a href="#" onclick="showPage('pg-register')">Créer un compte</a>
-        <a href="index.html">← Retour à l'accueil</a>
       </div>
     </div>
   </div>
