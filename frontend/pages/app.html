@@ -298,6 +298,38 @@
     </div>
   </div>
 
+  <!-- ECRAN ATTENTE KYC -->
+  <div id="pg-kyc-waiting" class="page" style="display:none; padding:0; width:100%; height:100vh; background:#F8FAFC; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:40px; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.05); text-align:center; max-width:500px; width:90%;">
+        <div style="width:80px; height:80px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+            <i class="ti ti-hourglass" style="font-size:36px; color:#2563EB;"></i>
+        </div>
+        <h2 style="font-size:24px; color:#0F172A; margin-bottom:12px;">Vérification en cours</h2>
+        <p style="color:#64748B; font-size:15px; margin-bottom:20px;">
+            Votre création de compte est en cours de vérification.
+        </p>
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:15px; border-radius:8px; text-align:left; margin-bottom:20px;">
+            <p style="color:#B45309; font-size:13px; margin:0; line-height:1.5;">
+                <strong>Important :</strong> Si les éléments ou informations fournies ne sont pas 100% exactes, veuillez contacter le support client pour une mise à jour avant le traitement des données.
+            </p>
+        </div>
+        <button class="btn-outline" style="width:100%;" onclick="window.location.href='mailto:support@fintechia.com'">Contacter le support</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-kyc-approved" style="display:none; z-index: 10000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
+    <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 40px 30px;">
+      <div style="width:70px; height:70px; background:#F0FDF4; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+        <i class="ti ti-check" style="font-size:36px; color:#16A34A;"></i>
+      </div>
+      <h3 style="margin-top: 0; font-size:22px; color:#0F172A;">Ourrah votre compte FINTECHIA a bien été créé et validé.</h3>
+      <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
+        Découvrez votre espace client pour vos opérations bancaires.
+      </p>
+      <button class="btn-primary" style="width:100%;" onclick="goToEspaceBancaire()">Voir Espace Bancaire</button>
+    </div>
+  </div>
+
   <!-- ECRAN DASHBOARD -->
   <div id="pg-dash" class="page" style="display:none; padding:0; width: 100%;">
     

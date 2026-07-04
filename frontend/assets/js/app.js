@@ -153,6 +153,12 @@ async function initDashboard(user, account, kycStatut = null) {
     return;
   }
 
+  if (kycStatut === 'en_attente') {
+    showPage('pg-kyc-waiting');
+    startKycPolling();
+    return;
+  }
+
   showPage('pg-dash');
   
   if (account && user.role !== 'admin') {
@@ -670,5 +676,34 @@ window.finishVideoKyc = function() {
   clearInterval(kycTimerInterval);
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     mediaRecorder.stop();
-  }
+}
+
+// ============================
+// KYC Polling
+// ============================
+let kycPollInterval = null;
+
+function startKycPolling() {
+  if (kycPollInterval) clearInterval(kycPollInterval);
+  
+  kycPollInterval = setInterval(async () => {
+    try {
+      const data = await apiCall('/auth/me');
+      if (data && data.kyc_statut === 'valide' && data.account && data.account.iban) {
+        clearInterval(kycPollInterval);
+        document.getElementById('modal-kyc-approved').style.display = 'flex';
+      } else if (data && data.kyc_statut === 'rejete') {
+        clearInterval(kycPollInterval);
+        alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.');
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("KYC Polling error", err);
+    }
+  }, 10000); // Check every 10 seconds
+}
+
+window.goToEspaceBancaire = function() {
+  document.getElementById('modal-kyc-approved').style.display = 'none';
+  window.location.reload(); // Will reload and re-initialize dashboard, hitting the Alimentation check
 }
