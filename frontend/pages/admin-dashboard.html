@@ -71,13 +71,9 @@
                 </a>
 
                 <div class="nav-section">SYSTÈME</div>
-                <a href="#" class="nav-item" onclick="showAdminView('view-securite', this)">
-                    <i class="ti ti-shield-lock"></i>
-                    <span>Sécurité & accès</span>
-                </a>
-                <a href="#" class="nav-item" onclick="showAdminView('view-parametres', this)">
+                <a href="#" class="nav-item" onclick="document.getElementById('modal-settings').style.display='flex'">
                     <i class="ti ti-settings"></i>
-                    <span>Paramètres</span>
+                    <span>Paramètres Globaux</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showAdminView('view-logs', this)">
                     <i class="ti ti-file-text"></i>
@@ -1050,6 +1046,46 @@
             <div style="display:flex; gap:12px; margin-top:24px;">
                 <button class="btn-danger" style="flex:1;" onclick="rejectKyc()">Refuser le document</button>
                 <button class="btn-primary" style="flex:1;" onclick="validateKyc()">Valider (Activer le compte)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-reject-kyc" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Rejeter le dossier KYC</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Veuillez sélectionner le motif de rejet. Ce motif sera enregistré dans le dossier du client.</p>
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Motif (obligatoire)</label>
+                <select id="kyc-reject-reason" class="input" style="width:100%;">
+                    <option value="">-- Choisir un motif --</option>
+                    <option value="Photo pièce d'identité floue">Photo pièce d'identité floue</option>
+                    <option value="Numéro de pièce d'identié non conforme à celle communiqué verbalement">Numéro de pièce d'identié non conforme à celle communiqué verbalement</option>
+                    <option value="Video selfie étape 1 non valide">Video selfie étape 1 non valide</option>
+                    <option value="Video selfie étape 2 non valide">Video selfie étape 2 non valide</option>
+                    <option value="Video selfie étape 3 non valide">Video selfie étape 3 non valide</option>
+                    <option value="Orientation de la tête non valide avec instruction">Orientation de la tête non valide avec instruction</option>
+                    <option value="Video selfie prise dans espace sombre">Video selfie prise dans espace sombre</option>
+                    <option value="Etapes 1 + 2 + 3 non complétés correctement">Etapes 1 + 2 + 3 non complétés correctement</option>
+                </select>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-reject-kyc').style.display='none'">Annuler</button>
+                <button class="btn-danger" onclick="confirmRejectKyc()">Confirmer le rejet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Paramètres -->
+    <div class="modal" id="modal-settings" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Paramètres Système</h3>
+            <div style="margin-top:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:4px;">Frais d'activation du compte (€)</label>
+                <input type="number" id="settings-activation-fee" class="input" style="width:100%;" min="0" step="1">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-settings').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="saveSettings()">Enregistrer</button>
             </div>
         </div>
     </div>

@@ -747,7 +747,6 @@ window.submitKycAction = async function(action) {
     if (action === 'valider') {
         const res = await fetchAPI(`/admin/kyc/${selectedKyc.id}/document`, 'PATCH', { decision: 'valide', commentaire: note || 'Identité vérifiée par Admin' });
         if (res && res.success) {
-            // Optionnel : activer le compte
             const acc = allClients.find(c => c.email === selectedKyc.email);
             if(acc && acc.statut === 'en_attente') {
                 await fetchAPI(`/admin/comptes/${acc.id}/statut`, 'PATCH', { statut: 'actif', commentaire: 'Suite KYC' });
@@ -756,19 +755,7 @@ window.submitKycAction = async function(action) {
             loadKycTable();
         }
     } else if (action === 'rejeter') {
-        let motif = note;
-        if (!motif || motif.trim() === '') {
-            motif = prompt('Veuillez saisir le motif du rejet (obligatoire) :');
-            if (!motif || motif.trim() === '') {
-                alert('Action annulée : Le motif du rejet est obligatoire.');
-                return;
-            }
-        }
-        const res = await fetchAPI(`/admin/kyc/${selectedKyc.id}/document`, 'PATCH', { decision: 'rejete', commentaire: motif });
-        if (res && res.success) {
-            alert('KYC Rejeté');
-            loadKycTable();
-        }
+        document.getElementById('modal-reject-kyc').style.display = 'flex';
     } else if (action === 'contacter') {
         const subject = prompt("Sujet de l'email :", "Concernant votre dossier KYC");
         if(subject) {
@@ -782,6 +769,43 @@ window.submitKycAction = async function(action) {
         }
     }
 }
+
+window.confirmRejectKyc = async function() {
+    if (!selectedKyc) return;
+    const motif = document.getElementById('kyc-reject-reason').value;
+    if (!motif) {
+        alert('Action annulée : Le motif du rejet est obligatoire.');
+        return;
+    }
+    const res = await fetchAPI(`/admin/kyc/${selectedKyc.id}/document`, 'PATCH', { decision: 'rejete', commentaire: motif });
+    if (res && res.success) {
+        alert('KYC Rejeté');
+        document.getElementById('modal-reject-kyc').style.display = 'none';
+        loadKycTable();
+    }
+}
+
+// Paramètres
+window.saveSettings = async function() {
+    const fee = document.getElementById('settings-activation-fee').value;
+    if(!fee || fee < 0) return alert('Veuillez entrer un montant valide');
+    const res = await fetchAPI('/settings/activation_fee', 'POST', { value: fee });
+    if(res && res.success) {
+        alert('Paramètres enregistrés !');
+        document.getElementById('modal-settings').style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load activation fee for settings panel
+    try {
+        const res = await fetchAPI('/settings/activation_fee', 'GET');
+        if(res && res.value) {
+            document.getElementById('settings-activation-fee').value = res.value;
+        }
+    } catch(e) {}
+});
+
 
 
 // --- Virements (Page 4) ---

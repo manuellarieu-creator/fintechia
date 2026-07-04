@@ -16,6 +16,7 @@ const adminRoutes = require('./routes/admin');
 const budgetsRoutes = require('./routes/budgets');
 const beneficiairesRoutes = require('./routes/beneficiaires');
 const cartesRoutes = require('./routes/cartes');
+const settingsRoutes = require('./routes/settings');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -67,6 +68,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/budgets', budgetsRoutes);
 app.use('/api/beneficiaires', beneficiairesRoutes);
 app.use('/api/cartes', cartesRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Fichiers statiques (en production configuré via Nginx internal)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

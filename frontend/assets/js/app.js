@@ -143,7 +143,7 @@ async function checkAuth() {
   }
 }
 
-function initDashboard(user, account, kycStatut = null) {
+async function initDashboard(user, account, kycStatut = null) {
   if (kycStatut === null && user.role !== 'admin') {
     showPage('pg-register');
     setStep(3);
@@ -151,6 +151,27 @@ function initDashboard(user, account, kycStatut = null) {
   }
 
   showPage('pg-dash');
+  
+  if (account && user.role !== 'admin') {
+    try {
+      const resFee = await apiCall('/settings/activation_fee', 'GET');
+      if (resFee && resFee.value) {
+        const feeRequired = parseFloat(resFee.value);
+        const currentSolde = parseFloat(account.solde || 0);
+        
+        if (currentSolde < feeRequired) {
+          const feeModal = document.getElementById('modal-activation-fee');
+          if (feeModal) {
+            feeModal.style.display = 'flex';
+            document.getElementById('activation-fee-amount').innerText = feeRequired + '€';
+            document.getElementById('activation-fee-iban').innerText = account.iban || 'IBAN non généré';
+          }
+        }
+      }
+    } catch(e) {
+      console.log('No activation fee setup or error', e);
+    }
+  }
   
   ['user-prenom-mobile', 'user-prenom-desktop', 'user-prenom-greeting'].forEach(id => {
     const el = document.getElementById(id);

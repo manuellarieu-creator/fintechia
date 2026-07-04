@@ -1851,5 +1851,25 @@
   </div>
 </div>
 
+<div class="modal" id="modal-activation-fee" style="display:none; z-index: 10000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
+  <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 30px;">
+    <div style="width:60px; height:60px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+      <i class="ti ti-wallet" style="font-size:32px; color:#2563EB;"></i>
+    </div>
+    <h3 style="margin-top: 0;">Alimentation de compte requise</h3>
+    <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
+      Pour activer pleinement votre compte et accéder à toutes nos fonctionnalités (virements, cartes, etc.), veuillez effectuer un premier dépôt d'au moins <strong id="activation-fee-amount" style="color:#0F172A;">10€</strong>.
+    </p>
+    <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:16px; margin-bottom:24px; text-align:left;">
+      <p style="margin:0 0 8px; font-size:13px; font-weight:600; color:#475569; text-transform:uppercase;">Coordonnées bancaires (IBAN)</p>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span id="activation-fee-iban" style="font-family:monospace; font-size:16px; font-weight:500; color:#0F172A;">En attente</span>
+      </div>
+      <p style="margin:8px 0 0; font-size:12px; color:#64748B;">Veuillez effectuer un virement vers cet IBAN pour alimenter votre compte.</p>
+    </div>
+    <button class="btn-primary" style="width:100%;" onclick="window.location.reload()">J'ai effectué mon dépôt</button>
+  </div>
+</div>
+
 </body>
 </html>
