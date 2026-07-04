@@ -538,13 +538,18 @@ window.startVideoKyc = async function() {
   kycStep = 0;
 
   try {
-    kycStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    kycStream = await navigator.mediaDevices.getUserMedia({ 
+      video: { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 15, max: 24 } }, 
+      audio: true 
+    });
     const videoPreview = document.getElementById('kyc-video-preview');
     videoPreview.srcObject = kycStream;
   } catch (err) {
     console.error("Camera access denied", err);
     alert("Impossible d'accéder à la caméra et au microphone. Autorisation requise.");
     window.cancelVideoKyc();
+    alert('Erreur: Impossible d\'accéder à la caméra. ' + err.message);
+    return;
   }
 }
 
@@ -565,12 +570,12 @@ window.startRecording = function() {
   
   recordedChunks = [];
   try {
-    mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm; codecs=vp8,opus' });
+    mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm; codecs=vp8,opus', videoBitsPerSecond: 250000 });
   } catch (e) {
     try {
-      mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm' });
+      mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm', videoBitsPerSecond: 250000 });
     } catch (e) {
-      mediaRecorder = new MediaRecorder(kycStream); // Fallback
+      mediaRecorder = new MediaRecorder(kycStream, { videoBitsPerSecond: 250000 }); // Fallback
     }
   }
 
