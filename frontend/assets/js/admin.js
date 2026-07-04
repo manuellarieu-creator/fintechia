@@ -4,7 +4,7 @@ const API_BASE = '/api';
 const TOKEN = localStorage.getItem('fintech_token');
 
 if (!TOKEN) {
-    window.location.href = 'index.html';
+    window.location.href = 'admin.html';
 }
 
 // État global
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutTimer = setTimeout(() => {
             localStorage.removeItem('fintech_token');
             alert('Session expirée pour inactivité.');
-            window.location.href = 'index.html';
+            window.location.href = 'admin.html';
         }, 5 * 60 * 1000);
     }
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => document.addEventListener(evt, resetLogoutTimer));
@@ -117,7 +117,7 @@ async function fetchAPI(endpoint, method = 'GET', body = null) {
         
         if (response.status === 401 || response.status === 403) {
             localStorage.removeItem('fintech_token');
-            window.location.href = 'index.html';
+            window.location.href = 'admin.html';
             return null;
         }
         return await response.json();
