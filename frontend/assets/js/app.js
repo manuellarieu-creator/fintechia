@@ -144,9 +144,12 @@ async function checkAuth() {
 }
 
 async function initDashboard(user, account, kycStatut = null) {
-  if (kycStatut === null && user.role !== 'admin') {
+  if ((kycStatut === null || kycStatut === 'rejete' || kycStatut === 'a_refaire') && user.role !== 'admin') {
     showPage('pg-register');
     setStep(3);
+    if (kycStatut === 'rejete') {
+      alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.');
+    }
     return;
   }
 

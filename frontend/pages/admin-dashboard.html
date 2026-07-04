@@ -708,14 +708,462 @@
             <!-- =============================== -->
             <!-- VUE 6 : FRAUDES ET ALERTES      -->
             <!-- =============================== -->
-            <div id="view-fraudes" class="admin-view" style="display: none;">
-                <div class="alerts-card">
-                    <div class="card-header border-bottom">
-                        <h2 class="danger-text">Gestionnaire d'incidents de fraude</h2>
+            <div id="view-fraudes" class="admin-view" style="display: none; padding: 0; background:#F1F5F9; border-radius:14px; overflow:hidden; border:0.5px solid #E2E8F0; height:calc(100vh - 40px); display:none; flex-direction:column;">
+                <style>
+                #view-fraudes .bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+                #view-fraudes .bs{background:#F0FDF4;color:#15803D;}
+                #view-fraudes .bn{background:#F1F5F9;color:#475569;}
+                #view-fraudes .bw{background:#FFFBEB;color:#B45309;}
+                #view-fraudes .bd{background:#FEF2F2;color:#B91C1C;}
+                #view-fraudes .ba{background:#EFF6FF;color:#1D4ED8;}
+                #view-fraudes .bp{background:#F5F3FF;color:#6D28D9;}
+                #view-fraudes .frd-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+                #view-fraudes .frd-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+                #view-fraudes .frd-tab.act{background:#DC2626;color:#fff;border-color:#DC2626;}
+                #view-fraudes .frd-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;}
+                #view-fraudes .th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
+                #view-fraudes .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+                #view-fraudes .alert-row{padding:10px 14px;border-bottom:0.5px solid #F8FAFC;cursor:pointer;display:grid;align-items:center;transition:background .1s;}
+                #view-fraudes .alert-row:hover{background:#F8FAFC;}
+                #view-fraudes .alert-row.crit{background:#FFF5F5;border-left:3px solid #DC2626;}
+                #view-fraudes .alert-row.warn{background:#FFFDF0;border-left:3px solid #D97706;}
+                #view-fraudes .alert-row.act{background:#EFF6FF;border-left:3px solid #2563EB;}
+                #view-fraudes .risk-ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0;border:3px solid;}
+                #view-fraudes .bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:3px;}
+                #view-fraudes .bar-f{height:5px;border-radius:3px;}
+                #view-fraudes .rule-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid #F8FAFC;}
+                #view-fraudes .rule-row:last-child{border-bottom:none;}
+                #view-fraudes .tg{width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0;}
+                #view-fraudes .tg.on{background:#16A34A;}
+                #view-fraudes .tg.off{background:#CBD5E1;}
+                #view-fraudes .tg span{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+                #view-fraudes .tg.on span{left:15px;}
+                #view-fraudes .tg.off span{left:2.5px;}
+                #view-fraudes .timeline-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+                </style>
+
+                <!-- Topbar -->
+                <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                  <div>
+                    <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Fraudes & Alertes</h2>
+                    <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Détection, instruction et résolution des incidents de sécurité</p>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <div style="display:flex;align-items:center;gap:6px;background:#FEF2F2;border:0.5px solid #FECACA;border-radius:7px;padding:5px 10px;">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block;"></span>
+                      <span style="font-size:11px;font-weight:600;color:#B91C1C;">8 alertes critiques actives</span>
                     </div>
-                    <div class="alerts-list" id="fraudes-full-container">
-                        <!-- Loaded dynamically -->
+                    <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Rapport</button>
+                    <button class="frd-btn" style="background:#DC2626;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Créer une alerte</button>
+                  </div>
+                </div>
+
+                <!-- KPIs -->
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Critiques</p>
+                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">8</p>
+                    <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +3 ce matin</p>
+                  </div>
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #D97706;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Avertissements</p>
+                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">23</p>
+                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">En attente revue</p>
+                  </div>
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tx suspectes</p>
+                    <p style="font-size:22px;font-weight:800;color:#2563EB;margin:0;">15</p>
+                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Bloquées auto</p>
+                  </div>
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes ciblés</p>
+                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">12</p>
+                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Clients affectés</p>
+                  </div>
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Résolues (7j)</p>
+                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">147</p>
+                    <p style="font-size:10px;color:#15803D;margin:3px 0 0;">Taux : 94%</p>
+                  </div>
+                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tps moyen résol.</p>
+                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">18 min</p>
+                    <p style="font-size:10px;color:#0891B2;margin:3px 0 0;">↓ −4 min vs S-1</p>
+                  </div>
+                </div>
+
+                <!-- Corps 3 colonnes -->
+                <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.2fr) 210px;gap:12px;padding:0 20px 16px;overflow:hidden;">
+
+                  <!-- COL 1 : File des alertes -->
+                  <div class="frd-card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
+
+                    <!-- Onglets -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:0.5px solid #F1F5F9;gap:6px;flex-shrink:0;">
+                      <div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;">
+                        <div class="frd-tab act">Toutes (31)</div>
+                        <div class="frd-tab" style="border-color:#FECACA;color:#B91C1C;background:#FEF2F2;">Critiques (8)</div>
+                        <div class="frd-tab" style="border-color:#FDE68A;color:#B45309;background:#FFFBEB;">Avertiss. (23)</div>
+                        <div class="frd-tab">Résolues</div>
+                      </div>
+                      <select style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;flex-shrink:0;">
+                        <option>Toutes catégories</option>
+                        <option>Fraude carte</option>
+                        <option>Phishing</option>
+                        <option>Usurpation</option>
+                      </select>
                     </div>
+
+                    <!-- En-têtes -->
+                    <div style="display:grid;grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;gap:0;padding:7px 14px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;flex-shrink:0;">
+                      <span class="th"></span>
+                      <span class="th">Alerte</span>
+                      <span class="th">Client</span>
+                      <span class="th" style="text-align:center;">Score</span>
+                      <span class="th" style="text-align:center;">Statut</span>
+                      <span class="th" style="text-align:center;">Actions</span>
+                    </div>
+
+                    <!-- Lignes alertes -->
+                    <div style="flex:1;overflow-y:auto;scrollbar-width:none;">
+
+                      <div class="alert-row crit" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-circle" style="font-size:14px;color:#DC2626;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Transaction internationale suspecte</p>
+                          <p style="font-size:9px;color:#B91C1C;margin:1px 0 0;">4 200 € → IBAN Maroc · Il y a 12 min</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#FEE2E2;color:#B91C1C;width:24px;height:24px;font-size:9px;">KD</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">K. Douiri</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#DC2626;">94</span></div>
+                        <div style="text-align:center;"><span class="bk bd">Critique</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row crit" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-circle" style="font-size:14px;color:#DC2626;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Tentative de phishing détectée</p>
+                          <p style="font-size:9px;color:#B91C1C;margin:1px 0 0;">Accès depuis IP suspecte · Il y a 28 min</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#F5F3FF;color:#6D28D9;width:24px;height:24px;font-size:9px;">SM</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">S. Martin</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#DC2626;">88</span></div>
+                        <div style="text-align:center;"><span class="bk bd">Critique</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row act" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-circle" style="font-size:14px;color:#DC2626;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Usurpation d'identité suspectée</p>
+                          <p style="font-size:9px;color:#B91C1C;margin:1px 0 0;">Selfie KYC non concordant · Il y a 45 min</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#FEF3C7;color:#B45309;width:24px;height:24px;font-size:9px;">NF</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">N. Ferhat</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#DC2626;">82</span></div>
+                        <div style="text-align:center;"><span class="bk ba">En revue</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-check" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row warn" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-triangle" style="font-size:14px;color:#D97706;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Plafond virement dépassé</p>
+                          <p style="font-size:9px;color:#B45309;margin:1px 0 0;">5 000 € — seuil max dépassé · 14:31</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#FFF0F5;color:#9D174D;width:24px;height:24px;font-size:9px;">RC</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">R. Chen</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#D97706;">71</span></div>
+                        <div style="text-align:center;"><span class="bk bw">Avertiss.</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#FFFBEB;color:#B45309;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-flag" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row warn" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-triangle" style="font-size:14px;color:#D97706;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Connexion VPN suspecte</p>
+                          <p style="font-size:9px;color:#B45309;margin:1px 0 0;">Maroc · IP masquée · 14:18</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#F5F3FF;color:#6D28D9;width:24px;height:24px;font-size:9px;">SM</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">S. Martin</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#D97706;">67</span></div>
+                        <div style="text-align:center;"><span class="bk bw">Avertiss.</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#FFFBEB;color:#B45309;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-flag" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row warn" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;">
+                        <i class="ti ti-alert-triangle" style="font-size:14px;color:#D97706;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">3 tentatives OTP échouées</p>
+                          <p style="font-size:9px;color:#B45309;margin:1px 0 0;">Compte temporairement suspendu · 13:55</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#EDE9FE;color:#6D28D9;width:24px;height:24px;font-size:9px;">PL</div>
+                          <span style="font-size:10px;font-weight:500;color:#0F172A;">P. Leroux</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#D97706;">58</span></div>
+                        <div style="text-align:center;"><span class="bk bw">Avertiss.</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="frd-btn" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock-open" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="alert-row" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;background:#F0FDF4;">
+                        <i class="ti ti-circle-check" style="font-size:14px;color:#16A34A;"></i>
+                        <div>
+                          <p style="font-size:11px;font-weight:600;margin:0;color:#475569;">Fraude carte — Résolue</p>
+                          <p style="font-size:9px;color:#94A3B8;margin:1px 0 0;">Carte bloquée · Nouveau code envoyé · 11:20</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <div class="av" style="background:#F0FDF4;color:#166534;width:24px;height:24px;font-size:9px;">MB</div>
+                          <span style="font-size:10px;font-weight:500;color:#475569;">M. Bouchard</span>
+                        </div>
+                        <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#94A3B8;">12</span></div>
+                        <div style="text-align:center;"><span class="bk bs">Résolu</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="padding:8px 14px;border-top:0.5px solid #E2E8F0;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                      <span style="font-size:10px;color:#94A3B8;">31 alertes · Page 1/3</span>
+                      <div style="display:flex;gap:4px;">
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-left" style="font-size:11px;"></i></button>
+                        <button class="frd-btn" style="background:#DC2626;color:#fff;padding:3px 9px;font-size:10px;border-radius:5px;">1</button>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">2</button>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">3</button>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-right" style="font-size:11px;"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- COL 2 : Fiche alerte active -->
+                  <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+
+                    <!-- Header fiche -->
+                    <div class="frd-card" style="padding:14px 16px;">
+                      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;">
+                        <div class="risk-ring" style="border-color:#DC2626;">
+                          <span style="font-size:16px;font-weight:800;color:#DC2626;">82</span>
+                          <span style="font-size:8px;color:#94A3B8;">/100</span>
+                        </div>
+                        <div style="flex:1;">
+                          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                            <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Usurpation d'identité</h3>
+                            <span class="bk ba">En revue</span>
+                          </div>
+                          <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-20260630-0037 · Déclenché à 13:45</p>
+                          <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">Nadia Ferhat — **** 3318 — Compte Premium</p>
+                        </div>
+                      </div>
+
+                      <!-- Infos -->
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:12px;">
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">Usurpation KYC</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Canal détection</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">IA — Reconnaissance faciale</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant à risque</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">0 € — Bloqué préventivement</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">IP de connexion</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">185.220.101.x</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Localisation</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">🇩🇿 Algérie (VPN détecté)</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">Android inconnu</p></div>
+                      </div>
+
+                      <!-- Détail IA -->
+                      <div style="background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:10px 12px;margin-bottom:12px;">
+                        <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-robot" style="font-size:13px;"></i>Analyse IA — Score de confiance : 82/100</p>
+                        <div style="display:flex;flex-direction:column;gap:5px;">
+                          <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:10px;color:#B91C1C;">Selfie vs document KYC</span>
+                            <span style="font-size:10px;font-weight:700;color:#B91C1C;">Concordance 34% ✗</span>
+                          </div>
+                          <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:10px;color:#B45309;">IP détectée comme Tor/VPN</span>
+                            <span style="font-size:10px;font-weight:700;color:#B45309;">Confirmé ⚠</span>
+                          </div>
+                          <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:10px;color:#B45309;">Géolocalisation ≠ domicile déclaré</span>
+                            <span style="font-size:10px;font-weight:700;color:#B45309;">Écart 2 800 km ⚠</span>
+                          </div>
+                          <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:10px;color:#15803D;">Aucune correspondance liste noire</span>
+                            <span style="font-size:10px;font-weight:700;color:#15803D;">OK ✓</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Timeline -->
+                      <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Chronologie</p>
+                      <div style="display:flex;flex-direction:column;gap:0;">
+                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
+                          <div class="timeline-dot" style="background:#2563EB;"></div>
+                          <div><p style="font-size:10px;font-weight:500;margin:0;">Dossier pris en charge par l'admin</p><p style="font-size:9px;color:#94A3B8;margin:0;">14:22 · Admin (vous)</p></div>
+                        </div>
+                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
+                          <div class="timeline-dot" style="background:#DC2626;"></div>
+                          <div><p style="font-size:10px;font-weight:500;margin:0;">Compte bloqué automatiquement</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:46 · Moteur IA</p></div>
+                        </div>
+                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
+                          <div class="timeline-dot" style="background:#DC2626;"></div>
+                          <div><p style="font-size:10px;font-weight:500;margin:0;">Alerte fraude déclenchée — Score 82</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:45 · Moteur IA</p></div>
+                        </div>
+                        <div style="display:flex;gap:10px;padding:5px 0;">
+                          <div class="timeline-dot" style="background:#94A3B8;"></div>
+                          <div><p style="font-size:10px;font-weight:500;margin:0;">Tentative KYC soumise</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:44 · Client</p></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Décision -->
+                    <div class="frd-card" style="padding:14px 16px;">
+                      <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 12px;">Décision & résolution</h3>
+                      <div style="display:flex;flex-direction:column;gap:8px;">
+                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…">Selfie non concordant à 34%. IP Tor confirmée. Géolocalisation Algérie. Recommandation : clôture du dossier + signalement Tracfin.</textarea>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                          <button class="frd-btn" style="background:#16A34A;color:#fff;justify-content:center;"><i class="ti ti-circle-check" style="font-size:13px;"></i>Résoudre</button>
+                          <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;"><i class="ti ti-ban" style="font-size:13px;"></i>Clôturer fraude</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                          <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;justify-content:center;font-size:10px;"><i class="ti ti-gavel" style="font-size:12px;"></i>Signaler Tracfin</button>
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Contacter client</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- COL 3 : Règles & stats -->
+                  <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+
+                    <!-- Répartition fraudes -->
+                    <div class="frd-card" style="padding:12px 14px;">
+                      <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 10px;">Répartition des fraudes</h3>
+                      <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                            <span style="font-size:10px;color:#475569;">Tx suspectes</span>
+                            <span style="font-size:10px;font-weight:700;">42% <span style="color:#94A3B8;font-weight:400;">(13)</span></span>
+                          </div>
+                          <div class="bar-h"><div class="bar-f" style="width:42%;background:#DC2626;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                            <span style="font-size:10px;color:#475569;">Usurpation KYC</span>
+                            <span style="font-size:10px;font-weight:700;">26% <span style="color:#94A3B8;font-weight:400;">(8)</span></span>
+                          </div>
+                          <div class="bar-h"><div class="bar-f" style="width:26%;background:#D97706;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                            <span style="font-size:10px;color:#475569;">Phishing / connexion</span>
+                            <span style="font-size:10px;font-weight:700;">19% <span style="color:#94A3B8;font-weight:400;">(6)</span></span>
+                          </div>
+                          <div class="bar-h"><div class="bar-f" style="width:19%;background:#7C3AED;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                            <span style="font-size:10px;color:#475569;">Fraude carte</span>
+                            <span style="font-size:10px;font-weight:700;">13% <span style="color:#94A3B8;font-weight:400;">(4)</span></span>
+                          </div>
+                          <div class="bar-h"><div class="bar-f" style="width:13%;background:#0891B2;"></div></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Volume fraudes 7j -->
+                    <div class="frd-card" style="padding:12px 14px;">
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Alertes sur 7 jours</h3>
+                        <span style="font-size:9px;color:#94A3B8;">7 derniers jours</span>
+                      </div>
+                      <div style="display:flex;align-items:flex-end;gap:5px;height:55px;margin-bottom:5px;">
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:40%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">L</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:60%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">M</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:30%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">M</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:75%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">J</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:50%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">V</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:20%;background:#FECACA;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#94A3B8;">S</span></div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:100%;height:100%;background:#DC2626;border-radius:2px 2px 0 0;"></div><span style="font-size:8px;color:#DC2626;font-weight:700;">A</span></div>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;">
+                        <span style="font-size:9px;color:#94A3B8;">Moy. 7j : 18 alertes</span>
+                        <span style="font-size:9px;font-weight:700;color:#DC2626;">Auj. : 31 ↑</span>
+                      </div>
+                    </div>
+
+                    <!-- Règles actives -->
+                    <div class="frd-card" style="padding:12px 14px;">
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Règles de détection</h3>
+                        <a style="font-size:10px;color:#2563EB;cursor:pointer;">Gérer →</a>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:0;">
+                        <div class="rule-row">
+                          <div class="tg on"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Tx &gt; 5 000 € → blocage auto</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 8 fois auj.</p></div>
+                        </div>
+                        <div class="rule-row">
+                          <div class="tg on"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">IBAN hors UE → revue manuelle</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 4 fois auj.</p></div>
+                        </div>
+                        <div class="rule-row">
+                          <div class="tg on"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">VPN/Tor → alerte connexion</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 3 fois auj.</p></div>
+                        </div>
+                        <div class="rule-row">
+                          <div class="tg on"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Score IA &gt; 70 → alerte critique</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 6 fois auj.</p></div>
+                        </div>
+                        <div class="rule-row">
+                          <div class="tg off"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;color:#94A3B8;">3 OTP échoués → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Désactivé</p></div>
+                        </div>
+                        <div class="rule-row" style="border-bottom:none;">
+                          <div class="tg on"><span></span></div>
+                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">KYC selfie &lt; 50% → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 2 fois auj.</p></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Actions rapides -->
+                    <div class="frd-card" style="padding:12px 14px;">
+                      <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Actions globales</h3>
+                      <div style="display:flex;flex-direction:column;gap:5px;">
+                        <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
+                        <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
+                        <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
             </div>
 
@@ -743,27 +1191,381 @@
             <!-- =============================== -->
             <!-- VUE 8 : CARTES EMISES           -->
             <!-- =============================== -->
-            <div id="view-cartes" class="admin-view" style="display: none;">
-                <div class="clients-card">
-                    <div class="card-header border-bottom">
-                        <h2>Parc de Cartes Bancaires</h2>
+            <div id="view-cartes" class="admin-view" style="display: none; padding: 0; background:#F1F5F9; border-radius:14px; overflow:hidden; border:0.5px solid #E2E8F0; height:calc(100vh - 40px); display:none; flex-direction:column;">
+                <style>
+                #view-cartes .bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+                #view-cartes .bs{background:#F0FDF4;color:#15803D;}
+                #view-cartes .bn{background:#F1F5F9;color:#475569;}
+                #view-cartes .bw{background:#FFFBEB;color:#B45309;}
+                #view-cartes .bd{background:#FEF2F2;color:#B91C1C;}
+                #view-cartes .ba{background:#EFF6FF;color:#1D4ED8;}
+                #view-cartes .bp{background:#F5F3FF;color:#6D28D9;}
+                #view-cartes .crt-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+                #view-cartes .crt-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+                #view-cartes .crt-tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+                #view-cartes .crt-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;}
+                #view-cartes .crt-th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
+                #view-cartes .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+                #view-cartes .crt-tr{display:grid;align-items:center;padding:8px 14px;border-bottom:0.5px solid #F8FAFC;cursor:pointer;transition:background .1s;}
+                #view-cartes .crt-tr:hover{background:#F8FAFC;}
+                #view-cartes .crt-tr.act{background:#EFF6FF;border-left:3px solid #2563EB;}
+                #view-cartes .crt-tr.warn{background:#FFFDF0;border-left:3px solid #D97706;}
+                #view-cartes .crt-tr.blk{background:#FFF5F5;border-left:3px solid #DC2626;}
+                #view-cartes .bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:4px;}
+                #view-cartes .bar-f{height:5px;border-radius:3px;}
+                #view-cartes .field label{font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+                #view-cartes .field select, #view-cartes .field input{width:100%;padding:7px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;color:#0F172A;outline:none;}
+                #view-cartes .tg{width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0;}
+                #view-cartes .tg.on{background:#16A34A;}
+                #view-cartes .tg.off{background:#CBD5E1;}
+                #view-cartes .tg span{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+                #view-cartes .tg.on span{left:15px;}
+                #view-cartes .tg.off span{left:2.5px;}
+                </style>
+
+                <!-- Topbar -->
+                <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                  <div>
+                    <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Cartes émises</h2>
+                    <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Gestion du parc de cartes bancaires — émission, blocage, plafonds</p>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <div style="position:relative;">
+                      <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#94A3B8;"></i>
+                      <input style="padding:7px 12px 7px 30px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;width:190px;outline:none;" placeholder="N° carte, client, IBAN…">
                     </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Propriétaire</th>
-                                    <th>Numéro (Masqué)</th>
-                                    <th>Type</th>
-                                    <th>Expiration</th>
-                                    <th>Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cartes-tbody">
-                                <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
-                            </tbody>
-                        </table>
+                    <button class="crt-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Exporter</button>
+                    <button class="crt-btn" style="background:#2563EB;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Émettre une carte</button>
+                  </div>
+                </div>
+
+                <!-- KPIs -->
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Total émises</p>
+                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">14 280</p>
+                    <p style="font-size:10px;color:#15803D;margin:3px 0 0;">↑ +48 ce mois</p>
+                  </div>
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Actives</p>
+                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">13 841</p>
+                    <div class="bar-h" style="margin-top:6px;"><div class="bar-f" style="width:97%;background:#16A34A;"></div></div>
+                  </div>
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Bloquées</p>
+                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">124</p>
+                    <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +8 ce mois</p>
+                  </div>
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #D97706;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Expirant &lt;30j</p>
+                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">315</p>
+                    <p style="font-size:10px;color:#D97706;margin:3px 0 0;">Renouvellement auto</p>
+                  </div>
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Platinum</p>
+                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">3 810</p>
+                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">27% du parc</p>
+                  </div>
+                  <div class="crt-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
+                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Virtuelles</p>
+                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">2 140</p>
+                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">15% du parc</p>
+                  </div>
+                </div>
+
+                <!-- Corps -->
+                <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:12px;padding:0 20px 16px;overflow:hidden;">
+
+                  <!-- TABLE CARTES -->
+                  <div class="crt-card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
+
+                    <!-- Filtres -->
+                    <div style="padding:10px 14px;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:8px;">
+                      <div style="display:flex;gap:5px;">
+                        <div class="crt-tab act">Toutes (14 280)</div>
+                        <div class="crt-tab">Actives (13 841)</div>
+                        <div class="crt-tab">Bloquées (124)</div>
+                        <div class="crt-tab" style="border-color:#FDE68A;color:#B45309;background:#FFFBEB;">Expiration (315)</div>
+                      </div>
+                      <div style="display:flex;gap:6px;flex-shrink:0;">
+                        <select style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;">
+                          <option>Tous types</option><option>Visa Classic</option><option>Visa Platinum</option><option>Virtuelle</option><option>Business</option>
+                        </select>
+                        <select style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;">
+                          <option>Trier : Date émission</option><option>Nom</option><option>Expiration</option>
+                        </select>
+                      </div>
                     </div>
+
+                    <!-- En-têtes -->
+                    <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;gap:0;padding:7px 14px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;flex-shrink:0;">
+                      <span class="crt-th">Titulaire</span>
+                      <span class="crt-th">N° carte (masqué)</span>
+                      <span class="crt-th">Type</span>
+                      <span class="crt-th" style="text-align:center;">Émission</span>
+                      <span class="crt-th" style="text-align:center;">Expiration</span>
+                      <span class="crt-th" style="text-align:center;">Statut</span>
+                      <span class="crt-th" style="text-align:center;">Actions</span>
+                    </div>
+
+                    <!-- Lignes -->
+                    <div style="flex:1;overflow-y:auto;scrollbar-width:none;">
+
+                      <div class="crt-tr act" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#EFF6FF;color:#1D4ED8;">MR</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Manuela Rodriguez</p><p style="font-size:9px;color:#94A3B8;margin:0;">manuela@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 4821</p>
+                        <div><span class="bk bp">Platinum</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">06/2024</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">06/2029</p>
+                        <div style="text-align:center;"><span class="bk bs">Active</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr blk" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#FEE2E2;color:#B91C1C;">KD</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Karim Douiri</p><p style="font-size:9px;color:#94A3B8;margin:0;">k.douiri@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 2291</p>
+                        <div><span class="bk bn">Classic</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">01/2023</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">01/2028</p>
+                        <div style="text-align:center;"><span class="bk bd">Bloquée</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock-open" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#F0FDF4;color:#166534;">MB</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Marc Beaumont</p><p style="font-size:9px;color:#94A3B8;margin:0;">marc@bnp.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 7703</p>
+                        <div><span class="bk bn">Classic</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">03/2022</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">03/2027</p>
+                        <div style="text-align:center;"><span class="bk bs">Active</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr warn" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#F5F3FF;color:#6D28D9;">JL</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Julie Lambert</p><p style="font-size:9px;color:#94A3B8;margin:0;">julie.l@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 8834</p>
+                        <div><span class="bk bp">Platinum</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">07/2021</p>
+                        <p style="font-size:11px;font-weight:600;color:#D97706;text-align:center;">07/2026 ⚠</p>
+                        <div style="text-align:center;"><span class="bk bw">Expire bientôt</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FFFBEB;color:#B45309;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-refresh" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#FFF0F5;color:#9D174D;">RC</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Raphaël Chen</p><p style="font-size:9px;color:#94A3B8;margin:0;">r.chen@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 1145</p>
+                        <div><span class="bk bp">Platinum</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">11/2023</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">11/2028</p>
+                        <div style="text-align:center;"><span class="bk bs">Active</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#EDE9FE;color:#6D28D9;">AK</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Amina Khalil</p><p style="font-size:9px;color:#94A3B8;margin:0;">a.khalil@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 6621</p>
+                        <div><span class="bk" style="background:#E0F2FE;color:#0369A1;">Virtuelle</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">02/2025</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">02/2027</p>
+                        <div style="text-align:center;"><span class="bk bs">Active</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr warn" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#FEF3C7;color:#B45309;">TD</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Thomas Dupont</p><p style="font-size:9px;color:#94A3B8;margin:0;">t.dupont@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 9901</p>
+                        <div><span class="bk bn">Classic</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">08/2021</p>
+                        <p style="font-size:11px;font-weight:600;color:#D97706;text-align:center;">08/2026 ⚠</p>
+                        <div style="text-align:center;"><span class="bk bw">Expire bientôt</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#FFFBEB;color:#B45309;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-refresh" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                      <div class="crt-tr blk" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="av" style="background:#FEE2E2;color:#B91C1C;">LR</div>
+                          <div><p style="font-size:11px;font-weight:600;margin:0;">Lucas Renard</p><p style="font-size:9px;color:#94A3B8;margin:0;">l.renard@email.fr</p></div>
+                        </div>
+                        <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** 3318</p>
+                        <div><span class="bk bp">Platinum</span></div>
+                        <p style="font-size:11px;color:#475569;text-align:center;">05/2023</p>
+                        <p style="font-size:11px;color:#475569;text-align:center;">05/2028</p>
+                        <div style="text-align:center;"><span class="bk bd">Bloquée</span></div>
+                        <div style="display:flex;gap:3px;justify-content:center;">
+                          <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
+                          <button class="crt-btn" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-lock-open" style="font-size:10px;"></i></button>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div style="padding:9px 14px;border-top:0.5px solid #E2E8F0;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+                      <span style="font-size:10px;color:#94A3B8;">Page 1 / 1 429 · 14 280 cartes</span>
+                      <div style="display:flex;gap:4px;">
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 9px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-left" style="font-size:11px;"></i></button>
+                        <button class="crt-btn" style="background:#2563EB;color:#fff;padding:4px 10px;font-size:10px;border-radius:5px;">1</button>
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 10px;font-size:10px;border-radius:5px;">2</button>
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 10px;font-size:10px;border-radius:5px;">3</button>
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 10px;font-size:10px;border-radius:5px;">…</button>
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 10px;font-size:10px;border-radius:5px;">1429</button>
+                        <button class="crt-btn" style="background:#F1F5F9;color:#475569;padding:4px 9px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-right" style="font-size:11px;"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- PANNEAU DROIT -->
+                  <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+
+                    <!-- Fiche carte sélectionnée -->
+                    <div class="crt-card" style="padding:14px 16px;">
+                      <!-- Visuel carte -->
+                      <div style="background:linear-gradient(135deg,#1e40af,#2563EB,#3b82f6);border-radius:12px;padding:16px 18px;color:#fff;position:relative;overflow:hidden;margin-bottom:14px;">
+                        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07);"></div>
+                        <div style="position:absolute;bottom:-30px;left:-10px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;">
+                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
+                          <div style="display:flex;gap:6px;align-items:center;">
+                            <span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;">ACTIVE</span>
+                            <i class="ti ti-wifi" style="font-size:16px;opacity:.75;transform:rotate(90deg);"></i>
+                          </div>
+                        </div>
+                        <div style="width:28px;height:20px;border-radius:3px;background:rgba(255,220,100,.55);margin-bottom:12px;position:relative;">
+                          <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(180,140,0,.4);transform:translateY(-50%);"></div>
+                          <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(180,140,0,.4);transform:translateX(-50%);"></div>
+                        </div>
+                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;">**** **** **** 4821</p>
+                        <div style="display:flex;justify-content:space-between;position:relative;">
+                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">MANUELA RODRIGUEZ</p></div>
+                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">06/29</p></div>
+                        </div>
+                      </div>
+
+                      <!-- Infos carte -->
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:14px;">
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa International</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">4821 ···· ···· 4821</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">**** 4821</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">06/06/2024</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Statut</p><span class="bk bs" style="margin-top:3px;display:inline-flex;">Active</span></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">NFC</p><p style="font-size:11px;font-weight:600;color:#15803D;margin:2px 0 0;">Activé ✓</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Paiements intl</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">Désactivé ✗</p></div>
+                      </div>
+
+                      <!-- Plafonds -->
+                      <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Plafonds actuels</p>
+                      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">2 340 / 5 000 €</span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:47%;background:#2563EB;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Retrait hebdo</span><span style="font-size:10px;font-weight:700;">400 / 500 €</span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:80%;background:#D97706;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Sans contact</span><span style="font-size:10px;font-weight:700;">87 / 150 €</span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:58%;background:#16A34A;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement en ligne</span><span style="font-size:10px;font-weight:700;">760 / 3 000 €</span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:25%;background:#2563EB;"></div></div>
+                        </div>
+                      </div>
+
+                      <!-- Paramètres toggles -->
+                      <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Paramètres</p>
+                      <div style="display:flex;flex-direction:column;gap:0;margin-bottom:14px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #F1F5F9;">
+                          <span style="font-size:11px;font-weight:500;color:#0F172A;">Paiement sans contact</span>
+                          <div class="tg on"><span></span></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #F1F5F9;">
+                          <span style="font-size:11px;font-weight:500;color:#0F172A;">Paiements en ligne</span>
+                          <div class="tg on"><span></span></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #F1F5F9;">
+                          <span style="font-size:11px;font-weight:500;color:#0F172A;">Paiements à l'étranger</span>
+                          <div class="tg off"><span></span></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+                          <span style="font-size:11px;font-weight:500;color:#0F172A;">Retraits DAB</span>
+                          <div class="tg on"><span></span></div>
+                        </div>
+                      </div>
+
+                      <!-- Actions -->
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <button class="crt-btn" style="background:#FFFBEB;color:#B45309;border:0.5px solid #FDE68A;justify-content:center;font-size:10px;"><i class="ti ti-settings" style="font-size:12px;"></i>Modifier plafonds</button>
+                        <button class="crt-btn" style="background:#F5F3FF;color:#6D28D9;justify-content:center;font-size:10px;"><i class="ti ti-refresh" style="font-size:12px;"></i>Renouveler carte</button>
+                        <button class="crt-btn" style="background:#EFF6FF;color:#1D4ED8;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Envoyer PIN</button>
+                        <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;font-size:10px;"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer la carte</button>
+                      </div>
+                    </div>
+
+                    <!-- Stats parc -->
+                    <div class="crt-card" style="padding:12px 14px;">
+                      <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 10px;">Répartition du parc</h3>
+                      <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Visa Classic</span><span style="font-size:10px;font-weight:700;">8 330 <span style="color:#94A3B8;font-weight:400;">(58%)</span></span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:58%;background:#2563EB;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Visa Platinum</span><span style="font-size:10px;font-weight:700;">3 810 <span style="color:#94A3B8;font-weight:400;">(27%)</span></span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:27%;background:#7C3AED;"></div></div>
+                        </div>
+                        <div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Virtuelle</span><span style="font-size:10px;font-weight:700;">2 140 <span style="color:#94A3B8;font-weight:400;">(15%)</span></span></div>
+                          <div class="bar-h"><div class="bar-f" style="width:15%;background:#0891B2;"></div></div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
             </div>
 
