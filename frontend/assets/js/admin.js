@@ -1493,6 +1493,125 @@ window.exportCSV = function() {
 }
 
 // ============================
+// CARTES & FRAUDES (DYNAMIC)
+// ============================
+
+async function loadCartesTable() {
+    const data = await fetchAPI('/admin/cartes/admin?limit=50');
+    if (!data) return;
+
+    // Update KPIs (targeting the specific paragraphs by order in DOM if IDs don't exist)
+    const kpiCards = document.querySelectorAll('#view-cartes .crt-card p:nth-of-type(2)');
+    if (kpiCards.length >= 3) {
+        kpiCards[0].innerText = formatNumber(data.stats.total_emises || 0);
+        kpiCards[1].innerText = formatNumber(data.stats.actives || 0);
+        kpiCards[2].innerText = formatNumber(data.stats.bloquees || 0);
+    }
+
+    const tbody = document.getElementById('admin-cartes-list');
+    if (!tbody) return;
+
+    if (data.cartes.length === 0) {
+        tbody.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucune carte émise.</div>';
+        return;
+    }
+
+    tbody.innerHTML = data.cartes.map(c => {
+        const isBlocked = c.bloquee === 1 || c.statut === 'bloquee';
+        const isExpiring = false; // Add logic for expiring if needed
+        const badgeClass = isBlocked ? 'bd' : (isExpiring ? 'bw' : 'bs');
+        const badgeText = isBlocked ? 'Bloquée' : (isExpiring ? 'Expire bientôt' : 'Active');
+        const rowClass = isBlocked ? 'blk' : (isExpiring ? 'warn' : (c.bloquee === 0 ? 'act' : ''));
+
+        return `
+        <div class="crt-tr ${rowClass}" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="av" style="background:#F1F5F9;color:#475569;">${(c.prenom || 'X')[0]}${(c.nom || 'X')[0]}</div>
+                <div><p style="font-size:11px;font-weight:600;margin:0;">${c.prenom} ${c.nom}</p></div>
+            </div>
+            <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** ${c.pan ? c.pan.slice(-4) : (c.last_4 || '0000')}</p>
+            <div><span class="bk bn">Standard</span></div>
+            <p style="font-size:11px;color:#475569;text-align:center;">${new Date(c.cree_le || c.created_at).toLocaleDateString('fr-FR', {month:'2-digit', year:'numeric'})}</p>
+            <p style="font-size:11px;color:#475569;text-align:center;">${c.exp_date || c.date_expiration}</p>
+            <div style="text-align:center;"><span class="bk ${badgeClass}">${badgeText}</span></div>
+            <div style="display:flex;gap:3px;justify-content:center;">
+                <button class="crt-btn" onclick="toggleCarteStatus(${c.id}, ${isBlocked})" style="background:${isBlocked ? '#F0FDF4' : '#FEF2F2'};color:${isBlocked ? '#15803D' : '#B91C1C'};padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ${isBlocked ? 'ti-lock-open' : 'ti-lock'}" style="font-size:10px;"></i></button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+window.toggleCarteStatus = async function(id, isBlocked) {
+    if(confirm(isBlocked ? 'Débloquer cette carte ?' : 'Bloquer cette carte ?')) {
+        const action = isBlocked ? 'unblock' : 'block';
+        const res = await fetchAPI(`/admin/cartes/admin/${id}/action`, 'POST', { action });
+        if(res && res.success) {
+            loadCartesTable();
+        }
+    }
+}
+
+async function renderFraudesFullTable() {
+    const data = await fetchAPI('/admin/alertes/admin?limit=50');
+    // If route doesn't exist yet, this will fail gracefully due to fetchAPI error handling
+    if (!data) return;
+
+    const kpiCards = document.querySelectorAll('#view-fraudes .frd-card p:nth-of-type(2)');
+    if (kpiCards.length >= 4) {
+        kpiCards[0].innerText = formatNumber(data.stats.critiques || 0);
+        kpiCards[1].innerText = formatNumber(data.stats.en_attente || 0);
+        kpiCards[4].innerText = formatNumber(data.stats.resolues || 0);
+    }
+
+    const tbody = document.getElementById('admin-alertes-list');
+    if (!tbody) return;
+
+    if (data.alertes.length === 0) {
+        tbody.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucune alerte.</div>';
+        return;
+    }
+
+    tbody.innerHTML = data.alertes.map(a => {
+        const isResolved = a.statut === 'resolu';
+        const isCrit = a.niveau_risque === 'high';
+        
+        return `
+        <div class="alert-row ${isResolved ? '' : (isCrit ? 'crit' : 'warn')}" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px; ${isResolved ? 'background:#F0FDF4;' : ''}">
+            <i class="ti ${isResolved ? 'ti-circle-check' : 'ti-alert-circle'}" style="font-size:14px;color:${isResolved ? '#16A34A' : '#DC2626'};"></i>
+            <div>
+                <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${a.type}</p>
+                <p style="font-size:9px;color:${isResolved ? '#94A3B8' : '#B91C1C'};margin:1px 0 0;">${a.description}</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <div class="av" style="background:#F1F5F9;color:#475569;width:24px;height:24px;font-size:9px;">${(a.prenom||'X')[0]}${(a.nom||'X')[0]}</div>
+                <span style="font-size:10px;font-weight:500;color:#0F172A;">${a.prenom} ${a.nom}</span>
+            </div>
+            <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#DC2626;">${isCrit ? '99' : '75'}</span></div>
+            <div style="text-align:center;"><span class="bk ${isResolved ? 'bs' : (isCrit ? 'bd' : 'bw')}">${isResolved ? 'Résolu' : (isCrit ? 'Critique' : 'Avertiss.')}</span></div>
+            <div style="display:flex;gap:3px;justify-content:center;">
+                ${!isResolved ? `<button class="frd-btn" onclick="resolveAlerte(${a.id})" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-check" style="font-size:10px;"></i></button>` : ''}
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+window.resolveAlerte = async function(id) {
+    if(confirm('Marquer cette alerte comme résolue ?')) {
+        const res = await fetchAPI(`/admin/alertes/admin/${id}/resolve`, 'POST');
+        if (res && res.success) {
+            renderFraudesFullTable();
+        }
+    }
+}
+
+// Load alertes on dashboard view
+async function loadAlertes() {
+    // We could fetch a small summary here for the main dashboard if needed
+}
+
+// ============================
 // UTILS
 // ============================
 function formatNumber(num) {
