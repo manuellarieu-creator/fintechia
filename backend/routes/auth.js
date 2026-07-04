@@ -213,10 +213,14 @@ router.post('/login', [
       cible_detail: `Connexion depuis ${req.headers['x-forwarded-for'] || 'IP inconnue'}`, req
     });
 
+    const [kycs] = await db.query('SELECT statut FROM kyc WHERE user_id = ? ORDER BY soumis_le DESC LIMIT 1', [user.id]);
+    const kyc_statut = kycs.length > 0 ? kycs[0].statut : null;
+
     res.json({
       token,
       user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
-      account
+      account,
+      kyc_statut
     });
   } catch (err) {
     next(err);
@@ -266,11 +270,15 @@ router.post('/login/2fa', [
       cible_detail: `Connexion avec 2FA validé depuis ${req.headers['x-forwarded-for'] || 'IP inconnue'}`, req
     });
 
+    const [kycs] = await db.query('SELECT statut FROM kyc WHERE user_id = ? ORDER BY soumis_le DESC LIMIT 1', [user.id]);
+    const kyc_statut = kycs.length > 0 ? kycs[0].statut : null;
+
     res.json({
       token,
       deviceToken, // The frontend will store this and send it on next login
       user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
-      account
+      account,
+      kyc_statut
     });
   } catch (err) {
     if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {

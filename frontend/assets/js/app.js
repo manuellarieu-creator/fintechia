@@ -118,8 +118,17 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
   
   try {
     const res = await apiCall('/auth/login', 'POST', { email, password });
+    
+    if (res.require2FA) {
+      document.getElementById('modal-2fa-login').style.display = 'flex';
+      document.getElementById('login-2fa-phone').innerText = res.obfuscatedPhone;
+      tempToken2FA = res.tempToken;
+      document.getElementById('2fa-input-1').focus();
+      return;
+    }
+    
     localStorage.setItem('fintech_token', res.token);
-    initDashboard(res.user, res.account);
+    initDashboard(res.user, res.account, res.kyc_statut);
   } catch (err) {
     alert(err.message);
   }
@@ -135,6 +144,12 @@ async function checkAuth() {
 }
 
 function initDashboard(user, account, kycStatut = null) {
+  if (kycStatut === null && user.role !== 'admin') {
+    showPage('pg-register');
+    setStep(3);
+    return;
+  }
+
   showPage('pg-dash');
   
   ['user-prenom-mobile', 'user-prenom-desktop', 'user-prenom-greeting'].forEach(id => {
