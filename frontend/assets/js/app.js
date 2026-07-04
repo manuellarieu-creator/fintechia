@@ -10,15 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('fintech_token');
   if (token) {
     checkAuth(token);
-  } else {
-    setTimeout(() => {
-      if (action === 'register') {
-        showPage('pg-register');
-      } else {
-        showPage('pg-login');
+    } else {
+      setTimeout(() => {
+        if (action === 'register') {
+          showPage('pg-register');
+        } else {
+          showPage('pg-login');
+        }
+      }, 500); // Petit délai pour éviter les flashs
+    }
+
+    // Auto-logout: 3 minutes d'inactivité
+    let logoutTimer;
+    function resetLogoutTimer() {
+      clearTimeout(logoutTimer);
+      if (localStorage.getItem('fintech_token')) {
+        logoutTimer = setTimeout(() => {
+          localStorage.removeItem('fintech_token');
+          alert('Session expirée pour inactivité.');
+          window.location.reload();
+        }, 3 * 60 * 1000);
       }
-    }, 500); // Petit délai pour éviter les flashs
-  }
+    }
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => document.addEventListener(evt, resetLogoutTimer));
+    resetLogoutTimer();
 });
 
 function showPage(pageId) {
@@ -78,7 +93,10 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   if (res.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem('fintech_token');
     showPage('pg-login');
-    alert('Session expirée, veuillez vous reconnecter.');
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') !== 'login') {
+      alert('Session expirée, veuillez vous reconnecter.');
+    }
     return null;
   }
 

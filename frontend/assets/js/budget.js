@@ -94,7 +94,7 @@ async function loadBudgetsPage() {
      }
   });
 
-  const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0) || 2880;
+  const budgetTotal = userBudgets.reduce((sum, b) => sum + parseFloat(b.limite), 0);
   const reste = Math.max(0, budgetTotal - depenses);
   const epargneObjMensuel = 400; 
   const epargneObjAnnuel = epargneObjMensuel * 12;

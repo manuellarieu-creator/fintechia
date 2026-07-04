@@ -143,7 +143,7 @@ async function loadBeneficiairesForSelect() {
       if (includeAddButton) {
         html += `
           <div class="recent-card" style="border-style: dashed; cursor: pointer;" onclick="openModal('modal-add-beneficiaire')">
-              <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-plus"></i></div>
+              <div class="avatar-sm" style="background: white; border: 1px dashed var(--border); color: var(--text-muted);"><i class="ti ti-user-plus"></i></div>
               <div class="recent-info">
                   <h5 style="color: var(--text-muted);">Nouveau</h5>
               </div>

@@ -20,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Précharger les données globales
     preloadData();
+
+    // Auto-logout: 5 minutes d'inactivité
+    let logoutTimer;
+    function resetLogoutTimer() {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(() => {
+            localStorage.removeItem('fintech_token');
+            alert('Session expirée pour inactivité.');
+            window.location.href = 'index.html';
+        }, 5 * 60 * 1000);
+    }
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => document.addEventListener(evt, resetLogoutTimer));
+    resetLogoutTimer();
 });
 
 function updateDate() {
