@@ -27,7 +27,8 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
     cloudinary: cloudinary,
     params: {
       folder: 'fintechia_kyc',
-      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf', 'webm', 'mp4'],
+      resource_type: 'auto',
       public_id: (req, file) => `kyc_${req.user.id}_${file.fieldname}_${Date.now()}`
     }
   });
@@ -55,9 +56,9 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880 }, // 5MB
+  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) || 20971520 }, // 20MB
   fileFilter: (req, file, cb) => {
-    const allowed = ['.jpg', '.jpeg', '.png', '.pdf'];
+    const allowed = ['.jpg', '.jpeg', '.png', '.pdf', '.webm', '.mp4'];
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowed.includes(ext)) {
       cb(null, true);
@@ -77,7 +78,7 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     // Récupérer l'URL Cloudinary ou l'URL locale
     const docUrl = req.files['document'][0].path || `/uploads/${req.files['document'][0].filename}`;
     const selfieUrl = req.files['selfie'][0].path || `/uploads/${req.files['selfie'][0].filename}`;
-    const { type_document } = req.body; // cni, passeport, permis, sejour
+    const { type_document, instructions_kyc } = req.body; // cni, passeport, permis, sejour
 
     if (!['cni', 'passeport', 'permis', 'sejour'].includes(type_document)) {
       return res.status(400).json({ error: 'Type de document invalide', code: 'INVALID_TYPE', status: 400 });
@@ -86,13 +87,13 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     const [existingKyc] = await db.query('SELECT id FROM kyc WHERE user_id = ?', [req.user.id]);
     if (existingKyc.length > 0) {
       await db.query(
-        'UPDATE kyc SET type_document = ?, document_url = ?, selfie_url = ?, statut = "en_attente", soumis_le = NOW() WHERE user_id = ?',
-        [type_document, docUrl, selfieUrl, req.user.id]
+        'UPDATE kyc SET type_document = ?, document_url = ?, selfie_url = ?, commentaire = ?, statut = "en_attente", soumis_le = NOW() WHERE user_id = ?',
+        [type_document, docUrl, selfieUrl, instructions_kyc || '', req.user.id]
       );
     } else {
       await db.query(
-        'INSERT INTO kyc (user_id, type_document, document_url, selfie_url, statut) VALUES (?, ?, ?, ?, "en_attente")',
-        [req.user.id, type_document, docUrl, selfieUrl]
+        'INSERT INTO kyc (user_id, type_document, document_url, selfie_url, commentaire, statut) VALUES (?, ?, ?, ?, ?, "en_attente")',
+        [req.user.id, type_document, docUrl, selfieUrl, instructions_kyc || '']
       );
     }
 

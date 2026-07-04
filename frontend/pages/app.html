@@ -226,13 +226,12 @@
                   <input type="file" id="reg-kyc-verso" style="display:none;" onchange="document.getElementById('verso-name').innerText = this.files[0].name" />
                   <div id="verso-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
                 </div>
-                <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-selfie').click()">
-                  <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
-                  <div style="font-weight:600; color:#0F172A; font-size:14px;">Selfie avec le document</div>
-                  <div style="font-size:12px; color:#94A3B8;">Capture via webcam ou mobile</div>
-                  <input type="file" id="reg-kyc-selfie" style="display:none;" onchange="document.getElementById('selfie-name').innerText = this.files[0].name" />
-                  <div id="selfie-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
-                </div>
+                <div class="kyc-upload-zone" id="btn-start-video-kyc" onclick="startVideoKyc()">
+                    <i class="ti ti-video" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
+                    <div style="font-weight:600; color:#0F172A; font-size:14px;">Vérification Vidéo (Selfie)</div>
+                    <div style="font-size:12px; color:#94A3B8;">Capture via webcam obligatoire</div>
+                    <div id="video-kyc-status" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
+                  </div>
               </div>
 
               <button type="submit" class="btn-primary" id="btn-step-3">Soumettre pour vérification →</button>

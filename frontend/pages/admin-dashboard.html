@@ -123,32 +123,27 @@
                     <div class="kpi-card">
                         <div class="kpi-title">CLIENTS ACTIFS</div>
                         <div class="kpi-value" id="kpi-clients-actifs">--</div>
-                        <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> <span id="kpi-clients-actifs-sub">--</span> ce mois</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-title">TX AUJOURD'HUI</div>
-                        <div class="kpi-value" id="kpi-tx-jour">--</div>
-                        <div class="kpi-sub positive"><i class="ti ti-arrow-up-right"></i> +8% vs hier</div>
+                        <div class="kpi-sub positive" id="kpi-clients-actifs-sub"></div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">VOLUME (JOUR)</div>
                         <div class="kpi-value" id="kpi-volume-jour">--</div>
-                        <div class="kpi-sub neutral">Moy. 2,1M €/j</div>
+                        <div class="kpi-sub neutral" id="kpi-volume-jour-sub"></div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">KYC EN ATTENTE</div>
                         <div class="kpi-value warning" id="kpi-kyc-attente">--</div>
-                        <div class="kpi-sub warning"><i class="ti ti-alert-triangle"></i> <span id="kpi-kyc-attente-sub">-- urgents</span></div>
+                        <div class="kpi-sub warning"><span id="kpi-kyc-attente-sub"></span></div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">ALERTES FRAUDE</div>
                         <div class="kpi-value danger" id="kpi-alertes-fraude">--</div>
-                        <div class="kpi-sub danger"><i class="ti ti-alert-circle"></i> <span id="kpi-alertes-fraude-sub">-- nouvelles</span></div>
+                        <div class="kpi-sub danger"><span id="kpi-alertes-fraude-sub"></span></div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">UPTIME SYSTÈME</div>
-                        <div class="kpi-value success" id="kpi-uptime">99,98%</div>
-                        <div class="kpi-sub neutral">Latence 42ms</div>
+                        <div class="kpi-value success" id="kpi-uptime">--</div>
+                        <div class="kpi-sub neutral" id="kpi-uptime-sub"></div>
                     </div>
                 </div>
 
@@ -227,14 +222,22 @@
                         <div class="system-health-card">
                             <div class="card-header">
                                 <h2>Santé système</h2>
-                                <span class="status-badge success"><i class="ti ti-point-filled"></i> Tous systèmes OK</span>
+                                <span class="status-badge success" id="sys-status-badge">Calcul...</span>
                             </div>
-                            <!-- Static content... -->
-                            <div class="health-item"><div class="health-info"><span>API Gateway</span><span>99,98%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 99.98%;"></div></div></div>
-                            <div class="health-item"><div class="health-info"><span>Base de données</span><span>100%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div></div>
-                            <div class="health-item"><div class="health-info"><span>Moteur virements</span><span>99,9%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 99.9%;"></div></div></div>
-                            <div class="health-item"><div class="health-info"><span>Module KYC</span><span class="warning-text">97,2%</span></div><div class="progress-bar"><div class="progress-fill warning" style="width: 97.2%;"></div></div></div>
-                            <div class="health-item"><div class="health-info"><span>Notifications</span><span>100%</span></div><div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div></div>
+                            <div class="health-list" id="sys-health-list">
+                                <div class="health-item">
+                                    <span class="health-label">API Core</span>
+                                    <span class="health-status success" id="sys-api-core">--</span>
+                                </div>
+                                <div class="health-item">
+                                    <span class="health-label">Database</span>
+                                    <span class="health-status success" id="sys-db">--</span>
+                                </div>
+                                <div class="health-item">
+                                    <span class="health-label">Passerelle SEPA</span>
+                                    <span class="health-status warning" id="sys-sepa">--</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Répartition clients -->

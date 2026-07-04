@@ -143,14 +143,14 @@ async function loadDashboardStats() {
     allClients = await fetchAPI('/admin/comptes') || [];
 
     document.getElementById('kpi-clients-actifs').innerText = formatNumber(stats.comptes_actifs || 0);
-    document.getElementById('kpi-clients-actifs-sub').innerText = `+${Math.floor(Math.random()*50)} ce mois`;
+    // document.getElementById('kpi-clients-actifs-sub').innerText = `+${Math.floor(Math.random()*50)} ce mois`;
     
     document.getElementById('kpi-kyc-attente').innerText = stats.kyc_en_attente || 0;
-    document.getElementById('kpi-kyc-attente-sub').innerText = `${Math.floor((stats.kyc_en_attente || 0) / 3)} urgents`;
+    // document.getElementById('kpi-kyc-attente-sub').innerText = `${Math.floor((stats.kyc_en_attente || 0) / 3)} urgents`;
     
     // Mocks for transactions volume (if not returned by API)
-    document.getElementById('kpi-tx-jour').innerText = formatNumber(Math.floor(Math.random() * 5000) + 1000);
-    document.getElementById('kpi-volume-jour').innerText = (Math.random() * 5 + 1).toFixed(1) + "M €";
+    document.getElementById('kpi-tx-jour') ? document.getElementById('kpi-tx-jour').innerText = formatNumber(stats.tx_jour || 0) : null;
+    document.getElementById('kpi-volume-jour') ? document.getElementById('kpi-volume-jour').innerText = formatNumber(stats.volume_jour || 0) + " €" : null;
     
     const standard = allClients.filter(c => (c.id % 3 !== 0 && c.id % 5 !== 0)).length;
     const premium = allClients.filter(c => c.id % 3 === 0).length;
@@ -677,6 +677,8 @@ function showKycDetail(kycId) {
     document.getElementById('kyc-docs-title').innerText = `Documents soumis`;
     document.getElementById('kyc-docs-date').innerText = `Soumis le ${new Date(selectedKyc.soumis_le || selectedKyc.created_at).toLocaleString('fr-FR')}`;
     
+    const isVideo = selectedKyc.selfie_url && (selectedKyc.selfie_url.endsWith('.webm') || selectedKyc.selfie_url.endsWith('.mp4'));
+    
     document.getElementById('kyc-docs-grid').innerHTML = `
         <div>
         <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">${selectedKyc.type_document ? selectedKyc.type_document.toUpperCase() : 'Document'}</p>
@@ -685,10 +687,11 @@ function showKycDetail(kycId) {
         </div>
         </div>
         <div>
-        <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">Selfie avec document</p>
-        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${selectedKyc.selfie_url || '#'}', '_blank')">
-            ${selectedKyc.selfie_url ? `<img src="${selectedKyc.selfie_url}" style="width:100%;height:100%;object-fit:cover;">` : '<div class="doc-overlay"><i class="ti ti-user-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
+        <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">Selfie Vidéo (Vérification)</p>
+        <div class="doc-thumb" style="height:120px;background:#000;">
+            ${selectedKyc.selfie_url ? (isVideo ? `<video src="${selectedKyc.selfie_url}" controls style="width:100%;height:100%;object-fit:contain;"></video>` : `<img src="${selectedKyc.selfie_url}" style="width:100%;height:100%;object-fit:cover;">`) : '<div class="doc-overlay" style="background:#F8FAFC;"><i class="ti ti-user-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
         </div>
+        ${selectedKyc.commentaire && selectedKyc.commentaire.includes('Code lu') ? `<div style="font-size:10px;margin-top:4px;color:#0F172A;font-weight:600;">Instructions : ${selectedKyc.commentaire.split('|')[0]}</div>` : ''}
         </div>
     `;
     

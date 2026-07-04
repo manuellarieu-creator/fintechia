@@ -377,23 +377,26 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   }
 });
 
-document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('fintech_token');
-  if(!token) return alert('Vous devez d\'abord créer le compte.');
-
-  const typeDoc = document.getElementById('reg-kyc-type').value;
-  const rectoFile = document.getElementById('reg-kyc-recto').files[0];
-  const selfieFile = document.getElementById('reg-kyc-selfie').files[0];
-
-  if (!rectoFile || !selfieFile) {
-    return alert('Veuillez fournir au moins la pièce d\'identité et le selfie.');
-  }
-
-  const formData = new FormData();
-  formData.append('type_document', typeDoc);
-  formData.append('document', rectoFile);
-  formData.append('selfie', selfieFile);
+  document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('fintech_token');
+    if(!token) return alert('Vous devez d\'abord créer le compte.');
+  
+    const typeDoc = document.getElementById('reg-kyc-type').value;
+    const rectoFile = document.getElementById('reg-kyc-recto').files[0];
+  
+    if (!rectoFile || !recordedVideoBlob) {
+      return alert('Veuillez fournir la pièce d\'identité et terminer la vérification vidéo.');
+    }
+  
+    const formData = new FormData();
+    formData.append('type_document', typeDoc);
+    formData.append('document', rectoFile);
+    
+    // Check if recordedVideoBlob is set, and append it with a filename based on mime type
+    const ext = recordedVideoBlob.type.includes('mp4') ? 'mp4' : 'webm';
+    formData.append('selfie', recordedVideoBlob, `video_kyc.${ext}`);
+    formData.append('instructions_kyc', `Code lu: ${kycCode}`);
 
   const btn = document.getElementById('btn-step-3');
   const prevText = btn.innerText;
@@ -490,3 +493,131 @@ window.closeModal = function(id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
 };
+
+// --- Video KYC Logic ---
+let mediaRecorder;
+let recordedChunks = [];
+let recordedVideoBlob = null;
+let kycStream = null;
+let kycStep = 0;
+let kycCode = "";
+let kycTimerInterval = null;
+let kycTimeRemaining = 30;
+
+function generateKycCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+window.startVideoKyc = async function() {
+  const modal = document.getElementById('modal-video-kyc');
+  modal.style.display = 'flex';
+  document.getElementById('btn-kyc-start-record').style.display = 'block';
+  document.getElementById('btn-kyc-next-step').style.display = 'none';
+  document.getElementById('btn-kyc-finish').style.display = 'none';
+  document.getElementById('kyc-instruction-overlay').style.display = 'none';
+  document.getElementById('kyc-timer').style.display = 'none';
+  
+  kycCode = generateKycCode();
+  recordedChunks = [];
+  recordedVideoBlob = null;
+  kycStep = 0;
+
+  try {
+    kycStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const videoPreview = document.getElementById('kyc-video-preview');
+    videoPreview.srcObject = kycStream;
+  } catch (err) {
+    console.error("Camera access denied", err);
+    alert("Impossible d'accéder à la caméra et au microphone. Autorisation requise.");
+    window.cancelVideoKyc();
+  }
+}
+
+window.cancelVideoKyc = function() {
+  if (kycStream) {
+    kycStream.getTracks().forEach(track => track.stop());
+    kycStream = null;
+  }
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+  clearInterval(kycTimerInterval);
+  document.getElementById('modal-video-kyc').style.display = 'none';
+}
+
+window.startRecording = function() {
+  if (!kycStream) return;
+  
+  recordedChunks = [];
+  try {
+    mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm; codecs=vp8,opus' });
+  } catch (e) {
+    try {
+      mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm' });
+    } catch (e) {
+      mediaRecorder = new MediaRecorder(kycStream); // Fallback
+    }
+  }
+
+  mediaRecorder.ondataavailable = function(e) {
+    if (e.data.size > 0) {
+      recordedChunks.push(e.data);
+    }
+  };
+
+  mediaRecorder.onstop = function() {
+    recordedVideoBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
+    document.getElementById('video-kyc-status').innerText = 'Vidéo enregistrée avec succès (Prêt à soumettre)';
+    document.getElementById('video-kyc-status').style.color = '#16A34A';
+    
+    // Stop camera
+    if (kycStream) {
+      kycStream.getTracks().forEach(track => track.stop());
+    }
+    document.getElementById('modal-video-kyc').style.display = 'none';
+  };
+
+  mediaRecorder.start(100);
+  
+  document.getElementById('btn-kyc-start-record').style.display = 'none';
+  document.getElementById('btn-kyc-next-step').style.display = 'block';
+  
+  // Timer setup
+  kycTimeRemaining = 30;
+  document.getElementById('kyc-timer').style.display = 'block';
+  document.getElementById('kyc-timer').innerText = '00:' + kycTimeRemaining;
+  
+  kycTimerInterval = setInterval(() => {
+    kycTimeRemaining--;
+    let displayTime = kycTimeRemaining < 10 ? '0' + kycTimeRemaining : kycTimeRemaining;
+    document.getElementById('kyc-timer').innerText = '00:' + displayTime;
+    if (kycTimeRemaining <= 0) {
+      window.finishVideoKyc();
+    }
+  }, 1000);
+
+  window.nextVideoStep();
+}
+
+window.nextVideoStep = function() {
+  kycStep++;
+  const overlay = document.getElementById('kyc-instruction-overlay');
+  overlay.style.display = 'block';
+  
+  if (kycStep === 1) {
+    overlay.innerText = "Étape 1/3: Tournez la tête en haut puis à droite";
+  } else if (kycStep === 2) {
+    overlay.innerText = `Étape 2/3: Lisez à voix haute les chiffres : ${kycCode.split('').join(' - ')}`;
+  } else if (kycStep === 3) {
+    overlay.innerText = "Étape 3/3: Dites votre nom, prénom, puis le numéro de la pièce d'identité";
+    document.getElementById('btn-kyc-next-step').style.display = 'none';
+    document.getElementById('btn-kyc-finish').style.display = 'block';
+  }
+}
+
+window.finishVideoKyc = function() {
+  clearInterval(kycTimerInterval);
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+}
