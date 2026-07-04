@@ -25,20 +25,22 @@ const app = express();
 app.set('trust proxy', 1); // Trust first proxy for Vercel rate-limiting
 const server = http.createServer(app);
 
-// Socket.io configuration
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ['GET', 'POST']
-  }
-});
-notificationsService.setIo(io);
-
-io.on('connection', (socket) => {
-  socket.on('rejoindre', (userId) => {
-    socket.join(`user_${userId}`);
+// Socket.io configuration (not supported on Vercel Serverless Functions)
+if (!process.env.VERCEL) {
+  const io = new Server(server, {
+    cors: {
+      origin: process.env.FRONTEND_URL,
+      methods: ['GET', 'POST']
+    }
   });
-});
+  notificationsService.setIo(io);
+
+  io.on('connection', (socket) => {
+    socket.on('rejoindre', (userId) => {
+      socket.join(`user_${userId}`);
+    });
+  });
+}
 
 // Middlewares
 app.use(helmet({ contentSecurityPolicy: false }));
