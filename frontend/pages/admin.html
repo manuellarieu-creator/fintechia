@@ -284,99 +284,427 @@
             <!-- =============================== -->
             <!-- VUE 3 : KYC / VERIFICATION      -->
             <!-- =============================== -->
-            <div id="view-kyc" class="admin-view" style="display: none;">
-                <div class="kpi-grid" style="margin-bottom:24px;">
-                    <div class="kpi-card"><div class="kpi-title">EN ATTENTE</div><div class="kpi-value warning" id="kyc-stats-attente">0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">VALIDÉS (30j)</div><div class="kpi-value success" id="kyc-stats-valides">0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">REJETÉS (30j)</div><div class="kpi-value danger" id="kyc-stats-rejetes">0</div></div>
-                </div>
-                <div class="clients-card">
-                    <div class="card-header border-bottom">
-                        <h2>Dossiers KYC en attente de modération</h2>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Document ID</th>
-                                    <th>Selfie</th>
-                                    <th>Date de soumission</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="kyc-tbody">
-                                <tr><td colspan="6" class="text-center text-muted">Chargement...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div id="view-kyc" class="admin-view" style="display: none; background:#F1F5F9; flex-direction:column; overflow:hidden;">
+<style>
+#view-kyc .ni{display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:5px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;}
+#view-kyc .ni.act{background:rgba(255,255,255,.12);color:#fff;font-weight:500;}
+#view-kyc .ni:hover{background:rgba(255,255,255,.08);}
+#view-kyc .ni i{font-size:15px;flex-shrink:0;}
+#view-kyc .ni-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.3);padding:10px 10px 4px;margin-top:2px;}
+#view-kyc .card{background:#fff;border:0.5px solid #E2E8F0;border-radius:10px;padding:10px 12px;}
+#view-kyc .ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+#view-kyc .ch h3{margin:0;font-size:11px;font-weight:600;color:#0F172A;}
+#view-kyc .bk{display:inline-block;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:600;}
+#view-kyc .bs{background:#F0FDF4;color:#15803D;}
+#view-kyc .bn{background:#F1F5F9;color:#475569;}
+#view-kyc .bw{background:#FFFBEB;color:#B45309;}
+#view-kyc .bd{background:#FEF2F2;color:#B91C1C;}
+#view-kyc .ba{background:#EFF6FF;color:#1D4ED8;}
+#view-kyc .bp{background:#F5F3FF;color:#6D28D9;}
+#view-kyc .kyc-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;border:0.5px solid transparent;transition:all .12s;}
+#view-kyc .kyc-row:hover{background:#F8FAFC;}
+#view-kyc .kyc-row.act{background:#EFF6FF;border-color:#BFDBFE;}
+#view-kyc .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+#view-kyc .btn-xs{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;border:none;}
+#view-kyc .doc-thumb{border-radius:8px;overflow:hidden;border:1px solid #E2E8F0;position:relative;cursor:pointer;}
+#view-kyc .doc-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;}
+#view-kyc .field label{font-size:10px;font-weight:500;color:#475569;display:block;margin-bottom:3px;}
+#view-kyc .field input,#view-kyc .field select{width:100%;padding:5px 8px;border-radius:5px;border:0.5px solid #CBD5E1;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;}
+#view-kyc .bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:3px;}
+#view-kyc .bar-f{height:5px;border-radius:3px;}
+#view-kyc .check-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid #F1F5F9;}
+#view-kyc .check-item:last-child{border-bottom:none;}
+#view-kyc .check-item i{font-size:14px;flex-shrink:0;}
+#view-kyc .tab{padding:4px 10px;border-radius:5px;font-size:10px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#475569;white-space:nowrap;}
+#view-kyc .tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+</style>
+
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">KYC / Vérification d'identité</h2>
+        <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;" id="kyc-topbar-subtitle">Traitez les dossiers en attente · 0 dossiers · 0 urgents</p>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <div style="display:flex;gap:4px;" id="kyc-tabs">
+          <div class="tab act" onclick="filterKycTab('Tous')">Tous (0)</div>
+          <div class="tab" onclick="filterKycTab('Urgents')">Urgents (0)</div>
+          <div class="tab" onclick="filterKycTab('Validés')">Validés</div>
+          <div class="tab" onclick="filterKycTab('Rejetés')">Rejetés</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corps -->
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:210px minmax(0,1fr) 200px;gap:0;overflow:hidden;">
+
+      <!-- COL 1 : File KYC -->
+      <div style="border-right:0.5px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Filtres -->
+        <div style="padding:8px 10px;border-bottom:0.5px solid #F1F5F9;display:flex;flex-direction:column;gap:5px;">
+          <div style="position:relative;">
+            <i class="ti ti-search" style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:12px;color:#94A3B8;"></i>
+            <input id="kyc-search" onkeyup="filterKycList()" style="width:100%;padding:5px 8px 5px 24px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;outline:none;" placeholder="Rechercher un client…">
+          </div>
+          <div style="display:flex;gap:4px;">
+            <select id="kyc-type-filter" onchange="filterKycList()" style="flex:1;padding:4px 6px;border-radius:5px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;">
+              <option value="">Tous types</option><option value="cni">CNI</option><option value="passeport">Passeport</option><option value="permis">Permis</option><option value="sejour">Titre de séjour</option>
+            </select>
+            <select id="kyc-sort" onchange="filterKycList()" style="flex:1;padding:4px 6px;border-radius:5px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;">
+              <option value="urgence">Urgence</option><option value="date">Date</option><option value="nom">Nom</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Liste dossiers -->
+        <div id="kyc-list" style="flex:1;overflow-y:auto;padding:6px 8px;scrollbar-width:none;">
+          <!-- Injecté dynamiquement -->
+        </div>
+
+        <!-- Stats résumé -->
+        <div id="kyc-summary-stats" style="border-top:0.5px solid #E2E8F0;padding:8px 10px;background:#F8FAFC;display:flex;gap:6px;">
+          <!-- Dynamique -->
+        </div>
+      </div>
+
+      <!-- COL 2 : Dossier actif -->
+      <div id="kyc-detail-col2" style="display:none;background:#F8FAFC;flex-direction:column;overflow:hidden;border-right:0.5px solid #E2E8F0;">
+        <!-- Header dossier -->
+        <div id="kyc-detail-header" style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+            <!-- Dynamique -->
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none;">
+          <!-- Documents soumis -->
+          <div class="card">
+            <div class="ch"><h3 id="kyc-docs-title">Documents soumis</h3><span id="kyc-docs-date" style="font-size:9px;color:#94A3B8;">Soumis le...</span></div>
+            <div id="kyc-docs-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+                <!-- Dynamique -->
             </div>
+          </div>
+
+          <!-- Vérifications automatiques -->
+          <div class="card" id="kyc-ai-checks">
+            <!-- Dynamique -->
+          </div>
+
+          <!-- Informations déclarées -->
+          <div class="card">
+            <div class="ch"><h3>Informations déclarées</h3></div>
+            <div id="kyc-user-info" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px 12px;">
+              <!-- Dynamique -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Barre d'action -->
+        <div style="background:#fff;border-top:0.5px solid #E2E8F0;padding:8px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <div style="flex:1;">
+            <input id="kyc-action-note" placeholder="Motif de décision ou note interne…" style="width:100%;padding:6px 10px;border-radius:6px;border:0.5px solid #E2E8F0;font-size:11px;background:#F8FAFC;outline:none;">
+          </div>
+          <button class="btn-xs" onclick="submitKycAction('rejeter')" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;padding:6px 10px;"><i class="ti ti-x" style="font-size:11px;"></i>Rejeter</button>
+          <button class="btn-xs" onclick="submitKycAction('valider')" style="background:#16A34A;color:#fff;padding:6px 14px;font-size:11px;"><i class="ti ti-check" style="font-size:12px;"></i>Valider le KYC</button>
+        </div>
+      </div>
+
+      <!-- COL 3 : Panneau latéral -->
+      <div id="kyc-detail-col3" style="display:none;background:#fff;flex-direction:column;overflow-y:auto;scrollbar-width:none;padding:10px 12px;gap:10px;">
+        <!-- Historique actions -->
+        <div class="card" style="padding:8px 10px;">
+          <div class="ch"><h3>Historique dossier</h3></div>
+          <div id="kyc-history-list" style="display:flex;flex-direction:column;gap:0;">
+              <!-- Dynamique -->
+          </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="card" style="padding:8px 10px;">
+          <div class="ch"><h3>Actions rapides</h3></div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <button class="btn-xs" onclick="submitKycAction('contacter')" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:flex-start;padding:5px 8px;"><i class="ti ti-mail" style="font-size:12px;"></i>Envoyer email client</button>
+          </div>
+        </div>
+
+        <!-- Réglementation -->
+        <div style="background:#EFF6FF;border:0.5px solid #BFDBFE;border-radius:8px;padding:8px 10px;">
+          <div style="display:flex;gap:6px;align-items:flex-start;">
+            <i class="ti ti-info-circle" style="font-size:13px;color:#1D4ED8;flex-shrink:0;margin-top:1px;"></i>
+            <div>
+              <p style="font-size:10px;font-weight:600;color:#1D4ED8;margin:0 0 2px;">Réglementation LCB-FT</p>
+              <p style="font-size:9px;color:#1D4ED8;opacity:.85;margin:0;line-height:1.4;">Délai max de vérification KYC : <strong>7 jours</strong> après inscription.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
             <!-- =============================== -->
             <!-- VUE 4 : CLIENTS BLOQUES         -->
             <!-- =============================== -->
-            <div id="view-bloques" class="admin-view" style="display: none;">
-                <div class="clients-card">
-                    <div class="card-header border-bottom">
-                        <h2 class="danger-text"><i class="ti ti-user-cancel"></i> Comptes suspendus ou bloqués</h2>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Email</th>
-                                    <th>Motif (Dernier statut)</th>
-                                    <th>Solde gelé</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bloques-tbody">
-                                <tr><td colspan="5" class="text-center text-muted">Chargement...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div id="view-bloques" class="admin-view" style="display: none; background:#F1F5F9; flex-direction:column; overflow:hidden;">
+<style>
+#view-bloques .bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 9px;border-radius:5px;font-weight:600;white-space:nowrap;}
+#view-bloques .bs{background:#F0FDF4;color:#15803D;}
+#view-bloques .bn{background:#F1F5F9;color:#475569;}
+#view-bloques .bw{background:#FFFBEB;color:#B45309;}
+#view-bloques .bd{background:#FEF2F2;color:#B91C1C;}
+#view-bloques .ba{background:#EFF6FF;color:#1D4ED8;}
+#view-bloques .bp{background:#F5F3FF;color:#6D28D9;}
+#view-bloques .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+#view-bloques .tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+#view-bloques .tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+#view-bloques .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+#view-bloques .card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;padding:16px 18px;}
+#view-bloques .field label{font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+#view-bloques .field input, #view-bloques .field select, #view-bloques .field textarea{width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;color:#0F172A;outline:none;}
+#view-bloques .field textarea{resize:none;height:72px;font-family:inherit;}
+#view-bloques .field input:focus, #view-bloques .field select:focus, #view-bloques .field textarea:focus{border-color:#2563EB;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+#view-bloques .hist-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+#view-bloques .reason-tag{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:500;cursor:pointer;border:1px solid #E2E8F0;background:#F8FAFC;color:#64748B;}
+#view-bloques .reason-tag.on{background:#FEF2F2;border-color:#FECACA;color:#B91C1C;}
+</style>
+
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Clients bloqués</h2>
+        <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Gérez et instruisez les comptes suspendus ou bloqués</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="position:relative;">
+          <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#94A3B8;"></i>
+          <input id="bloques-search" onkeyup="filterBlockedClients()" style="padding:7px 12px 7px 30px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;width:200px;outline:none;" placeholder="Nom, email, IBAN…">
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI bandeau -->
+    <div id="bloques-kpis" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
+      <!-- KPIs dynamiques -->
+    </div>
+
+    <!-- Corps -->
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;padding:0 20px 16px;overflow:hidden;">
+
+      <!-- TABLE CLIENTS BLOQUÉS -->
+      <div class="card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
+
+        <!-- Filtres onglets -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:0.5px solid #F1F5F9;">
+          <div id="bloques-tabs" style="display:flex;gap:6px;">
+            <div class="tab act" onclick="filterBlockedTab('Tous')">Tous (0)</div>
+            <div class="tab" onclick="filterBlockedTab('Fraude')">Fraude (0)</div>
+            <div class="tab" onclick="filterBlockedTab('KYC')">KYC (0)</div>
+            <div class="tab" onclick="filterBlockedTab('Judiciaire')">Judiciaire (0)</div>
+            <div class="tab" onclick="filterBlockedTab('Autres')">Autres (0)</div>
+          </div>
+          <select id="bloques-sort" onchange="filterBlockedClients()" style="padding:5px 9px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#475569;outline:none;">
+            <option value="date">Trier : Date blocage</option>
+            <option value="nom">Nom</option>
+          </select>
+        </div>
+
+        <!-- En-tête table -->
+        <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) 110px;gap:0;padding:8px 16px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;">
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;">Client</span>
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;">Motif</span>
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;">Date blocage</span>
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;">Solde</span>
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;text-align:center;">Actions</span>
+        </div>
+
+        <!-- Lignes -->
+        <div id="bloques-list" style="flex:1;overflow-y:auto;scrollbar-width:none;">
+          <!-- Dynamique -->
+        </div>
+      </div>
+
+      <!-- PANNEAU DÉTAIL -->
+      <div id="bloques-detail-panel" style="display:none;flex-direction:column;gap:12px;overflow-y:auto;scrollbar-width:none;">
+        <!-- Fiche client bloqué -->
+        <div class="card" id="bloques-detail-info">
+            <!-- Dynamique -->
+        </div>
+
+        <!-- Formulaire décision -->
+        <div class="card">
+          <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 14px;">Décision & instruction</h3>
+
+          <div style="margin-bottom:12px;">
+            <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Motif de blocage</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;" id="bloques-detail-tags">
+              <span class="reason-tag" onclick="selectReason(this, 'Transaction suspecte')">Transaction suspecte</span>
+              <span class="reason-tag" onclick="selectReason(this, 'KYC expiré')">KYC expiré</span>
+              <span class="reason-tag" onclick="selectReason(this, 'Fraude avérée')">Fraude avérée</span>
+              <span class="reason-tag" onclick="selectReason(this, 'Décision judiciaire')">Judiciaire</span>
+              <span class="reason-tag" onclick="selectReason(this, 'Demande client')">Demande client</span>
             </div>
+            <input type="hidden" id="bloques-decision-motif">
+          </div>
+
+          <div class="field" style="margin-bottom:10px;">
+            <label>Note interne</label>
+            <textarea id="bloques-decision-note" placeholder="Décrivez les raisons du blocage ou les actions menées…"></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button class="btn" onclick="submitBloquesAction('debloquer')" style="background:#16A34A;color:#fff;width:100%;justify-content:center;padding:9px;">
+              <i class="ti ti-lock-open" style="font-size:14px;"></i>Débloquer le compte
+            </button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <button class="btn" onclick="submitBloquesAction('contacter')" style="background:#EFF6FF;color:#1D4ED8;justify-content:center;padding:7px;font-size:11px;">
+                <i class="ti ti-mail" style="font-size:12px;"></i>Contacter le client
+              </button>
+              <button class="btn" onclick="submitBloquesAction('bloquer')" style="background:#F5F3FF;color:#6D28D9;justify-content:center;padding:7px;font-size:11px;">
+                <i class="ti ti-lock" style="font-size:12px;"></i>Sauvegarder infos
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
             <!-- =============================== -->
             <!-- VUE 5 : VIREMENTS               -->
             <!-- =============================== -->
-            <div id="view-virements" class="admin-view" style="display: none;">
-                <div class="clients-card">
-                    <div class="card-header border-bottom">
-                        <h2>Historique des transactions réseau</h2>
-                        <div class="select-wrapper" style="width:200px;">
-                            <select id="filter-virement-type" onchange="loadVirementsTable()">
-                                <option value="">Tous les types</option>
-                                <option value="virement">Virement externe</option>
-                                <option value="interne">Virement interne</option>
-                                <option value="recharge">Recharge / Dépôt</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Client (Émetteur)</th>
-                                    <th>Type</th>
-                                    <th>Bénéficiaire / Motif</th>
-                                    <th>Montant</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="virements-tbody">
-                                <tr><td colspan="6" class="text-center text-muted">Chargement...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div id="view-virements" class="admin-view" style="display: none; background:#F1F5F9; flex-direction:column; overflow:hidden;">
+<style>
+#view-virements .ni{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;}
+#view-virements .ni.act{background:rgba(255,255,255,.12);color:#fff;font-weight:500;}
+#view-virements .ni:hover{background:rgba(255,255,255,.07);}
+#view-virements .ni i{font-size:15px;flex-shrink:0;}
+#view-virements .ni-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.28);padding:12px 10px 4px;}
+#view-virements .bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+#view-virements .bs{background:#F0FDF4;color:#15803D;}
+#view-virements .bn{background:#F1F5F9;color:#475569;}
+#view-virements .bw{background:#FFFBEB;color:#B45309;}
+#view-virements .bd{background:#FEF2F2;color:#B91C1C;}
+#view-virements .ba{background:#EFF6FF;color:#1D4ED8;}
+#view-virements .bp{background:#F5F3FF;color:#6D28D9;}
+#view-virements .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+#view-virements .tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+#view-virements .tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+#view-virements .card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;}
+#view-virements .th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
+#view-virements .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+#view-virements .field label{font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+#view-virements .field input,#view-virements .field select{width:100%;padding:7px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;color:#0F172A;outline:none;}
+#view-virements .field input:focus,#view-virements .field select:focus{border-color:#2563EB;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+#view-virements .row-tx{display:grid;align-items:center;padding:9px 16px;border-bottom:0.5px solid #F8FAFC;cursor:pointer;transition:background .1s;}
+#view-virements .row-tx:hover{background:#F8FAFC;}
+#view-virements .row-tx.act{background:#EFF6FF;border-left:3px solid #2563EB;}
+#view-virements .row-tx.susp{background:#FFF7ED;}
+#view-virements .row-tx.bloc{background:#FEF2F2;}
+#view-virements .bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:4px;}
+#view-virements .bar-f{height:5px;border-radius:3px;}
+#view-virements .live-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+</style>
+
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Supervision des virements</h2>
+        <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Consultez, instruisez et bloquez les virements en temps réel</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;align-items:center;gap:6px;background:#F0FDF4;border:0.5px solid #BBF7D0;border-radius:7px;padding:5px 10px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#16A34A;display:inline-block;"></span>
+          <span style="font-size:11px;font-weight:600;color:#15803D;" id="vir-live-count">Live · 0 tx aujourd'hui</span>
+        </div>
+        <button class="btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Exporter</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div id="vir-kpis" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
+      <!-- Dynamique -->
+    </div>
+
+    <!-- Corps 3 colonnes -->
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr) 220px;gap:12px;padding:0 20px 16px;overflow:hidden;">
+
+      <!-- COL 1 : Table virements -->
+      <div class="card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
+
+        <!-- Filtres & onglets -->
+        <div style="padding:10px 14px;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;">
+          <div style="display:flex;gap:6px;flex-wrap:nowrap;" id="vir-tabs">
+            <div class="tab act" onclick="filterVirTab('Tous')">Tous (0)</div>
+            <div class="tab" onclick="filterVirTab('Revue')">Revue (0)</div>
+            <div class="tab" onclick="filterVirTab('Bloqués')">Bloqués (0)</div>
+            <div class="tab" onclick="filterVirTab('Validés')">Validés</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <div style="position:relative;">
+              <i class="ti ti-search" style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:12px;color:#94A3B8;"></i>
+              <input id="vir-search" onkeyup="filterVirementsList()" style="padding:5px 8px 5px 24px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;width:160px;outline:none;" placeholder="IBAN, nom, référence…">
             </div>
+          </div>
+        </div>
+
+        <!-- En-têtes -->
+        <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 90px 90px 100px 90px;gap:0;padding:8px 16px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;flex-shrink:0;">
+          <span class="th">Émetteur</span>
+          <span class="th">Bénéficiaire</span>
+          <span class="th" style="text-align:right;">Montant</span>
+          <span class="th" style="text-align:center;">Type</span>
+          <span class="th" style="text-align:center;">Statut</span>
+          <span class="th" style="text-align:center;">Actions</span>
+        </div>
+
+        <!-- Lignes -->
+        <div id="vir-list" style="flex:1;overflow-y:auto;scrollbar-width:none;">
+          <!-- Dynamique -->
+        </div>
+      </div>
+
+      <!-- COL 2 : Fiche virement sélectionné -->
+      <div id="vir-detail-col2" style="display:none;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+        <!-- Dynamique -->
+      </div>
+
+      <!-- COL 3 : Live + stats -->
+      <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+        <!-- Flux live -->
+        <div class="card" style="padding:12px 14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Flux live</h3>
+            <div style="display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:#16A34A;display:inline-block;"></span><span style="font-size:10px;color:#15803D;font-weight:500;">En direct</span></div>
+          </div>
+          <div id="vir-live-stream" style="display:flex;flex-direction:column;gap:0;">
+            <!-- Dynamique -->
+          </div>
+        </div>
+
+        <!-- Alertes actives -->
+        <div class="card" style="padding:12px 14px;">
+          <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Seuils d'alerte actifs</h3>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FEF2F2;border-radius:6px;border:0.5px solid #FECACA;">
+              <span style="font-size:10px;color:#B91C1C;font-weight:500;">Tx &gt; 5 000 €</span>
+              <span class="bk bd">Bloquée auto</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FFFBEB;border-radius:6px;border:0.5px solid #FDE68A;">
+              <span style="font-size:10px;color:#B45309;font-weight:500;">IBAN hors UE</span>
+              <span class="bk bw">Revue manuelle</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FFFBEB;border-radius:6px;border:0.5px solid #FDE68A;">
+              <span style="font-size:10px;color:#B45309;font-weight:500;">Score risque &gt; 70</span>
+              <span class="bk bw">Revue manuelle</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#F0FDF4;border-radius:6px;border:0.5px solid #BBF7D0;">
+              <span style="font-size:10px;color:#15803D;font-weight:500;">&lt; 1 000 € — FR</span>
+              <span class="bk bs">Validation auto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
             <!-- =============================== -->
             <!-- VUE 6 : FRAUDES ET ALERTES      -->

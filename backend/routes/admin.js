@@ -10,6 +10,7 @@ const notifications = require('../services/notifications');
 (async () => {
   try {
     await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE").catch(()=>{});
+    await db.query("ALTER TABLE accounts ADD COLUMN motif_blocage VARCHAR(255) DEFAULT NULL").catch(()=>{});
     await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(()=>{});
     await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(()=>{});
     await db.query(`
@@ -66,7 +67,7 @@ router.get('/comptes', guard, async (req, res, next) => {
   try {
     const { statut } = req.query;
     let sql = `
-      SELECT a.*, u.prenom, u.nom, u.email, k.statut as kyc_statut 
+      SELECT a.*, u.prenom, u.nom, u.email, k.statut as kyc_statut, a.motif_blocage 
       FROM accounts a 
       JOIN users u ON a.user_id = u.id 
       LEFT JOIN (SELECT user_id, statut FROM kyc WHERE id IN (SELECT MAX(id) FROM kyc GROUP BY user_id)) k ON k.user_id = u.id
@@ -86,10 +87,10 @@ router.get('/comptes', guard, async (req, res, next) => {
 // PATCH /api/admin/comptes/:id/statut
 router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], validateReq, async (req, res, next) => {
   try {
-    const { statut, commentaire } = req.body;
+    const { statut, commentaire, motif_blocage } = req.body;
     const { accountId } = req.params;
     
-    await db.query('UPDATE accounts SET statut = ? WHERE id = ?', [statut, accountId]);
+    await db.query('UPDATE accounts SET statut = ?, motif_blocage = ? WHERE id = ?', [statut, statut === 'bloque' ? (motif_blocage || 'Indéfini') : null, accountId]);
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     
     if (accounts.length > 0) {
@@ -98,11 +99,29 @@ router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], v
         action: audit.ACTIONS[`COMPTE_${statut.toUpperCase()}`] || 'compte_statut_change',
         categorie: audit.CATEGORIES.admin,
         cible_type: 'account', cible_id: accountId,
-        cible_detail: `Statut → ${statut}`, req
+        cible_detail: `Statut → ${statut}`,
+        details: { commentaire, motif_blocage, new_status: statut }, req
       });
       await notifications.envoyer(accounts[0].user_id, 'Mise à jour du compte', `Votre compte est maintenant : ${statut}`, 'info');
     }
     res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/comptes/:accountId/audit
+router.get('/comptes/:accountId/audit', guard, async (req, res, next) => {
+  try {
+    const { accountId } = req.params;
+    const [logs] = await db.query(`
+      SELECT action, categorie, cible_detail, details, acteur_role, created_at
+      FROM audit_logs
+      WHERE cible_type = 'account' AND cible_id = ?
+      ORDER BY created_at DESC
+      LIMIT 20
+    `, [accountId]);
+    res.json(logs);
   } catch (err) {
     next(err);
   }
@@ -343,7 +362,7 @@ router.delete('/comptes/:accountId', guard, async (req, res, next) => {
 router.get('/kyc', guard, async (req, res, next) => {
   try {
     const { statut } = req.query;
-    let sql = `SELECT k.*, u.prenom, u.nom, u.email FROM kyc k JOIN users u ON k.user_id = u.id`;
+    let sql = `SELECT k.*, u.prenom, u.nom, u.email, u.adresse, u.telephone_code, u.created_at as user_created_at FROM kyc k JOIN users u ON k.user_id = u.id`;
     const params = [];
     if (statut) {
       sql += ' WHERE k.statut = ?';
@@ -415,7 +434,7 @@ router.get('/virements', guard, async (req, res, next) => {
   try {
     const { statut } = req.query;
     let sql = `
-      SELECT t.*, a.iban as iban_source, u.nom, u.prenom 
+      SELECT t.*, a.iban as iban_source, u.nom, u.prenom, u.email
       FROM transactions t 
       JOIN accounts a ON t.account_id = a.id 
       JOIN users u ON a.user_id = u.id 
