@@ -306,10 +306,6 @@ async function loadBudgetsPage() {
           <div class="bdg-metric-val">${epargneCurrentMonth.toFixed(0)} €</div>
           <div class="bdg-metric-sub">Obj. ${epargneObjMensuel} € - ${epargnePct}%</div>
         </div>
-        <div class="bdg-metric-card">
-          <div class="bdg-metric-title">RESTE À DÉPENSER</div>
-          <div class="bdg-metric-val">${reste.toFixed(0)} €</div>
-          <div class="bdg-metric-sub">Budget total: ${budgetTotal.toFixed(0)} €</div>
         </div>
       `;
   }
@@ -393,10 +389,6 @@ async function loadBudgetsPage() {
           <div class="m-bdg-metric-val">${epargneCurrentMonth.toFixed(0)} €</div>
           <div class="m-bdg-metric-sub">Obj. ${epargneObjMensuel} € - ${epargnePct}%</div>
         </div>
-        <div class="m-bdg-metric">
-          <div class="m-bdg-metric-title">RESTE À DÉPENSER</div>
-          <div class="m-bdg-metric-val">${reste.toFixed(0)} €</div>
-          <div class="m-bdg-metric-sub">Budget : ${budgetTotal.toFixed(0)} €</div>
         </div>
       </div>
 
@@ -443,29 +435,6 @@ async function loadBudgetsPage() {
           <button onclick="openModal('modal-budgets')" style="width:100%; padding:12px; margin-top:16px; border:1px dashed var(--border-strong); border-radius:8px; background:transparent; color:var(--text-muted); font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px;">
             <i class="ti ti-plus"></i> Nouvelle enveloppe
           </button>
-      </div>
-
-      <div class="nb-card" style="margin-bottom: 24px; padding: 16px;">
-          <div class="bdg-card-header" style="margin-bottom:12px;">
-            <h3 style="margin:0; font-size:1.1rem;">Objectif épargne</h3>
-            <a href="#" onclick="openModal('modal-budgets')" style="font-size:0.8rem; color:var(--primary); font-weight:600; text-decoration:none;">Modifier</a>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
-            <div style="font-size:0.8rem; color:var(--text-muted);">${epargneCurrentMonth.toFixed(0)} / ${epargneObjMensuel} € ce mois</div>
-            <div style="font-size:0.85rem; font-weight:700;">${epargnePct}%</div>
-          </div>
-          <div class="bdg-progress-bg" style="height:8px; margin-bottom:8px;"><div class="bdg-progress-fill" style="width:${epargnePct}%; background:var(--success);"></div></div>
-          
-          <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px; margin-top:16px;">
-            <div>
-                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">${currentYearEpargne} €</div>
-                <div style="font-size:0.7rem; color:var(--text-muted);">Épargné en ${currentYear}</div>
-            </div>
-            <div style="text-align:right;">
-                <div style="font-size:1.1rem; font-weight:700; margin-bottom:2px;">${epargneObjAnnuel - currentYearEpargne} €</div>
-                <div style="font-size:0.7rem; color:var(--text-muted);">Restant à atteindre</div>
-            </div>
-          </div>
       </div>
 
       <div class="nb-card" style="margin-bottom: 24px; padding: 16px;">

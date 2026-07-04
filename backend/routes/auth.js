@@ -149,7 +149,7 @@ router.post('/login', [
 ], validateReq, async (req, res, next) => {
   const { idClient, password, trustedDeviceToken } = req.body;
   try {
-    const [users] = await db.query('SELECT * FROM users WHERE numero_client = ?', [idClient]);
+    const [users] = await db.query('SELECT * FROM users WHERE numero_client = ? OR email = ?', [idClient, idClient]);
     if (users.length === 0) {
       await audit.log({
         acteur_email: idClient, acteur_role: 'client',
