@@ -23,7 +23,7 @@ const authMiddleware = require('../middleware/auth');
 })();
 
 // GET /api/settings/:key (Accessible by authenticated users)
-router.get('/:key', authMiddleware.verifyToken, async (req, res, next) => {
+router.get('/:key', authMiddleware.authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await db.query('SELECT setting_value FROM settings WHERE setting_key = ?', [req.params.key]);
     if (rows.length === 0) return res.status(404).json({ error: 'Setting introuvable' });
@@ -34,7 +34,7 @@ router.get('/:key', authMiddleware.verifyToken, async (req, res, next) => {
 });
 
 // POST /api/settings/:key (Admin only)
-router.post('/:key', [authMiddleware.verifyToken, authMiddleware.isAdmin], async (req, res, next) => {
+router.post('/:key', [authMiddleware.authMiddleware, authMiddleware.adminMiddleware], async (req, res, next) => {
   try {
     const { value } = req.body;
     if (value === undefined) return res.status(400).json({ error: 'Value is required' });
