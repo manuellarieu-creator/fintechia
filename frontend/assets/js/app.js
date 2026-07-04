@@ -677,6 +677,7 @@ window.finishVideoKyc = function() {
   clearInterval(kycTimerInterval);
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     mediaRecorder.stop();
+  }
 }
 
 // ============================
