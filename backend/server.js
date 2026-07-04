@@ -21,6 +21,7 @@ const cartesRoutes = require('./routes/cartes');
 const notificationsService = require('./services/notifications');
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy for Vercel rate-limiting
 const server = http.createServer(app);
 
 // Socket.io configuration
