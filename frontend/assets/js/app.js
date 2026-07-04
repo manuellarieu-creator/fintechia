@@ -698,7 +698,8 @@ function startKycPolling() {
         window.location.reload();
       }
     } catch (err) {
-      console.error("KYC Polling error", err);
+      console.error('KYC Polling error', err);
+      if (err.message && err.message.includes('Token') || err.message === 'Erreur serveur') { clearInterval(kycPollInterval); }
     }
   }, 10000); // Check every 10 seconds
 }
