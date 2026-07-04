@@ -9,10 +9,10 @@ const notifications = require('../services/notifications');
 // Auto-migration pour les nouvelles colonnes accounts et account_rules
 (async () => {
   try {
-    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE").catch(()=>{});
-    await db.query("ALTER TABLE accounts ADD COLUMN motif_blocage VARCHAR(255) DEFAULT NULL").catch(()=>{});
-    await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(()=>{});
-    await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(()=>{});
+    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN motif_blocage VARCHAR(255) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
     await db.query(`
       CREATE TABLE IF NOT EXISTS account_rules (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -145,6 +145,9 @@ router.patch('/comptes/:accountId/activer', [
     const bicClean = req.body.bic.replace(/\s+/g, '').toUpperCase();
     const numeroCompteClean = req.body.numero_compte.trim();
     const { accountId } = req.params;
+    
+    // Fallback auto-migration if the global one failed silently
+    try { await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE DEFAULT NULL"); } catch(e){}
     
     // Vérifier l'unicité de l'IBAN et Numéro de compte
     const [existing] = await db.query('SELECT id FROM accounts WHERE (iban = ? OR numero_compte = ?) AND id != ?', [ibanClean, numeroCompteClean, accountId]);
