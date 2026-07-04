@@ -667,6 +667,7 @@ function showKycDetail(kycId) {
             <span class="bk ${selectedKyc.statut === 'valide' ? 'bs' : (selectedKyc.statut === 'rejete' ? 'bd' : 'bn')}">${selectedKyc.statut}</span>
             ${diffDays >= 3 && selectedKyc.statut === 'en_attente' ? `<span style="font-size:9px;color:#B45309;font-weight:600;">⚠ Dossier urgent — J+${diffDays}</span>` : ''}
         </div>
+        ${selectedKyc.statut === 'rejete' && selectedKyc.motif_rejet ? `<p style="font-size:10px;color:#B91C1C;margin:2px 0 0;font-weight:600;">Motif : ${selectedKyc.motif_rejet}</p>` : ''}
         <p style="font-size:10px;color:#94A3B8;margin:0;">${selectedKyc.email} · Inscrit le ${new Date(selectedKyc.user_created_at || Date.now()).toLocaleDateString('fr-FR')} · KYC-${selectedKyc.id}</p>
         </div>
         <div style="display:flex;gap:5px;">

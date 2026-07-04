@@ -398,7 +398,9 @@ router.patch('/kyc/:kycId/document', guard, async (req, res, next) => {
     const { kycId } = req.params;
     const nouveauStatut = decision === 'valide' ? 'valide' : 'rejete';
     
-    await db.query('UPDATE kyc SET statut = ?, commentaire = ?, traite_le = NOW(), traite_par = ? WHERE id = ?', 
+    // We update motif_rejet with the admin's note (commentaire from req.body)
+    // but we DO NOT overwrite the db 'commentaire' column because it contains the KYC instructions.
+    await db.query('UPDATE kyc SET statut = ?, motif_rejet = ?, traite_le = NOW(), traite_par = ? WHERE id = ?', 
       [nouveauStatut, commentaire, req.user.id, kycId]);
 
     const [kycs] = await db.query('SELECT user_id FROM kyc WHERE id = ?', [kycId]);
