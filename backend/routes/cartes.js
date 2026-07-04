@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 pool.query(`
   CREATE TABLE IF NOT EXISTS cartes (
@@ -54,6 +54,72 @@ router.patch('/:id/plafond', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur update plafond' });
+  }
+});
+// --- Admin Routes ---
+router.get('/admin', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+    const filter = req.query.filter || 'all'; // all, actives, bloquees
+    
+    let whereClause = '';
+    let queryParams = [];
+    if (filter === 'actives') {
+      whereClause = 'WHERE c.bloquee = 0';
+    } else if (filter === 'bloquees') {
+      whereClause = 'WHERE c.bloquee = 1';
+    }
+    
+    const countQuery = `SELECT COUNT(*) as total FROM cartes c ${whereClause}`;
+    const [countRows] = await pool.query(countQuery, queryParams);
+    const total = countRows[0].total;
+
+    const query = `
+      SELECT c.*, u.nom, u.prenom 
+      FROM cartes c 
+      JOIN users u ON c.user_id = u.id 
+      ${whereClause}
+      ORDER BY c.cree_le DESC 
+      LIMIT ? OFFSET ?
+    `;
+    const [cartes] = await pool.query(query, [...queryParams, limit, offset]);
+    
+    // Stats
+    const [stats] = await pool.query(`
+      SELECT 
+        COUNT(*) as total_emises,
+        SUM(CASE WHEN bloquee = 0 THEN 1 ELSE 0 END) as actives,
+        SUM(CASE WHEN bloquee = 1 THEN 1 ELSE 0 END) as bloquees
+      FROM cartes
+    `);
+
+    res.json({
+      cartes,
+      stats: stats[0],
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur fetch cartes admin' });
+  }
+});
+
+router.post('/admin/:id/action', [authMiddleware, adminMiddleware], async (req, res) => {
+  const { action } = req.body; // 'block', 'unblock', 'renew'
+  try {
+    if (action === 'block' || action === 'unblock') {
+      const bloquee = action === 'block' ? 1 : 0;
+      await pool.query('UPDATE cartes SET bloquee = ? WHERE id = ?', [bloquee, req.params.id]);
+    } else if (action === 'renew') {
+      const exp_date = '12/30'; // Simple mock logic for renewal
+      await pool.query('UPDATE cartes SET exp_date = ? WHERE id = ?', [exp_date, req.params.id]);
+    }
+    res.json({ success: true, action });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur action carte admin' });
   }
 });
 

@@ -17,6 +17,7 @@ const budgetsRoutes = require('./routes/budgets');
 const beneficiairesRoutes = require('./routes/beneficiaires');
 const cartesRoutes = require('./routes/cartes');
 const settingsRoutes = require('./routes/settings');
+const alertesRoutes = require('./routes/alertes');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -55,7 +56,7 @@ const resetDemandeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3 });
 const resetValiderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3 });
 const adminLimiter = rateLimit({ windowMs: 60 * 1000, max: 100 });
 
-// Routes API avec rate limiters spécifiques
+// Routes API avec rate limiters spǸcifiques
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
 app.use('/api/auth/reset-demande', resetDemandeLimiter);
@@ -71,6 +72,7 @@ app.use('/api/budgets', budgetsRoutes);
 app.use('/api/beneficiaires', beneficiairesRoutes);
 app.use('/api/cartes', cartesRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/admin/alertes', alertesRoutes);
 
 // Fichiers statiques (en production configuré via Nginx internal)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -110,6 +112,21 @@ if (!process.env.VERCEL) {
       await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE").catch(() => {});
+
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS alertes_fraudes (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id INT NOT NULL,
+          transaction_id INT DEFAULT NULL,
+          type ENUM('phishing', 'virement_suspect', 'login_anormal', 'kyc_multiple') NOT NULL,
+          description TEXT NOT NULL,
+          niveau_risque ENUM('low', 'medium', 'high') NOT NULL,
+          statut ENUM('en_attente', 'resolu') DEFAULT 'en_attente',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+      `).catch(err => console.error("Erreur création alertes_fraudes:", err.message));
+
       console.log("Auto-migration DB terminée.");
     } catch (err) {
       console.error("Erreur lors de l'auto-migration :", err.message);
