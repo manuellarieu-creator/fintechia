@@ -64,6 +64,7 @@ app.use('/api/auth/reset-valider', resetValiderLimiter);
 app.use('/api/admin', adminLimiter);
 
 // Setup routes
+app.use('/api', (req, res, next) => { res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate'); res.setHeader('Pragma', 'no-cache'); res.setHeader('Expires', '0'); next(); });
 app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/transactions', transactionsRoutes);
