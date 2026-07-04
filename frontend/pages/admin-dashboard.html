@@ -1019,6 +1019,19 @@
             <p id="modal-block-desc">Êtes-vous sûr de vouloir bloquer ce client ?</p>
             <input type="hidden" id="block-client-id">
             <input type="hidden" id="block-client-action">
+            
+            <div id="modal-block-motif-container" style="display:none; margin-top:16px;">
+                <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Motif</p>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;" id="modal-block-tags">
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Transaction suspecte')">Transaction suspecte</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'KYC expiré')">KYC expiré</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Fraude avérée')">Fraude avérée</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Décision judiciaire')">Judiciaire</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Demande client')">Demande client</span>
+                </div>
+                <input type="hidden" id="modal-block-motif-value">
+            </div>
+
             <div style="display:flex; gap:12px; margin-top:24px;">
                 <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-block-client').style.display='none'">Annuler</button>
                 <button class="btn-danger" style="flex:1;" id="btn-confirm-block" onclick="confirmBlockClient()">Confirmer</button>

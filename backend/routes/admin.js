@@ -90,7 +90,13 @@ router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], v
     const { statut, commentaire, motif_blocage } = req.body;
     const { accountId } = req.params;
     
-    await db.query('UPDATE accounts SET statut = ?, motif_blocage = ? WHERE id = ?', [statut, statut === 'bloque' ? (motif_blocage || 'Indéfini') : null, accountId]);
+    if (statut === 'restreindre') {
+      await db.query('UPDATE accounts SET transfer_allowed = FALSE WHERE id = ?', [accountId]);
+    } else {
+      const transferAllowed = statut === 'actif' ? true : false; // Reset to true if reactivated
+      await db.query('UPDATE accounts SET statut = ?, motif_blocage = ?, transfer_allowed = IF(statut = \'actif\', TRUE, transfer_allowed) WHERE id = ?', 
+      [statut, statut === 'bloque' ? (motif_blocage || 'Indéfini') : null, accountId]);
+    }
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     
     if (accounts.length > 0) {

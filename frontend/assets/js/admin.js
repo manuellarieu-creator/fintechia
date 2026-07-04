@@ -294,7 +294,7 @@ let selectedBlockedClient = null;
 
 async function renderBloquesTable() {
     if(allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
-    blockedClientsData = allClients.filter(c => c.statut === 'bloque');
+    blockedClientsData = allClients.filter(c => c.statut === 'bloque' || c.transfer_allowed === 0 || c.transfer_allowed === false);
     filterBlockedClients();
 }
 
@@ -1270,11 +1270,25 @@ window.manageAction = function(actionType) {
       document.getElementById('modal-block-title').innerText = titleMap[actionType];
       document.getElementById('modal-block-desc').innerText = descMap[actionType];
       
+      if (actionType === 'restreindre' || actionType === 'bloquer') {
+          document.getElementById('modal-block-motif-container').style.display = 'block';
+          document.getElementById('modal-block-motif-value').value = '';
+          document.querySelectorAll('#modal-block-tags .reason-tag').forEach(tag => tag.classList.remove('selected'));
+      } else {
+          document.getElementById('modal-block-motif-container').style.display = 'none';
+      }
+      
       const btn = document.getElementById('btn-confirm-block');
       btn.innerText = actionType === 'supprimer' ? 'Supprimer' : 'Confirmer';
       
       document.getElementById('modal-block-client').style.display = 'flex';
   }
+}
+
+window.selectBlockReason = function(el, motif) {
+  document.querySelectorAll('#modal-block-tags .reason-tag').forEach(tag => tag.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('modal-block-motif-value').value = motif;
 }
 
 window.confirmMontantAction = async function() {
@@ -1311,7 +1325,12 @@ window.confirmBlockClient = async function() {
     if (action === 'supprimer') {
         res = await fetchAPI(`/admin/comptes/${id}`, 'DELETE');
     } else {
-        res = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { statut: action, commentaire: `Action via console Admin: ${action}` });
+        const motif = document.getElementById('modal-block-motif-value').value || 'Autre';
+        res = await fetchAPI(`/admin/comptes/${id}/statut`, 'PATCH', { 
+          statut: action, 
+          commentaire: `Action via console Admin: ${action}`,
+          motif_blocage: motif
+        });
     }
 
     if (res && res.success) {
