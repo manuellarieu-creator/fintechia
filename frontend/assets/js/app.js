@@ -137,6 +137,7 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
 async function checkAuth() {
   try {
     const data = await apiCall('/auth/me');
+        if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
     initDashboard(data.user, data.account, data.kyc_statut);
   } catch (err) {
     console.error(err);
@@ -689,6 +690,7 @@ function startKycPolling() {
   kycPollInterval = setInterval(async () => {
     try {
       const data = await apiCall('/auth/me');
+        if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
       if (data && data.kyc_statut === 'valide' && data.account && data.account.iban) {
         clearInterval(kycPollInterval);
         document.getElementById('modal-kyc-approved').style.display = 'flex';
