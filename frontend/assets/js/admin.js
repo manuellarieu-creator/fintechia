@@ -681,17 +681,22 @@ function showKycDetail(kycId) {
     
     document.getElementById('kyc-docs-grid').innerHTML = `
         <div>
-        <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">${selectedKyc.type_document ? selectedKyc.type_document.toUpperCase() : 'Document'}</p>
+        <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">${selectedKyc.type_document ? selectedKyc.type_document.toUpperCase() : 'Document'} (Recto)</p>
         <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${selectedKyc.document_url || '#'}', '_blank')">
             ${selectedKyc.document_url ? `<img src="${selectedKyc.document_url}" style="width:100%;height:100%;object-fit:cover;">` : '<div class="doc-overlay"><i class="ti ti-file-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
         </div>
+        ${selectedKyc.document_verso_url ? `
+        <p style="font-size:10px;font-weight:500;color:#475569;margin:10px 0 4px;">Verso du document</p>
+        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${selectedKyc.document_verso_url || '#'}', '_blank')">
+            <img src="${selectedKyc.document_verso_url}" style="width:100%;height:100%;object-fit:cover;">
+        </div>` : ''}
         </div>
         <div>
         <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">Selfie Vidéo (Vérification)</p>
         <div class="doc-thumb" style="height:120px;background:#000;">
             ${selectedKyc.selfie_url ? (isVideo ? `<video src="${selectedKyc.selfie_url}" controls style="width:100%;height:100%;object-fit:contain;"></video>` : `<img src="${selectedKyc.selfie_url}" style="width:100%;height:100%;object-fit:cover;">`) : '<div class="doc-overlay" style="background:#F8FAFC;"><i class="ti ti-user-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
         </div>
-        ${selectedKyc.commentaire && selectedKyc.commentaire.includes('Code lu') ? `<div style="font-size:10px;margin-top:4px;color:#0F172A;font-weight:600;">Instructions : ${selectedKyc.commentaire.split('|')[0]}</div>` : ''}
+        ${selectedKyc.commentaire && (selectedKyc.commentaire.includes('Code lu') || selectedKyc.commentaire.includes('Actions demandées')) ? `<div style="font-size:10px;margin-top:4px;color:#0F172A;font-weight:600;white-space:pre-wrap;">${selectedKyc.commentaire}</div>` : ''}
         </div>
     `;
     
@@ -751,7 +756,15 @@ window.submitKycAction = async function(action) {
             loadKycTable();
         }
     } else if (action === 'rejeter') {
-        const res = await fetchAPI(`/admin/kyc/${selectedKyc.id}/document`, 'PATCH', { decision: 'rejete', commentaire: note || 'Document non conforme' });
+        let motif = note;
+        if (!motif || motif.trim() === '') {
+            motif = prompt('Veuillez saisir le motif du rejet (obligatoire) :');
+            if (!motif || motif.trim() === '') {
+                alert('Action annulée : Le motif du rejet est obligatoire.');
+                return;
+            }
+        }
+        const res = await fetchAPI(`/admin/kyc/${selectedKyc.id}/document`, 'PATCH', { decision: 'rejete', commentaire: motif });
         if (res && res.success) {
             alert('KYC Rejeté');
             loadKycTable();
@@ -1236,6 +1249,11 @@ window.manageAction = function(actionType) {
   document.getElementById('modal-manage-client').style.display = 'none';
 
   if (actionType === 'activer') {
+      const client = allClients.find(c => c.id == id);
+      if (client && client.kyc_statut !== 'valide') {
+          alert('Impossible d\'activer ce compte : le KYC n\'est pas validé.');
+          return;
+      }
       document.getElementById('activer-client-id').value = id;
       document.getElementById('activer-iban').value = iban && iban !== 'null' && iban !== '-' ? iban : '';
       document.getElementById('activer-bic').value = 'FINTEFR22XXX';

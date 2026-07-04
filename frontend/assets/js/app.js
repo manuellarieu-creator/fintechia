@@ -408,10 +408,17 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
     formData.append('type_document', typeDoc);
     formData.append('document', rectoFile);
     
+    const versoFile = document.getElementById('reg-kyc-verso').files[0];
+    if (versoFile) {
+      formData.append('document_verso', versoFile);
+    }
+    
     // Check if recordedVideoBlob is set, and append it with a filename based on mime type
     const ext = recordedVideoBlob.type.includes('mp4') ? 'mp4' : 'webm';
     formData.append('selfie', recordedVideoBlob, `video_kyc.${ext}`);
-    formData.append('instructions_kyc', `Code lu: ${kycCode}`);
+    
+    const fullInstructions = `Actions demandées :\n1. Tourner la tête en haut puis à droite\n2. Code lu : ${kycCode.split('').join(' - ')}\n3. Dire son nom, prénom, puis le numéro de la pièce d'identité`;
+    formData.append('instructions_kyc', fullInstructions);
 
   const btn = document.getElementById('btn-step-3');
   const prevText = btn.innerText;

@@ -150,6 +150,16 @@ router.patch('/comptes/:accountId/activer', [
     const [existing] = await db.query('SELECT id FROM accounts WHERE (iban = ? OR numero_compte = ?) AND id != ?', [ibanClean, numeroCompteClean, accountId]);
     if (existing.length > 0) return res.status(400).json({ error: 'IBAN ou Numéro de compte déjà utilisé', code: 'ALREADY_EXISTS', status: 400 });
 
+    // Vérifier si le KYC est valide
+    const [acc] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
+    if (acc.length === 0) return res.status(404).json({ error: 'Compte introuvable', status: 404 });
+    const userId = acc[0].user_id;
+
+    const [kyc] = await db.query('SELECT statut FROM kyc WHERE user_id = ? ORDER BY id DESC LIMIT 1', [userId]);
+    if (!kyc.length || kyc[0].statut !== 'valide') {
+      return res.status(403).json({ error: 'Impossible d\'activer ce compte : le KYC n\'est pas validé.', code: 'KYC_NOT_VALID', status: 403 });
+    }
+
     await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ? WHERE id = ?', 
       [ibanClean, bicClean, numeroCompteClean, accountId]);
     

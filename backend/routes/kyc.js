@@ -10,6 +10,12 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+// Migration BDD silencieuse pour KYC
+(async () => {
+  try { await db.query('ALTER TABLE kyc ADD COLUMN document_verso_url VARCHAR(500) AFTER document_url'); } catch(e){}
+  try { await db.query('ALTER TABLE kyc ADD COLUMN motif_rejet VARCHAR(500) AFTER statut'); } catch(e){}
+})();
+
 // Configuration Cloudinary (si présente dans .env)
 if (process.env.CLOUDINARY_CLOUD_NAME) {
   cloudinary.config({
@@ -69,14 +75,18 @@ const upload = multer({
 });
 
 // POST /api/kyc/submit
-router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCount: 1 }, { name: 'selfie', maxCount: 1 }]), async (req, res, next) => {
+router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCount: 1 }, { name: 'document_verso', maxCount: 1 }, { name: 'selfie', maxCount: 1 }]), async (req, res, next) => {
   try {
     if (!req.files || !req.files['document'] || !req.files['selfie']) {
-      return res.status(400).json({ error: 'Document et selfie requis', code: 'MISSING_FILES', status: 400 });
+      return res.status(400).json({ error: 'Document (recto) et selfie requis', code: 'MISSING_FILES', status: 400 });
     }
 
     // Récupérer l'URL Cloudinary ou l'URL locale
     const docUrl = req.files['document'][0].path || `/uploads/${req.files['document'][0].filename}`;
+    let docVersoUrl = null;
+    if (req.files['document_verso']) {
+      docVersoUrl = req.files['document_verso'][0].path || `/uploads/${req.files['document_verso'][0].filename}`;
+    }
     const selfieUrl = req.files['selfie'][0].path || `/uploads/${req.files['selfie'][0].filename}`;
     const { type_document, instructions_kyc } = req.body; // cni, passeport, permis, sejour
 
@@ -87,13 +97,13 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     const [existingKyc] = await db.query('SELECT id FROM kyc WHERE user_id = ?', [req.user.id]);
     if (existingKyc.length > 0) {
       await db.query(
-        'UPDATE kyc SET type_document = ?, document_url = ?, selfie_url = ?, commentaire = ?, statut = "en_attente", soumis_le = NOW() WHERE user_id = ?',
-        [type_document, docUrl, selfieUrl, instructions_kyc || '', req.user.id]
+        'UPDATE kyc SET type_document = ?, document_url = ?, document_verso_url = ?, selfie_url = ?, commentaire = ?, statut = "en_attente", soumis_le = NOW() WHERE user_id = ?',
+        [type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '', req.user.id]
       );
     } else {
       await db.query(
-        'INSERT INTO kyc (user_id, type_document, document_url, selfie_url, commentaire, statut) VALUES (?, ?, ?, ?, ?, "en_attente")',
-        [req.user.id, type_document, docUrl, selfieUrl, instructions_kyc || '']
+        'INSERT INTO kyc (user_id, type_document, document_url, document_verso_url, selfie_url, commentaire, statut) VALUES (?, ?, ?, ?, ?, ?, "en_attente")',
+        [req.user.id, type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '']
       );
     }
 
