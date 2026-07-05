@@ -592,7 +592,7 @@ async function renderIbanTable() {
                     <div class="ad-av" style="background:#EFF6FF;color:#1D4ED8;">${initials}</div>
                     <div style="min-width:0; overflow:hidden;">
                         <p style="font-size:11px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.prenom} ${c.nom}</p>
-                        <p style="font-size:9px;color:#94A3B8;margin:0;">${c.email || 'Pas d\\'email'}</p>
+                        <p style="font-size:9px;color:#94A3B8;margin:0;">${c.email || "Pas d'email"}</p>
                     </div>
                 </div>
                 <p style="font-size:10px;font-family:monospace;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.iban || '—'}</p>
