@@ -31,6 +31,13 @@ router.post('/', authMiddleware, async (req, res) => {
   if(!nom || !iban) return res.status(400).json({ error: 'Nom et IBAN requis' });
   
   try {
+    // Auto-migration silencieuse (nécessaire pour Vercel où server.listen n'est pas appelé)
+    try {
+      await pool.query('CREATE TABLE IF NOT EXISTS iban_rules (code_pays VARCHAR(2) PRIMARY KEY, longueur INT NOT NULL)');
+      await pool.query("INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), ('ES', 24), ('IT', 27), ('LU', 20), ('CH', 21), ('GB', 22), ('PT', 25), ('NL', 18)");
+      await pool.query('ALTER TABLE beneficiaires ADD COLUMN bic VARCHAR(20) DEFAULT NULL');
+    } catch(e) {}
+
     // 1. Validation de la longueur via BDD
     const codePays = iban.substring(0, 2);
     const [rules] = await pool.query('SELECT longueur FROM iban_rules WHERE code_pays = ?', [codePays]);

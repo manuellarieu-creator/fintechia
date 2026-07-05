@@ -198,3 +198,36 @@ window.selectBeneficiary = function(iban, nom, isMobile) {
   if(nameLabel) nameLabel.innerText = nom;
   if(ibanLabel) ibanLabel.innerText = iban;
 }
+
+let bicTimeout = null;
+async function previewBIC() {
+  const iban = document.getElementById('new-ben-iban').value.replace(/\s+/g, '').toUpperCase();
+  const bicInput = document.getElementById('new-ben-bic');
+  if (!bicInput) return;
+  
+  if (iban.length < 15) {
+    bicInput.value = '';
+    return;
+  }
+  
+  clearTimeout(bicTimeout);
+  bicInput.value = 'Recherche en cours...';
+  
+  bicTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://openiban.com/validate/${iban}?getBIC=true`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.valid && data.bankData && data.bankData.bic) {
+          bicInput.value = data.bankData.bic;
+        } else {
+          bicInput.value = 'BIC non trouvé ou IBAN invalide';
+        }
+      } else {
+        bicInput.value = 'Erreur réseau';
+      }
+    } catch(err) {
+      bicInput.value = 'Erreur de recherche';
+    }
+  }, 500);
+}
