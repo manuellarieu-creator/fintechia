@@ -171,7 +171,7 @@ router.post('/login', [
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
 
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte FROM accounts WHERE user_id = ?', [user.id]);
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
     if (account && account.statut === 'bloque') {
@@ -258,7 +258,7 @@ router.post('/login/2fa', [
     const deviceToken = crypto.randomBytes(32).toString('hex');
     await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
 
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte FROM accounts WHERE user_id = ?', [user.id]);
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });

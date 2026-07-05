@@ -155,8 +155,12 @@ router.patch('/comptes/:accountId/activer', [
         await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL");
         await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)");
       }
+      const [colsDepot] = await db.query("SHOW COLUMNS FROM accounts LIKE 'depot_initial_requis'");
+      if (colsDepot.length === 0) {
+        await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0");
+      }
     } catch(e) {
-      console.error("Migration error for numero_compte:", e);
+      console.error("Migration error for numero_compte / depot_initial:", e);
     }
     
     // Vérifier l'unicité de l'IBAN et Numéro de compte
@@ -173,16 +177,9 @@ router.patch('/comptes/:accountId/activer', [
       return res.status(403).json({ error: 'Impossible d\'activer ce compte : le KYC n\'est pas validé.', code: 'KYC_NOT_VALID', status: 403 });
     }
 
-    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ?, solde = ? WHERE id = ?', 
+    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ?, depot_initial_requis = ? WHERE id = ?', 
       [ibanClean, bicClean, numeroCompteClean, soldeInitial, accountId]);
-    
-    if (soldeInitial > 0) {
-      await db.query(
-        `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
-         VALUES (?, 'credit', ?, 0, ?, 'Dépôt initial', 'Dépôt initial pour activation', 'valide')`,
-        [accountId, soldeInitial, soldeInitial]
-      );
-    }
+
 
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     if (accounts.length > 0) {

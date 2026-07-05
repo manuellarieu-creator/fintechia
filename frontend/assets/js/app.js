@@ -163,23 +163,18 @@ async function initDashboard(user, account, kycStatut = null) {
   showPage('pg-dash');
   
   if (account && user.role !== 'admin') {
-    try {
-      const resFee = await apiCall('/settings/activation_fee', 'GET');
-      if (resFee && resFee.value) {
-        const feeRequired = parseFloat(resFee.value);
-        const currentSolde = parseFloat(account.solde || 0);
-        
-        if (currentSolde < feeRequired) {
-          const feeModal = document.getElementById('modal-activation-fee');
-          if (feeModal) {
-            feeModal.style.display = 'flex';
-            document.getElementById('activation-fee-amount').innerText = feeRequired + '€';
-            document.getElementById('activation-fee-iban').innerText = account.iban || 'IBAN non généré';
-          }
+    if (account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
+      const feeRequired = parseFloat(account.depot_initial_requis);
+      const currentSolde = parseFloat(account.solde || 0);
+      
+      if (currentSolde < feeRequired) {
+        const feeModal = document.getElementById('modal-activation-fee');
+        if (feeModal) {
+          feeModal.style.display = 'flex';
+          document.getElementById('activation-fee-amount').innerText = feeRequired + '€';
+          document.getElementById('activation-fee-iban').innerText = account.iban || 'IBAN non généré';
         }
       }
-    } catch(e) {
-      console.log('No activation fee setup or error', e);
     }
   }
   
@@ -731,4 +726,37 @@ function startKycPolling() {
 window.goToEspaceBancaire = function() {
   document.getElementById('modal-kyc-approved').style.display = 'none';
   window.location.reload(); // Will reload and re-initialize dashboard, hitting the Alimentation check
+}
+
+window.verifyInitialDeposit = async function() {
+  const btn = document.getElementById('btn-verify-deposit');
+  const ogText = btn.innerText;
+  btn.innerText = 'Vérification...';
+  btn.disabled = true;
+
+  try {
+      const data = await apiCall('/auth/me');
+      if (data && data.account) {
+          const feeRequired = parseFloat(data.account.depot_initial_requis || 0);
+          const currentSolde = parseFloat(data.account.solde || 0);
+          
+          if (feeRequired > 0 && currentSolde >= feeRequired) {
+              document.getElementById('modal-activation-fee').style.display = 'none';
+              document.getElementById('modal-activation-success').style.display = 'flex';
+          } else {
+              alert("Nous n'avons pas encore reçu votre virement. Veuillez patienter ou vérifier auprès de votre banque émettrice.");
+          }
+      }
+  } catch (err) {
+      console.error("Erreur de vérification du dépôt:", err);
+      alert("Erreur lors de la vérification. Veuillez réessayer.");
+  } finally {
+      btn.innerText = ogText;
+      btn.disabled = false;
+  }
+}
+
+window.closeActivationSuccess = function() {
+  document.getElementById('modal-activation-success').style.display = 'none';
+  window.location.reload();
 }
