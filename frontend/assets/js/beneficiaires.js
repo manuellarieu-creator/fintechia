@@ -82,6 +82,9 @@ async function ajouterBeneficiaire() {
     document.getElementById('new-ben-iban').value = '';
     closeModal('modal-add-beneficiaire');
     loadBeneficiaires();
+    if (typeof loadBeneficiairesForSelect === 'function') {
+      loadBeneficiairesForSelect();
+    }
     alert('Bénéficiaire ajouté avec succès');
   } catch(err) {
     alert('Erreur lors de l\'ajout du bénéficiaire');
