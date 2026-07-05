@@ -682,238 +682,13 @@
         <!-- Alertes actives -->
         <div class="card" style="padding:12px 14px;">
           <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Seuils d'alerte actifs</h3>
-          <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FEF2F2;border-radius:6px;border:0.5px solid #FECACA;">
-              <span style="font-size:10px;color:#B91C1C;font-weight:500;">Tx &gt; 5 000 €</span>
-              <span class="bk bd">Bloquée auto</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FFFBEB;border-radius:6px;border:0.5px solid #FDE68A;">
-              <span style="font-size:10px;color:#B45309;font-weight:500;">IBAN hors UE</span>
-              <span class="bk bw">Revue manuelle</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#FFFBEB;border-radius:6px;border:0.5px solid #FDE68A;">
-              <span style="font-size:10px;color:#B45309;font-weight:500;">Score risque &gt; 70</span>
-              <span class="bk bw">Revue manuelle</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#F0FDF4;border-radius:6px;border:0.5px solid #BBF7D0;">
-              <span style="font-size:10px;color:#15803D;font-weight:500;">&lt; 1 000 € — FR</span>
-              <span class="bk bs">Validation auto</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-            <!-- =============================== -->
-            <!-- VUE 6 : FRAUDES ET ALERTES      -->
-            <!-- =============================== -->
-            <div id="view-fraudes" class="admin-view" style="display: none; padding: 0; background:#F1F5F9; border-radius:14px; overflow:hidden; border:0.5px solid #E2E8F0; height:calc(100vh - 40px); display:none; flex-direction:column;">
-                <style>
-                #view-fraudes .bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
-                #view-fraudes .bs{background:#F0FDF4;color:#15803D;}
-                #view-fraudes .bn{background:#F1F5F9;color:#475569;}
-                #view-fraudes .bw{background:#FFFBEB;color:#B45309;}
-                #view-fraudes .bd{background:#FEF2F2;color:#B91C1C;}
-                #view-fraudes .ba{background:#EFF6FF;color:#1D4ED8;}
-                #view-fraudes .bp{background:#F5F3FF;color:#6D28D9;}
-                #view-fraudes .frd-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
-                #view-fraudes .frd-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
-                #view-fraudes .frd-tab.act{background:#DC2626;color:#fff;border-color:#DC2626;}
-                #view-fraudes .frd-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;}
-                #view-fraudes .th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
-                #view-fraudes .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
-                #view-fraudes .alert-row{padding:10px 14px;border-bottom:0.5px solid #F8FAFC;cursor:pointer;display:grid;align-items:center;transition:background .1s;}
-                #view-fraudes .alert-row:hover{background:#F8FAFC;}
-                #view-fraudes .alert-row.crit{background:#FFF5F5;border-left:3px solid #DC2626;}
-                #view-fraudes .alert-row.warn{background:#FFFDF0;border-left:3px solid #D97706;}
-                #view-fraudes .alert-row.act{background:#EFF6FF;border-left:3px solid #2563EB;}
-                #view-fraudes .risk-ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0;border:3px solid;}
-                #view-fraudes .bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:3px;}
-                #view-fraudes .bar-f{height:5px;border-radius:3px;}
-                #view-fraudes .rule-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid #F8FAFC;}
-                #view-fraudes .rule-row:last-child{border-bottom:none;}
-                #view-fraudes .tg{width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0;}
-                #view-fraudes .tg.on{background:#16A34A;}
-                #view-fraudes .tg.off{background:#CBD5E1;}
-                #view-fraudes .tg span{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
-                #view-fraudes .tg.on span{left:15px;}
-                #view-fraudes .tg.off span{left:2.5px;}
-                #view-fraudes .timeline-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-                </style>
-
-                <!-- Topbar -->
-                <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-                  <div>
-                    <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Fraudes & Alertes</h2>
-                    <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Détection, instruction et résolution des incidents de sécurité</p>
-                  </div>
-                  <div style="display:flex;gap:8px;align-items:center;">
-                    <div style="display:flex;align-items:center;gap:6px;background:#FEF2F2;border:0.5px solid #FECACA;border-radius:7px;padding:5px 10px;">
-                      <span style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block;"></span>
-                      <span style="font-size:11px;font-weight:600;color:#B91C1C;">8 alertes critiques actives</span>
-                    </div>
-                    <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Rapport</button>
-                    <button class="frd-btn" style="background:#DC2626;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Créer une alerte</button>
-                  </div>
-                </div>
-
-                <!-- KPIs -->
-                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Critiques</p>
-                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">8</p>
-                    <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +3 ce matin</p>
-                  </div>
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #D97706;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Avertissements</p>
-                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">23</p>
-                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">En attente revue</p>
-                  </div>
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tx suspectes</p>
-                    <p style="font-size:22px;font-weight:800;color:#2563EB;margin:0;">15</p>
-                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Bloquées auto</p>
-                  </div>
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes ciblés</p>
-                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">12</p>
-                    <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Clients affectés</p>
-                  </div>
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Résolues (7j)</p>
-                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">147</p>
-                    <p style="font-size:10px;color:#15803D;margin:3px 0 0;">Taux : 94%</p>
-                  </div>
-                  <div class="frd-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
-                    <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tps moyen résol.</p>
-                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">18 min</p>
-                    <p style="font-size:10px;color:#0891B2;margin:3px 0 0;">↓ −4 min vs S-1</p>
-                  </div>
-                </div>
-
-                <!-- Corps 3 colonnes -->
-                <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.2fr) 210px;gap:12px;padding:0 20px 16px;overflow:hidden;">
-
-                  <!-- COL 1 : File des alertes -->
-                  <div class="frd-card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
-
-                    <!-- Onglets -->
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:0.5px solid #F1F5F9;gap:6px;flex-shrink:0;">
-                      <div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;">
-                        <div class="frd-tab act">Toutes (31)</div>
-                        <div class="frd-tab" style="border-color:#FECACA;color:#B91C1C;background:#FEF2F2;">Critiques (8)</div>
-                        <div class="frd-tab" style="border-color:#FDE68A;color:#B45309;background:#FFFBEB;">Avertiss. (23)</div>
-                        <div class="frd-tab">Résolues</div>
-                      </div>
-                      <select style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;flex-shrink:0;">
-                        <option>Toutes catégories</option>
-                        <option>Fraude carte</option>
-                        <option>Phishing</option>
-                        <option>Usurpation</option>
-                      </select>
-                    </div>
-
-                    <!-- En-têtes -->
-                    <div style="display:grid;grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px;gap:0;padding:7px 14px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;flex-shrink:0;">
-                      <span class="th"></span>
-                      <span class="th">Alerte</span>
-                      <span class="th">Client</span>
-                      <span class="th" style="text-align:center;">Score</span>
-                      <span class="th" style="text-align:center;">Statut</span>
-                      <span class="th" style="text-align:center;">Actions</span>
-                    </div>
-
-                    <!-- Lignes alertes -->
-                    <div id="admin-alertes-list" style="flex:1;overflow-y:auto;scrollbar-width:none;">
-                        <!-- JS dynamically populates this area -->
-                    </div>
-
-                    <!-- Footer -->
-                    <div style="padding:8px 14px;border-top:0.5px solid #E2E8F0;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-                      <span style="font-size:10px;color:#94A3B8;">31 alertes · Page 1/3</span>
-                      <div style="display:flex;gap:4px;">
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-left" style="font-size:11px;"></i></button>
-                        <button class="frd-btn" style="background:#DC2626;color:#fff;padding:3px 9px;font-size:10px;border-radius:5px;">1</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">2</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">3</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-right" style="font-size:11px;"></i></button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- COL 2 : Fiche alerte active -->
-                  <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
-
-                    <!-- Header fiche -->
-                    <div class="frd-card" style="padding:14px 16px;">
-                      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;">
-                        <div class="risk-ring" style="border-color:#DC2626;">
-                          <span style="font-size:16px;font-weight:800;color:#DC2626;">82</span>
-                          <span style="font-size:8px;color:#94A3B8;">/100</span>
-                        </div>
-                        <div style="flex:1;">
-                          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                            <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Usurpation d'identité</h3>
-                            <span class="bk ba">En revue</span>
-                          </div>
-                          <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-20260630-0037 · Déclenché à 13:45</p>
-                          <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">Nadia Ferhat — **** 3318 — Compte Premium</p>
-                        </div>
-                      </div>
-
-                      <!-- Infos -->
-                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:12px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">Usurpation KYC</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Canal détection</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">IA — Reconnaissance faciale</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant à risque</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">0 € — Bloqué préventivement</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">IP de connexion</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">185.220.101.x</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Localisation</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">🇩🇿 Algérie (VPN détecté)</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">Android inconnu</p></div>
-                      </div>
-
-                      <!-- Détail IA -->
-                      <div style="background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:10px 12px;margin-bottom:12px;">
-                        <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-robot" style="font-size:13px;"></i>Analyse IA — Score de confiance : 82/100</p>
-                        <div style="display:flex;flex-direction:column;gap:5px;">
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B91C1C;">Selfie vs document KYC</span>
-                            <span style="font-size:10px;font-weight:700;color:#B91C1C;">Concordance 34% ✗</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">IP détectée comme Tor/VPN</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Confirmé ⚠</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">Géolocalisation ≠ domicile déclaré</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Écart 2 800 km ⚠</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#15803D;">Aucune correspondance liste noire</span>
-                            <span style="font-size:10px;font-weight:700;color:#15803D;">OK ✓</span>
-                          </div>
+          <div id="fiche-fraude-ia-details" style="display:flex;flex-direction:column;gap:5px;">
                         </div>
                       </div>
 
                       <!-- Timeline -->
                       <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Chronologie</p>
-                      <div style="display:flex;flex-direction:column;gap:0;">
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#2563EB;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Dossier pris en charge par l'admin</p><p style="font-size:9px;color:#94A3B8;margin:0;">14:22 · Admin (vous)</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#DC2626;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Compte bloqué automatiquement</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:46 · Moteur IA</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#DC2626;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Alerte fraude déclenchée — Score 82</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:45 · Moteur IA</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;">
-                          <div class="timeline-dot" style="background:#94A3B8;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Tentative KYC soumise</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:44 · Client</p></div>
-                        </div>
+                      <div id="fiche-fraude-timeline" style="display:flex;flex-direction:column;gap:0;">
                       </div>
                     </div>
 
@@ -921,7 +696,7 @@
                     <div class="frd-card" style="padding:14px 16px;">
                       <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 12px;">Décision & résolution</h3>
                       <div style="display:flex;flex-direction:column;gap:8px;">
-                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…">Selfie non concordant à 34%. IP Tor confirmée. Géolocalisation Algérie. Recommandation : clôture du dossier + signalement Tracfin.</textarea>
+                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…"></textarea>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
                           <button class="frd-btn" style="background:#16A34A;color:#fff;justify-content:center;"><i class="ti ti-circle-check" style="font-size:13px;"></i>Résoudre</button>
                           <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;"><i class="ti ti-ban" style="font-size:13px;"></i>Clôturer fraude</button>
@@ -944,7 +719,7 @@
                         <div>
                           <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
                             <span style="font-size:10px;color:#475569;">Tx suspectes</span>
-                            <span style="font-size:10px;font-weight:700;">42% <span style="color:#94A3B8;font-weight:400;">(13)</span></span>
+                            <span style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(-)</span></span>
                           </div>
                           <div class="bar-h"><div class="bar-f" style="width:42%;background:#DC2626;"></div></div>
                         </div>
@@ -999,45 +774,9 @@
                         <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Règles de détection</h3>
                         <a style="font-size:10px;color:#2563EB;cursor:pointer;">Gérer →</a>
                       </div>
-                      <div style="display:flex;flex-direction:column;gap:0;">
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Tx &gt; 5 000 € → blocage auto</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 8 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">IBAN hors UE → revue manuelle</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 4 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">VPN/Tor → alerte connexion</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 3 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Score IA &gt; 70 → alerte critique</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 6 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg off"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;color:#94A3B8;">3 OTP échoués → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Désactivé</p></div>
-                        </div>
-                        <div class="rule-row" style="border-bottom:none;">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">KYC selfie &lt; 50% → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 2 fois auj.</p></div>
-                        </div>
+                      <div id="fiche-carte-tx" style="display:flex;flex-direction:column;gap:0;">
                       </div>
                     </div>
-
-                    <!-- Actions rapides -->
-                    <div class="frd-card" style="padding:12px 14px;">
-                      <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Actions globales</h3>
-                      <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
-                        <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
-                        <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
-                      </div>
-                    </div>
-
                   </div>
                 </div>
             </div>
@@ -1118,32 +857,32 @@
                 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Total émises</p>
-                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">14 280</p>
+                    <p id="kpi-cartes-totales" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
                     <p style="font-size:10px;color:#15803D;margin:3px 0 0;">↑ +48 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Actives</p>
-                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">13 841</p>
+                    <p id="kpi-cartes-actives" style="font-size:22px;font-weight:800;color:#15803D;margin:0;">-</p>
                     <div class="bar-h" style="margin-top:6px;"><div class="bar-f" style="width:97%;background:#16A34A;"></div></div>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Bloquées</p>
-                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">124</p>
+                    <p id="kpi-cartes-bloquees" style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">-</p>
                     <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +8 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #D97706;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Expirant &lt;30j</p>
-                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">315</p>
+                    <p id="kpi-cartes-expirant" style="font-size:22px;font-weight:800;color:#D97706;margin:0;">-</p>
                     <p style="font-size:10px;color:#D97706;margin:3px 0 0;">Renouvellement auto</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Platinum</p>
-                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">3 810</p>
+                    <p id="kpi-cartes-platinum" style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">27% du parc</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Virtuelles</p>
-                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">2 140</p>
+                    <p id="kpi-cartes-virtuelles" style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">15% du parc</p>
                   </div>
                 </div>
@@ -1224,20 +963,20 @@
                           <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(180,140,0,.4);transform:translateY(-50%);"></div>
                           <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(180,140,0,.4);transform:translateX(-50%);"></div>
                         </div>
-                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;">**** **** **** 4821</p>
+                        <p id="fiche-carte-num" style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;">**** **** **** ****</p>
                         <div style="display:flex;justify-content:space-between;position:relative;">
-                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">MANUELA RODRIGUEZ</p></div>
-                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">06/29</p></div>
+                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p id="fiche-carte-titulaire" style="font-size:11px;font-weight:600;margin:2px 0 0;">-</p></div>
+                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p id="fiche-carte-exp" style="font-size:11px;font-weight:600;margin:2px 0 0;">-</p></div>
                         </div>
                       </div>
 
                       <!-- Infos carte -->
                       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:14px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa International</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">4821 ···· ···· 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">**** 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">06/06/2024</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p id="fiche-carte-type" style="font-size:11px;font-weight:600;margin:2px 0 0;">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p id="fiche-carte-reseau" style="font-size:11px;font-weight:600;margin:2px 0 0;">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p id="fiche-carte-complet" style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p id="fiche-carte-compte" style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p id="fiche-carte-emission" style="font-size:11px;font-weight:500;margin:2px 0 0;">-</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Statut</p><span class="bk bs" style="margin-top:3px;display:inline-flex;">Active</span></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">NFC</p><p style="font-size:11px;font-weight:600;color:#15803D;margin:2px 0 0;">Activé ✓</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Paiements intl</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">Désactivé ✗</p></div>
@@ -1247,7 +986,7 @@
                       <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Plafonds actuels</p>
                       <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">2 340 / 5 000 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:47%;background:#2563EB;"></div></div>
                         </div>
                         <div>
@@ -1897,22 +1636,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
-                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -2</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+138</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;">68,2M €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">582k €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#D97706;">9</td>
-                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +6%</span></td>
-              </tr>
-              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
-                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -1</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+142</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;">74,8M €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">634k €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;">6</td>
-                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +9%</span></td>
-              </tr>
+              
               <tr class="ad-tr" style="grid-template-columns:none;display:table-row;background:#EFF6FF;">
                 <td style="padding:7px 0;font-size:11px;font-weight:700;color:#1D4ED8;">Mois en cours</td>
                 <td id="t-mois-n-clients" style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:700;">-</td>
