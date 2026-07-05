@@ -1283,6 +1283,7 @@ window.manageAction = function(actionType) {
       document.getElementById('activer-iban').value = iban && iban !== 'null' && iban !== '-' ? iban : '';
       document.getElementById('activer-bic').value = 'FINTEFR22XXX';
       document.getElementById('activer-numero').value = '';
+      document.getElementById('activer-solde').value = '';
       document.getElementById('modal-activer-compte').style.display = 'flex';
   } 
   else if (actionType === 'rules') {
@@ -1405,13 +1406,14 @@ window.confirmActiverCompte = async function() {
     const iban = document.getElementById('activer-iban').value;
     const bic = document.getElementById('activer-bic').value;
     const numero = document.getElementById('activer-numero').value;
+    const solde = document.getElementById('activer-solde').value;
 
-    if (!iban || !bic || !numero) {
-        alert('Veuillez remplir tous les champs (IBAN, BIC, Numéro).');
+    if (!iban || !bic || !numero || !solde) {
+        alert('Veuillez remplir tous les champs (IBAN, BIC, Numéro, Montant du dépôt initial).');
         return;
     }
 
-    const res = await fetchAPI(`/admin/comptes/${id}/activer`, 'PATCH', { iban, bic, numero_compte: numero });
+    const res = await fetchAPI(`/admin/comptes/${id}/activer`, 'PATCH', { iban, bic, numero_compte: numero, solde: parseFloat(solde) });
     if (res && res.success) {
         document.getElementById('modal-activer-compte').style.display = 'none';
         allClients = await fetchAPI('/admin/comptes') || [];

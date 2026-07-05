@@ -138,12 +138,14 @@ router.patch('/comptes/:accountId/activer', [
   guard, 
   body('iban').trim().notEmpty(),
   body('bic').trim().notEmpty(),
-  body('numero_compte').trim().notEmpty()
+  body('numero_compte').trim().notEmpty(),
+  body('solde').isFloat({ min: 0 })
 ], validateReq, async (req, res, next) => {
   try {
     const ibanClean = req.body.iban.replace(/\s+/g, '').toUpperCase();
     const bicClean = req.body.bic.replace(/\s+/g, '').toUpperCase();
     const numeroCompteClean = req.body.numero_compte.trim();
+    const soldeInitial = parseFloat(req.body.solde);
     const { accountId } = req.params;
     
     // Fallback auto-migration if the global one failed silently
@@ -163,8 +165,8 @@ router.patch('/comptes/:accountId/activer', [
       return res.status(403).json({ error: 'Impossible d\'activer ce compte : le KYC n\'est pas validé.', code: 'KYC_NOT_VALID', status: 403 });
     }
 
-    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ? WHERE id = ?', 
-      [ibanClean, bicClean, numeroCompteClean, accountId]);
+    await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ?, solde = ? WHERE id = ?', 
+      [ibanClean, bicClean, numeroCompteClean, soldeInitial, accountId]);
     
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     if (accounts.length > 0) {
