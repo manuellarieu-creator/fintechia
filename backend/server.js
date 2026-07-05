@@ -113,6 +113,10 @@ if (!process.env.VERCEL) {
       await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE").catch(() => {});
+      
+      await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)").catch(() => {});
+      await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0").catch(() => {});
 
       await db.query(`
         CREATE TABLE IF NOT EXISTS alertes_fraudes (

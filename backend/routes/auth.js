@@ -171,6 +171,9 @@ router.post('/login', [
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
 
+    try { await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL"); } catch(e) {}
+    try { await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)"); } catch(e) {}
+    try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
     const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
@@ -258,6 +261,7 @@ router.post('/login/2fa', [
     const deviceToken = crypto.randomBytes(32).toString('hex');
     await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
 
+    try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
     const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
