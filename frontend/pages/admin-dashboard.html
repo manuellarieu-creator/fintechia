@@ -1320,31 +1320,230 @@
             <!-- =============================== -->
             <!-- VUE 9 : COMPTES & IBAN          -->
             <!-- =============================== -->
-            <div id="view-iban" class="admin-view" style="display: none;">
-                <div class="clients-card">
-                    <div class="card-header border-bottom">
-                        <h2>Registre des IBANs Alloués</h2>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>IBAN</th>
-                                    <th>BIC</th>
-                                    <th>Client Lié</th>
-                                    <th>Date d'allocation</th>
-                                </tr>
-                            </thead>
-                            <tbody id="iban-tbody">
-                                <tr><td colspan="4" class="text-center text-muted">Chargement...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            
+            <div id="view-iban" class="admin-view" style="padding: 0; background:#F1F5F9; border-radius:14px; overflow:hidden; border:0.5px solid #E2E8F0; height:calc(100vh - 40px); display:none; flex-direction:column;">
+<style>
+#view-iban *{box-sizing:border-box;}
+#view-iban .ad-bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+#view-iban .ad-bs{background:#F0FDF4;color:#15803D;}
+#view-iban .ad-bn{background:#F1F5F9;color:#475569;}
+#view-iban .ad-bw{background:#FFFBEB;color:#B45309;}
+#view-iban .ad-bd{background:#FEF2F2;color:#B91C1C;}
+#view-iban .ad-ba{background:#EFF6FF;color:#1D4ED8;}
+#view-iban .ad-bp{background:#F5F3FF;color:#6D28D9;}
+#view-iban .ad-bc{background:#E0F2FE;color:#0369A1;}
+#view-iban .ad-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+#view-iban .ad-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+#view-iban .ad-tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+#view-iban .ad-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;}
+#view-iban .ad-th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
+#view-iban .ad-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+#view-iban .ad-tr{display:grid;align-items:center;padding:8px 14px;border-bottom:0.5px solid #F8FAFC;cursor:pointer;transition:background .1s;}
+#view-iban .ad-tr:hover{background:#F8FAFC;}
+#view-iban .ad-tr.act{background:#EFF6FF;border-left:3px solid #2563EB;}
+#view-iban .ad-tr.blk{background:#FFF5F5;border-left:3px solid #DC2626;}
+#view-iban .ad-tr.warn{background:#FFFDF0;border-left:3px solid #D97706;}
+#view-iban .ad-bar-h{background:#F1F5F9;border-radius:3px;height:5px;overflow:hidden;margin-top:4px;}
+#view-iban .ad-bar-f{height:5px;border-radius:3px;}
+#view-iban .ad-tg{width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0;}
+#view-iban .ad-tg.on{background:#16A34A;}
+#view-iban .ad-tg.off{background:#CBD5E1;}
+#view-iban .ad-tg span{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+#view-iban .ad-tg.on span{left:15px;}
+#view-iban .ad-tg.off span{left:2.5px;}
+#view-iban .ad-info-row{display:flex;flex-direction:column;gap:2px;}
+#view-iban .ad-info-row .lbl{font-size:9px;color:#94A3B8;}
+#view-iban .ad-info-row .val{font-size:11px;font-weight:500;color:#0F172A;}
+#view-iban .ad-sect{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;}
+#view-iban .ad-mv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;}
+#view-iban .ad-mv-row:last-child{border-bottom:none;}
+</style>
 
-            <!-- =============================== -->
-            <!-- VUE 10 : REPORTING              -->
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Comptes & IBAN</h2>
+        <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Gestion des comptes bancaires, IBAN et soldes clients</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="position:relative;">
+          <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#94A3B8;"></i>
+          <input id="acct-search" style="padding:7px 12px 7px 30px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;width:200px;outline:none;" placeholder="IBAN, nom, n° compte…">
+        </div>
+        <button class="ad-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Exporter</button>
+        <button class="ad-btn" style="background:#2563EB;color:#fff;" onclick="alert('Fonctionnalité non implémentée.')"><i class="ti ti-plus" style="font-size:13px;"></i>Ouvrir un compte</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes actifs</p>
+        <p id="kpi-actifs" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+      </div>
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Solde total géré</p>
+        <p id="kpi-solde-total" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+      </div>
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes épargne</p>
+        <p id="kpi-epargne" style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">-</p>
+      </div>
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes Business</p>
+        <p id="kpi-business" style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">-</p>
+      </div>
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes gelés</p>
+        <p id="kpi-geles" style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">-</p>
+      </div>
+      <div class="ad-card" style="padding:12px 14px;border-top:3px solid #D97706;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Solde moyen</p>
+        <p id="kpi-solde-moyen" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+      </div>
+    </div>
+
+    <!-- Corps -->
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:12px;padding:0 20px 16px;overflow:hidden;">
+
+      <!-- TABLE COMPTES -->
+      <div class="ad-card" style="display:flex;flex-direction:column;overflow:hidden;padding:0;">
+
+        <!-- Onglets & filtres -->
+        <div style="padding:10px 14px;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;">
+          <div id="acct-tabs" style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;">
+            <div class="ad-tab act" data-filter="all">Tous</div>
+            <div class="ad-tab" data-filter="courant">Courants</div>
+            <div class="ad-tab" data-filter="epargne">Épargne</div>
+            <div class="ad-tab" data-filter="business">Business</div>
+            <div class="ad-tab" data-filter="bloque" style="border-color:#FECACA;color:#B91C1C;background:#FEF2F2;">Gelés</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <select id="acct-sort" style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:10px;color:#475569;outline:none;">
+              <option value="solde_desc">Trier : Solde décroissant</option>
+              <option value="nom">Nom</option>
+              <option value="date_asc">Date d'ouverture</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- En-têtes -->
+        <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 80px 90px 90px 80px 80px;gap:0;padding:7px 14px;border-bottom:0.5px solid #E2E8F0;background:#F8FAFC;flex-shrink:0;">
+          <span class="ad-th">Titulaire</span>
+          <span class="ad-th">IBAN</span>
+          <span class="ad-th">Offre</span>
+          <span class="ad-th" style="text-align:right;">Solde</span>
+          <span class="ad-th" style="text-align:center;">Type</span>
+          <span class="ad-th" style="text-align:center;">Statut</span>
+          <span class="ad-th" style="text-align:center;">Actions</span>
+        </div>
+
+        <!-- Lignes -->
+        <div id="admin-comptes-tbody" style="flex:1;overflow-y:auto;scrollbar-width:none;">
+          <div style="padding: 20px; text-align: center; color: #94A3B8; font-size: 12px;">Chargement des données...</div>
+        </div>
+
+        <!-- Pagination -->
+        <div style="padding:9px 14px;border-top:0.5px solid #E2E8F0;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+          <span id="acct-pagination-info" style="font-size:10px;color:#94A3B8;">- comptes</span>
+        </div>
+      </div>
+
+      <!-- PANNEAU DROIT -->
+      <div id="acct-right-panel" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none; visibility:hidden;">
+
+        <!-- Fiche compte sélectionné -->
+        <div class="ad-card" style="padding:14px 16px;">
+
+          <!-- Header -->
+          <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;margin-bottom:12px;">
+            <div id="acct-det-av" style="width:44px;height:44px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#1D4ED8;flex-shrink:0;">-</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+                <h3 id="acct-det-nom" style="font-size:14px;font-weight:700;color:#0F172A;margin:0;">-</h3>
+                <span id="acct-det-statut" class="ad-bk ad-bs">Actif</span>
+                <span class="ad-bk ad-bp">Premium</span>
+              </div>
+              <p id="acct-det-subtitle" style="font-size:10px;color:#94A3B8;margin:0;">-</p>
+            </div>
+            <div style="display:flex;gap:5px;">
+              <button class="ad-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;padding:5px 10px;font-size:10px;"><i class="ti ti-edit" style="font-size:11px;"></i>Modifier</button>
+              <button id="btn-det-geler" class="ad-btn" style="background:#FEF2F2;color:#B91C1C;padding:5px 10px;font-size:10px;"><i class="ti ti-lock" style="font-size:11px;"></i>Geler</button>
+            </div>
+          </div>
+
+          <!-- IBAN + infos bancaires -->
+          <div style="background:#F8FAFC;border:0.5px solid #E2E8F0;border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+            <p id="acct-det-type-title" class="ad-sect" style="margin:0 0 8px;">Compte courant</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;">
+              <div style="grid-column:1/-1;">
+                <div class="ad-info-row"><span class="lbl">IBAN</span>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+                  <span id="acct-det-iban" style="font-size:12px;font-weight:600;font-family:monospace;color:#0F172A;letter-spacing:.5px;">-</span>
+                  <button class="ad-btn" style="background:#EFF6FF;color:#1D4ED8;padding:2px 7px;font-size:9px;border-radius:4px;"><i class="ti ti-copy" style="font-size:10px;"></i>Copier</button>
+                </div>
+                </div>
+              </div>
+              <div class="ad-info-row"><span class="lbl">BIC / SWIFT</span><span id="acct-det-bic" class="val" style="font-family:monospace;">-</span></div>
+              <div class="ad-info-row"><span class="lbl">N° compte interne</span><span id="acct-det-num" class="val" style="font-family:monospace;">-</span></div>
+              <div class="ad-info-row"><span class="lbl">Date ouverture</span><span id="acct-det-date" class="val">-</span></div>
+              <div class="ad-info-row"><span class="lbl">Type</span><span id="acct-det-type" class="val">-</span></div>
+            </div>
+          </div>
+
+          <!-- Soldes -->
+          <div style="display:grid;grid-template-columns:1fr;margin-bottom:12px;">
+            <div style="background:#EFF6FF;border-radius:9px;padding:10px 12px;text-align:center;">
+              <p style="font-size:9px;color:#1D4ED8;margin:0;text-transform:uppercase;letter-spacing:.4px;">Solde du compte</p>
+              <p id="acct-det-solde" style="font-size:18px;font-weight:800;color:#1D4ED8;margin:4px 0 0;">- €</p>
+            </div>
+          </div>
+
+          <!-- Paramètres compte -->
+          <p class="ad-sect">Paramètres du compte</p>
+          <div style="display:flex;flex-direction:column;gap:0;margin-bottom:12px;border:0.5px solid #E2E8F0;border-radius:9px;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:0.5px solid #F1F5F9;">
+              <div><p style="font-size:11px;font-weight:500;margin:0;">Virements sortants autorisés</p><p id="acct-det-limit" style="font-size:9px;color:#94A3B8;margin:0;">-</p></div>
+              <div id="acct-det-tg-transfer" class="ad-tg on"><span></span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:0.5px solid #F1F5F9;">
+              <div><p style="font-size:11px;font-weight:500;margin:0;">Découvert autorisé</p><p style="font-size:9px;color:#94A3B8;margin:0;">Limite : 0 €</p></div>
+              <div class="ad-tg off"><span></span></div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <button class="ad-btn" style="background:#EFF6FF;color:#1D4ED8;justify-content:center;font-size:10px;" onclick="alert('Bientôt disponible')"><i class="ti ti-file-text" style="font-size:12px;"></i>Générer relevé</button>
+            <button class="ad-btn" style="background:#F0FDF4;color:#15803D;justify-content:center;font-size:10px;" onclick="alert('Bientôt disponible')"><i class="ti ti-arrows-exchange" style="font-size:12px;"></i>Voir virements</button>
+            <button class="ad-btn" style="background:#F5F3FF;color:#6D28D9;justify-content:center;font-size:10px;" onclick="alert('Bientôt disponible')"><i class="ti ti-plus" style="font-size:12px;"></i>Ouvrir un 2e compte</button>
+            <button class="ad-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;font-size:10px;" onclick="alert('Bientôt disponible')"><i class="ti ti-ban" style="font-size:12px;"></i>Clôturer le compte</button>
+          </div>
+        </div>
+
+        <!-- Stats répartition -->
+        <div class="ad-card" style="padding:12px 14px;">
+          <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 10px;">Répartition globale de la banque</h3>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Courants</span><span id="rep-courant-txt" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span></div>
+              <div class="ad-bar-h"><div id="rep-courant-bar" class="ad-bar-f" style="width:0%;background:#2563EB;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Épargne</span><span id="rep-epargne-txt" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span></div>
+              <div class="ad-bar-h"><div id="rep-epargne-bar" class="ad-bar-f" style="width:0%;background:#7C3AED;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Gelés</span><span id="rep-geles-txt" style="font-size:10px;font-weight:700;color:#DC2626;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span></div>
+              <div class="ad-bar-h"><div id="rep-geles-bar" class="ad-bar-f" style="width:0%;background:#DC2626;"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+            </div>
+\n\n            <!-- =============================== -->\n            <!-- VUE 10 : REPORTING              -->
             <!-- =============================== -->
             <div id="view-reporting" class="admin-view" style="display: none;">
                 <div class="system-health-card" style="padding:24px; text-align:center;">
