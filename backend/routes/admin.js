@@ -149,7 +149,15 @@ router.patch('/comptes/:accountId/activer', [
     const { accountId } = req.params;
     
     // Fallback auto-migration if the global one failed silently
-    try { await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE DEFAULT NULL"); } catch(e){}
+    try { 
+      const [cols] = await db.query("SHOW COLUMNS FROM accounts LIKE 'numero_compte'");
+      if (cols.length === 0) {
+        await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL");
+        await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)");
+      }
+    } catch(e) {
+      console.error("Migration error for numero_compte:", e);
+    }
     
     // Vérifier l'unicité de l'IBAN et Numéro de compte
     const [existing] = await db.query('SELECT id FROM accounts WHERE (iban = ? OR numero_compte = ?) AND id != ?', [ibanClean, numeroCompteClean, accountId]);
