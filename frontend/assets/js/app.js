@@ -352,6 +352,8 @@ function logout() {
 let regData = {};
 
 function setStep(num) {
+  const stepper = document.querySelector('.register-stepper');
+  if (stepper) stepper.style.display = (num === 5) ? 'none' : 'flex';
   for(let i=1; i<=5; i++) {
     const sForm = document.getElementById('form-step-'+i);
     const sNav = document.getElementById('step-nav-'+i);
@@ -491,7 +493,26 @@ document.getElementById('form-step-4')?.addEventListener('submit', async (e) => 
     return alert('Veuillez accepter les CGU');
   }
   setStep(5);
+  startFinalTimer();
+  startKycPolling();
 });
+
+function startFinalTimer() {
+  let timeRemaining = 300; // 5 minutes
+  const timerEl = document.getElementById('kyc-timer-final');
+  if (!timerEl) return;
+  
+  const interval = setInterval(() => {
+    timeRemaining--;
+    let m = Math.floor(timeRemaining / 60);
+    let s = timeRemaining % 60;
+    timerEl.innerText = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    
+    if (timeRemaining <= 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
+}
 
 // Profile update
 document.getElementById('form-profile')?.addEventListener('submit', async (e) => {
