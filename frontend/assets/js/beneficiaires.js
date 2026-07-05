@@ -221,7 +221,7 @@ async function previewBIC() {
         if (data.valid && data.bankData && data.bankData.bic) {
           bicInput.value = data.bankData.bic;
         } else {
-          bicInput.value = 'BIC non trouvé ou IBAN invalide';
+          bicInput.value = 'Code BIC requis';
         }
       } else {
         bicInput.value = 'Erreur réseau';

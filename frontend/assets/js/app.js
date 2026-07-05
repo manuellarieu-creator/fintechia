@@ -391,9 +391,11 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   const pin = document.getElementById('reg-pin-1').value + 
               document.getElementById('reg-pin-2').value + 
               document.getElementById('reg-pin-3').value + 
-              document.getElementById('reg-pin-4').value;
+              document.getElementById('reg-pin-4').value +
+              document.getElementById('reg-pin-5').value +
+              document.getElementById('reg-pin-6').value;
   
-  if(pin.length !== 4) return alert('Le code PIN doit comporter 4 chiffres');
+  if(pin.length !== 6) return alert('Le code secret doit comporter 6 chiffres');
 
   regData.password = pwd;
   regData.pin_code = pin;

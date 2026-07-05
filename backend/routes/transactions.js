@@ -48,13 +48,20 @@ router.post('/virement', [
   body('nom_dest').trim().notEmpty(),
   body('nom_banque_dest').optional().trim(),
   body('montant').isFloat({ gt: 0 }),
-  body('motif').trim().notEmpty()
+  body('motif').trim().notEmpty(),
+  body('pin_code').trim().notEmpty()
 ], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { iban_dest, bic_dest, nom_dest, nom_banque_dest, montant, motif } = req.body;
+    const { iban_dest, bic_dest, nom_dest, nom_banque_dest, montant, motif, pin_code } = req.body;
     
     await connection.beginTransaction();
+
+    const [users] = await connection.query('SELECT pin_code FROM users WHERE id = ? FOR SHARE', [req.user.id]);
+    if (users.length === 0 || users[0].pin_code !== pin_code) {
+      await connection.rollback();
+      return res.status(401).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 401 });
+    }
 
     const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? FOR UPDATE', [req.user.id]);
     if (accounts.length === 0 || accounts[0].statut !== 'actif') {

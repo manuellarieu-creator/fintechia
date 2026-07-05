@@ -181,12 +181,14 @@
               </div>
 
               <div class="form-group" style="margin-bottom: 30px;">
-                <label>Code PIN (4 chiffres)</label>
+                <label>Code secret (6 chiffres) - <span style="font-size:12px; color:#64748B;">À sauvegarder pour valider vos virements</span></label>
                 <div class="pin-inputs">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-1" onkeyup="movePinFocus(this, 1)">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-2" onkeyup="movePinFocus(this, 2)">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-3" onkeyup="movePinFocus(this, 3)">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-4" onkeyup="movePinFocus(this, 4)">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-5" onkeyup="movePinFocus(this, 5)">
+                  <input type="text" class="pin-box" maxlength="1" id="reg-pin-6" onkeyup="movePinFocus(this, 6)">
                 </div>
               </div>
 
@@ -1572,15 +1574,15 @@
           <div class="auth-header" style="justify-content: center; margin-bottom: 16px;">
               <i class="ti ti-shield-check auth-icon"></i> Authentification
           </div>
-          <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'opération avec le code envoyé au +33 6 ** ** ** 42.</p>
+          <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'opération avec votre code secret à 6 chiffres.</p>
           
           <div class="otp-inputs" style="justify-content: center; margin-bottom: 32px;">
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="text" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center;">
