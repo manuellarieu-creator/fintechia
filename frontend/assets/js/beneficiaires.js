@@ -87,7 +87,7 @@ async function ajouterBeneficiaire() {
     }
     alert('Bénéficiaire ajouté avec succès');
   } catch(err) {
-    alert('Erreur lors de l\'ajout du bénéficiaire');
+    alert(err.message || 'Erreur lors de l\'ajout du bénéficiaire');
   }
 }
 

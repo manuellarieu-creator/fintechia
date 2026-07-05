@@ -26,11 +26,40 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 router.post('/', authMiddleware, async (req, res) => {
-  const { nom, iban } = req.body;
+  const { nom } = req.body;
+  const iban = req.body.iban ? req.body.iban.replace(/\s+/g, '').toUpperCase() : null;
   if(!nom || !iban) return res.status(400).json({ error: 'Nom et IBAN requis' });
+  
   try {
-    const [r] = await pool.query('INSERT INTO beneficiaires (user_id, nom, iban) VALUES (?, ?, ?)', [req.user.id, nom, iban]);
-    res.status(201).json({ id: r.insertId, nom, iban });
+    // 1. Validation de la longueur via BDD
+    const codePays = iban.substring(0, 2);
+    const [rules] = await pool.query('SELECT longueur FROM iban_rules WHERE code_pays = ?', [codePays]);
+    if (rules.length > 0) {
+      if (iban.length !== rules[0].longueur) {
+        return res.status(400).json({ error: `L'IBAN n'est pas valide (longueur incorrecte pour le pays ${codePays})`, code: 'INVALID_IBAN_LENGTH' });
+      }
+    }
+
+    // 2. Récupération automatique du BIC via openiban.com
+    let bic = null;
+    try {
+      const ibanResponse = await fetch(`https://openiban.com/validate/${iban}?getBIC=true`);
+      if (ibanResponse.ok) {
+        const data = await ibanResponse.json();
+        if (!data.valid) {
+          return res.status(400).json({ error: "L'IBAN n'est pas valide (contrôle de somme ou format incorrect)", code: 'INVALID_IBAN' });
+        }
+        if (data.bankData && data.bankData.bic) {
+          bic = data.bankData.bic;
+        }
+      }
+    } catch (err) {
+      console.error("Erreur appel openiban:", err.message);
+      // Fallback: on continue même si openiban échoue
+    }
+
+    const [r] = await pool.query('INSERT INTO beneficiaires (user_id, nom, iban, bic) VALUES (?, ?, ?, ?)', [req.user.id, nom, iban, bic]);
+    res.status(201).json({ id: r.insertId, nom, iban, bic });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur ajout beneficiaire' });

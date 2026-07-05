@@ -132,6 +132,21 @@ if (!process.env.VERCEL) {
         )
       `).catch(err => console.error("Erreur création alertes_fraudes:", err.message));
 
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS iban_rules (
+          code_pays VARCHAR(2) PRIMARY KEY,
+          longueur INT NOT NULL
+        )
+      `).catch(err => console.error("Erreur création iban_rules:", err.message));
+
+      await db.query(`INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES 
+        ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), 
+        ('ES', 24), ('IT', 27), ('LU', 20), ('CH', 21), 
+        ('GB', 22), ('PT', 25), ('NL', 18)
+      `).catch(err => console.error("Erreur insertion iban_rules:", err.message));
+
+      await db.query("ALTER TABLE beneficiaires ADD COLUMN bic VARCHAR(20) DEFAULT NULL").catch(() => {});
+
       console.log("Auto-migration DB terminée.");
     } catch (err) {
       console.error("Erreur lors de l'auto-migration :", err.message);
