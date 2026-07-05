@@ -1545,17 +1545,444 @@
             </div>
 \n\n            <!-- =============================== -->\n            <!-- VUE 10 : REPORTING              -->
             <!-- =============================== -->
-            <div id="view-reporting" class="admin-view" style="display: none;">
-                <div class="system-health-card" style="padding:24px; text-align:center;">
-                    <i class="ti ti-chart-bar" style="font-size:48px; color:var(--admin-sidebar-active); margin-bottom:16px;"></i>
-                    <h2>Module de Reporting Avancé</h2>
-                    <p class="text-muted" style="max-width:400px; margin: 0 auto 24px auto;">Générez des rapports comptables et réglementaires détaillés. (PDF, CSV, JSON).</p>
-                    <button class="btn-primary" style="margin: 0 auto;">Générer Rapport Mensuel</button>
-                </div>
-            </div>
+            
+            <div id="view-reporting" class="admin-view" style="padding: 0; background:#F1F5F9; border-radius:14px; overflow:hidden; border:0.5px solid #E2E8F0; height:calc(100vh - 40px); display:none; flex-direction:column;">
+<style>
+#view-reporting *{box-sizing:border-box;}
+#view-reporting .ad-bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+#view-reporting .ad-bs{background:#F0FDF4;color:#15803D;}
+#view-reporting .ad-bn{background:#F1F5F9;color:#475569;}
+#view-reporting .ad-bw{background:#FFFBEB;color:#B45309;}
+#view-reporting .ad-bd{background:#FEF2F2;color:#B91C1C;}
+#view-reporting .ad-ba{background:#EFF6FF;color:#1D4ED8;}
+#view-reporting .ad-bp{background:#F5F3FF;color:#6D28D9;}
+#view-reporting .ad-bc{background:#E0F2FE;color:#0369A1;}
+#view-reporting .ad-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+#view-reporting .ad-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid #E2E8F0;background:#F1F5F9;color:#64748B;white-space:nowrap;}
+#view-reporting .ad-tab.act{background:#2563EB;color:#fff;border-color:#2563EB;}
+#view-reporting .ad-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;padding:14px 16px;}
+#view-reporting .ad-ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#view-reporting .ad-ch h3{margin:0;font-size:12px;font-weight:700;color:#0F172A;}
+#view-reporting .ad-bar-h{background:#F1F5F9;border-radius:3px;height:6px;overflow:hidden;}
+#view-reporting .ad-bar-f{height:6px;border-radius:3px;}
+#view-reporting .ad-th{font-size:10px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;}
+#view-reporting .ad-tr{display:grid;align-items:center;padding:7px 0;border-bottom:0.5px solid #F8FAFC;}
+#view-reporting .ad-tr:last-child{border-bottom:none;}
+#view-reporting .ad-kpi-card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;padding:14px 16px;}
+#view-reporting .ad-seg-bar{display:flex;border-radius:6px;overflow:hidden;height:10px;gap:2px;}
+#view-reporting .ad-seg{height:10px;}
+</style>
 
-            <!-- =============================== -->
-            <!-- VUE 11 : SECURITE               -->
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:11px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Reporting & Analyses</h2>
+        <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Tableaux de bord financiers, opérationnels et de conformité</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <!-- Période -->
+        <div style="display:flex;align-items:center;gap:4px;border:0.5px solid #E2E8F0;border-radius:7px;background:#fff;padding:4px 6px;">
+          <button style="width:24px;height:24px;border:none;background:none;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;border-radius:4px;"><i class="ti ti-chevron-left" style="font-size:13px;"></i></button>
+          <span id="rep-period" style="font-size:12px;font-weight:600;min-width:80px;text-align:center;">Juin 2026</span>
+          <button style="width:24px;height:24px;border:none;background:none;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;border-radius:4px;"><i class="ti ti-chevron-right" style="font-size:13px;"></i></button>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div class="ad-tab" style="padding:5px 9px;font-size:10px;">Mois</div>
+          <div class="ad-tab act" style="padding:5px 9px;font-size:10px;">Trim.</div>
+          <div class="ad-tab" style="padding:5px 9px;font-size:10px;">Année</div>
+        </div>
+        <button class="ad-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="alert('Export PDF indisponible')"><i class="ti ti-file-export" style="font-size:13px;"></i>Exporter PDF</button>
+        <button class="ad-btn" style="background:#2563EB;color:#fff;" onclick="alert('Export CSV indisponible')"><i class="ti ti-file-type-csv" style="font-size:13px;"></i>Export CSV</button>
+      </div>
+    </div>
+
+    <!-- Onglets rapports -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:0 20px;display:flex;gap:0;flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
+      <div style="padding:10px 14px;font-size:12px;font-weight:600;color:#2563EB;border-bottom:2px solid #2563EB;cursor:pointer;white-space:nowrap;">Vue générale</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Clients & croissance</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Transactions</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Revenus & marges</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Fraudes & risques</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Conformité LCB-FT</div>
+      <div style="padding:10px 14px;font-size:12px;color:#94A3B8;cursor:pointer;white-space:nowrap;">Rapport ACPR</div>
+    </div>
+
+    <!-- Corps scroll -->
+    <div style="flex:1;overflow-y:auto;padding:14px 20px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none;">
+
+      <!-- KPIs LIGNE 1 -->
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;">
+        <div class="ad-kpi-card" style="border-top:3px solid #2563EB;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Clients totaux</p>
+          <p id="rep-kpi-clients" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <span style="font-size:10px;color:#15803D;font-weight:600;">↑ +3,4% vs T1</span>
+            <span id="rep-kpi-clients-badge" class="ad-bk ad-bs">+0</span>
+          </div>
+        </div>
+        <div class="ad-kpi-card" style="border-top:3px solid #16A34A;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Volume tx (trim.)</p>
+          <p id="rep-kpi-vol" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <span style="font-size:10px;color:#15803D;font-weight:600;">↑ +11,2% vs T1</span>
+            <span class="ad-bk ad-bs">+22M</span>
+          </div>
+        </div>
+        <div class="ad-kpi-card" style="border-top:3px solid #7C3AED;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">PNB trimestriel</p>
+          <p id="rep-kpi-pnb" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">-</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <span style="font-size:10px;color:#15803D;font-weight:600;">↑ +8,7% vs T1</span>
+            <span class="ad-bk ad-bp">Objectif 2M</span>
+          </div>
+        </div>
+        <div class="ad-kpi-card" style="border-top:3px solid #D97706;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Taux de fraude</p>
+          <p id="rep-kpi-fraude" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">0,06%</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <span style="font-size:10px;color:#15803D;font-weight:600;">↓ −0,02% vs T1</span>
+            <span class="ad-bk ad-bs">Seuil : 0,1%</span>
+          </div>
+        </div>
+        <div class="ad-kpi-card" style="border-top:3px solid #0891B2;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Satisfaction (NPS)</p>
+          <p id="rep-kpi-nps" style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">+72</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <span style="font-size:10px;color:#15803D;font-weight:600;">↑ +4 vs T1</span>
+            <span class="ad-bk ad-bc" style="background:#E0F2FE;color:#0369A1;">Excellent</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGNE 2 : Graphiques principaux -->
+      <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:12px;">
+
+        <!-- Évolution revenus vs volume (graphe barres empilées) -->
+        <div class="ad-card">
+          <div class="ad-ch">
+            <h3>Volume & PNB — 6 mois</h3>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <div style="display:flex;align-items:center;gap:4px;"><div style="width:10px;height:10px;border-radius:2px;background:#BFDBFE;"></div><span style="font-size:9px;color:#475569;">Volume (M€)</span></div>
+              <div style="display:flex;align-items:center;gap:4px;"><div style="width:10px;height:10px;border-radius:2px;background:#2563EB;"></div><span style="font-size:9px;color:#475569;">PNB (k€)</span></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:10px;height:100px;padding-top:8px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;flex:1;">
+                <div style="width:100%;height:35%;background:#BFDBFE;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#94A3B8;margin-top:4px;">Jan</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;flex:1;">
+                <div style="width:60%;height:22%;background:#2563EB;border-radius:3px 3px 0 0;position:absolute;z-index:2;"></div>
+                <div style="width:100%;height:47%;background:#BFDBFE;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#94A3B8;margin-top:4px;">Fév</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;justify-content:flex-end;flex:1;display:flex;flex-direction:column;">
+                <div style="width:100%;height:55%;background:#BFDBFE;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#94A3B8;margin-top:4px;">Mar</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;justify-content:flex-end;flex:1;display:flex;flex-direction:column;">
+                <div style="width:100%;height:63%;background:#BFDBFE;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#94A3B8;margin-top:4px;">Avr</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;justify-content:flex-end;flex:1;display:flex;flex-direction:column;">
+                <div style="width:100%;height:72%;background:#BFDBFE;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#94A3B8;margin-top:4px;">Mai</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+              <div style="width:100%;justify-content:flex-end;flex:1;display:flex;flex-direction:column;">
+                <div style="width:100%;height:88%;background:#2563EB;border-radius:3px 3px 0 0;"></div>
+              </div>
+              <span style="font-size:9px;color:#2563EB;font-weight:700;margin-top:4px;">Juin</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:0.5px solid #F1F5F9;">
+            <span style="font-size:10px;color:#94A3B8;">Total T2 2026</span>
+            <div style="display:flex;gap:12px;">
+              <span id="rep-g-vol" style="font-size:10px;font-weight:700;color:#0F172A;">-</span>
+              <span id="rep-g-pnb" style="font-size:10px;font-weight:700;color:#2563EB;">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Répartition clients par offre -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Clients par offre</h3><span style="font-size:10px;color:#94A3B8;">T2 2026</span></div>
+          <!-- Donut simplifié -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+            <svg viewBox="0 0 36 36" style="width:80px;height:80px;flex-shrink:0;transform:rotate(-90deg);">
+              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F1F5F9" stroke-width="4"/>
+              <circle id="donut-c1" cx="18" cy="18" r="15.9" fill="none" stroke="#2563EB" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+              <circle id="donut-c2" cx="18" cy="18" r="15.9" fill="none" stroke="#7C3AED" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="-66"/>
+              <circle id="donut-c3" cx="18" cy="18" r="15.9" fill="none" stroke="#0891B2" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="-96"/>
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:2px;background:#2563EB;flex-shrink:0;"></div><span style="font-size:10px;">Standard</span></div>
+                <span id="rep-offre-std" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:2px;background:#7C3AED;flex-shrink:0;"></div><span style="font-size:10px;">Premium</span></div>
+                <span id="rep-offre-prm" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:2px;background:#0891B2;flex-shrink:0;"></div><span style="font-size:10px;">Business</span></div>
+                <span id="rep-offre-biz" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(%)</span></span>
+              </div>
+            </div>
+          </div>
+          <div style="padding-top:8px;border-top:0.5px solid #F1F5F9;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:10px;color:#94A3B8;">Taux upsell vers Premium</span>
+              <span style="font-size:10px;font-weight:700;color:#7C3AED;">+2,1% vs T1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Taux KYC & conformité -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Conformité KYC</h3><span style="font-size:10px;color:#94A3B8;">Cumul T2</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:10px;color:#475569;">Validés</span><span id="kyc-val-txt" style="font-size:11px;font-weight:700;color:#15803D;">-</span></div>
+              <div class="ad-bar-h"><div id="kyc-val-bar" class="ad-bar-f" style="width:0%;background:#16A34A;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:10px;color:#475569;">En attente</span><span id="kyc-att-txt" style="font-size:11px;font-weight:700;color:#D97706;">-</span></div>
+              <div class="ad-bar-h"><div id="kyc-att-bar" class="ad-bar-f" style="width:0%;background:#D97706;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:10px;color:#475569;">Rejetés</span><span id="kyc-rej-txt" style="font-size:11px;font-weight:700;color:#DC2626;">-</span></div>
+              <div class="ad-bar-h"><div id="kyc-rej-bar" class="ad-bar-f" style="width:0%;background:#DC2626;"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding-top:8px;border-top:0.5px solid #F1F5F9;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:10px;color:#475569;">Délai moyen traitement</span><span style="font-size:10px;font-weight:700;">4,2 min</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#475569;">Dossiers traités (T2)</span><span id="kyc-tot-txt" style="font-size:10px;font-weight:700;">-</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGNE 3 : Revenus + Acquisition + Top segments -->
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:12px;">
+
+        <!-- Sources de revenus -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Sources de revenus (T2)</h3><span id="rep-g2-pnb" style="font-size:10px;font-weight:700;color:#0F172A;">-</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Cotisations cartes</span><span id="rev-1" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(37%)</span></span></div>
+              <div class="ad-bar-h"><div class="ad-bar-f" style="width:37%;background:#2563EB;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Commissions virements</span><span id="rev-2" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(28%)</span></span></div>
+              <div class="ad-bar-h"><div class="ad-bar-f" style="width:28%;background:#7C3AED;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Abonnements Premium</span><span id="rev-3" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(21%)</span></span></div>
+              <div class="ad-bar-h"><div class="ad-bar-f" style="width:21%;background:#0891B2;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Comptes Business</span><span id="rev-4" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(10%)</span></span></div>
+              <div class="ad-bar-h"><div class="ad-bar-f" style="width:10%;background:#D97706;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Autres (intérêts, pénalités)</span><span id="rev-5" style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(4%)</span></span></div>
+              <div class="ad-bar-h"><div class="ad-bar-f" style="width:4%;background:#94A3B8;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acquisition & Churn -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Acquisition & Rétention</h3><span style="font-size:10px;color:#94A3B8;">T2 2026</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="background:#F0FDF4;border-radius:9px;padding:10px;text-align:center;">
+              <p style="font-size:9px;color:#15803D;text-transform:uppercase;letter-spacing:.3px;margin:0;">Nouveaux clients</p>
+              <p id="rep-acq-new" style="font-size:20px;font-weight:800;color:#15803D;margin:4px 0 0;">-</p>
+              <p style="font-size:9px;color:#15803D;margin:3px 0 0;">↑ +8% vs T1</p>
+            </div>
+            <div style="background:#FEF2F2;border-radius:9px;padding:10px;text-align:center;">
+              <p style="font-size:9px;color:#B91C1C;text-transform:uppercase;letter-spacing:.3px;margin:0;">Churn</p>
+              <p id="rep-acq-churn" style="font-size:20px;font-weight:800;color:#B91C1C;margin:4px 0 0;">-</p>
+              <p style="font-size:9px;color:#B91C1C;margin:3px 0 0;">↓ −3 vs T1</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #F1F5F9;">
+              <span style="font-size:10px;color:#475569;">Taux de rétention</span>
+              <span style="font-size:10px;font-weight:700;color:#15803D;">96,8%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #F1F5F9;">
+              <span style="font-size:10px;color:#475569;">Coût d'acquisition (CAC)</span>
+              <span style="font-size:10px;font-weight:700;">38 €</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #F1F5F9;">
+              <span style="font-size:10px;color:#475569;">LTV moyenne client</span>
+              <span style="font-size:10px;font-weight:700;">1 240 €</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;">
+              <span style="font-size:10px;color:#475569;">Ratio LTV/CAC</span>
+              <span style="font-size:10px;font-weight:700;color:#15803D;">×32,6</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top régions & canaux -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Canaux d'acquisition</h3><span style="font-size:10px;color:#94A3B8;">T2 2026</span></div>
+          <!-- Barre segmentée -->
+          <div style="margin-bottom:8px;">
+            <div class="ad-seg-bar" style="margin-bottom:6px;">
+              <div style="width:44%;background:#2563EB;"></div>
+              <div style="width:28%;background:#7C3AED;"></div>
+              <div style="width:16%;background:#0891B2;"></div>
+              <div style="width:12%;background:#D97706;"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#2563EB;"></div><span style="font-size:10px;color:#475569;">App mobile</span></div>
+              <span style="font-size:10px;font-weight:700;">187 clients <span style="color:#94A3B8;font-weight:400;">(44%)</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#7C3AED;"></div><span style="font-size:10px;color:#475569;">Site web</span></div>
+              <span style="font-size:10px;font-weight:700;">119 clients <span style="color:#94A3B8;font-weight:400;">(28%)</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#0891B2;"></div><span style="font-size:10px;color:#475569;">Parrainage</span></div>
+              <span style="font-size:10px;font-weight:700;">68 clients <span style="color:#94A3B8;font-weight:400;">(16%)</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#D97706;"></div><span style="font-size:10px;color:#475569;">Partenaires</span></div>
+              <span style="font-size:10px;font-weight:700;">50 clients <span style="color:#94A3B8;font-weight:400;">(12%)</span></span>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding-top:8px;border-top:0.5px solid #F1F5F9;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:10px;color:#94A3B8;">Meilleur canal ROI</span>
+              <span style="font-size:10px;font-weight:700;color:#0891B2;">Parrainage (×48 LTV/CAC)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGNE 4 : Tableau récapitulatif + Exports -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;">
+
+        <!-- Tableau récap mensuel -->
+        <div class="ad-card">
+          <div class="ad-ch"><h3>Récapitulatif mensuel — T2 2026</h3><a style="font-size:10px;color:#2563EB;cursor:pointer;">Voir détail →</a></div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="border-bottom:0.5px solid #E2E8F0;">
+                <th style="text-align:left;padding:0 0 6px;" class="ad-th">Mois</th>
+                <th style="text-align:right;padding:0 0 6px;" class="ad-th">Nouveaux clients</th>
+                <th style="text-align:right;padding:0 0 6px;" class="ad-th">Volume tx</th>
+                <th style="text-align:right;padding:0 0 6px;" class="ad-th">PNB</th>
+                <th style="text-align:right;padding:0 0 6px;" class="ad-th">Fraudes</th>
+                <th style="text-align:center;padding:0 0 6px;" class="ad-th">Tendance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
+                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -2</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+138</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;">68,2M €</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">582k €</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;color:#D97706;">9</td>
+                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +6%</span></td>
+              </tr>
+              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
+                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -1</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+142</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;">74,8M €</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">634k €</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;">6</td>
+                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +9%</span></td>
+              </tr>
+              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;background:#EFF6FF;">
+                <td style="padding:7px 0;font-size:11px;font-weight:700;color:#1D4ED8;">Mois en cours</td>
+                <td id="t-mois-n-clients" style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:700;">-</td>
+                <td id="t-mois-n-vol" style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;">-</td>
+                <td id="t-mois-n-pnb" style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;color:#1D4ED8;">-</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:700;">5</td>
+                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-ba">En cours</span></td>
+              </tr>
+              <tr style="border-top:1px solid #E2E8F0;display:table-row;">
+                <td style="padding:7px 0;font-size:11px;font-weight:700;color:#0F172A;">Total T2</td>
+                <td id="t-tot-clients" style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;color:#15803D;">-</td>
+                <td id="t-tot-vol" style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;">-</td>
+                <td id="t-tot-pnb" style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;color:#7C3AED;">-</td>
+                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:700;color:#15803D;">20</td>
+                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +8,7%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Exports disponibles -->
+        <div style="display:flex;flex-direction:column;gap:10px;">
+
+          <div class="ad-card">
+            <div class="ad-ch"><h3>Rapports disponibles</h3></div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#F8FAFC;border-radius:8px;border:0.5px solid #E2E8F0;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-file-type-pdf" style="font-size:16px;color:#B91C1C;"></i></div>
+                <div style="flex:1;min-width:0;"><p style="font-size:11px;font-weight:500;margin:0;">Rapport mensuel</p><p style="font-size:9px;color:#94A3B8;margin:0;">Généré aujourd'hui · 2,4 Mo</p></div>
+                <button class="ad-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-download" style="font-size:11px;"></i></button>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#F8FAFC;border-radius:8px;border:0.5px solid #E2E8F0;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-file-type-csv" style="font-size:16px;color:#15803D;"></i></div>
+                <div style="flex:1;min-width:0;"><p style="font-size:11px;font-weight:500;margin:0;">Export transactions T2</p><p style="font-size:9px;color:#94A3B8;margin:0;">18 Mo</p></div>
+                <button class="ad-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-download" style="font-size:11px;"></i></button>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#F8FAFC;border-radius:8px;border:0.5px solid #E2E8F0;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-file-analytics" style="font-size:16px;color:#6D28D9;"></i></div>
+                <div style="flex:1;min-width:0;"><p style="font-size:11px;font-weight:500;margin:0;">Rapport conformité ACPR</p><p style="font-size:9px;color:#94A3B8;margin:0;">Échéance : 15 juillet</p></div>
+                <button class="ad-btn" style="background:#F5F3FF;color:#6D28D9;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-send" style="font-size:11px;"></i></button>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#F8FAFC;border-radius:8px;border:0.5px solid #E2E8F0;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#FFFBEB;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-shield-lock" style="font-size:16px;color:#B45309;"></i></div>
+                <div style="flex:1;min-width:0;"><p style="font-size:11px;font-weight:500;margin:0;">Déclaration LCB-FT T2</p><p style="font-size:9px;color:#D97706;margin:0;">⚠ En attente de signature</p></div>
+                <button class="ad-btn" style="background:#FFFBEB;color:#B45309;border:0.5px solid #FDE68A;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-edit" style="font-size:11px;"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ad-card">
+            <div class="ad-ch"><h3>Alertes réglementaires</h3></div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:flex-start;background:#F0FDF4;border:0.5px solid #BBF7D0;border-radius:7px;padding:8px 10px;">
+                <i class="ti ti-circle-check" style="font-size:14px;color:#16A34A;flex-shrink:0;margin-top:1px;"></i>
+                <div><p style="font-size:10px;font-weight:600;color:#15803D;margin:0;">Ratio de solvabilité</p><p style="font-size:9px;color:#15803D;margin:1px 0 0;opacity:.85;">18,4% — Conforme (seuil 8%)</p></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;background:#FFFBEB;border:0.5px solid #FDE68A;border-radius:7px;padding:8px 10px;">
+                <i class="ti ti-alert-triangle" style="font-size:14px;color:#D97706;flex-shrink:0;margin-top:1px;"></i>
+                <div><p style="font-size:10px;font-weight:600;color:#B45309;margin:0;">Déclaration Tracfin</p><p style="font-size:9px;color:#B45309;margin:1px 0 0;opacity:.85;">3 dossiers à soumettre avant le 10/07</p></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;background:#F0FDF4;border:0.5px solid #BBF7D0;border-radius:7px;padding:8px 10px;">
+                <i class="ti ti-circle-check" style="font-size:14px;color:#16A34A;flex-shrink:0;margin-top:1px;"></i>
+                <div><p style="font-size:10px;font-weight:600;color:#15803D;margin:0;">Rapport ACPR S1</p><p style="font-size:9px;color:#15803D;margin:1px 0 0;opacity:.85;">Préparé · Envoi prévu le 15</p></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+            </div>
+\n\n            <!-- =============================== -->\n            <!-- VUE 11 : SECURITE               -->
             <!-- =============================== -->
             <div id="view-securite" class="admin-view" style="display: none;">
                 <div class="clients-card">
