@@ -1418,6 +1418,10 @@ window.confirmActiverCompte = async function() {
         document.getElementById('modal-activer-compte').style.display = 'none';
         allClients = await fetchAPI('/admin/comptes') || [];
         showAdminView('view-comptes', document.querySelectorAll('.nav-item')[1]);
+    } else if (res) {
+        alert(res.error || 'Erreur lors de l\'activation');
+    } else {
+        alert('Erreur de connexion au serveur');
     }
 }
 

@@ -168,6 +168,14 @@ router.patch('/comptes/:accountId/activer', [
     await db.query('UPDATE accounts SET statut = "actif", iban = ?, bic = ?, numero_compte = ?, solde = ? WHERE id = ?', 
       [ibanClean, bicClean, numeroCompteClean, soldeInitial, accountId]);
     
+    if (soldeInitial > 0) {
+      await db.query(
+        `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
+         VALUES (?, 'credit', ?, 0, ?, 'Dépôt initial', 'Dépôt initial pour activation', 'valide')`,
+        [accountId, soldeInitial, soldeInitial]
+      );
+    }
+
     const [accounts] = await db.query('SELECT user_id FROM accounts WHERE id = ?', [accountId]);
     if (accounts.length > 0) {
       await audit.log({
