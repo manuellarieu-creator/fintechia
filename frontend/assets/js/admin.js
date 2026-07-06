@@ -1562,6 +1562,27 @@ window.toggleCarteStatus = async function(id, isBlocked) {
     }
 }
 
+window.openEmitCardModal = async function() {
+    const select = document.getElementById('emit-card-client');
+    if (allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
+    
+    select.innerHTML = allClients.map(c => `<option value="${c.id}">${c.prenom} ${c.nom} (ID: ${c.id})</option>`).join('');
+    document.getElementById('modal-emit-card').style.display = 'flex';
+}
+
+window.confirmEmitCard = async function() {
+    const user_id = document.getElementById('emit-card-client').value;
+    const type = document.getElementById('emit-card-type').value;
+    
+    const res = await fetchAPI('/cartes/admin/emit', 'POST', { user_id, type });
+    if(res && res.success) {
+        document.getElementById('modal-emit-card').style.display = 'none';
+        loadCartesTable();
+    } else {
+        alert(res?.error || "Erreur lors de l'émission");
+    }
+}
+
 async function renderFraudesFullTable() {
     const data = await fetchAPI('/admin/alertes/admin?limit=50');
     // If route doesn't exist yet, this will fail gracefully due to fetchAPI error handling

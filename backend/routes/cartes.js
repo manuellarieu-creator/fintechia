@@ -123,4 +123,20 @@ router.post('/admin/:id/action', [authMiddleware, adminMiddleware], async (req, 
   }
 });
 
+router.post('/admin/emit', [authMiddleware, adminMiddleware], async (req, res) => {
+  const { user_id, type } = req.body;
+  try {
+    const pan = '45' + Math.floor(Math.random() * 100000000000000).toString().padStart(14, '0');
+    const cvv = Math.floor(Math.random() * 900 + 100).toString();
+    const exp_date = '12/28';
+    const plafond = type === 'Platinum' ? 5000.00 : 1500.00;
+    
+    await pool.query('INSERT INTO cartes (user_id, pan, cvv, exp_date, plafond) VALUES (?, ?, ?, ?, ?)', [user_id, pan, cvv, exp_date, plafond]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur emission carte admin' });
+  }
+});
+
 module.exports = router;

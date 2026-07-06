@@ -1110,7 +1110,7 @@
                       <input style="padding:7px 12px 7px 30px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;width:190px;outline:none;" placeholder="N° carte, client, IBAN…">
                     </div>
                     <button class="crt-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Exporter</button>
-                    <button class="crt-btn" style="background:#2563EB;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Émettre une carte</button>
+                    <button class="crt-btn" style="background:#2563EB;color:#fff;" onclick="openEmitCardModal()"><i class="ti ti-plus" style="font-size:13px;"></i>Émettre une carte</button>
                   </div>
                 </div>
 
@@ -1644,6 +1644,38 @@
         </div>
     </div>
 
+    <!-- Modal Emettre Carte -->
+    <div id="modal-emit-card" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.4);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(2px);">
+        <div style="background:#fff;border-radius:14px;width:380px;box-shadow:0 10px 25px rgba(0,0,0,.1);padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h3 style="margin:0;font-size:15px;font-weight:700;color:#0F172A;">Émettre une nouvelle carte</h3>
+                <i class="ti ti-x" style="cursor:pointer;font-size:16px;color:#94A3B8;" onclick="document.getElementById('modal-emit-card').style.display='none'"></i>
+            </div>
+            
+            <div class="field" style="margin-bottom:12px;">
+                <label style="font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;">Sélectionner le client</label>
+                <select id="emit-card-client" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;">
+                    <!-- Rempli par JS -->
+                </select>
+            </div>
+            
+            <div class="field" style="margin-bottom:16px;">
+                <label style="font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;">Type de carte</label>
+                <select id="emit-card-type" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;">
+                    <option value="Classic">Visa Classic</option>
+                    <option value="Platinum">Visa Platinum</option>
+                    <option value="Virtuelle">Carte Virtuelle</option>
+                </select>
+            </div>
+            
+            <div style="display:flex;justify-content:flex-end;gap:8px;">
+                <button style="padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="document.getElementById('modal-emit-card').style.display='none'">Annuler</button>
+                <button style="padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#2563EB;color:#fff;border:none;" onclick="confirmEmitCard()">Émettre la carte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="../assets/js/admin.js"></script>
 </body>
 </html>
