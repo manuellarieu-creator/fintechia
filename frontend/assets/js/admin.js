@@ -1153,31 +1153,6 @@ async function loadLogsTable() {
 }
 
 
-// --- Cartes Émises (Page 7) ---
-async function loadCartesTable() {
-    // Si pas de route admin cartes, on mocke à partir des comptes actifs
-    if(allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
-    let clientsActifs = allClients.filter(c => c.statut === 'actif');
-    
-    const tbody = document.getElementById('cartes-tbody');
-    if (clientsActifs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Aucune carte émise.</td></tr>`;
-        return;
-    }
-    
-    tbody.innerHTML = clientsActifs.map((c, i) => {
-        const last4 = String(Math.floor(Math.random()*9000)+1000);
-        const type = c.offre === 'Premium' ? 'Mastercard Black' : (c.offre==='Business' ? 'Visa Platinum' : 'Visa Classic');
-        return `
-        <tr>
-            <td><div class="client-cell">${getClientAvatar(c)}<span class="client-name">${c.prenom} ${c.nom}</span></div></td>
-            <td><span class="iban-code">**** **** **** ${last4}</span></td>
-            <td>${type}</td>
-            <td class="text-muted">12/29</td>
-            <td><span class="status-badge success">Active</span></td>
-        </tr>
-    `}).join('');
-}
 
 // --- Fraudes (Page 5 & Dashboard) ---
 async function loadAlertes() {
@@ -1503,9 +1478,13 @@ window.exportCSV = function() {
 // CARTES & FRAUDES (DYNAMIC)
 // ============================
 
+let loadedCartes = [];
+
 async function loadCartesTable() {
-    const data = await fetchAPI('/admin/cartes/admin?limit=50');
+    const data = await fetchAPI('/cartes/admin?limit=50');
     if (!data) return;
+
+    loadedCartes = data.cartes || [];
 
     // Update KPIs (targeting the specific paragraphs by order in DOM if IDs don't exist)
     const kpiCards = document.querySelectorAll('#view-cartes .crt-card p:nth-of-type(2)');
@@ -1518,12 +1497,12 @@ async function loadCartesTable() {
     const tbody = document.getElementById('admin-cartes-list');
     if (!tbody) return;
 
-    if (data.cartes.length === 0) {
+    if (loadedCartes.length === 0) {
         tbody.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucune carte émise.</div>';
         return;
     }
 
-    tbody.innerHTML = data.cartes.map(c => {
+    tbody.innerHTML = loadedCartes.map(c => {
         const isBlocked = c.bloquee === 1 || c.statut === 'bloquee';
         const isExpiring = false; // Add logic for expiring if needed
         const badgeClass = isBlocked ? 'bd' : (isExpiring ? 'bw' : 'bs');
@@ -1531,7 +1510,7 @@ async function loadCartesTable() {
         const rowClass = isBlocked ? 'blk' : (isExpiring ? 'warn' : (c.bloquee === 0 ? 'act' : ''));
 
         return `
-        <div class="crt-tr ${rowClass}" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
+        <div class="crt-tr ${rowClass}" onclick="showCarteDetails(${c.id})" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 90px 90px 90px 90px 90px;">
             <div style="display:flex;align-items:center;gap:8px;">
                 <div class="av" style="background:#F1F5F9;color:#475569;">${(c.prenom || 'X')[0]}${(c.nom || 'X')[0]}</div>
                 <div><p style="font-size:11px;font-weight:600;margin:0;">${c.prenom} ${c.nom}</p></div>
@@ -1542,17 +1521,41 @@ async function loadCartesTable() {
             <p style="font-size:11px;color:#475569;text-align:center;">${c.exp_date || c.date_expiration}</p>
             <div style="text-align:center;"><span class="bk ${badgeClass}">${badgeText}</span></div>
             <div style="display:flex;gap:3px;justify-content:center;">
-                <button class="crt-btn" onclick="toggleCarteStatus(${c.id}, ${isBlocked})" style="background:${isBlocked ? '#F0FDF4' : '#FEF2F2'};color:${isBlocked ? '#15803D' : '#B91C1C'};padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ${isBlocked ? 'ti-lock-open' : 'ti-lock'}" style="font-size:10px;"></i></button>
+                <button class="crt-btn" onclick="event.stopPropagation(); toggleCarteStatus(${c.id}, ${isBlocked})" style="background:${isBlocked ? '#F0FDF4' : '#FEF2F2'};color:${isBlocked ? '#15803D' : '#B91C1C'};padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ${isBlocked ? 'ti-lock-open' : 'ti-lock'}" style="font-size:10px;"></i></button>
             </div>
         </div>
         `;
     }).join('');
+    
+    // Auto select first card
+    if (loadedCartes.length > 0) {
+        showCarteDetails(loadedCartes[0].id);
+    }
+}
+
+window.showCarteDetails = function(id) {
+    const c = loadedCartes.find(carte => carte.id === id);
+    if (!c) return;
+
+    // Remove .act class from all rows
+    document.querySelectorAll('#admin-cartes-list .crt-tr').forEach(tr => tr.classList.remove('act'));
+    // Add to clicked row is tricky, we'll just ignore or do it cleanly later.
+
+    document.getElementById('fiche-carte-num').innerText = '**** **** **** ' + (c.pan ? c.pan.slice(-4) : (c.last_4 || '0000'));
+    document.getElementById('fiche-carte-titulaire').innerText = (c.prenom + ' ' + c.nom).toUpperCase();
+    document.getElementById('fiche-carte-exp').innerText = c.exp_date || c.date_expiration || '-';
+    
+    document.getElementById('fiche-carte-type').innerText = 'Visa Classic'; // Mock
+    document.getElementById('fiche-carte-reseau').innerText = 'Visa International';
+    document.getElementById('fiche-carte-complet').innerText = (c.pan ? c.pan.replace(/(.{4})/g, '$1 ') : '**** **** **** ****');
+    document.getElementById('fiche-carte-compte').innerText = '**** ' + (c.pan ? c.pan.slice(-4) : '0000');
+    document.getElementById('fiche-carte-emission').innerText = new Date(c.cree_le || c.created_at).toLocaleDateString('fr-FR');
 }
 
 window.toggleCarteStatus = async function(id, isBlocked) {
     if(confirm(isBlocked ? 'Débloquer cette carte ?' : 'Bloquer cette carte ?')) {
         const action = isBlocked ? 'unblock' : 'block';
-        const res = await fetchAPI(`/admin/cartes/admin/${id}/action`, 'POST', { action });
+        const res = await fetchAPI(`/cartes/admin/${id}/action`, 'POST', { action });
         if(res && res.success) {
             loadCartesTable();
         }

@@ -1118,32 +1118,32 @@
                 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Total émises</p>
-                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">14 280</p>
+                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;" id="kpi-cartes-totales">-</p>
                     <p style="font-size:10px;color:#15803D;margin:3px 0 0;">↑ +48 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Actives</p>
-                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">13 841</p>
+                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;" id="kpi-cartes-actives">-</p>
                     <div class="bar-h" style="margin-top:6px;"><div class="bar-f" style="width:97%;background:#16A34A;"></div></div>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Bloquées</p>
-                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">124</p>
+                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;" id="kpi-cartes-bloquees">-</p>
                     <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +8 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #D97706;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Expirant &lt;30j</p>
-                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">315</p>
+                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;" id="kpi-cartes-expirant">-</p>
                     <p style="font-size:10px;color:#D97706;margin:3px 0 0;">Renouvellement auto</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Platinum</p>
-                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">3 810</p>
+                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;" id="kpi-cartes-platinum">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">27% du parc</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Virtuelles</p>
-                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">2 140</p>
+                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;" id="kpi-cartes-virtuelles">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">15% du parc</p>
                   </div>
                 </div>
@@ -1214,7 +1214,7 @@
                         <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07);"></div>
                         <div style="position:absolute;bottom:-30px;left:-10px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
                         <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;">
-                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
+                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
                           <div style="display:flex;gap:6px;align-items:center;">
                             <span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;">ACTIVE</span>
                             <i class="ti ti-wifi" style="font-size:16px;opacity:.75;transform:rotate(90deg);"></i>
@@ -1224,20 +1224,20 @@
                           <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(180,140,0,.4);transform:translateY(-50%);"></div>
                           <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(180,140,0,.4);transform:translateX(-50%);"></div>
                         </div>
-                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;">**** **** **** 4821</p>
+                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;" id="fiche-carte-num">**** **** **** ****</p>
                         <div style="display:flex;justify-content:space-between;position:relative;">
-                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">MANUELA RODRIGUEZ</p></div>
-                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">06/29</p></div>
+                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-titulaire">-</p></div>
+                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-exp">-</p></div>
                         </div>
                       </div>
 
                       <!-- Infos carte -->
                       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:14px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa International</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">4821 ···· ···· 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">**** 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">06/06/2024</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-reseau">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;" id="fiche-carte-complet">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;" id="fiche-carte-compte">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;" id="fiche-carte-emission">-</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Statut</p><span class="bk bs" style="margin-top:3px;display:inline-flex;">Active</span></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">NFC</p><p style="font-size:11px;font-weight:600;color:#15803D;margin:2px 0 0;">Activé ✓</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Paiements intl</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">Désactivé ✗</p></div>
@@ -1247,19 +1247,19 @@
                       <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Plafonds actuels</p>
                       <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">2 340 / 5 000 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:47%;background:#2563EB;"></div></div>
                         </div>
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Retrait hebdo</span><span style="font-size:10px;font-weight:700;">400 / 500 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Retrait hebdo</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:80%;background:#D97706;"></div></div>
                         </div>
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Sans contact</span><span style="font-size:10px;font-weight:700;">87 / 150 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Sans contact</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:58%;background:#16A34A;"></div></div>
                         </div>
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement en ligne</span><span style="font-size:10px;font-weight:700;">760 / 3 000 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement en ligne</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:25%;background:#2563EB;"></div></div>
                         </div>
                       </div>
