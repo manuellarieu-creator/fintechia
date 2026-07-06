@@ -751,7 +751,7 @@
                   <div style="display:flex;gap:8px;align-items:center;">
                     <div style="display:flex;align-items:center;gap:6px;background:#FEF2F2;border:0.5px solid #FECACA;border-radius:7px;padding:5px 10px;">
                       <span style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block;"></span>
-                      <span style="font-size:11px;font-weight:600;color:#B91C1C;">8 alertes critiques actives</span>
+                      <span style="font-size:11px;font-weight:600;color:#B91C1C;">- alertes critiques actives</span>
                     </div>
                     <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Rapport</button>
                     <button class="frd-btn" style="background:#DC2626;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Créer une alerte</button>
@@ -762,32 +762,32 @@
                 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Critiques</p>
-                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">8</p>
+                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;" id="kpi-fraudes-critiques">-</p>
                     <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +3 ce matin</p>
                   </div>
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #D97706;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Avertissements</p>
-                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">23</p>
+                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;" id="kpi-fraudes-avertissements">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">En attente revue</p>
                   </div>
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tx suspectes</p>
-                    <p style="font-size:22px;font-weight:800;color:#2563EB;margin:0;">15</p>
+                    <p style="font-size:22px;font-weight:800;color:#2563EB;margin:0;" id="kpi-fraudes-tx-suspectes">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Bloquées auto</p>
                   </div>
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Comptes ciblés</p>
-                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">12</p>
+                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;" id="kpi-fraudes-cibles">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">Clients affectés</p>
                   </div>
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Résolues (7j)</p>
-                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">147</p>
+                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;" id="kpi-fraudes-resolues">-</p>
                     <p style="font-size:10px;color:#15803D;margin:3px 0 0;">Taux : 94%</p>
                   </div>
                   <div class="frd-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Tps moyen résol.</p>
-                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">18 min</p>
+                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;" id="kpi-fraudes-temps">-</p>
                     <p style="font-size:10px;color:#0891B2;margin:3px 0 0;">↓ −4 min vs S-1</p>
                   </div>
                 </div>
@@ -849,48 +849,48 @@
                     <div class="frd-card" style="padding:14px 16px;">
                       <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;">
                         <div class="risk-ring" style="border-color:#DC2626;">
-                          <span style="font-size:16px;font-weight:800;color:#DC2626;">82</span>
+                          <span style="font-size:16px;font-weight:800;color:#DC2626;" id="fiche-fraude-score">-</span>
                           <span style="font-size:8px;color:#94A3B8;">/100</span>
                         </div>
                         <div style="flex:1;">
                           <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                            <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Usurpation d'identité</h3>
+                            <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;" id="fiche-fraude-titre">-</h3>
                             <span class="bk ba">En revue</span>
                           </div>
-                          <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-20260630-0037 · Déclenché à 13:45</p>
-                          <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">Nadia Ferhat — **** 3318 — Compte Premium</p>
+                          <p style="font-size:10px;color:#94A3B8;margin:0;" id="fiche-fraude-ref">-</p>
+                          <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;" id="fiche-fraude-client">-</p>
                         </div>
                       </div>
 
                       <!-- Infos -->
                       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:12px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">Usurpation KYC</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Canal détection</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">IA — Reconnaissance faciale</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant à risque</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">0 € — Bloqué préventivement</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">IP de connexion</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">185.220.101.x</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Localisation</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">🇩🇿 Algérie (VPN détecté)</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">Android inconnu</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;" id="fiche-fraude-type">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Canal détection</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;" id="fiche-fraude-canal">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant à risque</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;" id="fiche-fraude-montant">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">IP de connexion</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;" id="fiche-fraude-ip">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Localisation</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;" id="fiche-fraude-loc">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;" id="fiche-fraude-device">-</p></div>
                       </div>
 
                       <!-- Détail IA -->
                       <div style="background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:10px 12px;margin-bottom:12px;">
-                        <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-robot" style="font-size:13px;"></i>Analyse IA — Score de confiance : 82/100</p>
+                        <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-robot" style="font-size:13px;"></i>Analyse IA — Score de confiance : -/100</p>
                         <div style="display:flex;flex-direction:column;gap:5px;">
                           <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B91C1C;">Selfie vs document KYC</span>
-                            <span style="font-size:10px;font-weight:700;color:#B91C1C;">Concordance 34% ✗</span>
+                            <span style="font-size:10px;color:#B91C1C;">-</span>
+                            <span style="font-size:10px;font-weight:700;color:#B91C1C;">-</span>
                           </div>
                           <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">IP détectée comme Tor/VPN</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Confirmé ⚠</span>
+                            <span style="font-size:10px;color:#B45309;">-</span>
+                            <span style="font-size:10px;font-weight:700;color:#B45309;">-</span>
                           </div>
                           <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">Géolocalisation ≠ domicile déclaré</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Écart 2 800 km ⚠</span>
+                            <span style="font-size:10px;color:#B45309;">-</span>
+                            <span style="font-size:10px;font-weight:700;color:#B45309;">-</span>
                           </div>
                           <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#15803D;">Aucune correspondance liste noire</span>
-                            <span style="font-size:10px;font-weight:700;color:#15803D;">OK ✓</span>
+                            <span style="font-size:10px;color:#15803D;">-</span>
+                            <span style="font-size:10px;font-weight:700;color:#15803D;">-</span>
                           </div>
                         </div>
                       </div>
@@ -921,7 +921,7 @@
                     <div class="frd-card" style="padding:14px 16px;">
                       <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 12px;">Décision & résolution</h3>
                       <div style="display:flex;flex-direction:column;gap:8px;">
-                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…">Selfie non concordant à 34%. IP Tor confirmée. Géolocalisation Algérie. Recommandation : clôture du dossier + signalement Tracfin.</textarea>
+                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…"></textarea>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
                           <button class="frd-btn" style="background:#16A34A;color:#fff;justify-content:center;"><i class="ti ti-circle-check" style="font-size:13px;"></i>Résoudre</button>
                           <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;"><i class="ti ti-ban" style="font-size:13px;"></i>Clôturer fraude</button>
@@ -944,7 +944,7 @@
                         <div>
                           <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
                             <span style="font-size:10px;color:#475569;">Tx suspectes</span>
-                            <span style="font-size:10px;font-weight:700;">42% <span style="color:#94A3B8;font-weight:400;">(13)</span></span>
+                            <span style="font-size:10px;font-weight:700;">- <span style="color:#94A3B8;font-weight:400;">(-)</span></span>
                           </div>
                           <div class="bar-h"><div class="bar-f" style="width:42%;background:#DC2626;"></div></div>
                         </div>
@@ -1118,32 +1118,32 @@
                 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px;flex-shrink:0;">
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #2563EB;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Total émises</p>
-                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;">14 280</p>
+                    <p style="font-size:22px;font-weight:800;color:#0F172A;margin:0;" id="kpi-cartes-totales">-</p>
                     <p style="font-size:10px;color:#15803D;margin:3px 0 0;">↑ +48 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #16A34A;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Actives</p>
-                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;">13 841</p>
+                    <p style="font-size:22px;font-weight:800;color:#15803D;margin:0;" id="kpi-cartes-actives">-</p>
                     <div class="bar-h" style="margin-top:6px;"><div class="bar-f" style="width:97%;background:#16A34A;"></div></div>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #DC2626;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Bloquées</p>
-                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;">124</p>
+                    <p style="font-size:22px;font-weight:800;color:#DC2626;margin:0;" id="kpi-cartes-bloquees">-</p>
                     <p style="font-size:10px;color:#DC2626;margin:3px 0 0;">↑ +8 ce mois</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #D97706;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Expirant &lt;30j</p>
-                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;">315</p>
+                    <p style="font-size:22px;font-weight:800;color:#D97706;margin:0;" id="kpi-cartes-expirant">-</p>
                     <p style="font-size:10px;color:#D97706;margin:3px 0 0;">Renouvellement auto</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #7C3AED;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Platinum</p>
-                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;">3 810</p>
+                    <p style="font-size:22px;font-weight:800;color:#7C3AED;margin:0;" id="kpi-cartes-platinum">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">27% du parc</p>
                   </div>
                   <div class="crt-card" style="padding:12px 14px;border-top:3px solid #0891B2;">
                     <p style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#94A3B8;margin:0 0 4px;">Virtuelles</p>
-                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;">2 140</p>
+                    <p style="font-size:22px;font-weight:800;color:#0891B2;margin:0;" id="kpi-cartes-virtuelles">-</p>
                     <p style="font-size:10px;color:#94A3B8;margin:3px 0 0;">15% du parc</p>
                   </div>
                 </div>
@@ -1214,7 +1214,7 @@
                         <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07);"></div>
                         <div style="position:absolute;bottom:-30px;left:-10px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
                         <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;">
-                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
+                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
                           <div style="display:flex;gap:6px;align-items:center;">
                             <span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;">ACTIVE</span>
                             <i class="ti ti-wifi" style="font-size:16px;opacity:.75;transform:rotate(90deg);"></i>
@@ -1224,20 +1224,20 @@
                           <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(180,140,0,.4);transform:translateY(-50%);"></div>
                           <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(180,140,0,.4);transform:translateX(-50%);"></div>
                         </div>
-                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;">**** **** **** 4821</p>
+                        <p style="font-size:15px;letter-spacing:3px;font-weight:500;margin:0 0 12px;position:relative;" id="fiche-carte-num">**** **** **** ****</p>
                         <div style="display:flex;justify-content:space-between;position:relative;">
-                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">MANUELA RODRIGUEZ</p></div>
-                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">06/29</p></div>
+                          <div><p style="font-size:9px;opacity:.65;margin:0;">Titulaire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-titulaire">-</p></div>
+                          <div style="text-align:right;"><p style="font-size:9px;opacity:.65;margin:0;">Expire</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-exp">-</p></div>
                         </div>
                       </div>
 
                       <!-- Infos carte -->
                       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:14px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa Platinum</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;">Visa International</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">4821 ···· ···· 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">**** 4821</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">06/06/2024</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Réseau</p><p style="font-size:11px;font-weight:600;margin:2px 0 0;" id="fiche-carte-reseau">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">N° complet</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;" id="fiche-carte-complet">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Compte lié</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;" id="fiche-carte-compte">-</p></div>
+                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Date émission</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;" id="fiche-carte-emission">-</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Statut</p><span class="bk bs" style="margin-top:3px;display:inline-flex;">Active</span></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">NFC</p><p style="font-size:11px;font-weight:600;color:#15803D;margin:2px 0 0;">Activé ✓</p></div>
                         <div><p style="font-size:9px;color:#94A3B8;margin:0;">Paiements intl</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">Désactivé ✗</p></div>
@@ -1247,7 +1247,7 @@
                       <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Plafonds actuels</p>
                       <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
                         <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">2 340 / 5 000 €</span></div>
+                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:10px;color:#475569;">Paiement mensuel</span><span style="font-size:10px;font-weight:700;">- / - €</span></div>
                           <div class="bar-h"><div class="bar-f" style="width:47%;background:#2563EB;"></div></div>
                         </div>
                         <div>
@@ -1897,22 +1897,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
-                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -2</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+138</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;">68,2M €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">582k €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#D97706;">9</td>
-                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +6%</span></td>
-              </tr>
-              <tr class="ad-tr" style="grid-template-columns:none;display:table-row;">
-                <td style="padding:7px 0;font-size:11px;font-weight:600;color:#0F172A;">Mois -1</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:500;">+142</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;">74,8M €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;font-weight:600;">634k €</td>
-                <td style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;">6</td>
-                <td style="padding:7px 0;text-align:center;"><span class="ad-bk ad-bs">↑ +9%</span></td>
-              </tr>
+              
+              
               <tr class="ad-tr" style="grid-template-columns:none;display:table-row;background:#EFF6FF;">
                 <td style="padding:7px 0;font-size:11px;font-weight:700;color:#1D4ED8;">Mois en cours</td>
                 <td id="t-mois-n-clients" style="padding:7px 0;font-size:11px;text-align:right;color:#15803D;font-weight:700;">-</td>

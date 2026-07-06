@@ -63,7 +63,7 @@ async function showAdminView(viewId, navElement) {
     
     const targetView = document.getElementById(viewId);
     if (targetView) {
-        targetView.style.display = 'block';
+        targetView.style.display = 'flex';
     }
 
     // Appel du loader spécifique à la vue
