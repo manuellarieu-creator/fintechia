@@ -63,7 +63,7 @@ async function showAdminView(viewId, navElement) {
     
     const targetView = document.getElementById(viewId);
     if (targetView) {
-        targetView.style.display = 'flex';
+        targetView.style.display = 'block';
     }
 
     // Appel du loader spécifique à la vue
@@ -96,9 +96,6 @@ async function showAdminView(viewId, navElement) {
             break;
         case 'view-iban':
             await renderIbanTable();
-            break;
-        case 'view-reporting':
-            await renderReporting();
             break;
         case 'view-logs':
             await loadLogsTable();
@@ -512,183 +509,23 @@ async function submitBloquesAction(actionType) {
 // --- IBAN & Comptes (Page 8) ---
 async function renderIbanTable() {
     if(allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
+    let clientsWithIban = allClients.filter(c => c.iban && c.statut !== 'bloque');
+    const tbody = document.getElementById('iban-tbody');
     
-    // KPI Calculation
-    const actifs = allClients.filter(c => c.statut === 'actif').length;
-    const soldeTotal = allClients.reduce((acc, c) => acc + parseFloat(c.solde || 0), 0);
-    const epargne = allClients.filter(c => c.type_compte === 'epargne').length;
-    const business = allClients.filter(c => c.type_compte === 'business').length; // Fallback
-    const geles = allClients.filter(c => c.statut === 'bloque').length;
-    const soldeMoyen = allClients.length > 0 ? (soldeTotal / allClients.length) : 0;
-
-    document.getElementById('kpi-actifs').innerText = actifs;
-    document.getElementById('kpi-solde-total').innerText = soldeTotal.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-    document.getElementById('kpi-epargne').innerText = epargne;
-    document.getElementById('kpi-business').innerText = business;
-    document.getElementById('kpi-geles').innerText = geles;
-    document.getElementById('kpi-solde-moyen').innerText = soldeMoyen.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-
-    // Filtering
-    const searchTerm = (document.getElementById('acct-search')?.value || '').toLowerCase();
-    const sortVal = document.getElementById('acct-sort')?.value || 'solde_desc';
-    const activeTab = document.querySelector('#acct-tabs .ad-tab.act')?.dataset?.filter || 'all';
-
-    let filtered = allClients.filter(c => {
-        let matchTab = true;
-        if (activeTab === 'courant') matchTab = c.type_compte === 'courant' || c.type_compte === 'credit';
-        if (activeTab === 'epargne') matchTab = c.type_compte === 'epargne';
-        if (activeTab === 'business') matchTab = c.type_compte === 'business';
-        if (activeTab === 'bloque') matchTab = c.statut === 'bloque';
-        
-        let matchSearch = true;
-        if (searchTerm) {
-            const nom = `${c.prenom} ${c.nom}`.toLowerCase();
-            const email = (c.email || '').toLowerCase();
-            const iban = (c.iban || '').toLowerCase();
-            const num = (c.numero_compte || '').toLowerCase();
-            matchSearch = nom.includes(searchTerm) || email.includes(searchTerm) || iban.includes(searchTerm) || num.includes(searchTerm);
-        }
-        return matchTab && matchSearch;
-    });
-
-    if (sortVal === 'solde_desc') {
-        filtered.sort((a, b) => parseFloat(b.solde || 0) - parseFloat(a.solde || 0));
-    } else if (sortVal === 'nom') {
-        filtered.sort((a, b) => `${a.nom}`.localeCompare(`${b.nom}`));
-    } else if (sortVal === 'date_asc') {
-        filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-    }
-
-    const tbody = document.getElementById('admin-comptes-tbody');
-    document.getElementById('acct-pagination-info').innerText = `${filtered.length} / ${allClients.length} comptes affichés`;
-
-    if (filtered.length === 0) {
-        tbody.innerHTML = `<div style="padding: 20px; text-align: center; color: #94A3B8; font-size: 12px;">Aucun compte trouvé.</div>`;
+    if (clientsWithIban.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Aucun IBAN attribué.</td></tr>`;
         return;
     }
     
-    tbody.innerHTML = filtered.map(c => {
-        let trClass = 'ad-tr';
-        if (c.statut === 'bloque') trClass += ' blk';
-        else if (c.statut === 'kyc_requis' || c.kyc_statut === 'en_attente') trClass += ' warn';
-        
-        let typeBadge = '';
-        if (c.type_compte === 'epargne') typeBadge = '<span class="ad-bk ad-bp">Épargne</span>';
-        else if (c.type_compte === 'business') typeBadge = '<span class="ad-bk ad-bc">Business</span>';
-        else typeBadge = '<span class="ad-bk ad-bn">Courant</span>';
-
-        let statutBadge = '';
-        if (c.statut === 'actif') statutBadge = '<span class="ad-bk ad-bs">Actif</span>';
-        else if (c.statut === 'bloque') statutBadge = '<span class="ad-bk ad-bd"><i class="ti ti-lock" style="font-size:9px;"></i>Gelé</span>';
-        else if (c.statut === 'cloture') statutBadge = '<span class="ad-bk ad-bn">Clôturé</span>';
-        else statutBadge = '<span class="ad-bk ad-bw">Attente</span>';
-
-        let initials = ((c.prenom?.[0] || '') + (c.nom?.[0] || '')).toUpperCase() || '-';
-        let soldeColor = parseFloat(c.solde||0) < 0 ? '#DC2626' : (c.type_compte === 'epargne' ? '#15803D' : '#0F172A');
-        
-        return `
-            <div class="${trClass}" onclick="showAccountDetails(${c.id})">
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <div class="ad-av" style="background:#EFF6FF;color:#1D4ED8;">${initials}</div>
-                    <div style="min-width:0; overflow:hidden;">
-                        <p style="font-size:11px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.prenom} ${c.nom}</p>
-                        <p style="font-size:9px;color:#94A3B8;margin:0;">${c.email || "Pas d'email"}</p>
-                    </div>
-                </div>
-                <p style="font-size:10px;font-family:monospace;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.iban || '—'}</p>
-                <div><span class="ad-bk ad-bn">Standard</span></div>
-                <p style="font-size:12px;font-weight:700;text-align:right;color:${soldeColor};">${parseFloat(c.solde||0).toLocaleString('fr-FR', {style:'currency',currency:'EUR'})}</p>
-                <div style="text-align:center;">${typeBadge}</div>
-                <div style="text-align:center;">${statutBadge}</div>
-                <div style="display:flex;gap:3px;justify-content:center;">
-                    <button class="ad-btn" style="background:#EFF6FF;color:#1D4ED8;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:10px;"></i></button>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // Update Repartition
-    const total = allClients.length || 1;
-    const courants = allClients.filter(c => c.type_compte === 'courant' || c.type_compte === 'credit').length;
-    document.getElementById('rep-courant-txt').innerHTML = `${courants} <span style="color:#94A3B8;font-weight:400;">(${Math.round(courants/total*100)}%)</span>`;
-    document.getElementById('rep-courant-bar').style.width = `${Math.round(courants/total*100)}%`;
-
-    document.getElementById('rep-epargne-txt').innerHTML = `${epargne} <span style="color:#94A3B8;font-weight:400;">(${Math.round(epargne/total*100)}%)</span>`;
-    document.getElementById('rep-epargne-bar').style.width = `${Math.round(epargne/total*100)}%`;
-
-    document.getElementById('rep-geles-txt').innerHTML = `${geles} <span style="color:#94A3B8;font-weight:400;">(${Math.round(geles/total*100)}%)</span>`;
-    document.getElementById('rep-geles-bar').style.width = `${Math.round(geles/total*100)}%`;
+    tbody.innerHTML = clientsWithIban.map(c => `
+        <tr>
+            <td><span class="iban-code">${c.iban}</span></td>
+            <td>FINTEFR22XXX</td>
+            <td><span class="client-name">${c.prenom} ${c.nom}</span></td>
+            <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR')}</td>
+        </tr>
+    `).join('');
 }
-
-window.showAccountDetails = function(id) {
-    const c = allClients.find(acc => acc.id === id);
-    if (!c) return;
-
-    // Highlight row
-    document.querySelectorAll('.ad-tr').forEach(el => el.classList.remove('act'));
-    const rows = Array.from(document.querySelectorAll('.ad-tr'));
-    // Very simple fallback: just show the right panel
-    const panel = document.getElementById('acct-right-panel');
-    panel.style.visibility = 'visible';
-
-    let initials = ((c.prenom?.[0] || '') + (c.nom?.[0] || '')).toUpperCase() || '-';
-    document.getElementById('acct-det-av').innerText = initials;
-    document.getElementById('acct-det-nom').innerText = `${c.prenom} ${c.nom}`;
-    document.getElementById('acct-det-subtitle').innerText = `Client depuis le ${new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR')}`;
-
-    let statutHtml = '<span class="ad-bk ad-bw">Attente</span>';
-    if(c.statut === 'actif') statutHtml = '<span class="ad-bk ad-bs">Actif</span>';
-    if(c.statut === 'bloque') statutHtml = '<span class="ad-bk ad-bd">Gelé</span>';
-    if(c.statut === 'cloture') statutHtml = '<span class="ad-bk ad-bn">Clôturé</span>';
-    document.getElementById('acct-det-statut').outerHTML = `<span id="acct-det-statut">${statutHtml}</span>`;
-
-    let tTitle = c.type_compte === 'epargne' ? 'Compte épargne' : 'Compte courant';
-    document.getElementById('acct-det-type-title').innerText = tTitle;
-    document.getElementById('acct-det-type').innerText = tTitle;
-
-    document.getElementById('acct-det-iban').innerText = c.iban || 'Non attribué';
-    document.getElementById('acct-det-bic').innerText = c.bic || '—';
-    document.getElementById('acct-det-num').innerText = c.numero_compte || '—';
-    document.getElementById('acct-det-date').innerText = new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR');
-    document.getElementById('acct-det-solde').innerText = parseFloat(c.solde||0).toLocaleString('fr-FR', {style:'currency',currency:'EUR'});
-
-    const limits = c.max_transfer_amount ? `Plafond : ${c.max_transfer_amount} €` : 'Illimité';
-    document.getElementById('acct-det-limit').innerText = limits;
-
-    const tg = document.getElementById('acct-det-tg-transfer');
-    if (c.transfer_allowed) {
-        tg.className = 'ad-tg on';
-    } else {
-        tg.className = 'ad-tg off';
-    }
-
-    const btnGeler = document.getElementById('btn-det-geler');
-    if (c.statut === 'bloque') {
-        btnGeler.innerHTML = '<i class="ti ti-lock-open" style="font-size:11px;"></i>Dégeler';
-        btnGeler.style.background = '#F0FDF4';
-        btnGeler.style.color = '#15803D';
-        btnGeler.onclick = () => window.activerCompte(c.id, c.iban); // Existing function
-    } else {
-        btnGeler.innerHTML = '<i class="ti ti-lock" style="font-size:11px;"></i>Geler';
-        btnGeler.style.background = '#FEF2F2';
-        btnGeler.style.color = '#B91C1C';
-        btnGeler.onclick = () => window.bloquerClient(c.user_id, c.prenom+' '+c.nom); // Existing function
-    }
-}
-
-// Ensure events are attached
-setTimeout(() => {
-    document.getElementById('acct-search')?.addEventListener('input', renderIbanTable);
-    document.getElementById('acct-sort')?.addEventListener('change', renderIbanTable);
-    
-    document.querySelectorAll('#acct-tabs .ad-tab').forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            document.querySelectorAll('#acct-tabs .ad-tab').forEach(t => t.classList.remove('act'));
-            e.target.classList.add('act');
-            renderIbanTable();
-        });
-    });
-}, 1000);
 
 // --- KYC (Page 2) ---
 let currentKycFilter = 'Tous';
@@ -1790,109 +1627,4 @@ function formatNumber(num) {
 
 function formatMontant(montant) {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
-}
-
-
-// --- REPORTING (VUE 10) ---
-async function renderReporting() {
-    if (allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
-    if (allVirements.length === 0) allVirements = await fetchAPI('/admin/virements') || [];
-
-    // --- KPIs ---
-    const totalClients = allClients.length;
-    document.getElementById('rep-kpi-clients').innerText = totalClients;
-    
-    // Calcul volume total virements (simulé pour le trimestre)
-    const volumeTotal = allVirements.reduce((acc, v) => acc + parseFloat(v.montant || 0), 0);
-    
-    // Si la DB est presque vide, on applique un multiplicateur pour avoir des chiffres pertinents
-    // (A remplacer par de vraies données métier plus tard)
-    const volDisplay = volumeTotal < 1000 ? (volumeTotal * 1000 + 150000) : volumeTotal;
-    
-    document.getElementById('rep-kpi-vol').innerText = volDisplay.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-    document.getElementById('rep-g-vol').innerText = volDisplay.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0}) + ' volume';
-    document.getElementById('t-tot-vol').innerText = volDisplay.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-    document.getElementById('t-mois-n-vol').innerText = Math.round(volDisplay * 0.35).toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-
-    const pnb = volDisplay * 0.005; // PNB estimé = 0.5% du volume
-    const pnbStr = pnb.toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-    document.getElementById('rep-kpi-pnb').innerText = pnbStr;
-    document.getElementById('rep-g-pnb').innerText = pnbStr + ' PNB';
-    document.getElementById('rep-g2-pnb').innerText = pnbStr;
-    document.getElementById('t-tot-pnb').innerText = pnbStr;
-    document.getElementById('t-mois-n-pnb').innerText = Math.round(pnb * 0.35).toLocaleString('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
-
-    // Fraude (Fixe pour le moment)
-    document.getElementById('rep-kpi-fraude').innerText = '0,04%';
-    document.getElementById('rep-kpi-nps').innerText = '+76';
-
-    // --- Clients par offre ---
-    const epargne = allClients.filter(c => c.type_compte === 'epargne').length;
-    const business = allClients.filter(c => c.type_compte === 'business').length;
-    const courant = totalClients - epargne - business; // Reste = courant
-
-    const pCourant = totalClients > 0 ? Math.round((courant / totalClients) * 100) : 0;
-    const pEpargne = totalClients > 0 ? Math.round((epargne / totalClients) * 100) : 0;
-    const pBusiness = totalClients > 0 ? Math.round((business / totalClients) * 100) : 0;
-
-    document.getElementById('rep-offre-std').innerHTML = `${courant} <span style="color:#94A3B8;font-weight:400;">(${pCourant}%)</span>`;
-    document.getElementById('rep-offre-prm').innerHTML = `${epargne} <span style="color:#94A3B8;font-weight:400;">(${pEpargne}%)</span>`;
-    document.getElementById('rep-offre-biz').innerHTML = `${business} <span style="color:#94A3B8;font-weight:400;">(${pBusiness}%)</span>`;
-
-    // Maj Donut
-    // Circonférence ~100
-    // L'ordre: Standard (Bleu), Premium (Violet), Business (Cyan)
-    const c1 = document.getElementById('donut-c1');
-    const c2 = document.getElementById('donut-c2');
-    const c3 = document.getElementById('donut-c3');
-    if(c1 && c2 && c3) {
-        c1.setAttribute('stroke-dasharray', `${pCourant} 100`);
-        c1.setAttribute('stroke-dashoffset', '0');
-        
-        c2.setAttribute('stroke-dasharray', `${pEpargne} 100`);
-        c2.setAttribute('stroke-dashoffset', `-${pCourant}`);
-        
-        c3.setAttribute('stroke-dasharray', `${pBusiness} 100`);
-        c3.setAttribute('stroke-dashoffset', `-${pCourant + pEpargne}`);
-    }
-
-    // --- Conformité KYC ---
-    const kycValides = allClients.filter(c => c.statut === 'actif' || c.kyc_statut === 'valide').length;
-    const kycAttente = allClients.filter(c => c.kyc_statut === 'en_attente').length;
-    const kycRejetes = allClients.filter(c => c.kyc_statut === 'rejete' || c.statut === 'bloque').length;
-    const kycTotal = kycValides + kycAttente + kycRejetes || 1;
-
-    const pKycVal = Math.round((kycValides / kycTotal) * 100);
-    const pKycAtt = Math.round((kycAttente / kycTotal) * 100);
-    const pKycRej = Math.round((kycRejetes / kycTotal) * 100);
-
-    document.getElementById('kyc-val-txt').innerText = pKycVal + '%';
-    document.getElementById('kyc-val-bar').style.width = pKycVal + '%';
-    
-    document.getElementById('kyc-att-txt').innerText = pKycAtt + '%';
-    document.getElementById('kyc-att-bar').style.width = pKycAtt + '%';
-    
-    document.getElementById('kyc-rej-txt').innerText = pKycRej + '%';
-    document.getElementById('kyc-rej-bar').style.width = pKycRej + '%';
-
-    document.getElementById('kyc-tot-txt').innerText = totalClients;
-
-    // --- Revenus (Simulation ratios fixes) ---
-    document.getElementById('rev-1').innerHTML = `${Math.round(pnb * 0.37).toLocaleString()} € <span style="color:#94A3B8;font-weight:400;">(37%)</span>`;
-    document.getElementById('rev-2').innerHTML = `${Math.round(pnb * 0.28).toLocaleString()} € <span style="color:#94A3B8;font-weight:400;">(28%)</span>`;
-    document.getElementById('rev-3').innerHTML = `${Math.round(pnb * 0.21).toLocaleString()} € <span style="color:#94A3B8;font-weight:400;">(21%)</span>`;
-    document.getElementById('rev-4').innerHTML = `${Math.round(pnb * 0.10).toLocaleString()} € <span style="color:#94A3B8;font-weight:400;">(10%)</span>`;
-    document.getElementById('rev-5').innerHTML = `${Math.round(pnb * 0.04).toLocaleString()} € <span style="color:#94A3B8;font-weight:400;">(4%)</span>`;
-
-    // --- Acquisition ---
-    document.getElementById('rep-acq-new').innerText = `+${totalClients}`;
-    const churn = Math.round(totalClients * 0.02);
-    document.getElementById('rep-acq-churn').innerText = churn;
-    
-    // Mois n
-    document.getElementById('t-mois-n-clients').innerText = `+${Math.round(totalClients * 0.3)}`;
-    document.getElementById('t-tot-clients').innerText = `+${totalClients}`;
-
-    // Badge évolution clients totaux
-    document.getElementById('rep-kpi-clients-badge').innerText = `+${totalClients}`;
 }
