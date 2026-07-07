@@ -1897,6 +1897,9 @@
       localStorage.setItem('fintech_token', res.token);
       localStorage.setItem('fintech_device_token', res.deviceToken);
       document.getElementById('modal-2fa-login').style.display = 'none';
+      if (typeof initDashboard === 'function') initDashboard(res.user, res.account, res.kyc_statut);
+    } catch(err) {
+      alert('Erreur: ' + err.message);
       inputs.forEach(i => { i.value = ''; i.classList.add('empty'); });
       inputs[0].focus();
     }
