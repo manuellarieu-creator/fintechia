@@ -171,6 +171,7 @@ router.post('/login', [
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
 
+    try { await db.query("ALTER TABLE users ADD COLUMN pin_code_usage_count INT DEFAULT 0"); } catch(e) {}
     try { await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL"); } catch(e) {}
     try { await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)"); } catch(e) {}
     try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
@@ -257,6 +258,16 @@ router.post('/login/2fa', [
       return res.status(401).json({ error: 'Code incorrect', code: 'INVALID_2FA', status: 401 });
     }
 
+    const pinUsage = user.pin_code_usage_count || 0;
+    if (pinUsage >= 20) {
+      // Create a temporary token for resetting the PIN
+      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      return res.json({ requirePinReset: true, resetToken });
+    }
+
+    // Increment PIN usage count
+    await db.query('UPDATE users SET pin_code_usage_count = pin_code_usage_count + 1 WHERE id = ?', [user.id]);
+
     // Enregistrer l'appareil de confiance
     const deviceToken = crypto.randomBytes(32).toString('hex');
     await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
@@ -287,6 +298,59 @@ router.post('/login/2fa', [
   } catch (err) {
     if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
       return res.status(401).json({ error: 'Session 2FA expirée ou invalide', status: 401 });
+    }
+    next(err);
+  }
+});
+
+// POST /api/auth/reset-pin
+router.post('/reset-pin', [
+  body('resetToken').notEmpty(),
+  body('new_pin').isLength({ min: 6, max: 6 }).isNumeric()
+], validateReq, async (req, res, next) => {
+  const { resetToken, new_pin } = req.body;
+  try {
+    const decoded = jwt.verify(resetToken, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    if (decoded.intent !== 'reset_pin') {
+      return res.status(401).json({ error: 'Token invalide', status: 401 });
+    }
+
+    const [users] = await db.query('SELECT * FROM users WHERE id = ?', [decoded.id]);
+    if (users.length === 0) return res.status(401).json({ error: 'Utilisateur introuvable', status: 401 });
+    
+    const user = users[0];
+
+    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0 WHERE id = ?', [new_pin, user.id]);
+
+    // Proceed to login
+    const deviceToken = crypto.randomBytes(32).toString('hex');
+    await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
+
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
+    const account = accounts.length > 0 ? accounts[0] : null;
+
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+
+    await audit.log({
+      acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
+      action: 'code_pin_mis_a_jour', categorie: audit.CATEGORIES.securite,
+      cible_type: 'user', cible_id: user.id,
+      cible_detail: `Code PIN renouvelé (limite atteinte)`, req
+    });
+
+    const [kycs] = await db.query('SELECT statut FROM kyc WHERE user_id = ? ORDER BY soumis_le DESC LIMIT 1', [user.id]);
+    const kyc_statut = kycs.length > 0 ? kycs[0].statut : null;
+
+    res.json({
+      token,
+      deviceToken,
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
+      account,
+      kyc_statut
+    });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ error: 'Session expirée ou invalide', status: 401 });
     }
     next(err);
   }

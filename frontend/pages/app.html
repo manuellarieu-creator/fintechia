@@ -325,11 +325,11 @@
       <div style="width:70px; height:70px; background:#F0FDF4; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
         <i class="ti ti-check" style="font-size:36px; color:#16A34A;"></i>
       </div>
-      <h3 style="margin-top: 0; font-size:22px; color:#0F172A;">Ourrah votre compte FINTECHIA a bien été créé et validé.</h3>
+      <h3 style="margin-top: 0; font-size:22px; color:#0F172A;">🎉 Ourrah votre compte FINTECHIA a bien été créé et validé ! ✨</h3>
       <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
-        Découvrez votre espace client pour vos opérations bancaires.
+        Découvrez votre espace client pour vos opérations bancaires 🏦💳.
       </p>
-      <button class="btn-primary" style="width:100%;" onclick="goToEspaceBancaire()">Voir Espace Bancaire</button>
+      <button class="btn-primary" style="width:100%; display: flex; justify-content: center; align-items: center; text-align: center; gap: 8px;" onclick="goToEspaceBancaire()">👀 Voir Espace Bancaire</button>
     </div>
   </div>
 
@@ -1759,11 +1759,46 @@
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 1)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 2)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 3)">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 4)">
+      <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtpFocus(this, 5)">
       <input type="text" class="otp-box" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
     </div>
     <button type="button" class="btn-primary w-full" style="justify-content: center; text-align: center;" onclick="forceLogin()">Valider</button>
   </div>
 </div>
+
+<!-- Modale Reset PIN -->
+<div id="modal-reset-pin" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
+  <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:450px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
+    <div class="auth-title" style="font-size:22px; margin-bottom:12px; color: #EAB308;"><i class="ti ti-alert-triangle"></i> Changement de code PIN requis</div>
+    <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Vous avez atteint la limite de 20 connexions avec votre code actuel. Veuillez définir un nouveau code PIN à 6 chiffres pour continuer.</p>
+    
+    <label style="display:block; text-align:left; font-size:13px; font-weight:600; color:#334155; margin-bottom:8px;">Nouveau code PIN</label>
+    <div class="otp-inputs reset-pin-inputs" style="justify-content:center; gap:12px; margin-bottom:20px;">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 1)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 2)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 3)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 4)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 5)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinFocus(this, 6)">
+    </div>
+
+    <label style="display:block; text-align:left; font-size:13px; font-weight:600; color:#334155; margin-bottom:8px;">Confirmer le nouveau code PIN</label>
+    <div class="otp-inputs reset-pin-confirm-inputs" style="justify-content:center; gap:12px; margin-bottom:30px;">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinConfirmFocus(this, 1)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinConfirmFocus(this, 2)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinConfirmFocus(this, 3)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinConfirmFocus(this, 4)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="moveResetPinConfirmFocus(this, 5)">
+      <input type="password" class="otp-box" maxlength="1" onkeyup="checkResetPinAndSubmit(this, event)">
+    </div>
+
+    <div id="reset-pin-error" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;">Les codes ne correspondent pas.</div>
+
+    <button type="button" id="btn-submit-reset-pin" class="btn-primary w-full" style="justify-content: center; text-align: center;" onclick="submitNewPin()">Valider et se connecter</button>
+  </div>
+</div>
+
 
 <script>
   function handleLoginDynamic() {
@@ -1846,16 +1881,22 @@
     let code = '';
     inputs.forEach(i => code += i.value);
     
-    if (code.length < 4) return;
+    if (code.length < 6) return;
 
     try {
       const res = await apiCall('/auth/login/2fa', 'POST', { tempToken: tempToken2FA, code });
+      
+      if (res.requirePinReset) {
+        document.getElementById('modal-2fa-login').style.display = 'none';
+        document.getElementById('modal-reset-pin').style.display = 'flex';
+        window.tempResetToken = res.resetToken;
+        setTimeout(() => document.querySelector('.reset-pin-inputs .otp-box').focus(), 100);
+        return;
+      }
+
       localStorage.setItem('fintech_token', res.token);
       localStorage.setItem('fintech_device_token', res.deviceToken);
       document.getElementById('modal-2fa-login').style.display = 'none';
-      if (typeof initDashboard === 'function') initDashboard(res.user, res.account, res.kyc_statut);
-    } catch(err) {
-      alert('Erreur: ' + err.message);
       inputs.forEach(i => { i.value = ''; i.classList.add('empty'); });
       inputs[0].focus();
     }
@@ -1890,11 +1931,11 @@
 <div class="modal" id="modal-activation-fee" style="display:none; z-index: 10000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
   <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 30px;">
     <div style="width:60px; height:60px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
-      <i class="ti ti-wallet" style="font-size:32px; color:#2563EB;"></i>
+      <i class="ti ti-piggy-bank" style="font-size:32px; color:#2563EB;"></i>
     </div>
     <h3 style="margin-top: 0;">Alimentation de compte requise</h3>
     <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
-      Pour activer pleinement votre compte et accéder à toutes nos fonctionnalités (virements, cartes, etc.), veuillez effectuer un premier dépôt d'au moins <strong id="activation-fee-amount" style="color:#0F172A;">10€</strong>.
+      Pour activer pleinement votre compte et accéder à toutes nos fonctionnalités (virements, cartes, etc.), veuillez effectuer un premier dépôt d'au moins <strong id="activation-fee-amount" style="color:#0F172A;">25€</strong>.
     </p>
     <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:16px; margin-bottom:24px; text-align:left;">
       <p style="margin:0 0 8px; font-size:13px; font-weight:600; color:#475569; text-transform:uppercase;">Coordonnées bancaires (IBAN)</p>
@@ -1910,7 +1951,7 @@
 <div class="modal" id="modal-activation-success" style="display:none; z-index: 10001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
   <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 30px;">
     <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-    <h3 style="margin-top: 0; color: #10B981;">L'activation de votre compte NovaBanque est finalisée avec succès.</h3>
+    <h3 style="margin-top: 0; margin-bottom: 32px; color: #10B981;">L'activation de votre compte NovaBanque est finalisée avec succès.</h3>
     <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
       Vous pouvez à présent profiter des nombreuses fonctionnalités à disposition (Transférer, Recevoir, Emprunter, Trader) 🚀<br><br>
       Nous vous remercions pour votre confiance. 🙏
