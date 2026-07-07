@@ -842,6 +842,27 @@
         </div>
 
 
+<!-- MOBILE VUE CRÉDITS -->
+        <div id="m-view-credits" class="mobile-view" style="display:none; padding-bottom:100px;">
+          <div class="m-header">
+            <h1 class="m-title">Mes Crédits</h1>
+            <div class="m-actions">
+              <button class="m-btn-icon" onclick="openModal('modal-demande-credit')"><i class="ti ti-plus"></i></button>
+            </div>
+          </div>
+          <div class="m-content">
+            <div class="card" style="margin-bottom: 16px;">
+              <div class="card-header">
+                <h3 class="card-title">Historique des demandes</h3>
+              </div>
+              <div id="credits-list-mobile" style="margin-top: 10px;">
+                <p style="text-align:center; color:var(--text-muted); font-size:14px; padding:20px;">Chargement...</p>
+              </div>
+            </div>
+            <button class="btn-primary" style="width:100%; margin-top: 10px;" onclick="openModal('modal-demande-credit')">Nouvelle demande</button>
+          </div>
+        </div>
+
 <!-- Bottom nav -->
       <div class="bottom-nav">
         <div class="nb-item active" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-dashboard')">
@@ -859,6 +880,10 @@
         <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-budget')">
           <i class="ti ti-chart-pie"></i>
           <span>Budget</span>
+        </div>
+        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-credits')">
+          <i class="ti ti-building-bank"></i>
+          <span>Crédits</span>
         </div>
         <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-releves')">
           <i class="ti ti-file-text"></i>
@@ -886,6 +911,7 @@
           <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">🏠</span> Accueil</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-virements')"><span class="nb-icon">⇄</span> Virements</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">💳</span> Cartes</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-credits')"><span class="nb-icon">🏦</span> Crédits</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-releves')"><span class="nb-icon">📄</span> Relevés</a>
@@ -977,6 +1003,37 @@
           </div>
         </div> <!-- /nb-grid -->
         </div> <!-- /view-dashboard -->
+
+        <!-- VUE CRÉDITS -->
+        <div id="view-credits" class="nb-view" style="display:none; padding-bottom: 40px;">
+          <div class="nb-grid" style="margin-top: 24px;">
+            <div class="nb-card" style="grid-column: 1 / -1; margin-bottom: 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                      <h2 style="margin:0;">Mes Crédits</h2>
+                      <p style="color:var(--text-muted); font-size:14px; margin:4px 0 0;">Gérez vos demandes de financement.</p>
+                  </div>
+                  <button class="nb-btn-primary" onclick="openModal('modal-demande-credit')">
+                      <i class="ti ti-plus"></i> Nouvelle demande
+                  </button>
+              </div>
+            </div>
+            
+            <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1; margin-top: 24px;">
+              <div class="nb-tx-header">
+                <h2>Historique des demandes</h2>
+              </div>
+              <table class="nb-tx-table">
+                <thead>
+                  <tr><th>Référence</th><th>Date</th><th>Motif</th><th>Montant</th><th>Durée</th><th>Statut</th></tr>
+                </thead>
+                <tbody id="credits-tbody-desktop">
+                  <tr><td colspan="6" style="text-align:center; padding: 20px;">Chargement...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
         <!-- VUE VIREMENTS -->
         <div id="view-virements" class="nb-view" style="display:none; padding-bottom: 40px;">
@@ -2023,5 +2080,49 @@
   </div>
 </div>
 
+<!-- Modal Demande de Crédit -->
+<div class="modal" id="modal-demande-credit" style="display:none; z-index: 1000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
+  <div class="modal-content" style="max-width: 500px; width: 90%; background: white; border-radius: 12px; padding: 24px; position: relative;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h3 style="margin: 0;">Demande de crédit</h3>
+      <button onclick="closeModal('modal-demande-credit')" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">Utilisez le simulateur pour estimer votre mensualité puis validez votre demande.</p>
+    
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label class="form-label" style="display:block; margin-bottom:8px; font-weight:500;">Motif du crédit</label>
+      <select id="credit-motif" class="form-control" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0;">
+        <option value="Immobilier">Immobilier</option>
+        <option value="Personnel">Personnel</option>
+        <option value="Consommation">Consommation</option>
+        <option value="Auto">Auto</option>
+      </select>
+    </div>
+
+    <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:20px; margin-bottom:20px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:500;">Montant emprunté</span>
+        <span id="credit-amount-display" style="font-weight:600; color:var(--primary);">50 000 €</span>
+      </div>
+      <input type="range" id="credit-amount-range" min="5000" max="250000" step="1000" value="50000" style="width:100%; margin-bottom:20px;">
+      
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:500;">Durée</span>
+        <span id="credit-duration-display" style="font-weight:600; color:var(--primary);">120 mois</span>
+      </div>
+      <input type="range" id="credit-duration-range" min="12" max="300" step="12" value="120" style="width:100%;">
+      
+      <div style="border-top:1px solid #E2E8F0; margin-top:20px; padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; color:var(--text-muted);">Mensualité estimée (TAEG indicatif: 3.9%)</span>
+        <span id="credit-mensualite-display" style="font-size:24px; font-weight:600; color:var(--text-main);">494 €</span>
+      </div>
+    </div>
+    
+    <button class="btn-primary" style="width:100%; padding:12px; font-size:16px;" onclick="submitCreditRequest()">Soumettre ma demande</button>
+    <div id="credit-error-msg" style="color:var(--danger); font-size:13px; margin-top:10px; display:none; text-align:center;"></div>
+  </div>
+</div>
+
+<script src="../assets/js/credits.js"></script>
 </body>
 </html>
