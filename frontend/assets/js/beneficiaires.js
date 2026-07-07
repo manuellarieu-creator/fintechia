@@ -133,7 +133,7 @@ async function loadBeneficiairesForSelect() {
       let html = list.map(b => {
         const initials = b.nom.substring(0, 2).toUpperCase();
         return `
-          <div class="recent-card" onclick="selectBeneficiary('${b.iban}', '${b.nom}', ${isMobile})">
+          <div class="recent-card" style="grid-column: 1 / -1;" onclick="selectBeneficiary('${b.iban}', '${b.nom}', ${isMobile})">
               <div class="avatar-sm" style="background:var(--primary-light); color:var(--primary); font-weight:bold;">${initials}</div>
               <div class="recent-info">
                   <h5>${b.nom}</h5>
