@@ -61,9 +61,23 @@ async function submitCreditRequest() {
   const montant = document.getElementById('credit-amount-range').value;
   const duree_mois = document.getElementById('credit-duration-range').value;
   const motif = document.getElementById('credit-motif').value;
+  const prenom = document.getElementById('credit-prenom').value;
+  const nom = document.getElementById('credit-nom').value;
+  const email = document.getElementById('credit-email').value;
+  const telephone = document.getElementById('credit-telephone').value;
+  const message = document.getElementById('credit-message').value;
 
   try {
-    const res = await apiCall('/credits/demande', 'POST', { montant, duree_mois, motif });
+    const res = await apiCall('/credits/demande', 'POST', { 
+        montant, 
+        duree_mois, 
+        motif, 
+        prenom, 
+        nom, 
+        email, 
+        telephone, 
+        message 
+    });
     if (res.success) {
       closeModal('modal-demande-credit');
       alert('Votre demande de crédit a été enregistrée avec succès (Réf: ' + res.reference + ').');

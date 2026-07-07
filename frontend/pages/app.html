@@ -2113,9 +2113,32 @@
       <input type="range" id="credit-duration-range" min="12" max="300" step="12" value="120" style="width:100%;">
       
       <div style="border-top:1px solid #E2E8F0; margin-top:20px; padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:13px; color:var(--text-muted);">Mensualité estimée (TAEG indicatif: 3.9%)</span>
+        <span style="font-size:13px; color:var(--text-muted);">Mensualité estimée (TAEG indicatif: <span id="credit-taux-display">3.9</span>%)</span>
         <span id="credit-mensualite-display" style="font-size:24px; font-weight:600; color:var(--text-main);">494 €</span>
       </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+      <div class="form-group">
+        <label class="form-label" style="display:block; margin-bottom:4px; font-size:13px; font-weight:500;">Prénom</label>
+        <input type="text" id="credit-prenom" class="form-control" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0;">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:block; margin-bottom:4px; font-size:13px; font-weight:500;">Nom</label>
+        <input type="text" id="credit-nom" class="form-control" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0;">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label class="form-label" style="display:block; margin-bottom:4px; font-size:13px; font-weight:500;">Email</label>
+      <input type="email" id="credit-email" class="form-control" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0;">
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label class="form-label" style="display:block; margin-bottom:4px; font-size:13px; font-weight:500;">Téléphone</label>
+      <input type="tel" id="credit-telephone" class="form-control" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0;">
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label class="form-label" style="display:block; margin-bottom:4px; font-size:13px; font-weight:500;">Description du projet</label>
+      <textarea id="credit-message" class="form-control" rows="3" style="width:100%; padding:10px; border-radius:6px; border:1px solid #E2E8F0; resize:vertical;"></textarea>
     </div>
     
     <button class="btn-primary" style="width:100%; padding:12px; font-size:16px;" onclick="submitCreditRequest()">Soumettre ma demande</button>

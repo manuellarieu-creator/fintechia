@@ -9,10 +9,10 @@ const audit = require('../services/audit');
 // POST /api/credits/demande
 router.post('/demande', guard, async (req, res, next) => {
   try {
-    const { montant, duree_mois, motif } = req.body;
+    const { montant, duree_mois, motif, prenom, nom, email, telephone, message } = req.body;
     
-    if (!montant || !duree_mois || !motif) {
-      return res.status(400).json({ error: 'Tous les champs sont requis.', code: 'MISSING_FIELDS', status: 400 });
+    if (!montant || !duree_mois || !motif || !prenom || !nom || !email || !telephone) {
+      return res.status(400).json({ error: 'Veuillez remplir tous les champs requis.', code: 'MISSING_FIELDS', status: 400 });
     }
 
     const m = parseFloat(montant);
@@ -32,9 +32,9 @@ router.post('/demande', guard, async (req, res, next) => {
     const reference = 'CRE-' + crypto.randomUUID().slice(0, 8).toUpperCase();
 
     const [result] = await db.query(
-      `INSERT INTO credit_requests (user_id, montant, duree_mois, taux, mensualite, motif, reference) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [req.user.id, m, d, taux, mensualite, motif, reference]
+      `INSERT INTO credit_requests (user_id, montant, duree_mois, taux, mensualite, motif, prenom, nom, email, telephone, message, reference) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [req.user.id, m, d, taux, mensualite, motif, prenom, nom, email, telephone, message || null, reference]
     );
 
     await notifications.envoyer(req.user.id, 'Demande de crédit', `Votre demande de crédit de ${m}€ (Réf: ${reference}) est en cours d'analyse.`, 'info');
