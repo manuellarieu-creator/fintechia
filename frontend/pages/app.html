@@ -1839,7 +1839,7 @@
         setTimeout(() => document.querySelector('#modal-2fa-login .otp-box').focus(), 100);
       } else {
         localStorage.setItem('fintech_token', res.token);
-        if (typeof initDashboard === 'function') initDashboard(res.user, res.account);
+        if (typeof initDashboard === 'function') initDashboard(res.user, res.account, res.kyc_statut);
       }
     } catch (err) {
       alert(err.message);
@@ -1895,6 +1895,67 @@
       alert('Erreur: ' + err.message);
       inputs.forEach(i => { i.value = ''; i.classList.add('empty'); });
       inputs[0].focus();
+    }
+  }
+  function moveResetPinFocus(el, index) {
+    if (el.value.length === 1) {
+      const next = el.nextElementSibling;
+      if (next) next.focus();
+    } else if (el.value.length === 0 && event && event.key === "Backspace") {
+      const prev = el.previousElementSibling;
+      if (prev) prev.focus();
+    }
+  }
+
+  function moveResetPinConfirmFocus(el, index) {
+    if (el.value.length === 1) {
+      const next = el.nextElementSibling;
+      if (next) next.focus();
+    } else if (el.value.length === 0 && event && event.key === "Backspace") {
+      const prev = el.previousElementSibling;
+      if (prev) prev.focus();
+    }
+  }
+
+  async function checkResetPinAndSubmit(el, e) {
+    if (el.value.length === 1) {
+      await submitNewPin();
+    } else if (el.value.length === 0 && e && e.key === "Backspace") {
+      const prev = el.previousElementSibling;
+      if (prev) prev.focus();
+    }
+  }
+
+  async function submitNewPin() {
+    const inputs1 = document.querySelectorAll('.reset-pin-inputs .otp-box');
+    const inputs2 = document.querySelectorAll('.reset-pin-confirm-inputs .otp-box');
+    let pin1 = '';
+    let pin2 = '';
+    inputs1.forEach(i => pin1 += i.value);
+    inputs2.forEach(i => pin2 += i.value);
+
+    const errEl = document.getElementById('reset-pin-error');
+    if (pin1.length !== 6 || pin2.length !== 6) {
+      errEl.innerText = "Veuillez saisir les 6 chiffres.";
+      errEl.style.display = 'block';
+      return;
+    }
+    if (pin1 !== pin2) {
+      errEl.innerText = "Les codes ne correspondent pas.";
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    try {
+      const res = await apiCall('/auth/reset-pin', 'POST', { resetToken: window.tempResetToken, new_pin: pin1 });
+      localStorage.setItem('fintech_token', res.token);
+      localStorage.setItem('fintech_device_token', res.deviceToken);
+      document.getElementById('modal-reset-pin').style.display = 'none';
+      if (typeof initDashboard === 'function') initDashboard(res.user, res.account, res.kyc_statut);
+    } catch (err) {
+      errEl.innerText = err.message;
+      errEl.style.display = 'block';
     }
   }
 </script>
