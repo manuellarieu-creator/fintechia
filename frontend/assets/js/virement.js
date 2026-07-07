@@ -155,3 +155,24 @@ document.getElementById('form-virement-desktop')?.addEventListener('submit', (e)
     e.preventDefault();
     openTunnelModal();
 });
+
+function toggleDateProgrammee(val, context) {
+    const suffix = context === 'mobile' ? '-mobile' : '-desktop';
+    const dateInput = document.getElementById('vir-date' + suffix);
+    if (val === 'programme') {
+        dateInput.type = 'date';
+        dateInput.removeAttribute('readonly');
+        dateInput.style.background = 'white';
+        // Set minimum date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.min = tomorrow.toISOString().split('T')[0];
+        dateInput.value = '';
+    } else {
+        dateInput.type = 'text';
+        dateInput.setAttribute('readonly', 'true');
+        dateInput.style.background = context === 'mobile' ? 'white' : '#f8fafc';
+        dateInput.value = "Aujourd'hui";
+        dateInput.removeAttribute('min');
+    }
+}
