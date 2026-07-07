@@ -57,13 +57,13 @@ router.post('/virement', [
     
     await connection.beginTransaction();
 
-    const [users] = await connection.query('SELECT pin_code FROM users WHERE id = ? FOR SHARE', [req.user.id]);
+    const [users] = await connection.query('SELECT pin_code FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0 || users[0].pin_code !== pin_code) {
       await connection.rollback();
       return res.status(401).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 401 });
     }
 
-    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? FOR UPDATE', [req.user.id]);
+    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ?', [req.user.id]);
     if (accounts.length === 0 || accounts[0].statut !== 'actif') {
       await connection.rollback();
       return res.status(400).json({ error: 'Compte inactif ou inexistant', code: 'ACCOUNT_INVALID', status: 400 });
@@ -108,7 +108,7 @@ router.post('/virement', [
       `INSERT INTO transactions 
       (account_id, type, montant, solde_avant, solde_apres, libelle, motif, iban_dest, nom_dest, nom_banque_dest, reference, statut) 
       VALUES (?, 'virement_emis', ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en_attente')`,
-      [account.id, montant, account.solde, account.solde, 'Virement émis', motif, iban_dest, nom_dest, nom_banque_dest, reference]
+      [account.id, montant, account.solde, account.solde, motif, motif, iban_dest, nom_dest, nom_banque_dest, reference]
     );
 
     await connection.commit();

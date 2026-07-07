@@ -473,12 +473,15 @@
                       <a href="#" class="link">Changer &rarr;</a>
                   </div>
                   
-                  <div class="beneficiary-selected" id="mobile-beneficiary-selected" style="display:none;">
-                      <div class="avatar-green" id="mobile-ben-avatar">MB</div>
-                      <div class="beneficiary-info">
-                          <h4 id="mobile-ben-name">Sélectionnez un bénéficiaire</h4>
-                          <p id="mobile-ben-iban">-</p>
+                  <div class="beneficiary-selected" id="mobile-beneficiary-selected" style="display:none; justify-content: space-between; align-items: center;">
+                      <div style="display: flex; gap: 12px; align-items: center;">
+                          <div class="avatar-green" id="mobile-ben-avatar">MB</div>
+                          <div class="beneficiary-info">
+                              <h4 id="mobile-ben-name">Sélectionnez un bénéficiaire</h4>
+                              <p id="mobile-ben-iban">-</p>
+                          </div>
                       </div>
+                      <button type="button" onclick="unselectBeneficiary(true)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">✕</button>
                   </div>
 
                   <div id="mobile-recents-container" style="display:none;">
@@ -989,7 +992,7 @@
                       </div>
                   </div>
                   <button class="btn-outline desktop-only" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
-                      <i class="ti ti-plus"></i> Faire un virement
+                      <i class="ti ti-plus"></i> Nouveau virement
                   </button>
               </div>
             </div>
@@ -1495,12 +1498,15 @@
                       <h3 class="card-title">Bénéficiaire</h3>
                   </div>
                   
-                  <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none;">
-                      <div class="avatar-green" id="desktop-ben-avatar">MB</div>
-                      <div class="beneficiary-info">
-                          <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
-                          <p id="desktop-ben-iban">-</p>
+                  <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none; justify-content: space-between; align-items: center;">
+                      <div style="display: flex; gap: 12px; align-items: center;">
+                          <div class="avatar-green" id="desktop-ben-avatar">MB</div>
+                          <div class="beneficiary-info">
+                              <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
+                              <p id="desktop-ben-iban">-</p>
+                          </div>
                       </div>
+                      <button type="button" onclick="unselectBeneficiary(false)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">✕</button>
                   </div>
 
                   <div id="desktop-recents-container" style="display:none;">
@@ -1570,12 +1576,12 @@
           <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'opération avec votre code secret à 6 chiffres.</p>
           
           <div class="otp-inputs" style="justify-content: center; margin-bottom: 32px;">
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
-              <input type="password" maxlength="1" class="otp-input-real" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
+              <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;">
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center;">

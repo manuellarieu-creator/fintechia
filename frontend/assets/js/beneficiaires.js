@@ -199,6 +199,19 @@ window.selectBeneficiary = function(iban, nom, isMobile) {
   if(ibanLabel) ibanLabel.innerText = iban;
 }
 
+window.unselectBeneficiary = function(isMobile) {
+  const suffix = isMobile ? '-mobile' : '';
+  const prefix = isMobile ? 'mobile' : 'desktop';
+  
+  const inputIban = document.getElementById('vir-iban' + suffix);
+  const inputNom = document.getElementById('vir-nom' + suffix);
+  if(inputIban) inputIban.value = '';
+  if(inputNom) inputNom.value = '';
+
+  const blockSelected = document.getElementById(prefix + '-beneficiary-selected');
+  if(blockSelected) blockSelected.style.display = 'none';
+}
+
 let bicTimeout = null;
 async function previewBIC() {
   const iban = document.getElementById('new-ben-iban').value.replace(/\s+/g, '').toUpperCase();

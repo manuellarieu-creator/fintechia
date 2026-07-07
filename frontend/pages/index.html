@@ -3,261 +3,277 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NovaBanque — Banque & Crédit Digital</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <title>NovaBanque — Votre argent mérite mieux</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
   
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/landing.css">
-  <link rel="stylesheet" href="../assets/css/responsive.css">
-</head>
-<body class="lang-fr">
+  <style>
+    /* Reset & Base */
+    body, html { margin: 0; padding: 0; width: 100%; overflow-x: hidden; background: #0F1B33; }
+    * { box-sizing: border-box; }
+    
+    .nb { font-family:'Inter',sans-serif; color:#E9E6DD; background:#0F1B33; width: 100%; min-height: 100vh; }
+    .nb-serif { font-family:'Fraunces',serif; font-optical-sizing:auto; }
+    .nb-mono { font-family:'IBM Plex Mono',monospace; }
+    
+    .nb-btn { transition:opacity .15s ease; cursor:pointer; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border: none; }
+    .nb-btn:hover { opacity:.85; }
+    .nb-card { transition: border-color .15s ease; }
+    .nb-card:hover { border-color:#C99A3B !important; }
+    
+    @keyframes nbTick { 0% { opacity:1 } 50% { opacity:.55 } 100% { opacity:1 } }
+    .nb-tick { animation:nbTick 1s step-end infinite; }
+    input[type=range].nb-range { accent-color:#C99A3B; cursor: pointer; }
 
-<!-- HEADER -->
-<header>
-  <div class="header-inner">
-    <a href="#" class="logo">
-      <svg class="logo-svg" viewBox="0 0 120 105" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polyline points="2,85 52,5 102,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round"/>
-        <polyline points="16,85 52,22 88,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round"/>
-        <polyline points="30,85 52,39 74,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round"/>
-        <line x1="105" y1="5" x2="105" y2="85" stroke="#2563EB" stroke-width="10" stroke-linecap="round"/>
-      </svg>
-      <span class="logo-name">NovaBanque</span>
-    </a>
-    <nav>
-      <a href="#services"><span class="fr">Services</span><span class="en">Services</span></a>
-      <a href="#products"><span class="fr">Produits</span><span class="en">Products</span></a>
-      <a href="#security"><span class="fr">Sécurité</span><span class="en">Security</span></a>
-      <a href="#contact"><span class="fr">Contact</span><span class="en">Contact</span></a>
-    </nav>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button class="lang-btn active" onclick="setLang('fr')">FR</button>
-        <button class="lang-btn" onclick="setLang('en')">EN</button>
-      </div>
-      <button class="btn-header" onclick="window.location.href='/app?action=login'">
-        <span class="fr">Connexion / S'inscrire</span>
-        <span class="en">Login / Sign up</span>
-      </button>
-      <button class="burger" onclick="openDrawer()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+    /* Layout Classes */
+    .nb-header { display:flex; align-items:center; justify-content:space-between; padding:20px 40px; border-bottom:1px solid rgba(233,230,221,0.12); }
+    .nb-nav-links { display:flex; align-items:center; gap:28px; font-size:14px; color:#B9B4A6; }
+    .nb-nav-links span { cursor: pointer; transition: color 0.2s; }
+    .nb-nav-links span:hover { color: #C99A3B; }
+    
+    .nb-hero { display:flex; align-items:center; gap:60px; padding:88px 40px 76px; max-width:1180px; margin:0 auto; }
+    .nb-hero-text { flex:1.3; }
+    .nb-hero-visual { flex:1; display:flex; justify-content:center; width: 100%; }
+    
+    .nb-features { background:#0B1428; border-top:1px solid rgba(233,230,221,0.1); border-bottom:1px solid rgba(233,230,221,0.1); }
+    .nb-features-inner { max-width:1180px; margin:0 auto; display:flex; padding:22px 40px; }
+    .nb-feature-item { flex:1; text-align:center; border-right:1px solid rgba(233,230,221,0.1); }
+    .nb-feature-item:last-child { border-right: none; }
+    
+    .nb-credit-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:48px; }
+    
+    .nb-sim-row { display:flex; gap:40px; flex-wrap:wrap; }
+    .nb-sim-col { flex:1; min-width:220px; }
+    
+    .nb-offers-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    
+    /* Responsive Media Queries */
+    @media (max-width: 992px) {
+      .nb-credit-grid { grid-template-columns:repeat(2,1fr); }
+      .nb-offers-grid { grid-template-columns:repeat(1,1fr); }
+      .nb-hero { flex-direction: column; text-align: center; gap: 40px; padding: 60px 20px 40px; }
+      .nb-hero-text h1 { font-size: 40px !important; }
+      .nb-hero-text p { margin: 0 auto 32px !important; }
+      .nb-hero-text > div { justify-content: center; }
+      .nb-features-inner { flex-direction: column; gap: 20px; }
+      .nb-feature-item { border-right: none; border-bottom: 1px solid rgba(233,230,221,0.1); padding-bottom: 10px; }
+      .nb-feature-item:last-child { border-bottom: none; padding-bottom: 0; }
+    }
+    
+    @media (max-width: 768px) {
+      .nb-header { flex-direction: column; gap: 20px; padding: 20px; }
+      .nb-nav-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+      .nb-credit-grid { grid-template-columns:repeat(1,1fr); }
+      .nb-hero-text h1 { font-size: 32px !important; }
+      .nb-hero-text > div { flex-direction: column; width: 100%; }
+      .nb-hero-text > div > span { width: 100%; text-align: center; }
+      #nbCredit { padding: 60px 20px !important; }
+      .nb-sim-row { flex-direction: column; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Maquette de la landing page NovaBanque avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page.</h2>
+
+<div class="nb">
+
+  <div class="nb-header">
+    <div style="display:flex;align-items:center;gap:10px; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
+      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">novabanque</span>
+    </div>
+    <div class="nb-nav-links">
+      <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">comptes</span>
+      <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">crédits</span>
+      <span>tarifs</span>
+      <span>sécurité</span>
+      <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">ouvrir un compte</button>
     </div>
   </div>
-</header>
 
-<div class="mobile-overlay" id="overlay" onclick="closeDrawer()"></div>
-<div class="mobile-drawer" id="drawer">
-  <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  <nav class="drawer-nav">
-    <a href="#services" onclick="closeDrawer()"><span class="fr">Services</span><span class="en">Services</span></a>
-    <a href="#products" onclick="closeDrawer()"><span class="fr">Produits</span><span class="en">Products</span></a>
-    <a href="#security" onclick="closeDrawer()"><span class="fr">Sécurité</span><span class="en">Security</span></a>
-    <a href="#contact" onclick="closeDrawer()"><span class="fr">Contact</span><span class="en">Contact</span></a>
-  </nav>
-  <div class="drawer-footer">
-    <button class="btn-primary" style="width:100%" onclick="window.location.href='/app?action=register'">
-      <span class="fr">Ouvrir un compte</span>
-      <span class="en">Open an account</span>
-    </button>
+  <div class="nb-hero">
+    <div class="nb-hero-text">
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.14em;color:#C99A3B;margin:0 0 18px;">banque en ligne · régulée acpr</p>
+      <h1 class="nb-serif" style="font-size:52px;line-height:1.08;font-weight:400;margin:0 0 22px;color:#F4F1E9;">
+        votre argent mérite<br>mieux qu'une file d'attente.
+      </h1>
+      <p style="font-size:16px;line-height:1.7;color:#B9B4A6;max-width:440px;margin:0 0 32px;">
+        un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. sans agence, sans papier, sans frais cachés.
+      </p>
+      <div style="display:flex;gap:14px;align-items:center;">
+        <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html'">ouvrir un compte</button>
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">simuler un crédit</button>
+      </div>
+    </div>
+
+    <div class="nb-hero-visual">
+      <div style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px;">
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">temps moyen d'ouverture</p>
+        <p class="nb-mono nb-tick" id="nbTimer" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">05:00</p>
+        <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">carte visa incluse<br>dès la validation kyc</p>
+      </div>
+    </div>
   </div>
+
+  <div class="nb-features">
+    <div class="nb-features-inner">
+      <div class="nb-feature-item">
+        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">100 000 €</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">fonds garantis fgdr</p>
+      </div>
+      <div class="nb-feature-item">
+        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">5 min</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">vérification kyc</p>
+      </div>
+      <div class="nb-feature-item">
+        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">0 €</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">frais de tenue de compte</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="nbCredit" style="background:#F4F1E9;color:#1C2436;padding:80px 40px;">
+    <div style="max-width:1180px;margin:0 auto;">
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">les crédits</p>
+      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;max-width:560px;">un projet à financer ? on a le crédit qu'il faut.</h2>
+      <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">immobilier, personnel, consommation ou financement de grands projets — demande en ligne, réponse de principe sous 48h.</p>
+
+      <div class="nb-credit-grid">
+        <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
+          <i class="ti ti-home-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit immobilier</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">achat, construction ou renégociation.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 3,2 %</p>
+        </div>
+        <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
+          <i class="ti ti-user-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit personnel</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">sans justificatif, libre d'usage.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 4,9 %</p>
+        </div>
+        <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
+          <i class="ti ti-shopping-cart" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit consommation</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">travaux, véhicule, équipement.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 5,4 %</p>
+        </div>
+        <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
+          <i class="ti ti-building-skyscraper" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">grands projets</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">financement structuré, montant élevé.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">sur dossier</p>
+        </div>
+      </div>
+
+      <div style="border:1px solid #DEDACB;border-radius:8px;padding:32px;background:#FFFFFF;">
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.1em;color:#8A6D1F;margin:0 0 20px;">simulateur de mensualité</p>
+        <div class="nb-sim-row">
+          <div class="nb-sim-col">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+              <span style="color:#5B5546;">montant emprunté</span>
+              <span class="nb-mono" id="nbAmountOut" style="font-weight:500;">50 000 €</span>
+            </div>
+            <input class="nb-range" type="range" min="5000" max="250000" step="1000" value="50000" id="nbAmount" style="width:100%;">
+          </div>
+          <div class="nb-sim-col">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+              <span style="color:#5B5546;">durée</span>
+              <span class="nb-mono" id="nbDurationOut" style="font-weight:500;">120 mois</span>
+            </div>
+            <input class="nb-range" type="range" min="12" max="300" step="12" value="120" id="nbDuration" style="width:100%;">
+          </div>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
+          <span style="font-size:13px;color:#5B5546;">mensualité estimée (taux indicatif 3,9 %)</span>
+          <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">494 €</span>
+        </div>
+        <div style="margin-top:22px;">
+          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">faire une demande de crédit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nbOffres" style="background:#0F1B33;padding:76px 40px;">
+    <div style="max-width:1180px;margin:0 auto;">
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#C99A3B;margin:0 0 10px;">les offres de compte</p>
+      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 40px;color:#F4F1E9;">un compte qui grandit avec vous.</h2>
+      <div class="nb-offers-grid">
+        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html'">
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">standard</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">gratuit</p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">compte courant + carte visa classic</p>
+        </div>
+        <div class="nb-card" style="border:1px solid #C99A3B;border-radius:8px;padding:26px;background:rgba(201,154,59,0.06);cursor:pointer;" onclick="window.location.href='app.html'">
+          <p style="font-size:12px;color:#C99A3B;margin:0 0 10px;">le plus choisi</p>
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">premium</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">9,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">visa platinum + assurances + 0 € frais intl.</p>
+        </div>
+        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html'">
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">business</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">24,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">multi-comptes + api + comptabilité</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:90px 40px;text-align:center;">
+    <h2 class="nb-serif" style="font-size:34px;font-weight:400;margin:0 0 26px;color:#F4F1E9;">ouvrez votre compte pendant qu'il en est encore temps.</h2>
+    <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html'">commencer maintenant</button>
+  </div>
+
+  <div style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
+    <span>novabanque © 2026 · établissement de paiement agréé</span>
+    <span style="display:flex;gap:18px;"><span>cgu</span><span>confidentialité</span><span>contact</span></span>
+  </div>
+
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-halo"></div>
-  <div class="hero-halo2"></div>
-  <div class="hero-content">
-    <div class="hero-left">
-      <div class="hero-tag">
-        <span class="fr">Banque digitale & Crédit</span>
-        <span class="en">Digital Banking & Credit</span>
-      </div>
-      <h1 class="hero-title">
-        <span class="fr">Votre argent,<em>libéré.</em>Votre crédit,<em>simplifié.</em></span>
-        <span class="en">Your money,<em>unleashed.</em>Your credit,<em>simplified.</em></span>
-      </h1>
-      <p class="hero-sub">
-        <span class="fr">NovaBanque réunit compte bancaire et crédit intelligent dans une seule plateforme sécurisée. Gérez, épargnez, empruntez — avec une transparence totale.</span>
-        <span class="en">NovaBanque brings together banking and smart credit in one secure platform. Manage, save, borrow — with complete transparency.</span>
-      </p>
-      <div class="hero-btns">
-        <button class="btn-primary" onclick="window.location.href='/app?action=register'">
-          <span class="fr">Commencer gratuitement</span>
-          <span class="en">Get started for free</span>
-        </button>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="card-mockup">
-        <div class="card-chip"></div>
-        <div class="card-num">4821 •••• •••• 7364</div>
-        <div class="card-bottom">
-          <div>
-            <div class="card-holder"><span class="fr">Titulaire</span><span class="en">Cardholder</span></div>
-            <div class="card-holder"><strong>Marie Fontaine</strong></div>
-          </div>
-          <div class="card-logo-area">
-            <svg viewBox="0 0 120 105" fill="none">
-              <polyline points="2,85 52,5 102,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round" opacity=".7"/>
-              <polyline points="16,85 52,22 88,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round" opacity=".85"/>
-              <polyline points="30,85 52,39 74,85" stroke="#2563EB" stroke-width="10" fill="none" stroke-linejoin="round"/>
-              <line x1="105" y1="5" x2="105" y2="85" stroke="#2563EB" stroke-width="10" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-mini">
-          <div class="stat-mini-val">€ 8 450</div>
-          <div class="stat-mini-lbl"><span class="fr">Solde disponible</span><span class="en">Available balance</span></div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-val">2,9%</div>
-          <div class="stat-mini-lbl"><span class="fr">Taux crédit annuel</span><span class="en">Annual credit rate</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<script>
+(function(){
+  var total = 300;
+  var el = document.getElementById('nbTimer');
+  function renderTimer(s){
+    var m = Math.floor(s/60);
+    var sec = s%60;
+    el.textContent = (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+  }
+  renderTimer(total);
+  setInterval(function(){
+    total = total > 0 ? total - 1 : 300;
+    renderTimer(total);
+  }, 1000);
 
-<!-- SERVICES -->
-<section class="services" id="services">
-  <div class="section-inner">
-    <div class="services-head">
-      <div class="section-eyebrow"><span class="fr">Ce que nous offrons</span><span class="en">What we offer</span></div>
-      <h2 class="section-title">
-        <span class="fr">Une plateforme,<br/>toutes vos finances.</span>
-        <span class="en">One platform,<br/>all your finances.</span>
-      </h2>
-    </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-ico"><i class="ti ti-building-bank"></i></div>
-        <div class="service-title"><span class="fr">Compte courant digital</span><span class="en">Digital current account</span></div>
-        <p class="service-desc"><span class="fr">IBAN personnel, virements SEPA instantanés et historique complet.</span><span class="en">Personal IBAN, instant SEPA transfers and complete history.</span></p>
-      </div>
-      <div class="service-card">
-        <div class="service-ico"><i class="ti ti-credit-card"></i></div>
-        <div class="service-title"><span class="fr">Crédit à la consommation</span><span class="en">Consumer credit</span></div>
-        <p class="service-desc"><span class="fr">Jusqu'à 75 000€ avec des taux compétitifs.</span><span class="en">Up to €75,000 with competitive rates.</span></p>
-      </div>
-      <div class="service-card">
-        <div class="service-ico"><i class="ti ti-shield-check"></i></div>
-        <div class="service-title"><span class="fr">KYC Sécurisé</span><span class="en">Secure KYC</span></div>
-        <p class="service-desc"><span class="fr">Vérification d'identité rapide et sécurisée.</span><span class="en">Fast and secure identity verification.</span></p>
-      </div>
-    </div>
-  </div>
-</section>
+  var amountEl = document.getElementById('nbAmount');
+  var durationEl = document.getElementById('nbDuration');
+  var amountOut = document.getElementById('nbAmountOut');
+  var durationOut = document.getElementById('nbDurationOut');
+  var monthlyOut = document.getElementById('nbMonthly');
+  var rate = 0.039;
 
-<!-- PRODUITS / SIMULATION -->
-<section class="products" id="products">
-  <div class="section-inner">
-    <div class="section-eyebrow"><span class="fr">Nos produits</span><span class="en">Our products</span></div>
-    <h2 class="section-title" style="margin-bottom:2rem">
-      <span class="fr">Banque ou crédit ?<br/>Les deux, ensemble.</span>
-      <span class="en">Banking or credit?<br/>Both, together.</span>
-    </h2>
-    <div class="products-tabs">
-      <button class="ptab active" onclick="switchTab('banking')">
-        <span class="fr">🏦 Compte bancaire</span><span class="en">🏦 Bank account</span>
-      </button>
-      <button class="ptab" onclick="switchTab('credit')">
-        <span class="fr">💳 Crédit</span><span class="en">💳 Credit</span>
-      </button>
-    </div>
-    
-    <div class="products-layout" id="tab-banking">
-      <div class="product-list">
-        <div class="product-item">
-          <div class="product-ico2"><i class="ti ti-bolt"></i></div>
-          <div>
-            <div class="product-item-title"><span class="fr">Virements instantanés</span><span class="en">Instant transfers</span></div>
-            <p class="product-item-desc"><span class="fr">Envoyez de l'argent en quelques secondes via SEPA Instant.</span><span class="en">Send money in seconds via SEPA Instant.</span></p>
-          </div>
-        </div>
-      </div>
-      <div class="product-visual">
-        <div class="pv-header">
-          <span class="pv-title"><span class="fr">Mon compte</span><span class="en">My account</span></span>
-          <span class="pv-badge">LIVE</span>
-        </div>
-        <div>
-          <div class="pv-amount">€ 8 450,00</div>
-          <div class="pv-label"><span class="fr">Solde disponible</span><span class="en">Available balance</span></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="products-layout" id="tab-credit" style="display:none">
-      <div class="product-list">
-        <div class="product-item">
-          <div class="product-ico2"><i class="ti ti-school"></i></div>
-          <div>
-            <div class="product-item-title"><span class="fr">Crédit projets</span><span class="en">Project loan</span></div>
-            <p class="product-item-desc"><span class="fr">Voyages, travaux, études, mariage : jusqu'à 75 000€.</span><span class="en">Travel, home improvement, education, wedding: up to €75,000.</span></p>
-          </div>
-        </div>
-      </div>
-      <div class="product-visual">
-        <div class="pv-header">
-          <span class="pv-title"><span class="fr">Simulation crédit</span><span class="en">Loan simulation</span></span>
-          <span class="pv-badge"><span class="fr">APPROUVÉ</span><span class="en">APPROVED</span></span>
-        </div>
-        <div>
-          <div class="pv-amount">€ 15 000</div>
-          <div class="pv-label"><span class="fr">Montant emprunté</span><span class="en">Loan amount</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  function fmt(n){
+    return Math.round(n).toLocaleString('fr-FR') + ' €';
+  }
 
-<!-- SÉCURITÉ (Truncated in user's prompt, completed here) -->
-<section class="security" id="security">
-  <div class="section-inner">
-    <div class="security-layout">
-      <div>
-        <div class="section-eyebrow"><span class="fr">Sécurité & Conformité</span><span class="en">Security & Compliance</span></div>
-        <h2 class="section-title">
-          <span class="fr">Votre argent est entre de bonnes mains.</span>
-          <span class="en">Your money is in safe hands.</span>
-        </h2>
-        <p class="section-sub" style="margin:1rem 0 2rem">
-          <span class="fr">NovaBanque est agréée par l'ACPR et respecte les plus hauts standards de sécurité bancaire européens. Vos données et vos fonds sont protégés à chaque instant.</span>
-          <span class="en">NovaBanque is approved by the ACPR and meets the highest European banking security standards. Your data and funds are protected at all times.</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+  function computeMonthly(){
+    var P = parseFloat(amountEl.value);
+    var n = parseFloat(durationEl.value);
+    var r = rate / 12;
+    var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+    amountOut.textContent = fmt(P);
+    durationOut.textContent = Math.round(n) + ' mois';
+    monthlyOut.textContent = fmt(monthly);
+  }
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-col">
-        <div class="logo-name">NovaBanque</div>
-        <p class="footer-brand-desc">
-          <span class="fr">La banque de demain, alliant comptes courants modernes et crédits intelligents.</span>
-          <span class="en">The bank of tomorrow, combining modern checking accounts and smart credit.</span>
-        </p>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Liens</div>
-        <a href="#services">Services</a>
-        <a href="#products">Produits</a>
-        <a href="#security">Sécurité</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">&copy; 2026 NovaBanque. Tous droits réservés.</div>
-    </div>
-  </div>
-</footer>
+  amountEl.addEventListener('input', computeMonthly);
+  durationEl.addEventListener('input', computeMonthly);
+  computeMonthly();
+})();
+</script>
 
-<script src="../assets/js/landing.js"></script>
 </body>
 </html>
