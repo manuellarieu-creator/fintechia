@@ -126,11 +126,7 @@
 
     <script>
         let tempToken = null;
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:3001/api' 
-            : (window.location.hostname.includes('github.dev') 
-                ? `https://${window.location.hostname.replace(/-\d+(?=\.(?:app\.)?github\.dev)/, '-3001')}/api` 
-                : '/api');
+        const API_BASE = '/api';
 
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
