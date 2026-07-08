@@ -82,6 +82,19 @@ async function submitCreditRequest() {
       closeModal('modal-demande-credit');
       alert('Votre demande de crédit a été enregistrée avec succès (Réf: ' + res.reference + ').');
       loadCredits();
+      
+      // Update sidebar active class if applicable
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const navItem = document.querySelector('[onclick*="view-credits"]');
+      if (navItem) navItem.classList.add('active');
+
+      if (window.innerWidth <= 768) {
+          if (typeof showMobileView === 'function') showMobileView('m-view-credits');
+      } else {
+          if (typeof showView === 'function') showView('view-credits');
+      }
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   } catch (e) {
     errEl.textContent = e.message || "Erreur lors de la demande.";
