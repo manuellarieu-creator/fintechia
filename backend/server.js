@@ -47,15 +47,28 @@ if (!process.env.VERCEL) {
 // Middlewares
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (same-origin, mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow the configured frontend URL
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) return callback(null, true);
+    // Allow same-host requests (Vercel serves frontend and backend on same domain)
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 
-// Rate limiters
-const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
-const registerLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3 });
-const resetDemandeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3 });
-const resetValiderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3 });
-const adminLimiter = rateLimit({ windowMs: 60 * 1000, max: 100 });
+// Rate limiters — handler renvoie du JSON pour éviter les erreurs de parsing côté client
+const rateLimitHandler = (req, res) => {
+  res.status(429).json({ error: 'Trop de tentatives. Réessayez plus tard.', code: 'RATE_LIMITED', status: 429 });
+};
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, handler: rateLimitHandler });
+const registerLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, handler: rateLimitHandler });
+const resetDemandeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5, handler: rateLimitHandler });
+const resetValiderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5, handler: rateLimitHandler });
+const adminLimiter = rateLimit({ windowMs: 60 * 1000, max: 200, handler: rateLimitHandler });
 
 // Routes API avec rate limiters spǸcifiques
 app.use('/api/auth/login', loginLimiter);
@@ -77,12 +90,31 @@ app.use('/api/cartes', cartesRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/admin/alertes', alertesRoutes);
 
-// Fichiers statiques (en production configuré via Nginx internal)
+// Fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes frontend (SPA)
+// Servir les assets et pages frontend depuis le backend (nécessaire en dev et Codespaces)
+app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/admin.html'));
+});
+app.get('/admin-dashboard.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/admin-dashboard.html'));
+});
+app.get('/app.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/app.html'));
+});
+app.get('/app', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/app.html'));
+});
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
+});
+app.get('/:page.html', (req, res) => {
+  const filePath = path.join(__dirname, '../frontend/pages', req.params.page + '.html');
+  res.sendFile(filePath, (err) => {
+    if (err) res.status(404).send('Page non trouvée');
+  });
 });
 
 // Health check
