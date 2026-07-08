@@ -443,6 +443,10 @@
   }
 
   function openCreditModal() {
+    if (localStorage.getItem('fintech_token')) {
+      window.location.href = 'app.html?action=credit';
+      return;
+    }
     document.getElementById('creditModalOverlay').style.display = 'flex';
     document.getElementById('modalStep1').style.display = 'block';
     document.getElementById('modalStep2').style.display = 'none';
@@ -531,9 +535,14 @@
     document.getElementById('modalStep3').style.display = 'none';
     document.getElementById('modalSuccess').style.display = 'block';
     
-    // Redirect to landing page
+    // Redirect based on login state
     setTimeout(function(){
-      window.location.href = 'index.html';
+      if (localStorage.getItem('fintech_token')) {
+        // Redirect to app and open credits view
+        window.location.href = 'app.html?view=view-credits&mview=m-view-credits';
+      } else {
+        window.location.href = 'index.html';
+      }
     }, 3000);
   }
 
