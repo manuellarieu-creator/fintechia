@@ -55,7 +55,7 @@ router.post('/demande', guard, async (req, res, next) => {
 
     const creditId = result.insertId;
 
-    await notifications.envoyer(req.user.id, 'Demande de crédit', \`Votre demande de crédit de \${m}€ (Réf: \${reference}) est en cours d'analyse.\`, 'info');
+    await notifications.envoyer(req.user.id, 'Demande de crédit', `Votre demande de crédit de ${m}€ (Réf: ${reference}) est en cours d'analyse.`, 'info');
 
     res.json({ success: true, reference, id: creditId, message: 'Votre demande a bien été enregistrée.' });
   } catch (err) {

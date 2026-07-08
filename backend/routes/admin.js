@@ -714,8 +714,8 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
         await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [newSolde, acc.id]);
         
         await connection.query(
-          \`INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
-           VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')\`,
+          `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
+           VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')`,
           [acc.id, credit.montant, acc.solde, newSolde, 'Déblocage de crédit : ' + credit.reference, 'Déblocage crédit']
         );
       } else {
@@ -728,26 +728,26 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 
     // Envoi de notification selon le statut
     let notifTitre = 'Mise à jour Crédit';
-    let notifMessage = \`Le statut de votre demande de crédit (Réf: \${credit.reference}) est passé à : \${statut}.\`;
+    let notifMessage = `Le statut de votre demande de crédit (Réf: ${credit.reference}) est passé à : ${statut}.`;
     let notifType = 'info';
     
     if (statut === 'incomplet') {
       notifTitre = 'Demande de crédit incomplète';
-      notifMessage = \`Il manque des documents pour votre demande de crédit. Message: \${message || ''}\`;
+      notifMessage = `Il manque des documents pour votre demande de crédit. Message: ${message || ''}`;
       notifType = 'alerte';
     } else if (statut === 'valide_succes') {
       notifTitre = 'Demande de crédit validée';
-      notifMessage = \`Votre demande de crédit a été validée avec succès !\`;
+      notifMessage = `Votre demande de crédit a été validée avec succès !`;
       notifType = 'succes';
     } else if (statut === 'credite') {
       notifTitre = 'Crédit versé';
-      notifMessage = \`Le montant de \${credit.montant}€ a été versé sur votre compte !\`;
+      notifMessage = `Le montant de ${credit.montant}€ a été versé sur votre compte !`;
       notifType = 'succes';
     }
 
     await notifications.envoyer(credit.user_id, notifTitre, notifMessage, notifType);
 
-    res.json({ success: true, message: \`Demande de crédit passée au statut \${statut}\` });
+    res.json({ success: true, message: `Demande de crédit passée au statut ${statut}` });
   } catch (err) {
     await connection.rollback();
     next(err);
