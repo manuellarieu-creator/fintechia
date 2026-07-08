@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-const { guard } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 const crypto = require('crypto');
 const notifications = require('../services/notifications');
 const multer = require('multer');
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // POST /api/credits/demande
-router.post('/demande', guard, async (req, res, next) => {
+router.post('/demande', authMiddleware, async (req, res, next) => {
   try {
     const { montant, duree_mois, motif, prenom, nom, email, telephone, message, profession, revenu_mensuel, type_credit } = req.body;
     
@@ -64,7 +64,8 @@ router.post('/demande', guard, async (req, res, next) => {
 });
 
 // POST /api/credits/:id/documents
-router.post('/:id/documents', guard, upload.single('document'), async (req, res, next) => {
+// POST /api/credits/:id/documents
+router.post('/:id/documents', authMiddleware, upload.single('document'), async (req, res, next) => {
   try {
     const { id } = req.params;
     const { type_document } = req.body;
@@ -92,7 +93,7 @@ router.post('/:id/documents', guard, upload.single('document'), async (req, res,
 });
 
 // GET /api/credits/mes-demandes
-router.get('/mes-demandes', guard, async (req, res, next) => {
+router.get('/mes-demandes', authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await db.query(
       'SELECT id, montant, duree_mois, taux, mensualite, motif, type_credit, statut, reference, created_at FROM credit_requests WHERE user_id = ? ORDER BY created_at DESC',
