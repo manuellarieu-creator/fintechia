@@ -639,4 +639,122 @@ router.post('/notifier', guard, async (req, res, next) => {
   }
 });
 
+// GET /api/admin/credits
+router.get('/credits', guard, async (req, res, next) => {
+  try {
+    const { statut } = req.query;
+    let sql = 'SELECT c.*, u.prenom as user_prenom, u.nom as user_nom, u.email as user_email FROM credit_requests c JOIN users u ON c.user_id = u.id';
+    const params = [];
+    if (statut) {
+      sql += ' WHERE c.statut = ?';
+      params.push(statut);
+    }
+    sql += ' ORDER BY c.created_at DESC';
+    const [demandes] = await db.query(sql, params);
+    
+    // Fetch documents pour chaque demande
+    for (let d of demandes) {
+      const [docs] = await db.query('SELECT id, type_document, file_path, statut, created_at FROM credit_documents WHERE credit_request_id = ?', [d.id]);
+      d.documents = docs;
+    }
+    
+    res.json(demandes);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/credits/:id/statut
+router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validateReq, async (req, res, next) => {
+  const connection = await db.getConnection();
+  try {
+    const { statut, message, compte_id } = req.body;
+    const creditId = req.params.id;
+
+    await connection.beginTransaction();
+
+    const [credits] = await connection.query('SELECT * FROM credit_requests WHERE id = ?', [creditId]);
+    if (credits.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ error: 'Demande introuvable', status: 404 });
+    }
+    const credit = credits[0];
+
+    // Mise à jour de la demande de crédit (statut et compte_id si fourni)
+    let updateSql = 'UPDATE credit_requests SET statut = ?';
+    let updateParams = [statut];
+    
+    if (compte_id) {
+      updateSql += ', compte_id = ?';
+      updateParams.push(compte_id);
+    }
+    if (message) {
+      updateSql += ', message = ?';
+      updateParams.push(message);
+    }
+    
+    updateSql += ' WHERE id = ?';
+    updateParams.push(creditId);
+
+    await connection.query(updateSql, updateParams);
+
+    // Si le statut est "Credite", on effectue le versement sur le compte
+    if (statut === 'credite') {
+      const targetCompteId = compte_id || credit.compte_id;
+      if (!targetCompteId) {
+         await connection.rollback();
+         return res.status(400).json({ error: 'Veuillez spécifier le compte à approvisionner.', status: 400 });
+      }
+      
+      const [accounts] = await connection.query('SELECT id, solde FROM accounts WHERE id = ? AND statut = "actif" LIMIT 1', [targetCompteId]);
+      if (accounts.length > 0) {
+        const acc = accounts[0];
+        const newSolde = parseFloat(acc.solde) + parseFloat(credit.montant);
+        
+        await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [newSolde, acc.id]);
+        
+        await connection.query(
+          \`INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
+           VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')\`,
+          [acc.id, credit.montant, acc.solde, newSolde, 'Déblocage de crédit : ' + credit.reference, 'Déblocage crédit']
+        );
+      } else {
+        await connection.rollback();
+        return res.status(400).json({ error: 'Le compte spécifié est invalide ou inactif.', status: 400 });
+      }
+    }
+
+    await connection.commit();
+
+    // Envoi de notification selon le statut
+    let notifTitre = 'Mise à jour Crédit';
+    let notifMessage = \`Le statut de votre demande de crédit (Réf: \${credit.reference}) est passé à : \${statut}.\`;
+    let notifType = 'info';
+    
+    if (statut === 'incomplet') {
+      notifTitre = 'Demande de crédit incomplète';
+      notifMessage = \`Il manque des documents pour votre demande de crédit. Message: \${message || ''}\`;
+      notifType = 'alerte';
+    } else if (statut === 'valide_succes') {
+      notifTitre = 'Demande de crédit validée';
+      notifMessage = \`Votre demande de crédit a été validée avec succès !\`;
+      notifType = 'succes';
+    } else if (statut === 'credite') {
+      notifTitre = 'Crédit versé';
+      notifMessage = \`Le montant de \${credit.montant}€ a été versé sur votre compte !\`;
+      notifType = 'succes';
+    }
+
+    await notifications.envoyer(credit.user_id, notifTitre, notifMessage, notifType);
+
+    res.json({ success: true, message: \`Demande de crédit passée au statut \${statut}\` });
+  } catch (err) {
+    await connection.rollback();
+    next(err);
+  } finally {
+    connection.release();
+  }
+});
+
+
 module.exports = router;

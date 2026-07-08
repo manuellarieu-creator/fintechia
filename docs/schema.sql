@@ -164,3 +164,36 @@ CREATE TABLE IF NOT EXISTS user_devices (
   last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS credit_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  compte_id INT,
+  montant DECIMAL(15,2) NOT NULL,
+  duree_mois INT NOT NULL,
+  taux DECIMAL(5,2) NOT NULL,
+  mensualite DECIMAL(15,2) NOT NULL,
+  type_credit VARCHAR(100),
+  motif VARCHAR(255) NOT NULL,
+  message TEXT,
+  nom VARCHAR(100),
+  prenom VARCHAR(100),
+  email VARCHAR(255),
+  telephone VARCHAR(50),
+  profession VARCHAR(100),
+  revenu_mensuel DECIMAL(15,2),
+  statut VARCHAR(50) DEFAULT 'en_attente',
+  reference VARCHAR(50) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS credit_documents (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  credit_request_id INT NOT NULL,
+  type_document VARCHAR(100) NOT NULL,
+  file_path VARCHAR(255) NOT NULL,
+  statut VARCHAR(50) DEFAULT 'recu',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (credit_request_id) REFERENCES credit_requests(id) ON DELETE CASCADE
+);

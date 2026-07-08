@@ -91,6 +91,9 @@ async function showAdminView(viewId, navElement) {
         case 'view-supervision':
             startSupervisionLive();
             break;
+        case 'view-credits':
+            await loadAdminCredits();
+            break;
         case 'view-cartes':
             await loadCartesTable();
             break;
@@ -794,6 +797,89 @@ window.saveSettings = async function() {
     if(res && res.success) {
         alert('Paramètres enregistrés !');
         document.getElementById('modal-settings').style.display = 'none';
+    }
+}
+
+// ============================
+// GESTION DES CRÉDITS
+// ============================
+let adminCredits = [];
+
+async function loadAdminCredits() {
+    const credits = await fetchAPI('/admin/credits') || [];
+    adminCredits = credits;
+    
+    const tbody = document.getElementById('admin-credits-tbody');
+    if (credits.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding:20px; text-align:center; font-size:13px; color:#94A3B8;">Aucune demande de crédit.</td></tr>`;
+        return;
+    }
+    
+    tbody.innerHTML = credits.map(c => {
+        let badgeClass = 'bn';
+        let badgeText = 'En attente';
+        if (c.statut === 'etude') { badgeClass = 'bw'; badgeText = 'En étude'; }
+        else if (c.statut === 'incomplet') { badgeClass = 'bd'; badgeText = 'Incomplet'; }
+        else if (c.statut === 'valide_succes') { badgeClass = 'bs'; badgeText = 'Validé (Succès)'; }
+        else if (c.statut === 'credite') { badgeClass = 'bs'; badgeText = 'Crédité'; }
+        
+        const dateStr = new Date(c.created_at).toLocaleDateString('fr-FR');
+        
+        return `
+        <tr style="border-bottom:0.5px solid #F1F5F9;">
+            <td style="padding:12px 16px; font-size:12px; color:#0F172A;">
+                <p style="margin:0; font-weight:600;">#${c.reference}</p>
+                <p style="margin:2px 0 0; font-size:10px; color:#64748B;">${dateStr}</p>
+            </td>
+            <td style="padding:12px 16px; font-size:12px; color:#0F172A;">
+                <p style="margin:0; font-weight:500;">${c.user_prenom} ${c.user_nom}</p>
+                <p style="margin:2px 0 0; font-size:10px; color:#64748B;">${c.user_email}</p>
+            </td>
+            <td style="padding:12px 16px; font-size:12px; color:#0F172A;">
+                <p style="margin:0;">${c.motif || 'Non spécifié'}</p>
+                <p style="margin:2px 0 0; font-size:10px; color:#64748B; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${c.message || ''}">${c.message || '...'}</p>
+            </td>
+            <td style="padding:12px 16px; font-size:12px; color:#0F172A;">
+                <p style="margin:0; font-weight:600;">${formatMontant(c.montant)}</p>
+                <p style="margin:2px 0 0; font-size:10px; color:#64748B;">${c.duree} mois / ${formatMontant(c.mensualite)}/mois</p>
+            </td>
+            <td style="padding:12px 16px;">
+                <span style="display:inline-flex; align-items:center; font-size:10px; padding:3px 8px; border-radius:5px; font-weight:600;" class="bk ${badgeClass}">${badgeText}</span>
+            </td>
+            <td style="padding:12px 16px; text-align:right;">
+                <button class="btn" style="background:#EFF6FF; color:#1D4ED8; padding:5px 10px; font-size:11px; border-radius:6px; border:none; cursor:pointer;" onclick="manageCredit(${c.id})">Gérer</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function manageCredit(id) {
+    const credit = adminCredits.find(c => c.id === id);
+    if (!credit) return;
+    
+    // We can show a prompt or a small modal to change status
+    const newStatut = prompt(`Changer le statut pour ${credit.reference} (actuel: ${credit.statut})\n\nValeurs possibles : etude, incomplet, valide_succes, credite`, credit.statut);
+    
+    if (newStatut && newStatut !== credit.statut) {
+        let msg = prompt('Message (optionnel, pour l\'utilisateur) :');
+        let body = { statut: newStatut, message: msg };
+        
+        // S'il est crédité, on a besoin du compte pour le versement (pour simplifier, on en demande un)
+        if (newStatut === 'credite' && !credit.compte_id) {
+            const cpt = prompt("ID du compte à créditer ? (Vous pouvez le trouver dans Comptes Clients)");
+            if (!cpt) return alert("Action annulée, ID de compte requis.");
+            body.compte_id = cpt;
+        }
+        
+        fetchAPI(`/admin/credits/${id}/statut`, 'PATCH', body)
+            .then(res => {
+                if(res && res.success) {
+                    alert(res.message || 'Statut mis à jour');
+                    loadAdminCredits();
+                } else {
+                    alert(res?.error || 'Erreur lors de la mise à jour');
+                }
+            });
     }
 }
 
@@ -1640,6 +1726,83 @@ window.resolveAlerte = async function(id) {
 // Load alertes on dashboard view
 async function loadAlertes() {
     // We could fetch a small summary here for the main dashboard if needed
+}
+
+// ============================
+// CREDITS ADMIN
+// ============================
+async function loadAdminCredits() {
+    const tbody = document.getElementById('admin-credits-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px; text-align:center; font-size:13px; color:#94A3B8;">Chargement...</td></tr>';
+    
+    const credits = await fetchAPI('/admin/credits');
+    if (!credits || credits.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="padding:20px; text-align:center; font-size:13px; color:#94A3B8;">Aucune demande de crédit trouvée.</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = credits.map(c => {
+        const date = new Date(c.created_at).toLocaleDateString('fr-FR');
+        const montant = formatMontant(c.montant);
+        
+        let statusBadge = '';
+        let actions = '';
+        
+        if (c.statut === 'en_attente') {
+            statusBadge = '<span class="bk bw">En attente</span>';
+            actions = `
+                <button class="crt-btn" style="background:#F0FDF4;color:#15803D;padding:4px 8px;font-size:10px;" onclick="updateCreditStatus(${c.id}, 'valide')"><i class="ti ti-check"></i></button>
+                <button class="crt-btn" style="background:#FEF2F2;color:#B91C1C;padding:4px 8px;font-size:10px;" onclick="updateCreditStatus(${c.id}, 'rejete')"><i class="ti ti-x"></i></button>
+            `;
+        } else if (c.statut === 'valide') {
+            statusBadge = '<span class="bk bs">Approuvé</span>';
+        } else if (c.statut === 'rejete') {
+            statusBadge = '<span class="bk bd">Refusé</span>';
+        }
+        
+        return `
+            <tr class="crt-tr" style="border-bottom: 0.5px solid #F8FAFC;">
+                <td style="padding:12px 16px;">
+                    <div style="font-size:11px;font-weight:600;color:#0F172A;font-family:monospace;">${c.reference}</div>
+                    <div style="font-size:10px;color:#94A3B8;">${date}</div>
+                </td>
+                <td style="padding:12px 16px;">
+                    <div style="font-size:12px;font-weight:600;color:#0F172A;">${c.user_prenom} ${c.user_nom}</div>
+                    <div style="font-size:10px;color:#94A3B8;">${c.user_email}</div>
+                </td>
+                <td style="padding:12px 16px;">
+                    <div style="font-size:11px;font-weight:600;color:#0F172A;">${c.motif}</div>
+                    <div style="font-size:10px;color:#94A3B8;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.message || '-'}</div>
+                </td>
+                <td style="padding:12px 16px;">
+                    <div style="font-size:12px;font-weight:600;color:#0F172A;">${montant}</div>
+                    <div style="font-size:10px;color:#94A3B8;">${c.duree_mois} mois à ${c.taux}%</div>
+                </td>
+                <td style="padding:12px 16px;">${statusBadge}</td>
+                <td style="padding:12px 16px;text-align:right;display:flex;gap:4px;justify-content:flex-end;">${actions}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+window.updateCreditStatus = async function(id, statut) {
+    let msg = '';
+    if (statut === 'rejete') {
+        msg = prompt('Motif du refus (optionnel) :');
+        if (msg === null) return; // annulé
+    } else {
+        if (!confirm('Approuver ce crédit ? Le montant sera versé sur le compte client.')) return;
+    }
+    
+    const res = await fetchAPI(`/admin/credits/${id}/statut`, 'PATCH', { statut, message: msg });
+    if (res && res.success) {
+        alert(res.message);
+        loadAdminCredits();
+    } else {
+        alert(res?.error || 'Erreur');
+    }
 }
 
 // ============================

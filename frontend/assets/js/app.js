@@ -60,6 +60,8 @@ function showView(viewId) {
     loadCartes();
   } else if (viewId === 'view-budget' && typeof loadBudgetsPage === 'function') {
     loadBudgetsPage();
+  } else if (viewId === 'view-credits' && typeof loadCredits === 'function') {
+    loadCredits();
   }
 }
 
@@ -76,6 +78,8 @@ function showMobileView(viewId) {
     loadCartes();
   } else if (viewId === 'm-view-budget' && typeof loadBudgetsPage === 'function') {
     loadBudgetsPage();
+  } else if (viewId === 'm-view-credits' && typeof loadCredits === 'function') {
+    loadCredits();
   }
 }
 
@@ -93,8 +97,8 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   if (res.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem('fintech_token');
     showPage('pg-login');
-    const action = params.get('action');
-    if (action !== 'login' && action !== 'register') {
+    const urlAction = new URLSearchParams(window.location.search).get('action');
+    if (urlAction !== 'login' && urlAction !== 'register') {
       alert('Session expirée, veuillez vous reconnecter.');
     }
     return null;
@@ -233,6 +237,9 @@ async function initDashboard(user, account, kycStatut = null) {
   } else if (typeof loadTransactions === 'function') {
     loadTransactions();
   }
+  if (typeof loadCredits === 'function') {
+    loadCredits();
+  }
 
   // Pre-fill profile settings
   if(document.getElementById('prof-prenom')) {
@@ -265,6 +272,67 @@ async function initDashboard(user, account, kycStatut = null) {
               i.classList.add('active');
           }
       });
+  }
+}
+
+/* === GESTION DES CREDITS === */
+async function loadCredits() {
+  try {
+    const credits = await apiCall('/credits/mes-demandes');
+    
+    // Desktop UI
+    const tbodyDesktop = document.getElementById('credits-tbody-desktop');
+    if (tbodyDesktop) {
+      if (credits.length === 0) {
+        tbodyDesktop.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">Aucune demande de crédit trouvée.</td></tr>';
+      } else {
+        tbodyDesktop.innerHTML = credits.map(c => `
+          <tr>
+            <td style="font-family:'IBM Plex Mono', monospace;">${c.reference}</td>
+            <td>${new Date(c.created_at).toLocaleDateString()}</td>
+            <td style="text-transform:capitalize;">${c.type_credit || c.motif}</td>
+            <td>${parseFloat(c.montant).toLocaleString('fr-FR')} €</td>
+            <td>${c.duree_mois} mois</td>
+            <td>
+              <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
+                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' : 
+                  c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' : 
+                  'background:#FEF3C7; color:#92400E;'}">
+                ${c.statut.replace('_', ' ').toUpperCase()}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+    
+    // Mobile UI
+    const listMobile = document.getElementById('credits-list-mobile');
+    if (listMobile) {
+      if (credits.length === 0) {
+        listMobile.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:14px; padding:20px;">Aucune demande de crédit trouvée.</p>';
+      } else {
+        listMobile.innerHTML = credits.map(c => `
+          <div style="padding:15px; border-bottom:1px solid #E2E8F0;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+              <strong style="text-transform:capitalize;">${c.type_credit || c.motif}</strong>
+              <span style="padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; 
+                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' : 
+                  c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' : 
+                  'background:#FEF3C7; color:#92400E;'}">
+                ${c.statut.replace('_', ' ').toUpperCase()}
+              </span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748B;">
+              <span>${parseFloat(c.montant).toLocaleString('fr-FR')} € sur ${c.duree_mois} mois</span>
+              <span>Réf: ${c.reference}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  } catch(e) {
+    console.error("Erreur chargement crédits", e);
   }
 }
 

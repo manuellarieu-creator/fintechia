@@ -88,7 +88,7 @@
       <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">crédits</span>
       <span>tarifs</span>
       <span>sécurité</span>
-      <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">ouvrir un compte</button>
+      <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">ouvrir un compte</button>
     </div>
   </div>
 
@@ -102,17 +102,24 @@
         un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. sans agence, sans papier, sans frais cachés.
       </p>
       <div style="display:flex;gap:14px;align-items:center;">
-        <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html'">ouvrir un compte</button>
-        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">simuler un crédit</button>
+        <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">ouvrir un compte</button>
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">simuler un crédit</button>
       </div>
     </div>
 
     <div class="nb-hero-visual">
-      <div style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px;">
+      <div id="hero-block-1" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; transition: opacity 0.5s;">
         <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">temps moyen d'ouverture</p>
         <p class="nb-mono nb-tick" id="nbTimer" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">05:00</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
         <p style="font-size:13px;color:#B9B4A6;margin:0;">carte visa incluse<br>dès la validation kyc</p>
+      </div>
+      <div id="hero-block-2" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; display: none; opacity: 0; transition: opacity 0.5s;">
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">simulation crédit</p>
+        <p class="nb-mono" style="font-size:24px;color:#C99A3B;margin:0;font-weight:500;">62 000 €</p>
+        <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Mensualité : 625 €</p>
+        <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Accord de principe immédiat</p>
       </div>
     </div>
   </div>
@@ -137,7 +144,7 @@
   <div id="nbCredit" style="background:#F4F1E9;color:#1C2436;padding:80px 40px;">
     <div style="max-width:1180px;margin:0 auto;">
       <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">les crédits</p>
-      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;max-width:560px;">un projet à financer ? on a le crédit qu'il faut.</h2>
+      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;white-space:nowrap;">Un projet à financer ? On a le crédit qu'il faut.</h2>
       <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">immobilier, personnel, consommation ou financement de grands projets — demande en ligne, réponse de principe sous 48h.</p>
 
       <div class="nb-credit-grid">
@@ -190,7 +197,7 @@
           <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">494 €</span>
         </div>
         <div style="margin-top:22px;">
-          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=credit'">faire une demande de crédit</button>
+          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="openCreditModal()">faire une demande de crédit</button>
         </div>
       </div>
     </div>
@@ -201,18 +208,18 @@
       <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#C99A3B;margin:0 0 10px;">les offres de compte</p>
       <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 40px;color:#F4F1E9;">un compte qui grandit avec vous.</h2>
       <div class="nb-offers-grid">
-        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html'">
+        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html?action=register'">
           <p style="font-size:14px;font-weight:600;margin:0 0 4px;">standard</p>
           <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">gratuit</p>
           <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">compte courant + carte visa classic</p>
         </div>
-        <div class="nb-card" style="border:1px solid #C99A3B;border-radius:8px;padding:26px;background:rgba(201,154,59,0.06);cursor:pointer;" onclick="window.location.href='app.html'">
+        <div class="nb-card" style="border:1px solid #C99A3B;border-radius:8px;padding:26px;background:rgba(201,154,59,0.06);cursor:pointer;" onclick="window.location.href='app.html?action=register'">
           <p style="font-size:12px;color:#C99A3B;margin:0 0 10px;">le plus choisi</p>
           <p style="font-size:14px;font-weight:600;margin:0 0 4px;">premium</p>
           <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">9,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
           <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">visa platinum + assurances + 0 € frais intl.</p>
         </div>
-        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html'">
+        <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html?action=register'">
           <p style="font-size:14px;font-weight:600;margin:0 0 4px;">business</p>
           <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">24,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
           <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">multi-comptes + api + comptabilité</p>
@@ -223,7 +230,7 @@
 
   <div style="padding:90px 40px;text-align:center;">
     <h2 class="nb-serif" style="font-size:34px;font-weight:400;margin:0 0 26px;color:#F4F1E9;">ouvrez votre compte pendant qu'il en est encore temps.</h2>
-    <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html'">commencer maintenant</button>
+    <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">commencer maintenant</button>
   </div>
 
   <div style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
@@ -234,46 +241,302 @@
 </div>
 
 <script>
-(function(){
-  var total = 300;
-  var el = document.getElementById('nbTimer');
-  function renderTimer(s){
-    var m = Math.floor(s/60);
-    var sec = s%60;
-    el.textContent = (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
-  }
-  renderTimer(total);
-  setInterval(function(){
-    total = total > 0 ? total - 1 : 300;
+<div id="creditModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,27,51,0.8); z-index:1000; align-items:center; justify-content:center; overflow-y:auto; padding: 20px;">
+  <div style="background:#fff; border-radius:12px; width:100%; max-width:600px; padding:30px; position:relative;">
+    <button onclick="closeCreditModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer; color:#1C2436;">&times;</button>
+    <h2 class="nb-serif" style="font-size:24px; color:#1C2436; margin:0 0 10px;">Demande de crédit</h2>
+    <p style="font-size:14px; color:#5B5546; margin-bottom:24px;" id="modalSubtitle">Utilisez le simulateur pour estimer votre mensualité puis validez votre demande.</p>
+    
+    <!-- Etape 1 : Simulation -->
+    <div id="modalStep1">
+      <div class="form-group" style="margin-bottom:20px;">
+        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du crédit</label>
+        <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit;">
+          <option value="immobilier">Immobilier</option>
+          <option value="personnel">Prêt personnel</option>
+          <option value="consommation">Crédit consommation</option>
+          <option value="grands_projets">Financement grands projets</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+          <span style="color:#5B5546;">Montant emprunté</span>
+          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 €</span>
+        </div>
+        <input class="nb-range" type="range" min="5000" max="2000000" step="1000" value="62000" id="modalAmount" style="width:100%;">
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+          <span style="color:#5B5546;">Durée</span>
+          <span class="nb-mono" id="modalDurationOut" style="font-weight:500;">120 mois</span>
+        </div>
+        <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
+      </div>
+
+      <div style="display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
+        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualité estimée (TAEG indicatif: 2.5%)</span>
+        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">625 €</span>
+      </div>
+
+      <button id="btnRequestAmount" class="nb-btn" style="width:100%; margin-top:24px; background:#C99A3B; color:#0F1B33; font-weight:600; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep2()">Demander ce montant</button>
+    </div>
+
+    <!-- Etape 2 : Infos -->
+    <div id="modalStep2" style="display:none;">
+      <div style="display:flex; gap:16px; margin-bottom:16px;">
+        <div style="flex:1;"><input type="text" id="reqPrenom" placeholder="Prénom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="text" id="reqNom" placeholder="Nom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+      </div>
+      <div style="display:flex; gap:16px; margin-bottom:16px;">
+        <div style="flex:1;"><input type="email" id="reqEmail" placeholder="Email" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <select id="reqProfession" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" onchange="toggleRevenu()">
+          <option value="" disabled selected>Profession</option>
+          <option value="Salarie">Salarié(e)</option>
+          <option value="Independant">Indépendant(e) / Freelance</option>
+          <option value="Etudiant">Étudiant(e)</option>
+          <option value="Retraite">Retraité(e)</option>
+          <option value="Chomage">Au chômage</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:16px;" id="revenuContainer">
+        <input type="number" id="reqRevenu" placeholder="Revenu mensuel net (€)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;">
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <textarea id="reqDesc" placeholder="Description du projet (optionnel)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; min-height:80px;"></textarea>
+      </div>
+      
+      <button class="nb-btn" style="width:100%; background:#1C2436; color:#fff; font-weight:600; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep3()">Continuer</button>
+    </div>
+
+    <!-- Etape 3 : Documents -->
+    <div id="modalStep3" style="display:none;">
+      <h3 style="font-size:16px; margin-bottom:16px; color:#1C2436;">Documents requis</h3>
+      
+      <div style="display:flex; gap:8px; border-bottom:1px solid #DEDACB; margin-bottom:16px;">
+        <button class="doc-tab active" id="tab-personnel" onclick="switchDocTab('personnel')" style="padding:8px 12px; background:none; border:none; cursor:pointer; font-weight:600; color:#C99A3B; border-bottom:2px solid #C99A3B;">Prêt personnel</button>
+        <button class="doc-tab" id="tab-immobilier" onclick="switchDocTab('immobilier')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Prêt Immobilier</button>
+        <button class="doc-tab" id="tab-projets" onclick="switchDocTab('projets')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Grands projets</button>
+      </div>
+
+      <div id="doc-list-container" style="margin-bottom:24px;">
+        <!-- Docs injectés par JS -->
+      </div>
+
+      <div style="display:flex; gap:16px;">
+        <button class="nb-btn" style="flex:1; background:#F4F1E9; color:#1C2436; border:1px solid #DEDACB; padding:12px; border-radius:6px; font-weight:600;" onclick="submitCreditRequest('later')">Envoyer plus tard</button>
+        <button class="nb-btn" style="flex:1; background:#C99A3B; color:#0F1B33; padding:12px; border-radius:6px; font-weight:600;" onclick="submitCreditRequest('now')">Soumettre</button>
+      </div>
+    </div>
+    
+    <div id="modalSuccess" style="display:none; text-align:center;">
+       <div style="width:60px; height:60px; border-radius:50%; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 30px;">
+          <i class="ti ti-check"></i>
+       </div>
+       <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">Demande envoyée !</h3>
+       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client.</p>
+       <button class="nb-btn" style="background:#C99A3B; color:#0F1B33; padding:12px 24px; border-radius:6px; font-weight:600;" onclick="window.location.href='app.html'">Aller à mon espace</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Hero Alternance
+  (function(){
+    var block1 = document.getElementById('hero-block-1');
+    var block2 = document.getElementById('hero-block-2');
+    var isBlock1 = true;
+    
+    setInterval(function(){
+      if(isBlock1) {
+        block1.style.opacity = 0;
+        setTimeout(() => { block1.style.display = 'none'; block2.style.display = 'block'; setTimeout(()=>block2.style.opacity = 1, 50); }, 500);
+      } else {
+        block2.style.opacity = 0;
+        setTimeout(() => { block2.style.display = 'none'; block1.style.display = 'block'; setTimeout(()=>block1.style.opacity = 1, 50); }, 500);
+      }
+      isBlock1 = !isBlock1;
+    }, 40000);
+  })();
+
+  // Timer hero 1
+  (function(){
+    var total = 300;
+    var el = document.getElementById('nbTimer');
+    function renderTimer(s){
+      var m = Math.floor(s/60);
+      var sec = s%60;
+      el.textContent = (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+    }
     renderTimer(total);
-  }, 1000);
+    setInterval(function(){
+      total = total > 0 ? total - 1 : 300;
+      renderTimer(total);
+    }, 1000);
+  })();
 
-  var amountEl = document.getElementById('nbAmount');
-  var durationEl = document.getElementById('nbDuration');
-  var amountOut = document.getElementById('nbAmountOut');
-  var durationOut = document.getElementById('nbDurationOut');
-  var monthlyOut = document.getElementById('nbMonthly');
-  var rate = 0.039;
+  // Calcul page principale
+  (function(){
+    var amountEl = document.getElementById('nbAmount');
+    var durationEl = document.getElementById('nbDuration');
+    var amountOut = document.getElementById('nbAmountOut');
+    var durationOut = document.getElementById('nbDurationOut');
+    var monthlyOut = document.getElementById('nbMonthly');
+    
+    function computeMonthly(){
+      var P = parseFloat(amountEl.value);
+      var n = parseFloat(durationEl.value);
+      var rate = 0.03;
+      if(P > 50000 && P <= 500000) rate = 0.025;
+      if(P > 500000) rate = 0.02;
+      
+      var r = rate / 12;
+      var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+      
+      amountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+      durationOut.textContent = Math.round(n) + ' mois';
+      monthlyOut.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
+    }
+    amountEl.addEventListener('input', computeMonthly);
+    durationEl.addEventListener('input', computeMonthly);
+    computeMonthly();
+  })();
 
-  function fmt(n){
-    return Math.round(n).toLocaleString('fr-FR') + ' €';
-  }
+  // Modale Credit
+  var mAmount = document.getElementById('modalAmount');
+  var mDuration = document.getElementById('modalDuration');
+  var mAmountOut = document.getElementById('modalAmountOut');
+  var mDurationOut = document.getElementById('modalDurationOut');
+  var mMonthly = document.getElementById('modalMonthly');
+  var mRateLabel = document.getElementById('modalRateLabel');
+  var currentCreditData = {};
 
-  function computeMonthly(){
-    var P = parseFloat(amountEl.value);
-    var n = parseFloat(durationEl.value);
+  function computeModalMonthly() {
+    var P = parseFloat(mAmount.value);
+    var n = parseFloat(mDuration.value);
+    var rate = 0.03;
+    if(P > 50000 && P <= 500000) rate = 0.025;
+    if(P > 500000) rate = 0.02;
+
     var r = rate / 12;
     var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
-    amountOut.textContent = fmt(P);
-    durationOut.textContent = Math.round(n) + ' mois';
-    monthlyOut.textContent = fmt(monthly);
+    
+    mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+    mDurationOut.textContent = Math.round(n) + ' mois';
+    mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
+    mRateLabel.textContent = "Mensualité estimée (TAEG indicatif: " + (rate*100) + "%)";
+  }
+  
+  if(mAmount) {
+    mAmount.addEventListener('input', computeModalMonthly);
+    mDuration.addEventListener('input', computeModalMonthly);
+    computeModalMonthly();
   }
 
-  amountEl.addEventListener('input', computeMonthly);
-  durationEl.addEventListener('input', computeMonthly);
-  computeMonthly();
-})();
-</script>
+  function openCreditModal() {
+    document.getElementById('creditModalOverlay').style.display = 'flex';
+    document.getElementById('modalStep1').style.display = 'block';
+    document.getElementById('modalStep2').style.display = 'none';
+    document.getElementById('modalStep3').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'none';
+    document.getElementById('modalSubtitle').style.display = 'block';
+  }
 
+  function closeCreditModal() {
+    document.getElementById('creditModalOverlay').style.display = 'none';
+  }
+
+  function goToStep2() {
+    currentCreditData.montant = mAmount.value;
+    currentCreditData.duree = mDuration.value;
+    currentCreditData.motif = document.getElementById('modalCreditType').value;
+    
+    document.getElementById('modalStep1').style.display = 'none';
+    document.getElementById('modalSubtitle').style.display = 'none';
+    document.getElementById('modalStep2').style.display = 'block';
+  }
+
+  function toggleRevenu() {
+    var prof = document.getElementById('reqProfession').value;
+    document.getElementById('revenuContainer').style.display = (prof === 'Chomage') ? 'none' : 'block';
+  }
+
+  function goToStep3() {
+    currentCreditData.prenom = document.getElementById('reqPrenom').value;
+    currentCreditData.nom = document.getElementById('reqNom').value;
+    currentCreditData.email = document.getElementById('reqEmail').value;
+    currentCreditData.telephone = document.getElementById('reqTel').value;
+    currentCreditData.profession = document.getElementById('reqProfession').value;
+    currentCreditData.revenu = document.getElementById('reqRevenu').value;
+    currentCreditData.desc = document.getElementById('reqDesc').value;
+
+    if(!currentCreditData.prenom || !currentCreditData.nom || !currentCreditData.email || !currentCreditData.telephone) {
+      alert("Veuillez remplir les informations de contact.");
+      return;
+    }
+
+    document.getElementById('modalStep2').style.display = 'none';
+    document.getElementById('modalStep3').style.display = 'block';
+    
+    // Select default tab
+    switchDocTab(currentCreditData.motif === 'immobilier' ? 'immobilier' : (currentCreditData.motif === 'grands_projets' ? 'projets' : 'personnel'));
+  }
+
+  function switchDocTab(type) {
+    document.querySelectorAll('.doc-tab').forEach(t => {
+      t.style.color = '#8A8676'; t.style.borderBottom = 'none'; t.style.fontWeight = 'normal';
+    });
+    var activeTab = document.getElementById('tab-' + type);
+    if(activeTab) {
+      activeTab.style.color = '#C99A3B';
+      activeTab.style.borderBottom = '2px solid #C99A3B';
+      activeTab.style.fontWeight = '600';
+    }
+
+    var docs = [];
+    if(type === 'personnel') docs = [{id:'cni', name:'Pièce d\'identité', info:'CNI, Passeport ou Titre de séjour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture d\'eau, gaz ou électricité de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire ou avis d\'imposition'}];
+    if(type === 'immobilier') docs = [{id:'cni', name:'Pièce d\'identité', info:'CNI, Passeport ou Titre de séjour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire'}, {id:'compromis', name:'Compromis de vente', info:'Signé par les deux parties'}, {id:'apport', name:'Justificatif d\'apport', info:'Relevés de comptes d\'épargne'}];
+    if(type === 'projets') docs = [{id:'cni', name:'Pièce d\'identité', info:'Identité du gérant ou porteur de projet'}, {id:'business_plan', name:'Business Plan', info:'Plan d\'affaires détaillé sur 3 ans'}, {id:'bilan', name:'Bilans comptables', info:'2 derniers bilans si existant'}, {id:'devis', name:'Devis estimatifs', info:'Devis des prestataires ou fournisseurs'}];
+
+    var html = docs.map(d => `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid #EFEBDE; border-radius:6px; margin-bottom:8px; background:#FAFAFA;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <i class="ti ti-file-text" style="font-size:20px; color:#8A6D1F;"></i>
+          <div>
+            <div style="font-size:14px; font-weight:500; color:#1C2436;">${d.name}</div>
+            <div style="font-size:12px; color:#8A8676;">${d.info}</div>
+          </div>
+        </div>
+        <input type="file" id="file-${d.id}" style="display:none;" onchange="document.getElementById('lbl-${d.id}').innerText = 'Ajouté'; document.getElementById('lbl-${d.id}').style.color = '#16A34A';">
+        <button onclick="document.getElementById('file-${d.id}').click()" style="background:none; border:none; cursor:pointer; color:#2563EB; font-size:13px; font-weight:600;" id="lbl-${d.id}">Uploader</button>
+      </div>
+    `).join('');
+    
+    document.getElementById('doc-list-container').innerHTML = html;
+  }
+
+  function submitCreditRequest(when) {
+    // Dans une implémentation réelle, nous enverrions un FormData avec fetch au backend ici.
+    // Pour l'instant on simule le succès.
+    
+    document.getElementById('modalStep3').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+    
+    // Redirect to app
+    setTimeout(function(){
+      window.location.href = 'app.html?action=register';
+    }, 3000);
+  }
+
+</script>
 </body>
 </html>
