@@ -128,25 +128,34 @@
         let tempToken = null;
         const API_BASE = '/api';
 
+        async function safeFetch(url, options) {
+            const res = await fetch(url, options);
+            const text = await res.text();
+            let data = null;
+            try { data = JSON.parse(text); } catch(e) {
+                console.error(`[safeFetch] HTTP ${res.status} — réponse non-JSON:`, text.substring(0, 500));
+            }
+            return { res, data, text };
+        }
+
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const errorDiv = document.getElementById('login-error');
             errorDiv.style.display = 'none';
 
             if (!tempToken) {
-                // Etape 1
                 const id = document.getElementById('admin-id').value;
                 const pwd = document.getElementById('admin-pwd').value;
                 try {
-                    const res = await fetch(`${API_BASE}/auth/login`, {
+                    const { res, data, text } = await safeFetch(`${API_BASE}/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ idClient: id, password: pwd })
                     });
-                    
-                    let data;
-                    try { data = await res.json(); } catch(parseErr) {
-                        errorDiv.innerText = `Erreur serveur (HTTP ${res.status}). Réessayez.`;
+
+                    if (!data) {
+                        const stripped = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 200);
+                        errorDiv.innerText = `Erreur serveur (HTTP ${res.status}): ${stripped || 'Réponse vide'}`;
                         errorDiv.style.display = 'block';
                         return;
                     }
@@ -168,18 +177,17 @@
                     errorDiv.style.display = 'block';
                 }
             } else {
-                // Etape 2
                 const code = document.getElementById('admin-2fa').value;
                 try {
-                    const res = await fetch(`${API_BASE}/auth/login/2fa`, {
+                    const { res, data, text } = await safeFetch(`${API_BASE}/auth/login/2fa`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ tempToken, code })
                     });
                     
-                    let data;
-                    try { data = await res.json(); } catch(parseErr) {
-                        errorDiv.innerText = `Erreur serveur (HTTP ${res.status}). Réessayez.`;
+                    if (!data) {
+                        const stripped = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 200);
+                        errorDiv.innerText = `Erreur serveur (HTTP ${res.status}): ${stripped || 'Réponse vide'}`;
                         errorDiv.style.display = 'block';
                         return;
                     }
