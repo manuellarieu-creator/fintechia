@@ -1,6 +1,6 @@
 // admin.js - Logique SPA de l'espace administration
 
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3001/api' : (window.location.hostname.includes('github.dev') ? `https://${window.location.hostname.replace('5500', '3001')}/api` : '/api');
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3001/api' : (window.location.hostname.includes('github.dev') ? `https://${window.location.hostname.replace(/-\d+(?=\.(?:app\.)?github\.dev)/, '-3001')}/api` : '/api');
 const TOKEN = localStorage.getItem('fintech_token');
 
 if (!TOKEN) {
