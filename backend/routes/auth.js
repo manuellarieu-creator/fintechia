@@ -10,6 +10,25 @@ const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
 
+// Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
+(async () => {
+  try {
+    await db.query(`CREATE TABLE IF NOT EXISTS user_devices (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      device_token VARCHAR(255) NOT NULL UNIQUE,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )`);
+  } catch(e) { console.error('[auth] Migration user_devices:', e.message); }
+  try { await db.query("ALTER TABLE users ADD COLUMN pin_code_usage_count INT DEFAULT 0"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50)"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
+})();
+
 const validateReq = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -171,11 +190,12 @@ router.post('/login', [
       return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
     }
 
-    try { await db.query("ALTER TABLE users ADD COLUMN pin_code_usage_count INT DEFAULT 0"); } catch(e) {}
-    try { await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL"); } catch(e) {}
-    try { await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)"); } catch(e) {}
-    try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
+    let accounts = [];
+    try {
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ?', [user.id]);
+    } catch(e) {
+      console.error('[login] Erreur chargement comptes:', e.message);
+    }
     const account = accounts.length > 0 ? accounts[0] : null;
 
     if (account && account.statut === 'bloque') {
@@ -192,10 +212,14 @@ router.post('/login', [
     let deviceKnown = false;
 
     if (trustedDeviceToken) {
-      const [devices] = await db.query('SELECT * FROM user_devices WHERE device_token = ? AND user_id = ?', [trustedDeviceToken, user.id]);
-      if (devices.length > 0) {
-        deviceKnown = true;
-        await db.query('UPDATE user_devices SET last_used = CURRENT_TIMESTAMP WHERE id = ?', [devices[0].id]);
+      try {
+        const [devices] = await db.query('SELECT * FROM user_devices WHERE device_token = ? AND user_id = ?', [trustedDeviceToken, user.id]);
+        if (devices.length > 0) {
+          deviceKnown = true;
+          await db.query('UPDATE user_devices SET last_used = CURRENT_TIMESTAMP WHERE id = ?', [devices[0].id]);
+        }
+      } catch(e) {
+        console.error('[login] Erreur vérification device:', e.message);
       }
     }
 
@@ -260,20 +284,24 @@ router.post('/login/2fa', [
 
     const pinUsage = user.pin_code_usage_count || 0;
     if (pinUsage >= 20) {
-      // Create a temporary token for resetting the PIN
       const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
       return res.json({ requirePinReset: true, resetToken });
     }
 
-    // Increment PIN usage count
-    await db.query('UPDATE users SET pin_code_usage_count = pin_code_usage_count + 1 WHERE id = ?', [user.id]);
+    // Increment PIN usage count (safe)
+    try { await db.query('UPDATE users SET pin_code_usage_count = pin_code_usage_count + 1 WHERE id = ?', [user.id]); } catch(e) { console.error('[2fa] pin_code_usage_count update:', e.message); }
 
-    // Enregistrer l'appareil de confiance
-    const deviceToken = crypto.randomBytes(32).toString('hex');
-    await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
+    // Enregistrer l'appareil de confiance (safe)
+    let deviceToken = null;
+    try {
+      deviceToken = crypto.randomBytes(32).toString('hex');
+      await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
+    } catch(e) { console.error('[2fa] device insert:', e.message); deviceToken = null; }
 
-    try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
+    let accounts = [];
+    try {
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ?', [user.id]);
+    } catch(e) { console.error('[2fa] accounts select:', e.message); }
     const account = accounts.length > 0 ? accounts[0] : null;
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
