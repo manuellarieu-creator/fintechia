@@ -127,9 +127,40 @@ async function loadCredits() {
       const date = new Date(c.created_at).toLocaleDateString('fr-FR');
       const montant = parseFloat(c.montant).toLocaleString('fr-FR') + ' €';
       let statusBadge = '';
-      if (c.statut === 'en_attente') statusBadge = '<span class="badge badge-warning">En attente</span>';
-      else if (c.statut === 'valide') statusBadge = '<span class="badge badge-success">Validé</span>';
-      else if (c.statut === 'rejete') statusBadge = '<span class="badge badge-danger">Rejeté</span>';
+      let progressWidth = '33%';
+      let progressColor = '#eab308';
+      let progressText = 'En attente';
+      if (c.statut === 'en_attente') {
+         statusBadge = '<span class="badge badge-warning">En attente</span>';
+      } else if (c.statut === 'analyse' || c.statut === 'en_analyse') {
+         statusBadge = '<span class="badge badge-info" style="background:#3b82f6; color:#fff;">En analyse</span>';
+         progressWidth = '66%';
+         progressColor = '#3b82f6';
+         progressText = 'Analyse';
+      } else if (c.statut === 'valide') {
+         statusBadge = '<span class="badge badge-success">Validé</span>';
+         progressWidth = '100%';
+         progressColor = '#22c55e';
+         progressText = 'Validé';
+      } else if (c.statut === 'rejete') {
+         statusBadge = '<span class="badge badge-danger">Rejeté</span>';
+         progressWidth = '100%';
+         progressColor = '#ef4444';
+         progressText = 'Rejeté';
+      }
+
+      const progressBar = `
+        <div style="margin-top: 12px; max-width: 250px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748b; margin-bottom:4px; font-weight: 500;">
+            <span style="color: ${progressWidth === '33%' || progressWidth === '66%' || progressWidth === '100%' ? progressColor : '#64748b'}">Soumis</span>
+            <span style="color: ${progressWidth === '66%' || progressWidth === '100%' ? progressColor : '#64748b'}">Analyse</span>
+            <span style="color: ${progressWidth === '100%' ? progressColor : '#64748b'}">Décision</span>
+          </div>
+          <div style="width:100%; background:#E2E8F0; height:6px; border-radius:3px; overflow:hidden;">
+            <div style="width:${progressWidth}; background:${progressColor}; height:100%; transition: width 0.3s ease;"></div>
+          </div>
+        </div>
+      `;
 
       desktopHtml += `
         <tr>
@@ -138,7 +169,10 @@ async function loadCredits() {
           <td>${c.motif}</td>
           <td style="font-weight:600;">${montant}</td>
           <td>${c.duree_mois} mois</td>
-          <td>${statusBadge}</td>
+          <td>
+            ${statusBadge}
+            ${progressBar}
+          </td>
         </tr>
       `;
 
@@ -152,6 +186,7 @@ async function loadCredits() {
             <span>${date} &bull; ${c.duree_mois} mois</span>
             <span>${statusBadge}</span>
           </div>
+          ${progressBar}
         </div>
       `;
     });

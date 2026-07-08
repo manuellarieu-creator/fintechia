@@ -291,7 +291,7 @@
       </div>
       <div style="display:flex; gap:16px; margin-bottom:16px;">
         <div style="flex:1;"><input type="email" id="reqEmail" placeholder="Email" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
-        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
       </div>
       
       <div style="margin-bottom:16px;">

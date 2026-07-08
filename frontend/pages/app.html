@@ -144,7 +144,7 @@
                 </div>
                 <div class="form-group">
                   <label>Téléphone</label>
-                  <input type="tel" id="reg-tel" required class="admin-input" placeholder="+33 6 12 34 56 78" style="width:100%;" />
+                  <input type="tel" id="reg-tel" required class="admin-input" placeholder="+33 6 12 34 56 78" style="width:100%;" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
                 </div>
               </div>
               <div class="form-group" style="margin-bottom: 30px;">
@@ -528,7 +528,7 @@
                       <div class="form-group">
                           <label class="form-label">Montant</label>
                           <div class="input-with-icon">
-                              <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;">
+                              <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                               <span class="input-icon">€</span>
                           </div>
                           <div class="help-text">Plafond : 5 000 €/j</div>
@@ -1602,7 +1602,7 @@
                       <div class="form-group">
                           <label class="form-label">Montant</label>
                           <div class="input-with-icon">
-                              <input type="number" class="form-control" id="vir-montant" value="" placeholder="0.00" required>
+                              <input type="number" class="form-control" id="vir-montant" value="" placeholder="0.00" required oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                               <span class="input-icon">€</span>
                           </div>
                       </div>
@@ -2134,7 +2134,7 @@
       </div>
       <div style="display:flex; gap:16px; margin-bottom:16px;">
         <div style="flex:1;"><input type="email" id="reqEmail" placeholder="Email" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
-        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
       </div>
       
       <div style="margin-bottom:16px;">

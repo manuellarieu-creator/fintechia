@@ -248,6 +248,14 @@ async function initDashboard(user, account, kycStatut = null) {
     document.getElementById('prof-tel').value = user.telephone || '';
   }
 
+  // Pre-fill credit modal
+  if(document.getElementById('reqPrenom')) {
+    document.getElementById('reqPrenom').value = user.prenom || '';
+    document.getElementById('reqNom').value = user.nom || '';
+    document.getElementById('reqTel').value = user.telephone || '';
+    document.getElementById('reqEmail').value = user.email || '';
+  }
+
   // Restore view from URL if present
   const urlParams = new URLSearchParams(window.location.search);
   const view = urlParams.get('view');
