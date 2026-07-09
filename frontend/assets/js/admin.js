@@ -852,13 +852,31 @@ async function loadAdminCredits() {
                 <p style="margin:2px 0 0; font-size:10px; color:#64748B;">${c.duree} mois / ${formatMontant(c.mensualite)}/mois</p>
             </td>
             <td style="padding:12px 16px;">
-                <span style="display:inline-flex; align-items:center; font-size:10px; padding:3px 8px; border-radius:5px; font-weight:600;" class="bk ${badgeClass}">${badgeText}</span>
+                <select style="font-size:11px; padding:4px; border-radius:4px; border:1px solid #E2E8F0; background:#F8FAFC; color:#334155; font-weight:600;" onchange="inlineManageCredit(${c.id}, this.value)">
+                    <option value="en_attente" ${c.statut === 'en_attente' ? 'selected' : ''}>En attente</option>
+                    <option value="etude" ${c.statut === 'etude' ? 'selected' : ''}>En étude</option>
+                    <option value="incomplet" ${c.statut === 'incomplet' ? 'selected' : ''}>Incomplet</option>
+                    <option value="valide_succes" ${c.statut === 'valide_succes' || c.statut === 'valide' ? 'selected' : ''}>Validé</option>
+                    <option value="credite" ${c.statut === 'credite' ? 'selected' : ''}>Crédité</option>
+                    <option value="rejete" ${c.statut === 'rejete' ? 'selected' : ''}>Rejeté</option>
+                </select>
             </td>
             <td style="padding:12px 16px; text-align:right;">
-                <button class="btn" style="background:#EFF6FF; color:#1D4ED8; padding:5px 10px; font-size:11px; border-radius:6px; border:none; cursor:pointer;" onclick="manageCredit(${c.id})">Gérer</button>
+                <button class="btn" style="background:#EFF6FF; color:#1D4ED8; padding:5px 10px; font-size:11px; border-radius:6px; border:none; cursor:pointer;" onclick="manageCredit(${c.id})">Gérer (Détails)</button>
             </td>
         </tr>`;
     }).join('');
+}
+
+window.inlineManageCredit = function(id, newStatut) {
+    manageCredit(id);
+    setTimeout(() => {
+        const select = document.getElementById('manage-credit-statut');
+        if (select) {
+            select.value = newStatut;
+            toggleCreditAccountSelection();
+        }
+    }, 100);
 }
 
 window.manageCredit = async function(id) {
