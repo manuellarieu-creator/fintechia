@@ -212,7 +212,7 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
     document.getElementById('suivi-message-container').style.display = 'none';
     
     let progressLevel = 1;
-    let step3Label = "Décision";
+    let step3Label = "Approuver";
     
     if (statut === 'en_attente') {
         progressLevel = 1;
@@ -263,6 +263,24 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
     if (progressLevel === 3 && (statut === 'rejete' || statut === 'incomplet')) lineColor = '#DC2626';
     if (progressLevel >= 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite')) lineColor = '#16A34A';
     document.getElementById('suivi-progress-line').style.background = lineColor;
+    
+    const actionBtn = document.getElementById('suivi-action-btn');
+    if (actionBtn) {
+        if (statut === 'credite') {
+            actionBtn.innerText = 'Voir mon solde';
+            actionBtn.onclick = function() {
+                closeModal('modal-suivre-demande');
+                if (typeof showView === 'function') {
+                    showView('view-dashboard');
+                }
+            };
+        } else {
+            actionBtn.innerText = 'Fermer';
+            actionBtn.onclick = function() {
+                closeModal('modal-suivre-demande');
+            };
+        }
+    }
     
     document.getElementById('modal-suivre-demande').style.display = 'flex';
 }
