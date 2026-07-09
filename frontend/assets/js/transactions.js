@@ -13,7 +13,7 @@ async function loadTransactions() {
     } else {
       // Lignes Mobile (Nouveau design)
       const mobileRows = txs.map(tx => {
-        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
         const badgeClass = isCredit ? 'badge-success' : 'badge-neutral';
         const amountClass = isCredit ? 'pos' : 'neg';
@@ -25,7 +25,7 @@ async function loadTransactions() {
         if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
 
         const iconClass = isCredit ? 'success' : 'neutral';
-        const icon = isCredit ? 'ti-arrow-down' : 'ti-arrow-up';
+        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-arrow-up-right';
 
         return `
           <div class="tx">
@@ -41,10 +41,10 @@ async function loadTransactions() {
 
       // Lignes Desktop (Format NovaBanque)
       const desktopRows = txs.map(tx => {
-        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
         const catClass = isCredit ? 'badge-green' : 'badge-grey';
-        const icon = isCredit ? '<i class="ti ti-arrow-down"></i>' : '<i class="ti ti-arrow-up"></i>';
+        const icon = isCredit ? '<i class="ti ti-arrow-down-left"></i>' : '<i class="ti ti-arrow-up-right"></i>';
         const iconClass = isCredit ? 'icon-green' : 'icon-grey';
         const amountClass = isCredit ? 'text-green' : 'text-black';
         const sign = isCredit ? '+' : '-';
@@ -80,7 +80,7 @@ async function loadTransactions() {
     const depensesGroup = {};
 
     txs.forEach(tx => {
-      const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+      const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
       const m = Math.abs(parseFloat(tx.montant));
       
       if(isCredit) {
@@ -133,7 +133,7 @@ async function loadTransactions() {
       } else {
         const desktopBudgets = userBudgets.map(b => {
           const spent = txs.filter(tx => {
-            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
+            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis' || tx.type === 'debit';
             if(!isDebit) return false;
             let lib = tx.libelle || tx.description || 'Transaction';
             if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
@@ -163,7 +163,7 @@ async function loadTransactions() {
 
         const mobileBudgets = userBudgets.map(b => {
           const spent = txs.filter(tx => {
-            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
+            const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis' || tx.type === 'debit';
             if(!isDebit) return false;
             let lib = tx.description || 'Transaction';
             if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
@@ -216,7 +216,7 @@ async function loadVirementHistory(page = 1) {
       document.getElementById('virement-btn-next').disabled = true;
     } else {
       tbody.innerHTML = txs.map(tx => {
-        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
+        const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
         const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
         
         let libelle = tx.description || 'Transaction';
