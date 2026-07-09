@@ -17,15 +17,15 @@ async function loadTransactions() {
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
         const badgeClass = isCredit ? 'badge-success' : 'badge-neutral';
         const amountClass = isCredit ? 'pos' : 'neg';
-        const sign = isCredit ? '+' : '';
+        const sign = isCredit ? '+' : '-';
         const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
         
-        let libelle = tx.description || 'Transaction';
+        let libelle = tx.libelle || tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
         if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
 
         const iconClass = isCredit ? 'success' : 'neutral';
-        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-shopping-bag';
+        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-arrow-up-right';
 
         return `
           <div class="tx">
@@ -44,13 +44,13 @@ async function loadTransactions() {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
         const catClass = isCredit ? 'badge-green' : 'badge-grey';
-        const icon = isCredit ? '↙' : '📤';
+        const icon = isCredit ? '<i class="ti ti-arrow-down-left"></i>' : '<i class="ti ti-arrow-up-right"></i>';
         const iconClass = isCredit ? 'icon-green' : 'icon-grey';
         const amountClass = isCredit ? 'text-green' : 'text-black';
         const sign = isCredit ? '+' : '-';
         const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
         
-        let libelle = tx.description || 'Transaction';
+        let libelle = tx.libelle || tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
         if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
 
@@ -133,7 +133,7 @@ async function loadTransactions() {
           const spent = txs.filter(tx => {
             const isDebit = parseFloat(tx.montant) < 0 || tx.type === 'virement_emis';
             if(!isDebit) return false;
-            let lib = tx.description || 'Transaction';
+            let lib = tx.libelle || tx.description || 'Transaction';
             if(tx.type === 'virement_emis') lib = 'Virement émis — ' + (tx.destinataire || '');
             return lib.toLowerCase().includes(b.categorie.toLowerCase());
           }).reduce((acc, curr) => acc + Math.abs(parseFloat(curr.montant)), 0);

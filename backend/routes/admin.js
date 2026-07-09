@@ -716,7 +716,7 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
         await connection.query(
           `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
            VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')`,
-          [acc.id, credit.montant, acc.solde, newSolde, 'Déblocage de crédit : ' + credit.reference, 'Déblocage crédit']
+          [acc.id, credit.montant, acc.solde, newSolde, credit.motif || 'Déblocage crédit', 'Déblocage crédit']
         );
       } else {
         await connection.rollback();
