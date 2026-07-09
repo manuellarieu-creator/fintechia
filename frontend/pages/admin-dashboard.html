@@ -1704,7 +1704,241 @@
             
             <div style="display:flex;justify-content:flex-end;gap:8px;">
                 <button style="padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="document.getElementById('modal-emit-card').style.display='none'">Annuler</button>
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 id="modal-montant-title">Action</h3>
+            <p id="modal-montant-desc" class="text-muted" style="margin-bottom:16px;">Veuillez saisir le montant et un libellé.</p>
+            <input type="hidden" id="montant-action-type">
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Montant (€)</label>
+                <input type="number" id="montant-valeur" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 500">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Libellé</label>
+                <input type="text" id="montant-libelle" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: Geste commercial">
+            </div>
+            
+            <div id="credit-options-container" style="display:none; margin-bottom:24px; padding:12px; background:var(--admin-bg); border-radius:8px;">
+                <h4 style="margin-top:0; margin-bottom:12px; font-size:14px;">Options de transfert</h4>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; cursor:pointer;">
+                    <input type="checkbox" id="montant-transfer-allowed" checked>
+                    Autoriser les transferts de fonds pour ce compte
+                </label>
+                <label style="font-size:13px; font-weight:500; display:block; margin-top:12px;">Limiter le montant maximum transférable (€)</label>
+                <input type="number" id="montant-max-transfer" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Laissez vide pour aucune limite">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-montant').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="confirmMontantAction()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-activer-compte" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Activer le compte</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Veuillez renseigner manuellement les informations bancaires.</p>
+            <input type="hidden" id="activer-client-id">
+            
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">IBAN</label>
+                <input type="text" id="activer-iban" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: FR76...">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Code BIC</label>
+                <input type="text" id="activer-bic" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: FINTEFR22XXX">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Numéro de Compte</label>
+                <input type="text" id="activer-numero" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 00012345678">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Montant du dépôt initial (€)</label>
+                <input type="number" step="0.01" id="activer-solde" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 50">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-activer-compte').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="confirmActiverCompte()">Activer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-rules" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Règles et Popups</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Configurez un message popup qui s'affichera au client lors d'un virement sous certaines conditions.</p>
+            <input type="hidden" id="rules-client-id">
+            
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Déclencher si Solde Supérieur ou égal à (€)</label>
+                <input type="number" id="rule-min-balance" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 10000 (Optionnel)">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:500;">Déclencher si Montant du Virement Supérieur ou égal à (€)</label>
+                <input type="number" id="rule-min-transfer" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ex: 5000 (Optionnel)">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="font-size:13px; font-weight:500;">Message du Popup</label>
+                <textarea id="rule-message" class="admin-input" style="width:100%; margin-top:4px; min-height:80px;" placeholder="Ex: Votre compte est en cours d'audit, merci de contacter votre conseiller..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn-outline" onclick="document.getElementById('modal-rules').style.display='none'">Fermer</button>
+                <button class="btn-primary" onclick="confirmAddRule()">Ajouter la règle</button>
+            </div>
+            
+            <div style="margin-top:24px; border-top:1px solid var(--card-border); padding-top:16px;">
+                <h4 style="margin-top:0; margin-bottom:12px; font-size:14px;">Règles existantes</h4>
+                <div id="rules-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-block-client" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 id="modal-block-title">Confirmer l'action</h3>
+            <p id="modal-block-desc">Êtes-vous sûr de vouloir bloquer ce client ?</p>
+            <input type="hidden" id="block-client-id">
+            <input type="hidden" id="block-client-action">
+            
+            <div id="modal-block-motif-container" style="display:none; margin-top:16px;">
+                <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Motif</p>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;" id="modal-block-tags">
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Transaction suspecte')">Transaction suspecte</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'KYC expiré')">KYC expiré</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Fraude avérée')">Fraude avérée</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Décision judiciaire')">Judiciaire</span>
+                  <span class="reason-tag" onclick="selectBlockReason(this, 'Demande client')">Demande client</span>
+                </div>
+                <input type="hidden" id="modal-block-motif-value">
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-block-client').style.display='none'">Annuler</button>
+                <button class="btn-danger" style="flex:1;" id="btn-confirm-block" onclick="confirmBlockClient()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal-verify-kyc" style="display:none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Vérification Documentaire (KYC)</h3>
+            <div id="kyc-details" style="margin-top:16px;"></div>
+            <input type="hidden" id="verify-kyc-id">
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-danger" style="flex:1;" onclick="rejectKyc()">Refuser le document</button>
+                <button class="btn-primary" style="flex:1;" onclick="validateKyc()">Valider (Activer le compte)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-reject-kyc" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Rejeter le dossier KYC</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Veuillez sélectionner le motif de rejet. Ce motif sera enregistré dans le dossier du client.</p>
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Motif (obligatoire)</label>
+                <select id="kyc-reject-reason" class="input" style="width:100%;">
+                    <option value="">-- Choisir un motif --</option>
+                    <option value="Photo pièce d'identité floue">Photo pièce d'identité floue</option>
+                    <option value="Numéro de pièce d'identié non conforme à celle communiqué verbalement">Numéro de pièce d'identié non conforme à celle communiqué verbalement</option>
+                    <option value="Video selfie étape 1 non valide">Video selfie étape 1 non valide</option>
+                    <option value="Video selfie étape 2 non valide">Video selfie étape 2 non valide</option>
+                    <option value="Video selfie étape 3 non valide">Video selfie étape 3 non valide</option>
+                    <option value="Orientation de la tête non valide avec instruction">Orientation de la tête non valide avec instruction</option>
+                    <option value="Video selfie prise dans espace sombre">Video selfie prise dans espace sombre</option>
+                    <option value="Etapes 1 + 2 + 3 non complétés correctement">Etapes 1 + 2 + 3 non complétés correctement</option>
+                </select>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-reject-kyc').style.display='none'">Annuler</button>
+                <button class="btn-danger" onclick="confirmRejectKyc()">Confirmer le rejet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Paramètres -->
+    <div class="modal" id="modal-settings" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Paramètres Système</h3>
+            <div style="margin-top:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:4px;">Frais d'activation du compte (€)</label>
+                <input type="number" id="settings-activation-fee" class="input" style="width:100%;" min="0" step="1">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-settings').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="saveSettings()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Emettre Carte -->
+    <div id="modal-emit-card" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.4);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(2px);">
+        <div style="background:#fff;border-radius:14px;width:380px;box-shadow:0 10px 25px rgba(0,0,0,.1);padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h3 style="margin:0;font-size:15px;font-weight:700;color:#0F172A;">Émettre une nouvelle carte</h3>
+                <i class="ti ti-x" style="cursor:pointer;font-size:16px;color:#94A3B8;" onclick="document.getElementById('modal-emit-card').style.display='none'"></i>
+            </div>
+            
+            <div class="field" style="margin-bottom:12px;">
+                <label style="font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;">Sélectionner le client</label>
+                <select id="emit-card-client" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;">
+                    <!-- Rempli par JS -->
+                </select>
+            </div>
+            
+            <div class="field" style="margin-bottom:16px;">
+                <label style="font-size:10px;font-weight:600;color:#64748B;display:block;margin-bottom:4px;">Type de carte</label>
+                <select id="emit-card-type" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;">
+                    <option value="Classic">Visa Classic</option>
+                    <option value="Platinum">Visa Platinum</option>
+                    <option value="Virtuelle">Carte Virtuelle</option>
+                </select>
+            </div>
+            
+            <div style="display:flex;justify-content:flex-end;gap:8px;">
+                <button style="padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="document.getElementById('modal-emit-card').style.display='none'">Annuler</button>
                 <button style="padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#2563EB;color:#fff;border:none;" onclick="confirmEmitCard()">Émettre la carte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Manage Credit -->
+    <div class="modal" id="modal-manage-credit" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Gestion de la Demande de Crédit</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Veuillez mettre à jour le statut de la demande <strong id="manage-credit-ref"></strong>.</p>
+            <input type="hidden" id="manage-credit-id">
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Statut (Étape de validation)</label>
+                <select id="manage-credit-statut" class="input" style="width:100%;" onchange="toggleCreditAccountSelection()">
+                    <option value="en_attente">En attente (Nouvelle demande)</option>
+                    <option value="etude">En étude (Analyse en cours)</option>
+                    <option value="incomplet">Incomplet (Dossier à compléter)</option>
+                    <option value="rejete">Rejeté (Refus)</option>
+                    <option value="valide_succes">Validé (Accepté, en attente de versement)</option>
+                    <option value="credite">Crédité (Fonds débloqués)</option>
+                </select>
+            </div>
+            
+            <div id="manage-credit-account-container" style="display:none; margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Compte à créditer</label>
+                <select id="manage-credit-account" class="input" style="width:100%;">
+                    <!-- Populated by JS -->
+                </select>
+                <p style="font-size:10px; color:#64748B; margin-top:4px;">Sélectionnez le compte sur lequel verser les fonds.</p>
+            </div>
+            
+            <div style="margin-bottom:24px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Message pour le client (Optionnel)</label>
+                <textarea id="manage-credit-message" class="input" style="width:100%; min-height:80px;" placeholder="Ex: Veuillez fournir un nouveau RIB..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-manage-credit').style.display='none'">Annuler</button>
+                <button class="btn-primary" onclick="confirmCreditStatus()">Enregistrer le statut</button>
             </div>
         </div>
     </div>

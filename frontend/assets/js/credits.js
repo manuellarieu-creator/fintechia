@@ -149,16 +149,9 @@ async function loadCredits() {
          progressText = 'Rejeté';
       }
 
-      const progressBar = `
-        <div style="margin-top: 12px; max-width: 250px;">
-          <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748b; margin-bottom:4px; font-weight: 500;">
-            <span style="color: ${progressWidth === '33%' || progressWidth === '66%' || progressWidth === '100%' ? progressColor : '#64748b'}">Soumis</span>
-            <span style="color: ${progressWidth === '66%' || progressWidth === '100%' ? progressColor : '#64748b'}">Analyse</span>
-            <span style="color: ${progressWidth === '100%' ? progressColor : '#64748b'}">Décision</span>
-          </div>
-          <div style="width:100%; background:#E2E8F0; height:6px; border-radius:3px; overflow:hidden;">
-            <div style="width:${progressWidth}; background:${progressColor}; height:100%; transition: width 0.3s ease;"></div>
-          </div>
+      const actions = `
+        <div style="margin-top: 12px;">
+            <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}')">Suivre ma demande</button>
         </div>
       `;
 
@@ -170,8 +163,7 @@ async function loadCredits() {
           <td style="font-weight:600;">${montant}</td>
           <td>${c.duree_mois} mois</td>
           <td>
-            ${statusBadge}
-            ${progressBar}
+            ${actions}
           </td>
         </tr>
       `;
@@ -186,7 +178,7 @@ async function loadCredits() {
             <span>${date} &bull; ${c.duree_mois} mois</span>
             <span>${statusBadge}</span>
           </div>
-          ${progressBar}
+          ${actions}
         </div>
       `;
     });
@@ -198,6 +190,81 @@ async function loadCredits() {
     if (tbodyDesktop) tbodyDesktop.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Erreur de chargement.</td></tr>';
     if (listMobile) listMobile.innerHTML = '<p style="text-align:center; color:red;">Erreur de chargement.</p>';
   }
+}
+
+// Modal Suivi Demande
+window.openSuivreDemande = function(reference, statut, montant, date) {
+    document.getElementById('suivi-ref').innerText = reference;
+    document.getElementById('suivi-montant').innerText = montant;
+    document.getElementById('suivi-date').innerText = date;
+    
+    for (let i = 1; i <= 4; i++) {
+        const step = document.getElementById('suivi-step-' + i);
+        if(!step) continue;
+        const node = step.querySelector('.suivi-node');
+        node.style.background = '#F1F5F9';
+        node.style.color = '#94A3B8';
+        node.style.borderColor = 'white';
+        node.style.boxShadow = '0 0 0 2px #E2E8F0';
+        node.innerHTML = i;
+    }
+    document.getElementById('suivi-progress-line').style.width = '0%';
+    document.getElementById('suivi-message-container').style.display = 'none';
+    
+    let progressLevel = 1;
+    let step3Label = "Décision";
+    
+    if (statut === 'en_attente') {
+        progressLevel = 1;
+    } else if (statut === 'etude' || statut === 'analyse' || statut === 'en_analyse') {
+        progressLevel = 2;
+    } else if (statut === 'incomplet') {
+        progressLevel = 3;
+        step3Label = "Incomplet";
+        document.getElementById('suivi-message').innerText = "Votre dossier est incomplet. Veuillez vérifier vos documents ou nous contacter.";
+        document.getElementById('suivi-message-container').style.display = 'block';
+    } else if (statut === 'rejete') {
+        progressLevel = 3;
+        step3Label = "Rejeté";
+    } else if (statut === 'valide_succes' || statut === 'valide') {
+        progressLevel = 3;
+        step3Label = "Validé";
+    } else if (statut === 'credite') {
+        progressLevel = 4;
+        step3Label = "Validé";
+    }
+    
+    document.getElementById('suivi-step-3-label').innerText = step3Label;
+    
+    for (let i = 1; i <= progressLevel; i++) {
+        const step = document.getElementById('suivi-step-' + i);
+        if(!step) continue;
+        const node = step.querySelector('.suivi-node');
+        
+        let color = '#2563EB';
+        if (i === 3 && (statut === 'rejete' || statut === 'incomplet')) {
+            color = '#DC2626';
+        } else if (i === 4 || (i === 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite'))) {
+            color = '#16A34A';
+        }
+        if (i < progressLevel && progressLevel === 3 && (statut === 'rejete' || statut === 'incomplet')) color = '#2563EB'; // Keep previous steps blue
+        if (i < progressLevel && progressLevel >= 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite')) color = '#2563EB';
+        
+        node.style.background = color;
+        node.style.color = 'white';
+        node.style.boxShadow = `0 0 0 2px ${color}`;
+        node.innerHTML = '<i class="ti ti-check"></i>';
+    }
+    
+    const percentages = ['0%', '33%', '66%', '100%'];
+    document.getElementById('suivi-progress-line').style.width = percentages[progressLevel - 1];
+    
+    let lineColor = '#2563EB';
+    if (progressLevel === 3 && (statut === 'rejete' || statut === 'incomplet')) lineColor = '#DC2626';
+    if (progressLevel >= 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite')) lineColor = '#16A34A';
+    document.getElementById('suivi-progress-line').style.background = lineColor;
+    
+    document.getElementById('modal-suivre-demande').style.display = 'flex';
 }
 
 // Modal Logic

@@ -853,33 +853,75 @@ async function loadAdminCredits() {
     }).join('');
 }
 
-function manageCredit(id) {
+window.manageCredit = async function(id) {
     const credit = adminCredits.find(c => c.id === id);
     if (!credit) return;
     
-    // We can show a prompt or a small modal to change status
-    const newStatut = prompt(`Changer le statut pour ${credit.reference} (actuel: ${credit.statut})\n\nValeurs possibles : etude, incomplet, valide_succes, credite`, credit.statut);
+    document.getElementById('manage-credit-id').value = credit.id;
+    document.getElementById('manage-credit-ref').innerText = credit.reference;
+    document.getElementById('manage-credit-statut').value = credit.statut || 'en_attente';
+    document.getElementById('manage-credit-message').value = credit.message || '';
     
-    if (newStatut && newStatut !== credit.statut) {
-        let msg = prompt('Message (optionnel, pour l\'utilisateur) :');
-        let body = { statut: newStatut, message: msg };
-        
-        // S'il est crédité, on a besoin du compte pour le versement (pour simplifier, on en demande un)
-        if (newStatut === 'credite' && !credit.compte_id) {
-            const cpt = prompt("ID du compte à créditer ? (Vous pouvez le trouver dans Comptes Clients)");
-            if (!cpt) return alert("Action annulée, ID de compte requis.");
-            body.compte_id = cpt;
+    // Load accounts for the client to select if credit is approved
+    const accountContainer = document.getElementById('manage-credit-account-container');
+    const accountSelect = document.getElementById('manage-credit-account');
+    
+    try {
+        const res = await fetchAPI(`/admin/comptes`);
+        if(res && res.length > 0) {
+            // Filter accounts belonging to the credit request user
+            const userAccounts = res.filter(a => a.user_id === credit.user_id);
+            accountSelect.innerHTML = userAccounts.map(a => `<option value="${a.id}">${a.iban || 'Nouveau compte'} - Solde: ${a.solde}€</option>`).join('');
+            if (userAccounts.length === 0) {
+                accountSelect.innerHTML = '<option value="">Aucun compte trouvé pour ce client</option>';
+            }
         }
-        
-        fetchAPI(`/admin/credits/${id}/statut`, 'PATCH', body)
-            .then(res => {
-                if(res && res.success) {
-                    alert(res.message || 'Statut mis à jour');
-                    loadAdminCredits();
-                } else {
-                    alert(res?.error || 'Erreur lors de la mise à jour');
-                }
-            });
+    } catch(e) {
+        console.error("Erreur lors du chargement des comptes", e);
+    }
+    
+    toggleCreditAccountSelection();
+    document.getElementById('modal-manage-credit').style.display = 'flex';
+}
+
+window.toggleCreditAccountSelection = function() {
+    const statut = document.getElementById('manage-credit-statut').value;
+    const accountContainer = document.getElementById('manage-credit-account-container');
+    if (statut === 'credite') {
+        accountContainer.style.display = 'block';
+    } else {
+        accountContainer.style.display = 'none';
+    }
+}
+
+window.confirmCreditStatus = async function() {
+    const id = document.getElementById('manage-credit-id').value;
+    const statut = document.getElementById('manage-credit-statut').value;
+    const message = document.getElementById('manage-credit-message').value;
+    const compte_id = document.getElementById('manage-credit-account').value;
+    
+    let body = { statut, message };
+    
+    if (statut === 'credite') {
+        if (!compte_id) {
+            alert("Veuillez sélectionner un compte à créditer.");
+            return;
+        }
+        body.compte_id = compte_id;
+    }
+    
+    try {
+        const res = await fetchAPI(`/admin/credits/${id}/statut`, 'PATCH', body);
+        if(res && res.success) {
+            document.getElementById('modal-manage-credit').style.display = 'none';
+            loadAdminCredits();
+            loadDashboardStats(); // Update dashboard if needed
+        } else {
+            alert(res?.error || 'Erreur lors de la mise à jour');
+        }
+    } catch(err) {
+        console.error(err);
+        alert("Erreur réseau ou serveur.");
     }
 }
 
