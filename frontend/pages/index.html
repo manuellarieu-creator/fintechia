@@ -81,41 +81,44 @@
   <div class="nb-header">
     <div style="display:flex;align-items:center;gap:10px; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
       <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
-      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">novabanque</span>
+      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">Novabanque</span>
     </div>
     <div class="nb-nav-links">
-      <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">comptes</span>
-      <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">crédits</span>
-      <span>tarifs</span>
-      <span>sécurité</span>
-      <button id="header-cta-btn" class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">ouvrir un compte</button>
+      <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Comptes</span>
+      <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Crédits</span>
+      <span>Tarifs</span>
+      <span>Sécurité</span>
+      <div style="display:flex; gap:12px;">
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">Se connecter</button>
+        <button id="header-cta-btn" class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
+      </div>
     </div>
   </div>
 
   <div class="nb-hero">
     <div class="nb-hero-text">
-      <p class="nb-mono" style="font-size:12px;letter-spacing:.14em;color:#C99A3B;margin:0 0 18px;">banque en ligne · régulée acpr</p>
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.14em;color:#C99A3B;margin:0 0 18px;">Banque en ligne · Régulée ACPR</p>
       <h1 class="nb-serif" style="font-size:52px;line-height:1.08;font-weight:400;margin:0 0 22px;color:#F4F1E9;">
-        votre argent mérite<br>mieux qu'une file d'attente.
+        Votre argent mérite<br>mieux qu'une file d'attente.
       </h1>
       <p style="font-size:16px;line-height:1.7;color:#B9B4A6;max-width:440px;margin:0 0 32px;">
-        un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. sans agence, sans papier, sans frais cachés.
+        Un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. Sans agence, sans papier, sans frais cachés.
       </p>
       <div style="display:flex;gap:14px;align-items:center;">
-        <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">ouvrir un compte</button>
-        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">simuler un crédit</button>
+        <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">Simuler un crédit</button>
       </div>
     </div>
 
     <div class="nb-hero-visual">
       <div id="hero-block-1" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; transition: opacity 0.5s;">
-        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">temps moyen d'ouverture</p>
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Temps moyen d'ouverture</p>
         <p class="nb-mono nb-tick" id="nbTimer" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">05:00</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
-        <p style="font-size:13px;color:#B9B4A6;margin:0;">carte visa incluse<br>dès la validation kyc</p>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Carte Visa incluse<br>dès la validation KYC</p>
       </div>
       <div id="hero-block-2" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; display: none; opacity: 0; transition: opacity 0.5s;">
-        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">simulation crédit</p>
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Simulation crédit</p>
         <p class="nb-mono" style="font-size:24px;color:#C99A3B;margin:0;font-weight:500;">62 000 €</p>
         <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Mensualité : 625 €</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
@@ -128,76 +131,76 @@
     <div class="nb-features-inner">
       <div class="nb-feature-item">
         <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">100 000 €</p>
-        <p style="font-size:12px;color:#8A8676;margin:0;">fonds garantis fgdr</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">Fonds garantis FGDR</p>
       </div>
       <div class="nb-feature-item">
         <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">5 min</p>
-        <p style="font-size:12px;color:#8A8676;margin:0;">vérification kyc</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">Vérification KYC</p>
       </div>
       <div class="nb-feature-item">
         <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">0 €</p>
-        <p style="font-size:12px;color:#8A8676;margin:0;">frais de tenue de compte</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">Frais de tenue de compte</p>
       </div>
     </div>
   </div>
 
   <div id="nbCredit" style="background:#F4F1E9;color:#1C2436;padding:80px 40px;">
     <div style="max-width:1180px;margin:0 auto;">
-      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">les crédits</p>
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">Les crédits</p>
       <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;white-space:nowrap;">Un projet à financer ? On a le crédit qu'il faut.</h2>
-      <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">immobilier, personnel, consommation ou financement de grands projets — demande en ligne, réponse de principe sous 48h.</p>
+      <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">Immobilier, personnel, consommation ou financement de grands projets — Demande en ligne, réponse de principe sous 48h.</p>
 
       <div class="nb-credit-grid">
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-home-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit immobilier</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">achat, construction ou renégociation.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 3,2 %</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit immobilier</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Achat, construction ou renégociation.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 3,2 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-user-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit personnel</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">sans justificatif, libre d'usage.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 4,9 %</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit personnel</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Sans justificatif, libre d'usage.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 4,9 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-shopping-cart" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">crédit consommation</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">travaux, véhicule, équipement.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">taux dès 5,4 %</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit consommation</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Travaux, véhicule, équipement.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 5,4 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-building-skyscraper" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">grands projets</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">financement structuré, montant élevé.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">sur dossier</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Grands projets</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Financement structuré, montant élevé.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Sur dossier</p>
         </div>
       </div>
 
       <div style="border:1px solid #DEDACB;border-radius:8px;padding:32px;background:#FFFFFF;">
-        <p class="nb-mono" style="font-size:11px;letter-spacing:.1em;color:#8A6D1F;margin:0 0 20px;">simulateur de mensualité</p>
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.1em;color:#8A6D1F;margin:0 0 20px;">Simulateur de mensualité</p>
         <div class="nb-sim-row">
           <div class="nb-sim-col">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-              <span style="color:#5B5546;">montant emprunté</span>
+              <span style="color:#5B5546;">Montant emprunté</span>
               <span class="nb-mono" id="nbAmountOut" style="font-weight:500;">50 000 €</span>
             </div>
             <input class="nb-range" type="range" min="5000" max="250000" step="1000" value="50000" id="nbAmount" style="width:100%;">
           </div>
           <div class="nb-sim-col">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-              <span style="color:#5B5546;">durée</span>
+              <span style="color:#5B5546;">Durée</span>
               <span class="nb-mono" id="nbDurationOut" style="font-weight:500;">120 mois</span>
             </div>
             <input class="nb-range" type="range" min="12" max="300" step="12" value="120" id="nbDuration" style="width:100%;">
           </div>
         </div>
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
-          <span style="font-size:13px;color:#5B5546;">mensualité estimée (taux indicatif 3,9 %)</span>
+          <span style="font-size:13px;color:#5B5546;">Mensualité estimée (taux indicatif 3,9 %)</span>
           <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">494 €</span>
         </div>
         <div style="margin-top:22px;">
-          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="openCreditModal()">faire une demande de crédit</button>
+          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="openCreditModal()">Faire une demande de crédit</button>
         </div>
       </div>
     </div>
@@ -205,37 +208,37 @@
 
   <div id="nbOffres" style="background:#0F1B33;padding:76px 40px;">
     <div style="max-width:1180px;margin:0 auto;">
-      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#C99A3B;margin:0 0 10px;">les offres de compte</p>
-      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 40px;color:#F4F1E9;">un compte qui grandit avec vous.</h2>
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#C99A3B;margin:0 0 10px;">Les offres de compte</p>
+      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 40px;color:#F4F1E9;">Un compte qui grandit avec vous.</h2>
       <div class="nb-offers-grid">
         <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html?action=register'">
-          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">standard</p>
-          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">gratuit</p>
-          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">compte courant + carte visa classic</p>
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">Standard</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">Gratuit</p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Compte courant + carte Visa Classic</p>
         </div>
         <div class="nb-card" style="border:1px solid #C99A3B;border-radius:8px;padding:26px;background:rgba(201,154,59,0.06);cursor:pointer;" onclick="window.location.href='app.html?action=register'">
-          <p style="font-size:12px;color:#C99A3B;margin:0 0 10px;">le plus choisi</p>
-          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">premium</p>
+          <p style="font-size:12px;color:#C99A3B;margin:0 0 10px;">Le plus choisi</p>
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">Premium</p>
           <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">9,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
-          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">visa platinum + assurances + 0 € frais intl.</p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Visa Platinum + assurances + 0 € frais intl.</p>
         </div>
         <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html?action=register'">
-          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">business</p>
+          <p style="font-size:14px;font-weight:600;margin:0 0 4px;">Business</p>
           <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">24,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
-          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">multi-comptes + api + comptabilité</p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Multi-comptes + API + comptabilité</p>
         </div>
       </div>
     </div>
   </div>
 
   <div style="padding:90px 40px;text-align:center;">
-    <h2 class="nb-serif" style="font-size:34px;font-weight:400;margin:0 0 26px;color:#F4F1E9;">ouvrez votre compte pendant qu'il en est encore temps.</h2>
-    <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">commencer maintenant</button>
+    <h2 class="nb-serif" style="font-size:34px;font-weight:400;margin:0 0 26px;color:#F4F1E9;">Ouvrez votre compte pendant qu'il en est encore temps.</h2>
+    <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Commencer maintenant</button>
   </div>
 
   <div style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
-    <span>novabanque © 2026 · établissement de paiement agréé</span>
-    <span style="display:flex;gap:18px;"><span>cgu</span><span>confidentialité</span><span>contact</span></span>
+    <span>Novabanque © 2026 · Établissement de paiement agréé</span>
+    <span style="display:flex;gap:18px;"><span>CGU</span><span>Confidentialité</span><span>Contact</span></span>
   </div>
 
 </div>
