@@ -15,8 +15,15 @@ let allLogs = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     updateDate();
-    // Charger la vue par défaut
-    showAdminView('view-dashboard', document.querySelector('.nav-item.active'));
+    const savedView = localStorage.getItem('activeAdminView') || 'view-dashboard';
+    let targetNav = null;
+    document.querySelectorAll('.nav-item').forEach(el => {
+        if(el.getAttribute('onclick') && el.getAttribute('onclick').includes(savedView)) {
+            targetNav = el;
+        }
+    });
+    if(!targetNav) targetNav = document.querySelector('.nav-item');
+    showAdminView(savedView, targetNav);
     
     // Précharger les données globales
     preloadData();
@@ -50,6 +57,7 @@ function updateDate() {
 // ROUTING SPA
 // ============================
 async function showAdminView(viewId, navElement) {
+    localStorage.setItem('activeAdminView', viewId);
     // Gestion du menu actif
     if (navElement) {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
