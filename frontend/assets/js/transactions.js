@@ -25,7 +25,7 @@ async function loadTransactions() {
         if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
 
         const iconClass = isCredit ? 'success' : 'neutral';
-        const icon = isCredit ? 'ti-arrow-down-left' : 'ti-arrow-up-right';
+        const icon = isCredit ? 'ti-arrow-down' : 'ti-arrow-up';
 
         return `
           <div class="tx">
@@ -44,7 +44,7 @@ async function loadTransactions() {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';
         const catClass = isCredit ? 'badge-green' : 'badge-grey';
-        const icon = isCredit ? '<i class="ti ti-arrow-down-left"></i>' : '<i class="ti ti-arrow-up-right"></i>';
+        const icon = isCredit ? '<i class="ti ti-arrow-down"></i>' : '<i class="ti ti-arrow-up"></i>';
         const iconClass = isCredit ? 'icon-green' : 'icon-grey';
         const amountClass = isCredit ? 'text-green' : 'text-black';
         const sign = isCredit ? '+' : '-';
@@ -89,7 +89,9 @@ async function loadTransactions() {
         revenusGroup[cat] = (revenusGroup[cat] || 0) + m;
       } else {
         totalDepenses += m;
-        const cat = tx.type === 'virement_emis' ? 'Virement émis' : 'Paiement / Retrait';
+        let cat = 'Paiement / Retrait';
+        if (tx.type === 'virement_emis') cat = 'Virement émis';
+        if (tx.type === 'debit') cat = 'Débit';
         depensesGroup[cat] = (depensesGroup[cat] || 0) + m;
       }
     });
