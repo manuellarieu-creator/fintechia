@@ -61,7 +61,7 @@ router.post('/virement', [
     const [users] = await connection.query('SELECT pin_code FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0 || users[0].pin_code !== pin_code) {
       await connection.rollback();
-      return res.status(401).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 401 });
+      return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
     }
 
     const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ?', [req.user.id]);
