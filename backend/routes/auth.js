@@ -392,7 +392,14 @@ router.get('/me', authMiddleware, async (req, res, next) => {
     const user = users[0];
     
     const [accounts] = await db.query('SELECT * FROM accounts WHERE user_id = ?', [user.id]);
-    const account = accounts.length > 0 ? accounts[0] : null;
+    let account = accounts.length > 0 ? accounts[0] : null;
+    
+    if (account && account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
+      if (parseFloat(account.solde) >= parseFloat(account.depot_initial_requis)) {
+        await db.query('UPDATE accounts SET depot_initial_requis = 0 WHERE id = ?', [account.id]);
+        account.depot_initial_requis = 0;
+      }
+    }
 
     const [kycs] = await db.query('SELECT statut FROM kyc WHERE user_id = ? ORDER BY soumis_le DESC LIMIT 1', [user.id]);
     const kyc_statut = kycs.length > 0 ? kycs[0].statut : null;
