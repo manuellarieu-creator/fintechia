@@ -117,9 +117,9 @@ function renderKPIs() {
 }
 
 function renderHistory() {
-    const listContainer = ('releves-history-list');
-    const selectDesktop = ('history-select-desktop');
-    const pillsMobile = ('history-pills-mobile');
+    const listContainer = $('releves-history-list');
+    const selectDesktop = $('history-select-desktop');
+    const pillsMobile = $('history-pills-mobile');
     
     listContainer.innerHTML = '';
     selectDesktop.innerHTML = '';
@@ -168,10 +168,10 @@ function renderHistory() {
 }
 
 function renderHistoryListForYear(year, byYearMap) {
-    const listContainer = ('releves-history-list');
+    const listContainer = $('releves-history-list');
     listContainer.innerHTML = `<div class="history-year">${year}</div><div class="history-list" id="active-history-list"></div>`;
     
-    const ul = ('active-history-list');
+    const ul = $('active-history-list');
     
     byYearMap[year].forEach((mKey, index) => {
         const group = groupedByMonth[mKey];
@@ -239,7 +239,7 @@ function selectMonth(mKey) {
     `;
     document.querySelectorAll(`[id=${'releves-balances'}]`).forEach(el => el.innerHTML = balancesHtml);
     
-    const txContainer = ('releves-tx-list');
+    const txContainer = $('releves-tx-list');
     
     if (group.txs.length === 0) {
         txContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Aucune transaction sur cette période.</div>';
@@ -288,8 +288,8 @@ function selectMonth(mKey) {
 }
 
 function renderExportForm() {
-    const selPeriode = ('export-periode-select');
-    const selCompte = ('export-compte-select');
+    const selPeriode = $('export-periode-select');
+    const selCompte = $('export-compte-select');
     
     if (selPeriode) {
         selPeriode.innerHTML = '';
@@ -313,12 +313,12 @@ function openExportModal(format, period) {
     currentExportPeriod = period || (sortedMonths.length > 0 ? sortedMonths[0] : null);
     
     document.querySelectorAll(`[id=${'export-email-input'}]`).forEach(el => el.value = currentUser ? currentUser.email : '');
-    ('modal-export-settings').style.display = 'flex';
+    $('modal-export-settings').style.display = 'flex';
 }
 
 function handleExportConfirm() {
-    const action = ('export-action').value;
-    const email = ('export-email-input').value;
+    const action = $('export-action').value;
+    const email = $('export-email-input').value;
     
     if (action === 'email' && !email) {
         alert("Veuillez saisir une adresse email.");
@@ -331,7 +331,7 @@ function handleExportConfirm() {
         generatePDF(currentExportPeriod, action, email);
     }
     
-    ('modal-export-settings').style.display = 'none';
+    $('modal-export-settings').style.display = 'none';
 }
 
 function generateCSV(mKey, action, email) {
@@ -389,7 +389,7 @@ function generatePDF(mKey, action, email) {
     document.querySelectorAll(`[id=${'pdf-balance-debits'}]`).forEach(el => el.textContent = `-${group.debits.toFixed(2).replace('.', ',')} €`);
     document.querySelectorAll(`[id=${'pdf-balance-end'}]`).forEach(el => el.textContent = `${group.endBalance.toFixed(2).replace('.', ',')} €`);
     
-    const tbody = ('pdf-tx-tbody');
+    const tbody = $('pdf-tx-tbody');
     tbody.innerHTML = '';
     
     group.txs.forEach((tx, idx) => {
@@ -418,7 +418,7 @@ function generatePDF(mKey, action, email) {
     });
     
     // 2. Generate PDF
-    const element = ('pdf-content');
+    const element = $('pdf-content');
     element.parentElement.style.display = 'block'; // Make it visible temporarily for rendering
     
     const opt = {
@@ -486,39 +486,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Export button (Form)
-    const btnExport = ('btn-export');
+    const btnExport = $('btn-export');
     if (btnExport) {
         btnExport.addEventListener('click', () => {
-            const periode = ('export-periode-select').value;
-            const format = ('export-format-select').value;
+            const periode = $('export-periode-select').value;
+            const format = $('export-format-select').value;
             openExportModal(format, periode);
         });
     }
     
     // Column buttons
-    const btnDownloadCsv = ('btn-download-csv');
+    const btnDownloadCsv = $('btn-download-csv');
     if (btnDownloadCsv) {
         btnDownloadCsv.addEventListener('click', () => openExportModal('csv', currentExportPeriod));
     }
     
-    const btnDownloadPdf = ('btn-download-pdf');
+    const btnDownloadPdf = $('btn-download-pdf');
     if (btnDownloadPdf) {
         btnDownloadPdf.addEventListener('click', () => openExportModal('pdf', currentExportPeriod));
     }
     
     // Modal events
-    const actionSelect = ('export-action');
+    const actionSelect = $('export-action');
     if (actionSelect) {
         actionSelect.addEventListener('change', (e) => {
             if (e.target.value === 'email') {
-                ('export-email-group').style.display = 'block';
+                $('export-email-group').style.display = 'block';
             } else {
-                ('export-email-group').style.display = 'none';
+                $('export-email-group').style.display = 'none';
             }
         });
     }
     
-    const btnConfirmExport = ('btn-confirm-export');
+    const btnConfirmExport = $('btn-confirm-export');
     if (btnConfirmExport) {
         btnConfirmExport.addEventListener('click', handleExportConfirm);
     }

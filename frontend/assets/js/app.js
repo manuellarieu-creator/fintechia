@@ -63,6 +63,8 @@ function showView(viewId) {
     loadBudgetsPage();
   } else if (viewId === 'view-credits' && typeof loadCredits === 'function') {
     loadCredits();
+  } else if (viewId === 'view-releves' && typeof loadRelevesData === 'function') {
+    loadRelevesData();
   }
 }
 
@@ -82,6 +84,8 @@ function showMobileView(viewId) {
     loadBudgetsPage();
   } else if (viewId === 'm-view-credits' && typeof loadCredits === 'function') {
     loadCredits();
+  } else if (viewId === 'm-view-releves' && typeof loadRelevesData === 'function') {
+    loadRelevesData();
   }
 }
 
