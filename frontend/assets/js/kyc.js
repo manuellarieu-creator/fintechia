@@ -18,8 +18,7 @@ async function submitKYC(event) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur KYC');
     
-    alert('Documents envoyés pour vérification.');
-    showPage('pg-dash');
+    alert('Documents envoyés pour vérification.', () => showPage('pg-dash'));
     checkAuth(); // refresh UI to hide KYC alert
   } catch (err) {
     alert(err.message);

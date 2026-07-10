@@ -1,3 +1,50 @@
+window.alert = function(message, callback) {
+    let modal = document.getElementById('modal-custom-alert');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-custom-alert';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.2s;';
+        modal.innerHTML = `
+            <div style="background:var(--bg-body, #fff); border-radius:24px; padding:32px; max-width:400px; width:90%; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.2); transform:scale(0.9); transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);" id="custom-alert-box">
+                <div id="custom-alert-icon" style="font-size:56px; margin-bottom:16px; line-height:1;"></div>
+                <h3 id="custom-alert-title" style="margin:0 0 12px; font-size:20px; font-weight:700; color:var(--text-main, #1e293b);"></h3>
+                <p id="custom-alert-message" style="margin:0 0 24px; font-size:15px; color:var(--text-muted, #64748b); line-height:1.5;"></p>
+                <button id="custom-alert-btn" style="background:var(--primary, #3b82f6); color:#fff; border:none; padding:14px 24px; border-radius:12px; font-weight:600; width:100%; cursor:pointer; font-size:15px; transition:transform 0.1s, filter 0.2s;">Compris</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const btn = document.getElementById('custom-alert-btn');
+        btn.addEventListener('mouseover', () => btn.style.filter = 'brightness(1.1)');
+        btn.addEventListener('mouseout', () => btn.style.filter = 'brightness(1)');
+        btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.97)');
+        btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
+    }
+    const lowerMsg = (message || '').toString().toLowerCase();
+    let type = 'info';
+    if (lowerMsg.includes('erreur') || lowerMsg.includes('échoué') || lowerMsg.includes('invalide') || lowerMsg.includes('incorrect') || lowerMsg.includes('insuffisant') || lowerMsg.includes('bloqué') || lowerMsg.includes('rejetée') || lowerMsg.includes('impossible') || lowerMsg.includes('exigé')) {
+        type = 'error';
+    } else if (lowerMsg.includes('succès') || lowerMsg.includes('validé') || lowerMsg.includes('ajouté') || lowerMsg.includes('réussi')) {
+        type = 'success';
+    } else if (lowerMsg.includes('attention') || lowerMsg.includes('bientôt') || lowerMsg.includes('limite')) {
+        type = 'warning';
+    }
+    let emoji = '💡', title = 'Notification', btnColor = 'var(--primary, #3b82f6)';
+    if (type === 'error') { emoji = '🚨'; title = 'Oups !'; btnColor = 'var(--danger, #ef4444)'; }
+    else if (type === 'success') { emoji = '✅'; title = 'Succès !'; btnColor = 'var(--success, #22c55e)'; }
+    else if (type === 'warning') { emoji = '⚠️'; title = 'Attention'; btnColor = 'var(--warning, #f59e0b)'; }
+    document.getElementById('custom-alert-icon').innerText = emoji;
+    document.getElementById('custom-alert-title').innerText = title;
+    document.getElementById('custom-alert-message').innerText = message;
+    document.getElementById('custom-alert-btn').style.background = btnColor;
+    modal.style.display = 'flex';
+    setTimeout(() => { modal.style.opacity = '1'; document.getElementById('custom-alert-box').style.transform = 'scale(1)'; }, 10);
+    document.getElementById('custom-alert-btn').onclick = () => {
+        modal.style.opacity = '0';
+        document.getElementById('custom-alert-box').style.transform = 'scale(0.9)';
+        setTimeout(() => { modal.style.display = 'none'; if (callback) callback(); }, 200);
+    };
+};
+
 // Base logic for the frontend SPA
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,8 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('fintech_token')) {
         logoutTimer = setTimeout(() => {
           localStorage.removeItem('fintech_token');
-          alert('Session expirée pour inactivité.');
-          window.location.reload();
+          alert('Session expirée pour inactivité.', () => window.location.reload());
         }, 3 * 60 * 1000);
       }
     }
@@ -821,8 +867,7 @@ function startKycPolling() {
         document.getElementById('modal-kyc-approved').style.display = 'flex';
       } else if (data && data.kyc_statut === 'rejete') {
         clearInterval(kycPollInterval);
-        alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.');
-        window.location.reload();
+        alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.', () => window.location.reload());
       }
     } catch (err) {
       console.error('KYC Polling error', err);
