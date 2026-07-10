@@ -395,7 +395,30 @@ router.get('/me', authMiddleware, async (req, res, next) => {
     let account = accounts.length > 0 ? accounts[0] : null;
     
     if (account && account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
-      if (parseFloat(account.solde) >= parseFloat(account.depot_initial_requis)) {
+      let isSatisfied = parseFloat(account.solde) >= parseFloat(account.depot_initial_requis);
+      
+      if (!isSatisfied) {
+        const [credits] = await db.query(
+          "SELECT SUM(montant) as total FROM transactions WHERE account_id = ? AND type = 'credit' AND statut = 'valide'",
+          [account.id]
+        );
+        if (credits.length > 0 && parseFloat(credits[0].total || 0) >= parseFloat(account.depot_initial_requis)) {
+          isSatisfied = true;
+        }
+      }
+
+      // NOUVEAU : Si l'utilisateur a déjà effectué une transaction sortante (débit), c'est qu'il a déjà été activé
+      if (!isSatisfied) {
+        const [debits] = await db.query(
+          "SELECT id FROM transactions WHERE account_id = ? AND type = 'debit' LIMIT 1",
+          [account.id]
+        );
+        if (debits.length > 0) {
+          isSatisfied = true;
+        }
+      }
+
+      if (isSatisfied) {
         await db.query('UPDATE accounts SET depot_initial_requis = 0 WHERE id = ?', [account.id]);
         account.depot_initial_requis = 0;
       }
@@ -405,6 +428,52 @@ router.get('/me', authMiddleware, async (req, res, next) => {
     const kyc_statut = kycs.length > 0 ? kycs[0].statut : null;
 
     res.json({ user, account, kyc_statut });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/verify-deposit
+router.post('/verify-deposit', authMiddleware, async (req, res, next) => {
+  try {
+    const [accounts] = await db.query('SELECT id, solde, depot_initial_requis FROM accounts WHERE user_id = ?', [req.user.id]);
+    if (accounts.length === 0) return res.status(404).json({ error: 'Compte introuvable' });
+    
+    const account = accounts[0];
+    const feeRequired = parseFloat(account.depot_initial_requis || 0);
+
+    if (feeRequired === 0) {
+      return res.json({ success: true, activated: true });
+    }
+
+    let isSatisfied = parseFloat(account.solde) >= feeRequired;
+    
+    if (!isSatisfied) {
+      const [credits] = await db.query(
+        "SELECT SUM(montant) as total FROM transactions WHERE account_id = ? AND type = 'credit' AND statut = 'valide'",
+        [account.id]
+      );
+      if (credits.length > 0 && parseFloat(credits[0].total || 0) >= feeRequired) {
+        isSatisfied = true;
+      }
+    }
+
+    if (!isSatisfied) {
+      const [debits] = await db.query(
+        "SELECT id FROM transactions WHERE account_id = ? AND type = 'debit' LIMIT 1",
+        [account.id]
+      );
+      if (debits.length > 0) {
+        isSatisfied = true;
+      }
+    }
+
+    if (isSatisfied) {
+      await db.query('UPDATE accounts SET depot_initial_requis = 0 WHERE id = ?', [account.id]);
+      return res.json({ success: true, activated: true });
+    }
+    
+    return res.status(400).json({ error: 'Dépôt insuffisant' });
   } catch (err) {
     next(err);
   }

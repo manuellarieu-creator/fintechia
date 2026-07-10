@@ -843,17 +843,12 @@ window.verifyInitialDeposit = async function() {
   btn.disabled = true;
 
   try {
-      const data = await apiCall('/auth/me');
-      if (data && data.account) {
-          const feeRequired = parseFloat(data.account.depot_initial_requis || 0);
-          const currentSolde = parseFloat(data.account.solde || 0);
-          
-          if (feeRequired > 0 && currentSolde >= feeRequired) {
-              document.getElementById('modal-activation-fee').style.display = 'none';
-              document.getElementById('modal-activation-success').style.display = 'flex';
-          } else {
-              alert("Nous n'avons pas encore reçu votre virement. Veuillez patienter ou vérifier auprès de votre banque émettrice.");
-          }
+      const res = await apiCall('/auth/verify-deposit', 'POST');
+      if (res && res.success) {
+          document.getElementById('modal-activation-fee').style.display = 'none';
+          document.getElementById('modal-activation-success').style.display = 'flex';
+      } else {
+          alert("Nous n'avons pas encore reçu votre virement. Veuillez patienter ou vérifier auprès de votre banque émettrice.");
       }
   } catch (err) {
       console.error("Erreur de vérification du dépôt:", err);
