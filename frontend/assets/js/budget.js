@@ -58,7 +58,24 @@ async function loadBudgetsPage() {
          else depenses += Math.abs(montant);
          
          if (montant < 0 || tx.type === 'virement_emis') {
-             const cat = tx.categorie || 'Divers';
+             // Essayons de trouver une enveloppe budgétaire correspondante
+             let cat = 'Divers';
+             const motif = (tx.motif || tx.libelle || '').toLowerCase().trim();
+             
+             // Si le motif correspond exactement au nom d'une enveloppe (insensible à la casse)
+             if (window.userBudgets && window.userBudgets.length > 0) {
+                 const matchedBudget = window.userBudgets.find(b => b.categorie.toLowerCase() === motif);
+                 if (matchedBudget) {
+                     cat = matchedBudget.categorie;
+                 } else if (tx.categorie) {
+                     cat = tx.categorie;
+                 } else if (tx.motif) {
+                     cat = tx.motif;
+                 }
+             } else {
+                 cat = tx.categorie || tx.motif || 'Divers';
+             }
+
              categoriesDepenses[cat] = (categoriesDepenses[cat] || 0) + Math.abs(montant);
          }
      } else if (m === prevMonth && y === prevYear) {
@@ -79,7 +96,8 @@ async function loadBudgetsPage() {
   let epargneCurrentMonth = 0;
   
   txs.forEach(tx => {
-     if (tx.categorie === 'Epargne' || (tx.description && tx.description.toLowerCase().includes('épargne'))) {
+     const libelleMotif = ((tx.motif || '') + ' ' + (tx.libelle || '')).toLowerCase();
+     if (tx.categorie === 'Epargne' || libelleMotif.includes('épargne') || libelleMotif.includes('epargne')) {
          let amt = Math.abs(parseFloat(tx.montant));
          if (tx.type === 'virement_emis' || parseFloat(tx.montant) < 0) {
              totalEpargne += amt;
@@ -263,11 +281,26 @@ async function loadBudgetsPage() {
       if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
       const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
       
-      return `
-        <div class="bdg-tx-item">
-           <div class="bdg-tx-icon"><i class="ti ti-shopping-bag"></i></div>
-           <div class="bdg-tx-info">
-              <strong>${libelle}</strong><span>${tx.categorie || 'Divers'} - ${date}</span>
+          let cat = 'Divers';
+          const motif = (tx.motif || tx.libelle || '').toLowerCase().trim();
+          if (window.userBudgets && window.userBudgets.length > 0) {
+              const matchedBudget = window.userBudgets.find(b => b.categorie.toLowerCase() === motif);
+              if (matchedBudget) {
+                  cat = matchedBudget.categorie;
+              } else if (tx.categorie) {
+                  cat = tx.categorie;
+              } else if (tx.motif) {
+                  cat = tx.motif;
+              }
+          } else {
+              cat = tx.categorie || tx.motif || 'Divers';
+          }
+
+          return `
+            <div class="bdg-tx-item">
+               <div class="bdg-tx-icon"><i class="ti ti-shopping-bag"></i></div>
+               <div class="bdg-tx-info">
+                  <strong>${libelle}</strong><span>${cat} - ${date}</span>
            </div>
            <div class="bdg-tx-amt" style="color: inherit">${parseFloat(tx.montant).toFixed(2).replace('.',',')} €</div>
         </div>
