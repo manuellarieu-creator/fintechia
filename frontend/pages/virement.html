@@ -926,7 +926,7 @@
             <div>
                 <h1 class="page-title">Nouveau virement</h1>
                 <div class="balance">
-                    Solde disponible : <span class="balance-amount">12 480,32 €</span>
+                    Solde disponible : <span class="balance-amount" id="virement-solde-display">12 480,32 €</span>
                 </div>
             </div>
             <button class="btn-outline">
@@ -939,7 +939,7 @@
             <div class="back-btn"><i class="fa-solid fa-arrow-left"></i></div>
             <div class="mobile-title-area">
                 <div class="mobile-title">Nouveau virement</div>
-                <div class="mobile-subtitle">Solde : 12 480,32 €</div>
+                <div class="mobile-subtitle" id="virement-solde-display-mobile">Solde : 12 480,32 €</div>
             </div>
             <div class="user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">MR</div>
         </div>
@@ -1016,10 +1016,10 @@
                 <div class="form-group">
                     <label class="form-label">Type de virement</label>
                     <div class="segmented-control">
-                        <button class="segment-btn active">
+                        <button class="segment-btn active" data-type="immediat" onclick="document.querySelectorAll('.segment-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
                             <i class="fa-solid fa-mobile-screen"></i> Immédiat
                         </button>
-                        <button class="segment-btn">
+                        <button class="segment-btn" data-type="programme" onclick="document.querySelectorAll('.segment-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
                             <i class="fa-regular fa-calendar"></i> Programmé
                         </button>
                         <button class="segment-btn mobile-only">
@@ -1113,8 +1113,8 @@
 
                     <div class="amount-summary">
                         <div class="amount-label">Montant à débiter</div>
-                        <div class="amount-value">250,00 €</div>
-                        <div class="balance-after">Solde après virement : <br><span>12 230,32 €</span></div>
+                        <div class="amount-value" id="recap-montant">250,00 €</div>
+                        <div class="balance-after">Solde après virement : <br><span id="recap-balance-after">12 230,32 €</span></div>
                     </div>
                 </div>
 

@@ -55,16 +55,23 @@ function openTunnelModal() {
 }
 
 function goToOtpStep() {
-  const montant = document.getElementById('vir-montant').value;
+  const montantStr = document.getElementById('vir-montant').value;
   const iban = document.getElementById('vir-iban').value;
   
-  if (!montant || !iban) {
+  if (!montantStr || !iban) {
     alert('Veuillez sélectionner un bénéficiaire et saisir un montant.');
     return;
   }
+
+  const soldeText = document.getElementById('virement-solde-display')?.innerText || "0";
+  const currentSolde = parseFloat(soldeText.replace(/[^0-9,.-]+/g, "").replace(',', '.'));
+  const montantVal = parseFloat(montantStr.replace(',', '.'));
+  const newSolde = currentSolde - montantVal;
   
   // Update recap fields with form data
-  document.getElementById('recap-montant').innerText = parseFloat(montant).toFixed(2) + ' €';
+  document.getElementById('recap-montant').innerText = montantVal.toFixed(2).replace('.', ',') + ' €';
+  const recapBalanceAfterEl = document.getElementById('recap-balance-after');
+  if(recapBalanceAfterEl) recapBalanceAfterEl.innerText = newSolde.toFixed(2).replace('.', ',') + ' €';
   document.getElementById('recap-vers').innerText = document.getElementById('vir-nom').value || iban;
   
   // Transition to OTP step
@@ -86,6 +93,9 @@ async function submitTunnelOtp() {
   document.getElementById('tunnel-step-otp').style.display = 'none';
   document.getElementById('tunnel-step-loading').style.display = 'block';
   
+  const activeTypeBtn = document.querySelector('.segment-btn.active');
+  const typeVirement = activeTypeBtn ? (activeTypeBtn.dataset.type || 'immediat') : 'immediat';
+  
   // Call the actual API
   const payload = {
     iban_dest: document.getElementById('vir-iban').value,
@@ -93,6 +103,7 @@ async function submitTunnelOtp() {
     nom_dest: document.getElementById('vir-nom').value,
     montant: document.getElementById('vir-montant').value,
     motif: document.getElementById('vir-motif').value,
+    type_virement: typeVirement,
     pin_code: pin_code
   };
 

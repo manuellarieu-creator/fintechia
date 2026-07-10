@@ -49,11 +49,12 @@ router.post('/virement', [
   body('nom_banque_dest').optional().trim(),
   body('montant').isFloat({ gt: 0 }),
   body('motif').trim().notEmpty(),
-  body('pin_code').trim().notEmpty()
+  body('pin_code').trim().notEmpty(),
+  body('type_virement').optional().trim()
 ], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { iban_dest, bic_dest, nom_dest, nom_banque_dest, montant, motif, pin_code } = req.body;
+    const { iban_dest, bic_dest, nom_dest, nom_banque_dest, montant, motif, pin_code, type_virement } = req.body;
     
     await connection.beginTransaction();
 
@@ -104,11 +105,19 @@ router.post('/virement', [
 
     const reference = 'VIR-' + crypto.randomUUID().slice(0, 12).toUpperCase().replace(/-/g, '');
     
+    const statutVirement = (type_virement === 'immediat') ? 'valide' : 'en_attente';
+    
+    let newSolde = account.solde;
+    if (statutVirement === 'valide') {
+      newSolde = parseFloat(account.solde) - parseFloat(montant);
+      await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [newSolde, account.id]);
+    }
+    
     const [insertResult] = await connection.query(
       `INSERT INTO transactions 
       (account_id, type, montant, solde_avant, solde_apres, libelle, motif, iban_dest, nom_dest, nom_banque_dest, reference, statut) 
-      VALUES (?, 'virement_emis', ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en_attente')`,
-      [account.id, montant, account.solde, account.solde, motif, motif, iban_dest, nom_dest, nom_banque_dest, reference]
+      VALUES (?, 'virement_emis', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [account.id, montant, account.solde, newSolde, motif, motif, iban_dest, nom_dest, nom_banque_dest, reference, statutVirement]
     );
 
     await connection.commit();
@@ -118,12 +127,16 @@ router.post('/virement', [
       action: audit.ACTIONS.VIREMENT_INITIE, categorie: audit.CATEGORIES.virement,
       cible_type: 'transaction', cible_id: insertResult.insertId,
       cible_detail: `Virement de ${montant}€ vers ${nom_dest} (${iban_dest})`,
-      detail: { reference, montant, iban_dest, nom_dest, motif }, req
+      detail: { reference, montant, iban_dest, nom_dest, motif, type_virement }, req
     });
 
-    await notifications.envoyer(req.user.id, 'Virement initié', 'Votre virement est en cours de validation.', 'info');
-
-    res.json({ success: true, reference, message: 'Virement en cours de validation' });
+    if (statutVirement === 'valide') {
+      await notifications.envoyer(req.user.id, 'Virement validé', 'Votre virement immédiat a été exécuté avec succès.', 'succes');
+      res.json({ success: true, reference, message: 'Virement validé avec succès' });
+    } else {
+      await notifications.envoyer(req.user.id, 'Virement initié', 'Votre virement est en cours de validation.', 'info');
+      res.json({ success: true, reference, message: 'Virement en cours de validation' });
+    }
   } catch (err) {
     await connection.rollback();
     next(err);
