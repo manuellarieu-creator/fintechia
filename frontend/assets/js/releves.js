@@ -466,7 +466,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
     
-    loadRelevesData();
+    if (localStorage.getItem('fintech_token')) {
+        loadRelevesData();
+    }
     
     const searchInput = document.querySelector('.search-input input');
     if (searchInput) {
