@@ -417,8 +417,9 @@
 
           <!-- Transactions -->
           <div class="mobile-card">
-            <div class="card-head">
+            <div class="card-head" style="display:flex; justify-content:space-between; align-items:center;">
               <h2>Transactions récentes</h2>
+              <a href="#" onclick="showMobileView('m-view-releves')" style="color:var(--primary); font-size:12px; font-weight:600; text-decoration:none;">Voir tout →</a>
             </div>
             <div id="tx-tbody-mobile">Chargement...</div>
           </div>
@@ -984,7 +985,7 @@
               <h2>Transactions récentes</h2>
               <div class="nb-tx-filters">
                 <select><option>Toutes catégories</option></select>
-                <a href="#">Voir tout →</a>
+                <a href="#" onclick="showView('view-releves')">Voir tout →</a>
               </div>
             </div>
             <table class="nb-tx-table">

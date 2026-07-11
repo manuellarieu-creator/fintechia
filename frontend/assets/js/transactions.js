@@ -5,7 +5,7 @@ async function loadTransactions() {
   if (!containerMobile && !containerDesktop) return;
 
   try {
-    const txs = await apiCall('/transactions?limit=10');
+    const txs = await apiCall('/transactions?limit=5');
     
     if (txs.length === 0) {
       if(containerMobile) containerMobile.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:15px;">Aucune transaction récente.</td></tr>';
