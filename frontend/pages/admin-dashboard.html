@@ -847,95 +847,9 @@
                   </div>
 
                   <!-- COL 2 : Fiche alerte active -->
-                  <div style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
-
-                    <!-- Header fiche -->
-                    <div class="frd-card" style="padding:14px 16px;">
-                      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;">
-                        <div class="risk-ring" style="border-color:#DC2626;">
-                          <span style="font-size:16px;font-weight:800;color:#DC2626;">82</span>
-                          <span style="font-size:8px;color:#94A3B8;">/100</span>
-                        </div>
-                        <div style="flex:1;">
-                          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                            <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Usurpation d'identité</h3>
-                            <span class="bk ba">En revue</span>
-                          </div>
-                          <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-20260630-0037 · Déclenché à 13:45</p>
-                          <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">Nadia Ferhat — **** 3318 — Compte Premium</p>
-                        </div>
-                      </div>
-
-                      <!-- Infos -->
-                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:12px;">
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">Usurpation KYC</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Canal détection</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">IA — Reconnaissance faciale</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant à risque</p><p style="font-size:11px;font-weight:600;color:#B91C1C;margin:2px 0 0;">0 € — Bloqué préventivement</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">IP de connexion</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;font-family:monospace;">185.220.101.x</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Localisation</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">🇩🇿 Algérie (VPN détecté)</p></div>
-                        <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;">Android inconnu</p></div>
-                      </div>
-
-                      <!-- Détail IA -->
-                      <div style="background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:10px 12px;margin-bottom:12px;">
-                        <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-robot" style="font-size:13px;"></i>Analyse IA — Score de confiance : 82/100</p>
-                        <div style="display:flex;flex-direction:column;gap:5px;">
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B91C1C;">Selfie vs document KYC</span>
-                            <span style="font-size:10px;font-weight:700;color:#B91C1C;">Concordance 34% ✗</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">IP détectée comme Tor/VPN</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Confirmé ⚠</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#B45309;">Géolocalisation ≠ domicile déclaré</span>
-                            <span style="font-size:10px;font-weight:700;color:#B45309;">Écart 2 800 km ⚠</span>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#15803D;">Aucune correspondance liste noire</span>
-                            <span style="font-size:10px;font-weight:700;color:#15803D;">OK ✓</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Timeline -->
-                      <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Chronologie</p>
-                      <div style="display:flex;flex-direction:column;gap:0;">
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#2563EB;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Dossier pris en charge par l'admin</p><p style="font-size:9px;color:#94A3B8;margin:0;">14:22 · Admin (vous)</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#DC2626;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Compte bloqué automatiquement</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:46 · Moteur IA</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
-                          <div class="timeline-dot" style="background:#DC2626;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Alerte fraude déclenchée — Score 82</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:45 · Moteur IA</p></div>
-                        </div>
-                        <div style="display:flex;gap:10px;padding:5px 0;">
-                          <div class="timeline-dot" style="background:#94A3B8;"></div>
-                          <div><p style="font-size:10px;font-weight:500;margin:0;">Tentative KYC soumise</p><p style="font-size:9px;color:#94A3B8;margin:0;">13:44 · Client</p></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Décision -->
-                    <div class="frd-card" style="padding:14px 16px;">
-                      <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 12px;">Décision & résolution</h3>
-                      <div style="display:flex;flex-direction:column;gap:8px;">
-                        <textarea style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;resize:none;height:60px;font-family:inherit;" placeholder="Note interne de décision…">Selfie non concordant à 34%. IP Tor confirmée. Géolocalisation Algérie. Recommandation : clôture du dossier + signalement Tracfin.</textarea>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                          <button class="frd-btn" style="background:#16A34A;color:#fff;justify-content:center;"><i class="ti ti-circle-check" style="font-size:13px;"></i>Résoudre</button>
-                          <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;justify-content:center;"><i class="ti ti-ban" style="font-size:13px;"></i>Clôturer fraude</button>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                          <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;justify-content:center;font-size:10px;"><i class="ti ti-gavel" style="font-size:12px;"></i>Signaler Tracfin</button>
-                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Contacter client</button>
-                        </div>
-                      </div>
-                    </div>
+                  <div id="alerte-detail-panel" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;">
+                      <!-- L'Alerte sélectionnée s'affichera ici -->
+                      <div class="text-center text-muted" style="padding:40px 20px;font-size:12px;">Sélectionnez une alerte pour voir les détails</div>
                   </div>
 
                   <!-- COL 3 : Règles & stats -->

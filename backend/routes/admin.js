@@ -9,10 +9,12 @@ const notifications = require('../services/notifications');
 // Auto-migration pour les nouvelles colonnes accounts et account_rules
 (async () => {
   try {
-    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) UNIQUE").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50)").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE accounts ADD COLUMN motif_blocage VARCHAR(255) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE users ADD COLUMN transfer_types VARCHAR(255) DEFAULT 'standard,immediat,swift,programme'").catch(e => console.error("Migration error:", e.message));
     await db.query(`
       CREATE TABLE IF NOT EXISTS account_rules (
         id INT AUTO_INCREMENT PRIMARY KEY,

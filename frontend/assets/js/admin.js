@@ -139,7 +139,8 @@ async function fetchAPI(endpoint, method = 'GET', body = null) {
 }
 
 async function preloadData() {
-    allClients = await fetchAPI('/admin/comptes') || [];
+    const res = await fetchAPI('/admin/comptes');
+    allClients = Array.isArray(res) ? res : [];
 }
 
 // ============================
@@ -151,7 +152,8 @@ async function loadDashboardStats() {
     const stats = await fetchAPI('/admin/dashboard');
     if (!stats) return;
 
-    allClients = await fetchAPI('/admin/comptes') || [];
+    const res = await fetchAPI('/admin/comptes');
+    allClients = Array.isArray(res) ? res : [];
 
     document.getElementById('kpi-clients-actifs').innerText = formatNumber(stats.comptes_actifs || 0);
     // document.getElementById('kpi-clients-actifs-sub').innerText = `+${Math.floor(Math.random()*50)} ce mois`;
@@ -245,7 +247,10 @@ async function renderClientsTable() {
 
 async function renderFullClientsTable() {
     // Si la liste est vide (première charge), on refetch
-    if(allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
+    if(allClients.length === 0) {
+        const res = await fetchAPI('/admin/comptes');
+        allClients = Array.isArray(res) ? res : [];
+    }
     let clients = enrichClientData(allClients);
     
     const searchTerm = (document.getElementById('search-comptes')?.value || '').toLowerCase();
@@ -1344,42 +1349,37 @@ async function loadLogsTable() {
 
 // --- Fraudes (Page 5 & Dashboard) ---
 async function loadAlertes() {
-    const fraudesList = await fetchAPI('/admin/alertes?limit=10') || [];
+    const res = await fetchAPI('/admin/alertes?limit=10');
+    const fraudesList = res && res.alertes ? res.alertes : [];
+    
     const container = document.getElementById('alerts-container');
-    document.getElementById('alert-count').innerText = fraudesList.length;
+    const countEl = document.getElementById('alert-count');
+    if(countEl) countEl.innerText = fraudesList.length;
     
     if (fraudesList.length === 0) {
-        container.innerHTML = `<div class="text-center text-muted p-3">Aucune alerte.</div>`;
+        if(container) container.innerHTML = `<div class="text-center text-muted p-3">Aucune alerte.</div>`;
         return;
     }
     
-    container.innerHTML = fraudesList.slice(0, 3).map(renderAlerteItem).join('');
-}
-
-async function renderFraudesFullTable() {
-    const fraudesList = await fetchAPI('/admin/alertes?limit=50') || [];
-    const container = document.getElementById('fraudes-full-container');
-    if (fraudesList.length === 0) {
-        container.innerHTML = `<div class="text-center text-muted p-3">Aucune alerte fraude ou sécurité.</div>`;
-        return;
-    }
-    container.innerHTML = fraudesList.map(renderAlerteItem).join('');
+    if(container) container.innerHTML = fraudesList.slice(0, 3).map(renderAlerteItem).join('');
 }
 
 function renderAlerteItem(a) {
-    const type = a.description?.toLowerCase().includes('bloqu') ? 'danger' : 'warning';
+    const isCrit = a.niveau_risque === 'high';
+    const type = isCrit ? 'danger' : 'warning';
+    const icon = isCrit ? 'ti-alert-circle' : 'ti-alert-triangle';
     return `
         <div class="alert-item">
             <div class="alert-icon ${type}">
-                <i class="ti ${type === 'danger' ? 'ti-alert-circle' : 'ti-alert-triangle'}"></i>
+                <i class="ti ${icon}"></i>
             </div>
             <div class="alert-content">
-                <div class="alert-title">${a.action}</div>
-                <div class="alert-desc">${a.description || ''} <br><span class="client-name" style="font-size:11px;">${a.utilisateur}</span></div>
+                <div class="alert-title">${a.type}</div>
+                <div class="alert-desc">${a.description || ''} <br><span class="client-name" style="font-size:11px;">${a.prenom} ${a.nom}</span></div>
                 <div class="alert-time">${new Date(a.created_at).toLocaleString('fr-FR')}</div>
             </div>
             <div class="alert-actions">
-                <button class="btn-alert-action ${type === 'danger' ? 'bloquer' : 'verifier'}">
+                <button class="btn-alert-action ${isCrit ? 'bloquer' : 'verifier'}">
                     Examiner
                 </button>
             </div>
@@ -1772,10 +1772,10 @@ window.confirmEmitCard = async function() {
 }
 
 async function renderFraudesFullTable() {
-    const data = await fetchAPI('/admin/alertes/admin?limit=50');
-    // If route doesn't exist yet, this will fail gracefully due to fetchAPI error handling
-    if (!data) return;
+    const data = await fetchAPI('/admin/alertes?limit=50');
+    if (!data || !data.stats) return;
 
+    // Update KPIs
     const kpiCards = document.querySelectorAll('#view-fraudes .frd-card p:nth-of-type(2)');
     if (kpiCards.length >= 4) {
         kpiCards[0].innerText = formatNumber(data.stats.critiques || 0);
@@ -1786,7 +1786,7 @@ async function renderFraudesFullTable() {
     const tbody = document.getElementById('admin-alertes-list');
     if (!tbody) return;
 
-    if (data.alertes.length === 0) {
+    if (!data.alertes || data.alertes.length === 0) {
         tbody.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucune alerte.</div>';
         return;
     }
@@ -1794,40 +1794,88 @@ async function renderFraudesFullTable() {
     tbody.innerHTML = data.alertes.map(a => {
         const isResolved = a.statut === 'resolu';
         const isCrit = a.niveau_risque === 'high';
+        // Encode alert data for onclick
+        const aJson = encodeURIComponent(JSON.stringify(a));
         
         return `
-        <div class="alert-row ${isResolved ? '' : (isCrit ? 'crit' : 'warn')}" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px; ${isResolved ? 'background:#F0FDF4;' : ''}">
+        <div class="alert-row ${isResolved ? '' : (isCrit ? 'crit' : 'warn')}" style="grid-template-columns:22px minmax(0,1.6fr) minmax(0,1fr) 70px 80px 80px; ${isResolved ? 'background:#F0FDF4;' : ''}" onclick="showAlerteDetail('${aJson}')">
             <i class="ti ${isResolved ? 'ti-circle-check' : 'ti-alert-circle'}" style="font-size:14px;color:${isResolved ? '#16A34A' : '#DC2626'};"></i>
             <div>
-                <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${a.type}</p>
-                <p style="font-size:9px;color:${isResolved ? '#94A3B8' : '#B91C1C'};margin:1px 0 0;">${a.description}</p>
+                <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;text-transform:capitalize;">${a.type.replace('_', ' ')}</p>
+                <p style="font-size:9px;color:${isResolved ? '#94A3B8' : '#B91C1C'};margin:1px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;">${a.description}</p>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
                 <div class="av" style="background:#F1F5F9;color:#475569;width:24px;height:24px;font-size:9px;">${(a.prenom||'X')[0]}${(a.nom||'X')[0]}</div>
-                <span style="font-size:10px;font-weight:500;color:#0F172A;">${a.prenom} ${a.nom}</span>
+                <span style="font-size:10px;font-weight:500;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;">${a.prenom} ${a.nom}</span>
             </div>
             <div style="text-align:center;"><span style="font-size:13px;font-weight:800;color:#DC2626;">${isCrit ? '99' : '75'}</span></div>
             <div style="text-align:center;"><span class="bk ${isResolved ? 'bs' : (isCrit ? 'bd' : 'bw')}">${isResolved ? 'Résolu' : (isCrit ? 'Critique' : 'Avertiss.')}</span></div>
             <div style="display:flex;gap:3px;justify-content:center;">
-                ${!isResolved ? `<button class="frd-btn" onclick="resolveAlerte(${a.id})" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-check" style="font-size:10px;"></i></button>` : ''}
+                ${!isResolved ? `<button class="frd-btn" onclick="event.stopPropagation(); resolveAlerte(${a.id})" style="background:#F0FDF4;color:#15803D;padding:3px 7px;font-size:10px;border-radius:5px;"><i class="ti ti-check" style="font-size:10px;"></i></button>` : ''}
             </div>
         </div>
         `;
     }).join('');
 }
 
+window.showAlerteDetail = function(aJsonEncoded) {
+    const a = JSON.parse(decodeURIComponent(aJsonEncoded));
+    const panel = document.getElementById('alerte-detail-panel');
+    if(!panel) return;
+    
+    const isCrit = a.niveau_risque === 'high';
+    const isResolved = a.statut === 'resolu';
+    const scoreColor = isCrit ? '#DC2626' : '#D97706';
+    const score = isCrit ? '99' : '75';
+    
+    panel.innerHTML = `
+      <div class="frd-card" style="padding:14px 16px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid #F1F5F9;">
+          <div class="risk-ring" style="border-color:${scoreColor};">
+            <span style="font-size:16px;font-weight:800;color:${scoreColor};">${score}</span>
+            <span style="font-size:8px;color:#94A3B8;">/100</span>
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+              <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;text-transform:capitalize;">${a.type.replace('_', ' ')}</h3>
+              <span class="bk ${isResolved ? 'bs' : 'ba'}">${isResolved ? 'Résolu' : 'En revue'}</span>
+            </div>
+            <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-${a.id} · Déclenché à ${new Date(a.created_at).toLocaleTimeString('fr-FR')}</p>
+            <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">${a.prenom} ${a.nom}</p>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:12px;">
+          <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type de fraude</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;text-transform:capitalize;">${a.type.replace('_', ' ')}</p></div>
+          <div><p style="font-size:9px;color:#94A3B8;margin:0;">Risque</p><p style="font-size:11px;font-weight:600;color:#0F172A;margin:2px 0 0;">${isCrit ? 'Élevé' : 'Moyen'}</p></div>
+        </div>
+
+        <div style="background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:10px 12px;margin-bottom:12px;">
+          <p style="font-size:10px;font-weight:700;color:#B91C1C;margin:0 0 6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-alert-triangle" style="font-size:13px;"></i>Détails de l'alerte</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <span style="font-size:10px;color:#B91C1C;">${a.description}</span>
+          </div>
+        </div>
+      </div>
+      
+      ${!isResolved ? `
+      <div class="frd-card" style="padding:14px 16px;">
+        <h3 style="font-size:12px;font-weight:700;color:#0F172A;margin:0 0 12px;">Actions Rapides</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="frd-btn" style="background:#16A34A;color:#fff;justify-content:center;" onclick="resolveAlerte(${a.id})"><i class="ti ti-circle-check" style="font-size:13px;"></i>Marquer comme résolu</button>
+        </div>
+      </div>
+      ` : ''}
+    `;
+};
+
 window.resolveAlerte = async function(id) {
     if(confirm('Marquer cette alerte comme résolue ?')) {
-        const res = await fetchAPI(`/admin/alertes/admin/${id}/resolve`, 'POST');
+        const res = await fetchAPI(`/admin/alertes/${id}/resolve`, 'POST');
         if (res && res.success) {
             renderFraudesFullTable();
         }
     }
-}
-
-// Load alertes on dashboard view
-async function loadAlertes() {
-    // We could fetch a small summary here for the main dashboard if needed
 }
 
 
