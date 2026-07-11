@@ -89,7 +89,12 @@ router.post('/virement', [
     // 2. Vérifier la limite de montant
     if (account.max_transfer_amount !== null && parseFloat(montant) > parseFloat(account.max_transfer_amount)) {
       await connection.rollback();
-      return res.status(403).json({ error: `Vous ne pouvez pas virer plus de ${account.max_transfer_amount}€ en une seule fois.`, code: 'TRANSFER_LIMIT_EXCEEDED', status: 403 });
+      return res.status(403).json({ error: `Vous ne pouvez pas virer plus de ${account.max_transfer_amount}€ en une seule fois. Veuillez contacter votre conseiller pour finaliser cette transaction.`, code: 'TRANSFER_LIMIT_EXCEEDED', status: 403 });
+    }
+
+    if (requestedType === 'immediat' && parseFloat(montant) > 900) {
+      await connection.rollback();
+      return res.status(403).json({ error: `Le montant maximum pour un virement instantané est de 900€. Veuillez choisir un virement standard.`, code: 'INSTANT_TRANSFER_LIMIT', status: 403 });
     }
 
     // 3. Vérifier le solde
