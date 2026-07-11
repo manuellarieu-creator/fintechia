@@ -91,9 +91,13 @@ router.post('/rules', [authMiddleware, adminMiddleware], async (req, res) => {
 // POST /api/admin/alertes/rules/add
 router.post('/rules/add', [authMiddleware, adminMiddleware], async (req, res) => {
   try {
-    const { rule_name, description } = req.body;
-    if (!rule_name || !description) return res.status(400).json({ error: 'Champs requis' });
-    await pool.query('INSERT INTO fraud_detection_rules (rule_name, description, is_active, times_triggered) VALUES (?, ?, TRUE, 0)', [rule_name, description]);
+    const { rule_name, description, event_type, condition_field, condition_operator, condition_value, action_type } = req.body;
+    if (!rule_name || !description || !condition_value) return res.status(400).json({ error: 'Champs requis' });
+    
+    await pool.query(
+        'INSERT INTO fraud_detection_rules (rule_name, description, is_active, times_triggered, event_type, condition_field, condition_operator, condition_value, action_type) VALUES (?, ?, TRUE, 0, ?, ?, ?, ?, ?)', 
+        [rule_name, description, event_type || 'virement', condition_field || 'montant', condition_operator || '>', condition_value, action_type || 'block']
+    );
     res.json({ success: true });
   } catch (err) {
     console.error(err);

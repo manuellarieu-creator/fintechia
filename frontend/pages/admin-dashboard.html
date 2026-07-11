@@ -1695,10 +1695,37 @@
 
             <div style="background:#F8FAFC;border:0.5px solid #E2E8F0;border-radius:8px;padding:12px;margin-bottom:24px;">
                 <h4 style="font-size:12px;font-weight:700;margin:0 0 10px;">Ajouter une règle</h4>
-                <div style="display:flex;gap:10px;">
-                    <input type="text" id="new-rule-name" class="input" style="flex:1;" placeholder="Nom (ex: Tx suspecte > 2000€)">
-                    <input type="text" id="new-rule-desc" class="input" style="flex:2;" placeholder="Description de la règle">
-                    <button class="btn-primary" onclick="addFraudRule()">Ajouter</button>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="new-rule-name" class="input" style="flex:1;" placeholder="Nom de la règle">
+                        <input type="text" id="new-rule-desc" class="input" style="flex:2;" placeholder="Description">
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <select id="new-rule-event" class="input" style="flex:1;font-size:11px;">
+                            <option value="virement">Virement</option>
+                            <option value="login">Connexion</option>
+                            <option value="kyc">KYC</option>
+                        </select>
+                        <select id="new-rule-field" class="input" style="flex:1;font-size:11px;">
+                            <option value="montant">Montant</option>
+                            <option value="destination_iban">IBAN Dest</option>
+                            <option value="ip">Adresse IP</option>
+                        </select>
+                        <select id="new-rule-operator" class="input" style="flex:1;font-size:11px;">
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value="==">Égal à</option>
+                            <option value="LIKE">Commence par</option>
+                            <option value="NOT_LIKE">Sauf (NOT LIKE)</option>
+                        </select>
+                        <input type="text" id="new-rule-value" class="input" style="flex:1;font-size:11px;" placeholder="Valeur (ex: 5000)">
+                        <select id="new-rule-action" class="input" style="flex:1;font-size:11px;">
+                            <option value="block">Bloquer</option>
+                            <option value="alert_manual">Revue Manuelle</option>
+                            <option value="alert_only">Alerte Simple</option>
+                        </select>
+                        <button class="btn-primary" onclick="addFraudRule()">Créer</button>
+                    </div>
                 </div>
             </div>
 

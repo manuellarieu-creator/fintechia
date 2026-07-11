@@ -34,22 +34,41 @@ const notifications = require('../services/notifications');
         rule_name VARCHAR(100) NOT NULL,
         description VARCHAR(255) NOT NULL,
         is_active BOOLEAN DEFAULT TRUE,
-        times_triggered INT DEFAULT 0
+        times_triggered INT DEFAULT 0,
+        event_type VARCHAR(50),
+        condition_field VARCHAR(50),
+        condition_operator VARCHAR(20),
+        condition_value VARCHAR(255),
+        action_type VARCHAR(50)
       )
     `);
+    
+    // Add columns if they don't exist (MySQL syntax to avoid errors: try/catch per column)
+    const addColumn = async (colDef) => {
+        try { await db.query(`ALTER TABLE fraud_detection_rules ADD COLUMN ${colDef}`); } catch(e) {}
+    };
+    await addColumn('event_type VARCHAR(50)');
+    await addColumn('condition_field VARCHAR(50)');
+    await addColumn('condition_operator VARCHAR(20)');
+    await addColumn('condition_value VARCHAR(255)');
+    await addColumn('action_type VARCHAR(50)');
     
     // Seed default fraud rules if empty
     const [rows] = await db.query("SELECT COUNT(*) as c FROM fraud_detection_rules");
     if (rows[0].c === 0) {
         await db.query(`
-            INSERT INTO fraud_detection_rules (id, rule_name, description, is_active, times_triggered) VALUES 
-            (1, 'Tx > 5 000 € → blocage auto', 'Montant très élevé', TRUE, 8),
-            (2, 'IBAN hors UE → revue manuelle', 'Zone géographique à risque', TRUE, 4),
-            (3, 'VPN/Tor → alerte connexion', 'Masquage IP détecté', TRUE, 3),
-            (4, 'Score IA > 70 → alerte critique', 'Analyse comportementale', TRUE, 6),
-            (5, '3 OTP échoués → blocage', 'Tentative de force brute', FALSE, 0),
-            (6, 'KYC selfie < 50% → blocage', 'Vérification faciale échouée', TRUE, 2)
+            INSERT INTO fraud_detection_rules (id, rule_name, description, is_active, times_triggered, event_type, condition_field, condition_operator, condition_value, action_type) VALUES 
+            (1, 'Tx > 5 000 € → blocage auto', 'Montant très élevé', TRUE, 8, 'virement', 'montant', '>', '5000', 'block'),
+            (2, 'IBAN hors UE → revue manuelle', 'Zone géographique à risque', TRUE, 4, 'virement', 'destination_iban', 'NOT_LIKE', 'FR%', 'alert_manual'),
+            (3, 'VPN/Tor → alerte connexion', 'Masquage IP détecté', TRUE, 3, 'login', 'ip', 'IN_BLACKLIST', 'true', 'alert_only'),
+            (4, 'Score IA > 70 → alerte critique', 'Analyse comportementale', TRUE, 6, 'global', 'ia_score', '>', '70', 'alert_manual'),
+            (5, '3 OTP échoués → blocage', 'Tentative de force brute', FALSE, 0, 'login', 'otp_fails', '>=', '3', 'block'),
+            (6, 'KYC selfie < 50% → blocage', 'Vérification faciale échouée', TRUE, 2, 'kyc', 'selfie_score', '<', '50', 'block')
         `);
+        
+        // Also update existing ones if they don't have event_type to match the seed
+        await db.query(`UPDATE fraud_detection_rules SET event_type = 'virement', condition_field = 'montant', condition_operator = '>', condition_value = '5000', action_type = 'block' WHERE id = 1`);
+        await db.query(`UPDATE fraud_detection_rules SET event_type = 'virement', condition_field = 'destination_iban', condition_operator = 'NOT_LIKE', condition_value = 'FR%', action_type = 'alert_manual' WHERE id = 2`);
     }
   } catch(e) {}
 })();

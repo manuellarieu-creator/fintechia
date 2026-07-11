@@ -6,6 +6,7 @@ const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
+const FraudEngine = require('../services/fraudEngine');
 
 const validateReq = (req, res, next) => {
   const errors = validationResult(req);
@@ -110,9 +111,21 @@ router.post('/virement', [
       }
     }
 
+    // 5. Fraud Engine Check
+    const fraudResult = await FraudEngine.checkTransaction({
+      user_id: req.user.id,
+      amount: montant,
+      destination_iban: iban_dest,
+      ip: req.ip
+    });
+
     const reference = 'VIR-' + crypto.randomUUID().slice(0, 12).toUpperCase().replace(/-/g, '');
     
-    const statutVirement = (type_virement === 'immediat') ? 'valide' : 'en_attente';
+    let statutVirement = (type_virement === 'immediat') ? 'valide' : 'en_attente';
+    
+    if (fraudResult.action === 'block' || fraudResult.action === 'alert_manual') {
+      statutVirement = 'en_attente'; // Force pending status for manual review
+    }
     
     let newSolde = account.solde;
     if (statutVirement === 'valide') {

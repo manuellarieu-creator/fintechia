@@ -2036,12 +2036,29 @@ window.toggleFraudRule = async function(id, currentState) {
 window.addFraudRule = async function() {
     const name = document.getElementById('new-rule-name').value;
     const desc = document.getElementById('new-rule-desc').value;
-    if(!name || !desc) return alert('Veuillez remplir le nom et la description.');
+    const event = document.getElementById('new-rule-event').value;
+    const field = document.getElementById('new-rule-field').value;
+    const operator = document.getElementById('new-rule-operator').value;
+    const val = document.getElementById('new-rule-value').value;
+    const action = document.getElementById('new-rule-action').value;
     
-    const res = await fetchAPI('/admin/alertes/rules/add', 'POST', { rule_name: name, description: desc });
+    if(!name || !desc || !val) return alert('Veuillez remplir le nom, la description et la valeur.');
+    
+    const payload = { 
+        rule_name: name, 
+        description: desc,
+        event_type: event,
+        condition_field: field,
+        condition_operator: operator,
+        condition_value: val,
+        action_type: action
+    };
+    
+    const res = await fetchAPI('/admin/alertes/rules/add', 'POST', payload);
     if(res && res.success) {
         document.getElementById('new-rule-name').value = '';
         document.getElementById('new-rule-desc').value = '';
+        document.getElementById('new-rule-value').value = '';
         openManageRulesModal();
         loadFraudesRulesSidebar();
     }
