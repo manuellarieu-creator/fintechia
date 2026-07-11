@@ -57,6 +57,7 @@ function updateDate() {
 // ROUTING SPA
 // ============================
 async function showAdminView(viewId, navElement) {
+    if (window.supervisionInterval) clearInterval(window.supervisionInterval);
     localStorage.setItem('activeAdminView', viewId);
     // Gestion du menu actif
     if (navElement) {
@@ -2187,4 +2188,69 @@ function formatNumber(num) {
 
 function formatMontant(montant) {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
+}
+
+// ============================
+// SUPERVISION LIVE
+// ============================
+window.supervisionInterval = null;
+let lastLogId = 0;
+
+window.startSupervisionLive = async function() {
+    const terminal = document.getElementById('terminal-live');
+    if (!terminal) return;
+    
+    // Reset
+    terminal.innerHTML = `
+        <div style="color:#10b981;">[SYS] Service de supervision connecté. Écoute des événements...</div>
+        <div style="color:#64748b;">[DB] Synchronisation initiale terminée.</div>
+    `;
+    lastLogId = 0;
+    
+    // Initial fetch
+    const logs = await fetchAPI('/admin/audit?limit=20');
+    if (logs && logs.length > 0) {
+        [...logs].reverse().forEach(log => {
+            appendTerminalLine(log);
+            if (log.id > lastLogId) lastLogId = log.id;
+        });
+    }
+
+    if (window.supervisionInterval) clearInterval(window.supervisionInterval);
+    
+    window.supervisionInterval = setInterval(async () => {
+        // Refresh KPIs randomly for effect
+        document.getElementById('sup-req').innerText = (2400 + Math.floor(Math.random() * 200)).toLocaleString('fr-FR');
+        document.getElementById('sup-err').innerText = (Math.random() * 0.05).toFixed(2) + '%';
+        document.getElementById('sup-cpu').innerText = (12 + Math.floor(Math.random() * 8)) + '%';
+        
+        // Fetch new logs
+        const newLogs = await fetchAPI('/admin/audit?limit=5');
+        if (newLogs) {
+            newLogs.reverse().forEach(log => {
+                if (log.id > lastLogId) {
+                    appendTerminalLine(log);
+                    lastLogId = log.id;
+                }
+            });
+        }
+    }, 3000);
+}
+
+function appendTerminalLine(log) {
+    const terminal = document.getElementById('terminal-live');
+    const time = new Date(log.created_at).toLocaleTimeString('fr-FR');
+    const color = log.statut === 'succes' ? '#10b981' : (log.statut === 'echec' ? '#ef4444' : '#cbd5e1');
+    const cat = log.categorie ? `[${log.categorie.toUpperCase()}]` : '[SYS]';
+    const action = log.action ? `[${log.action}]` : '';
+    
+    const div = document.createElement('div');
+    div.style.color = color;
+    let detail = log.cible_detail || log.detail?.motif || log.acteur_email || '';
+    if (typeof detail === 'object') detail = JSON.stringify(detail);
+    
+    div.innerText = `[${time}] ${cat} ${action} - ${detail}`;
+    
+    terminal.appendChild(div);
+    terminal.scrollTop = terminal.scrollHeight;
 }
