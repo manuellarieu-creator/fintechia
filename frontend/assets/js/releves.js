@@ -216,7 +216,7 @@ function selectMonth(mKey) {
     document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`);
     
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
-    document.querySelectorAll(`[id=${'center-meta'}]`).forEach(el => el.textContent = `Compte courant • **** ${currentAccount.id.toString().slice(-4) || '4821'} • Du 01 au ${lastDay} ${monthNameFull}`);
+    document.querySelectorAll(`[id=${'center-meta'}]`).forEach(el => el.textContent = `Compte courant • ${currentAccount.iban || ('**** ' + currentAccount.id.toString().slice(-4))} • Du 01 au ${lastDay} ${monthNameFull}`);
     
     const balancesHtml = `
         <div class="balance-item">
@@ -382,7 +382,7 @@ function generatePDF(mKey, action, email) {
     
     document.querySelectorAll(`[id=${'pdf-user-name'}]`).forEach(el => el.textContent = `${currentUser.prenom} ${currentUser.nom}`);
     document.querySelectorAll(`[id=${'pdf-user-email'}]`).forEach(el => el.textContent = currentUser.email);
-    document.querySelectorAll(`[id=${'pdf-account-id'}]`).forEach(el => el.textContent = `Identifiant: **** ${currentAccount.id.toString().slice(-4)}`);
+    document.querySelectorAll(`[id=${'pdf-account-id'}]`).forEach(el => el.textContent = `IBAN: ${currentAccount.iban || ('**** ' + currentAccount.id.toString().slice(-4))}`);
     
     document.querySelectorAll(`[id=${'pdf-balance-start'}]`).forEach(el => el.textContent = `${group.startBalance.toFixed(2).replace('.', ',')} €`);
     document.querySelectorAll(`[id=${'pdf-balance-credits'}]`).forEach(el => el.textContent = `+${group.credits.toFixed(2).replace('.', ',')} €`);
