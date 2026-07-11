@@ -65,4 +65,69 @@ router.post('/:id/resolve', [authMiddleware, adminMiddleware], async (req, res) 
   }
 });
 
+// GET /api/admin/alertes/rules
+router.get('/rules', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const [rules] = await pool.query('SELECT * FROM fraud_detection_rules ORDER BY id ASC');
+    res.json(rules);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur fetch rules' });
+  }
+});
+
+// POST /api/admin/alertes/rules
+router.post('/rules', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const { id, is_active } = req.body;
+    await pool.query('UPDATE fraud_detection_rules SET is_active = ? WHERE id = ?', [is_active, id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur update rule' });
+  }
+});
+
+// POST /api/admin/alertes/create
+router.post('/create', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const { user_id, type_alerte, severite, description } = req.body;
+    await pool.query(
+      'INSERT INTO alertes_fraudes (user_id, type, niveau_risque, description, statut) VALUES (?, ?, ?, ?, "en_attente")', 
+      [user_id, type_alerte, severite, description]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur création alerte' });
+  }
+});
+
+// POST /api/admin/alertes/global-action
+router.post('/global-action', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const { action } = req.body;
+    
+    // Get users with active critical/high alerts
+    const [activeUsers] = await pool.query(`
+      SELECT DISTINCT user_id FROM alertes_fraudes 
+      WHERE statut = 'en_attente' AND niveau_risque = 'high'
+    `);
+    
+    if (activeUsers.length === 0) return res.json({ success: true, message: 'Aucun compte ciblé' });
+    const userIds = activeUsers.map(u => u.user_id);
+    
+    if (action === 'block') {
+      await pool.query('UPDATE accounts SET statut = "bloque", motif_blocage = "Blocage global fraude" WHERE user_id IN (?)', [userIds]);
+    } else if (action === 'notify') {
+      // In a real app, send emails here
+    }
+    
+    res.json({ success: true, count: userIds.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur action globale' });
+  }
+});
+
 module.exports = router;

@@ -27,6 +27,30 @@ const notifications = require('../services/notifications');
         FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
       )
     `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS fraud_detection_rules (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        rule_name VARCHAR(100) NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        is_active BOOLEAN DEFAULT TRUE,
+        times_triggered INT DEFAULT 0
+      )
+    `);
+    
+    // Seed default fraud rules if empty
+    const [rows] = await db.query("SELECT COUNT(*) as c FROM fraud_detection_rules");
+    if (rows[0].c === 0) {
+        await db.query(`
+            INSERT INTO fraud_detection_rules (id, rule_name, description, is_active, times_triggered) VALUES 
+            (1, 'Tx > 5 000 € → blocage auto', 'Montant très élevé', TRUE, 8),
+            (2, 'IBAN hors UE → revue manuelle', 'Zone géographique à risque', TRUE, 4),
+            (3, 'VPN/Tor → alerte connexion', 'Masquage IP détecté', TRUE, 3),
+            (4, 'Score IA > 70 → alerte critique', 'Analyse comportementale', TRUE, 6),
+            (5, '3 OTP échoués → blocage', 'Tentative de force brute', FALSE, 0),
+            (6, 'KYC selfie < 50% → blocage', 'Vérification faciale échouée', TRUE, 2)
+        `);
+    }
   } catch(e) {}
 })();
 

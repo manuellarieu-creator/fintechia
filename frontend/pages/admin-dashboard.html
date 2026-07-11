@@ -757,8 +757,8 @@
                       <span style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block;"></span>
                       <span style="font-size:11px;font-weight:600;color:#B91C1C;">8 alertes critiques actives</span>
                     </div>
-                    <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-file-export" style="font-size:13px;"></i>Rapport</button>
-                    <button class="frd-btn" style="background:#DC2626;color:#fff;"><i class="ti ti-plus" style="font-size:13px;"></i>Créer une alerte</button>
+                    <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="downloadFraudeReport()"><i class="ti ti-file-export" style="font-size:13px;"></i>Rapport</button>
+                    <button class="frd-btn" style="background:#DC2626;color:#fff;" onclick="openCreateAlerteModal()"><i class="ti ti-plus" style="font-size:13px;"></i>Créer une alerte</button>
                   </div>
                 </div>
 
@@ -858,35 +858,8 @@
                     <!-- Répartition fraudes -->
                     <div class="frd-card" style="padding:12px 14px;">
                       <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 10px;">Répartition des fraudes</h3>
-                      <div style="display:flex;flex-direction:column;gap:7px;">
-                        <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-                            <span style="font-size:10px;color:#475569;">Tx suspectes</span>
-                            <span style="font-size:10px;font-weight:700;">42% <span style="color:#94A3B8;font-weight:400;">(13)</span></span>
-                          </div>
-                          <div class="bar-h"><div class="bar-f" style="width:42%;background:#DC2626;"></div></div>
-                        </div>
-                        <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-                            <span style="font-size:10px;color:#475569;">Usurpation KYC</span>
-                            <span style="font-size:10px;font-weight:700;">26% <span style="color:#94A3B8;font-weight:400;">(8)</span></span>
-                          </div>
-                          <div class="bar-h"><div class="bar-f" style="width:26%;background:#D97706;"></div></div>
-                        </div>
-                        <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-                            <span style="font-size:10px;color:#475569;">Phishing / connexion</span>
-                            <span style="font-size:10px;font-weight:700;">19% <span style="color:#94A3B8;font-weight:400;">(6)</span></span>
-                          </div>
-                          <div class="bar-h"><div class="bar-f" style="width:19%;background:#7C3AED;"></div></div>
-                        </div>
-                        <div>
-                          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-                            <span style="font-size:10px;color:#475569;">Fraude carte</span>
-                            <span style="font-size:10px;font-weight:700;">13% <span style="color:#94A3B8;font-weight:400;">(4)</span></span>
-                          </div>
-                          <div class="bar-h"><div class="bar-f" style="width:13%;background:#0891B2;"></div></div>
-                        </div>
+                      <div id="admin-fraudes-repartition" style="display:flex;flex-direction:column;gap:7px;">
+                         <div style="font-size:10px;color:#94A3B8;text-align:center;">Chargement...</div>
                       </div>
                     </div>
 
@@ -915,33 +888,10 @@
                     <div class="frd-card" style="padding:12px 14px;">
                       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                         <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Règles de détection</h3>
-                        <a style="font-size:10px;color:#2563EB;cursor:pointer;">Gérer →</a>
+                        <a style="font-size:10px;color:#2563EB;cursor:pointer;" onclick="openManageRulesModal()">Gérer →</a>
                       </div>
-                      <div style="display:flex;flex-direction:column;gap:0;">
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Tx &gt; 5 000 € → blocage auto</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 8 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">IBAN hors UE → revue manuelle</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 4 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">VPN/Tor → alerte connexion</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 3 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">Score IA &gt; 70 → alerte critique</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 6 fois auj.</p></div>
-                        </div>
-                        <div class="rule-row">
-                          <div class="tg off"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;color:#94A3B8;">3 OTP échoués → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Désactivé</p></div>
-                        </div>
-                        <div class="rule-row" style="border-bottom:none;">
-                          <div class="tg on"><span></span></div>
-                          <div style="flex:1;min-width:0;"><p style="font-size:10px;font-weight:500;margin:0;">KYC selfie &lt; 50% → blocage</p><p style="font-size:9px;color:#94A3B8;margin:0;">Déclenché 2 fois auj.</p></div>
-                        </div>
+                      <div id="admin-fraudes-rules-list" style="display:flex;flex-direction:column;gap:0;">
+                         <div style="font-size:10px;color:#94A3B8;text-align:center;">Chargement...</div>
                       </div>
                     </div>
 
@@ -949,10 +899,10 @@
                     <div class="frd-card" style="padding:12px 14px;">
                       <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Actions globales</h3>
                       <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
-                        <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
-                        <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
+                        <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('block')"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
+                        <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('tracfin')"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
+                        <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('notify')"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('report')"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
                       </div>
                     </div>
 
@@ -1684,6 +1634,65 @@
             <div style="display:flex; justify-content:flex-end; gap:12px;">
                 <button class="btn-outline" onclick="document.getElementById('modal-manage-credit').style.display='none'">Annuler</button>
                 <button class="btn-primary" onclick="confirmCreditStatus()">Enregistrer le statut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Create Alerte -->
+    <div class="modal" id="modal-create-alerte" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Créer une alerte de fraude</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Déclarer manuellement une activité suspecte.</p>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">ID Utilisateur</label>
+                <input type="number" id="create-alerte-user" class="input" style="width:100%;" placeholder="Ex: 1">
+            </div>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Type de Fraude</label>
+                <select id="create-alerte-type" class="input" style="width:100%;">
+                    <option value="phishing">Phishing</option>
+                    <option value="virement_suspect">Virement suspect</option>
+                    <option value="login_anormal">Login anormal</option>
+                    <option value="kyc_multiple">KYC multiple</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Sévérité</label>
+                <select id="create-alerte-severite" class="input" style="width:100%;">
+                    <option value="low">Faible</option>
+                    <option value="medium">Moyenne</option>
+                    <option value="high">Critique / Élevée</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom:24px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Description</label>
+                <textarea id="create-alerte-desc" class="input" style="width:100%; min-height:80px;" placeholder="Détails de la fraude..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-create-alerte').style.display='none'">Annuler</button>
+                <button class="btn-primary" style="background:#DC2626; border-color:#DC2626;" onclick="submitCreateAlerte()">Créer l'alerte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Manage Rules -->
+    <div class="modal" id="modal-manage-rules" style="display:none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Gestion des règles de détection</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Activer ou désactiver les règles de détection de fraude automatiques.</p>
+            
+            <div id="manage-rules-list" style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto;padding-right:10px;">
+                <!-- Populated by JS -->
+                <div class="text-center text-muted">Chargement...</div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                <button class="btn-primary" onclick="document.getElementById('modal-manage-rules').style.display='none'">Fermer</button>
             </div>
         </div>
     </div>
