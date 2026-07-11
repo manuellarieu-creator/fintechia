@@ -836,12 +836,10 @@
                     <!-- Footer -->
                     <div style="padding:8px 14px;border-top:0.5px solid #E2E8F0;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
                       <span id="frd-footer-count" style="font-size:10px;color:#94A3B8;">... alertes</span>
-                      <div style="display:flex;gap:4px;">
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-left" style="font-size:11px;"></i></button>
-                        <button class="frd-btn" style="background:#DC2626;color:#fff;padding:3px 9px;font-size:10px;border-radius:5px;">1</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">2</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;">3</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-chevron-right" style="font-size:11px;"></i></button>
+                      <div style="display:flex;gap:4px;" id="frd-pagination-container">
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;" onclick="changeFraudesPage(-1)"><i class="ti ti-chevron-left" style="font-size:11px;"></i></button>
+                        <span id="frd-pagination-pages" style="display:flex;gap:4px;"></span>
+                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 8px;font-size:10px;border-radius:5px;" onclick="changeFraudesPage(1)"><i class="ti ti-chevron-right" style="font-size:11px;"></i></button>
                       </div>
                     </div>
                   </div>
@@ -884,25 +882,35 @@
                       </div>
                     </div>
 
-                    <!-- Règles actives -->
+                    <!-- Règles actives (Accordion) -->
                     <div class="frd-card" style="padding:12px 14px;">
-                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                        <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Règles de détection</h3>
-                        <a style="font-size:10px;color:#2563EB;cursor:pointer;" onclick="openManageRulesModal()">Gérer →</a>
+                      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleAccordion('admin-fraudes-rules-content', 'admin-fraudes-rules-icon')">
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Règles de détection</h3>
+                          <i id="admin-fraudes-rules-icon" class="ti ti-chevron-down" style="font-size:12px;color:#94A3B8;transition:transform 0.2s;"></i>
+                        </div>
+                        <a style="font-size:10px;color:#2563EB;cursor:pointer;" onclick="event.stopPropagation(); openManageRulesModal()">Gérer →</a>
                       </div>
-                      <div id="admin-fraudes-rules-list" style="display:flex;flex-direction:column;gap:0;">
-                         <div style="font-size:10px;color:#94A3B8;text-align:center;">Chargement...</div>
+                      <div id="admin-fraudes-rules-content" style="display:block;margin-top:10px;">
+                        <div id="admin-fraudes-rules-list" style="display:flex;flex-direction:column;gap:0;">
+                           <div style="font-size:10px;color:#94A3B8;text-align:center;">Chargement...</div>
+                        </div>
                       </div>
                     </div>
 
-                    <!-- Actions rapides -->
+                    <!-- Actions globales (Accordion) -->
                     <div class="frd-card" style="padding:12px 14px;">
-                      <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;">Actions globales</h3>
-                      <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('block')"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
-                        <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('tracfin')"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
-                        <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('notify')"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
-                        <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('report')"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
+                      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleAccordion('admin-fraudes-actions-content', 'admin-fraudes-actions-icon')">
+                        <h3 style="font-size:11px;font-weight:700;color:#0F172A;margin:0;">Actions globales</h3>
+                        <i id="admin-fraudes-actions-icon" class="ti ti-chevron-down" style="font-size:12px;color:#94A3B8;transition:transform 0.2s;"></i>
+                      </div>
+                      <div id="admin-fraudes-actions-content" style="display:block;margin-top:8px;">
+                        <div style="display:flex;flex-direction:column;gap:5px;">
+                          <button class="frd-btn" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('block')"><i class="ti ti-lock" style="font-size:12px;"></i>Bloquer tous les comptes ciblés</button>
+                          <button class="frd-btn" style="background:#F5F3FF;color:#6D28D9;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('tracfin')"><i class="ti ti-gavel" style="font-size:12px;"></i>Signalement Tracfin groupé</button>
+                          <button class="frd-btn" style="background:#EFF6FF;color:#1D4ED8;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('notify')"><i class="ti ti-mail" style="font-size:12px;"></i>Notifier tous les clients affectés</button>
+                          <button class="frd-btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;width:100%;justify-content:center;font-size:10px;" onclick="triggerGlobalFraudeAction('report')"><i class="ti ti-file-analytics" style="font-size:12px;"></i>Générer rapport d'incident</button>
+                        </div>
                       </div>
                     </div>
 
@@ -1684,14 +1692,23 @@
     <div class="modal" id="modal-manage-rules" style="display:none;">
         <div class="modal-content" style="max-width: 600px;">
             <h3>Gestion des règles de détection</h3>
-            <p class="text-muted" style="margin-bottom:16px;">Activer ou désactiver les règles de détection de fraude automatiques.</p>
+            <p class="text-muted" style="margin-bottom:16px;">Activer, désactiver ou supprimer les règles de détection de fraude automatiques.</p>
             
-            <div id="manage-rules-list" style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto;padding-right:10px;">
+            <div id="manage-rules-list" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;padding-right:10px;margin-bottom:20px;">
                 <!-- Populated by JS -->
                 <div class="text-center text-muted">Chargement...</div>
             </div>
 
-            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+            <div style="background:#F8FAFC;border:0.5px solid #E2E8F0;border-radius:8px;padding:12px;margin-bottom:24px;">
+                <h4 style="font-size:12px;font-weight:700;margin:0 0 10px;">Ajouter une règle</h4>
+                <div style="display:flex;gap:10px;">
+                    <input type="text" id="new-rule-name" class="input" style="flex:1;" placeholder="Nom (ex: Tx suspecte > 2000€)">
+                    <input type="text" id="new-rule-desc" class="input" style="flex:2;" placeholder="Description de la règle">
+                    <button class="btn-primary" onclick="addFraudRule()">Ajouter</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
                 <button class="btn-primary" onclick="document.getElementById('modal-manage-rules').style.display='none'">Fermer</button>
             </div>
         </div>

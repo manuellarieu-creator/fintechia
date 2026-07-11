@@ -1771,8 +1771,12 @@ window.confirmEmitCard = async function() {
     }
 }
 
+let currentFraudesPage = 1;
+const fraudesPerPage = 8; // Assuming 8 fits nicely, or we can use 10
+let allFraudesAlertes = []; // Cache to paginate client-side
+
 async function renderFraudesFullTable() {
-    const data = await fetchAPI('/admin/alertes?limit=50');
+    const data = await fetchAPI('/admin/alertes?limit=100');
     if (!data || !data.stats) return;
 
     // Update KPIs & Tabs
@@ -1814,15 +1818,48 @@ async function renderFraudesFullTable() {
     
     setInner('frd-footer-count', `${total} alertes`);
 
+    allFraudesAlertes = data.alertes || [];
+    renderFraudesPage();
+}
+
+window.changeFraudesPage = function(delta) {
+    const totalPages = Math.ceil(allFraudesAlertes.length / fraudesPerPage) || 1;
+    currentFraudesPage += delta;
+    if(currentFraudesPage < 1) currentFraudesPage = 1;
+    if(currentFraudesPage > totalPages) currentFraudesPage = totalPages;
+    renderFraudesPage();
+}
+
+function renderFraudesPage() {
     const tbody = document.getElementById('admin-alertes-list');
     if (!tbody) return;
 
-    if (!data.alertes || data.alertes.length === 0) {
+    if (allFraudesAlertes.length === 0) {
         tbody.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucune alerte.</div>';
         return;
     }
 
-    tbody.innerHTML = data.alertes.map(a => {
+    const totalPages = Math.ceil(allFraudesAlertes.length / fraudesPerPage);
+    if(currentFraudesPage > totalPages) currentFraudesPage = totalPages;
+    if(currentFraudesPage < 1) currentFraudesPage = 1;
+
+    const start = (currentFraudesPage - 1) * fraudesPerPage;
+    const paginated = allFraudesAlertes.slice(start, start + fraudesPerPage);
+
+    const pagesContainer = document.getElementById('frd-pagination-pages');
+    if(pagesContainer) {
+        let pagesHtml = '';
+        for(let i=1; i<=totalPages; i++) {
+            if(i === currentFraudesPage) {
+                pagesHtml += `<button class="frd-btn" style="background:#DC2626;color:#fff;padding:3px 9px;font-size:10px;border-radius:5px;">${i}</button>`;
+            } else {
+                pagesHtml += `<button class="frd-btn" style="background:#F1F5F9;color:#475569;padding:3px 9px;font-size:10px;border-radius:5px;" onclick="currentFraudesPage=${i};renderFraudesPage()">${i}</button>`;
+            }
+        }
+        pagesContainer.innerHTML = pagesHtml;
+    }
+
+    tbody.innerHTML = paginated.map(a => {
         const isResolved = a.statut === 'resolu';
         const isCrit = a.niveau_risque === 'high';
         // Encode alert data for onclick
@@ -1941,12 +1978,15 @@ window.openManageRulesModal = async function() {
 
     list.innerHTML = rules.map(r => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border:1px solid #E2E8F0; border-radius:8px;">
-            <div>
+            <div style="flex:1;">
                 <p style="font-size:12px; font-weight:600; margin:0;">${r.rule_name}</p>
                 <p style="font-size:10px; color:#64748B; margin:0;">${r.description} (Déclenché ${r.times_triggered} fois)</p>
             </div>
-            <div class="tg ${r.is_active ? 'on' : 'off'}" onclick="toggleFraudRule(${r.id}, ${r.is_active})" style="width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0; background:${r.is_active ? '#16A34A' : '#CBD5E1'}">
-                <span style="width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15); left:${r.is_active ? '15px' : '2.5px'};"></span>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <i class="ti ti-trash" style="font-size:14px;color:#DC2626;cursor:pointer;" onclick="deleteFraudRule(${r.id})" title="Supprimer"></i>
+                <div class="tg ${r.is_active ? 'on' : 'off'}" onclick="toggleFraudRule(${r.id}, ${r.is_active})" style="width:30px;height:17px;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0; background:${r.is_active ? '#16A34A' : '#CBD5E1'}">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 2px rgba(0,0,0,.15); left:${r.is_active ? '15px' : '2.5px'};"></span>
+                </div>
             </div>
         </div>
     `).join('');
@@ -1957,6 +1997,29 @@ window.toggleFraudRule = async function(id, currentState) {
     if (res && res.success) {
         openManageRulesModal(); // refresh
         loadFraudesRulesSidebar(); // refresh sidebar
+    }
+}
+
+window.addFraudRule = async function() {
+    const name = document.getElementById('new-rule-name').value;
+    const desc = document.getElementById('new-rule-desc').value;
+    if(!name || !desc) return alert('Veuillez remplir le nom et la description.');
+    
+    const res = await fetchAPI('/admin/alertes/rules/add', 'POST', { rule_name: name, description: desc });
+    if(res && res.success) {
+        document.getElementById('new-rule-name').value = '';
+        document.getElementById('new-rule-desc').value = '';
+        openManageRulesModal();
+        loadFraudesRulesSidebar();
+    }
+}
+
+window.deleteFraudRule = async function(id) {
+    if(!confirm('Supprimer cette règle ?')) return;
+    const res = await fetchAPI(`/admin/alertes/rules/${id}`, 'DELETE');
+    if(res && res.success) {
+        openManageRulesModal();
+        loadFraudesRulesSidebar();
     }
 }
 
@@ -2055,6 +2118,19 @@ window.renderFraudesFullTable = async function() {
 // ============================
 // UTILS
 // ============================
+window.toggleAccordion = function(contentId, iconId) {
+    const content = document.getElementById(contentId);
+    const icon = document.getElementById(iconId);
+    if (!content || !icon) return;
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+    }
+}
+
 function formatNumber(num) {
     return new Intl.NumberFormat('fr-FR').format(num);
 }

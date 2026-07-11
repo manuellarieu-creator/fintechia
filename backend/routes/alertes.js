@@ -88,6 +88,30 @@ router.post('/rules', [authMiddleware, adminMiddleware], async (req, res) => {
   }
 });
 
+// POST /api/admin/alertes/rules/add
+router.post('/rules/add', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    const { rule_name, description } = req.body;
+    if (!rule_name || !description) return res.status(400).json({ error: 'Champs requis' });
+    await pool.query('INSERT INTO fraud_detection_rules (rule_name, description, is_active, times_triggered) VALUES (?, ?, TRUE, 0)', [rule_name, description]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur ajout rule' });
+  }
+});
+
+// DELETE /api/admin/alertes/rules/:id
+router.delete('/rules/:id', [authMiddleware, adminMiddleware], async (req, res) => {
+  try {
+    await pool.query('DELETE FROM fraud_detection_rules WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur suppression rule' });
+  }
+});
+
 // POST /api/admin/alertes/create
 router.post('/create', [authMiddleware, adminMiddleware], async (req, res) => {
   try {
