@@ -9,6 +9,7 @@ const notifications = require('../services/notifications');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const FraudEngine = require('../services/fraudEngine');
 
 // Migration BDD silencieuse pour KYC
 (async () => {
@@ -95,16 +96,31 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     }
 
     const [existingKyc] = await db.query('SELECT id FROM kyc WHERE user_id = ?', [req.user.id]);
+    
+    // Check FraudEngine pour Selfie (mocked score)
+    const kycScore = Math.floor(Math.random() * 100);
+    const fraudRes = await FraudEngine.checkKyc({
+        user_id: req.user.id,
+        kyc_score: kycScore
+    });
+
+    const isFraudBlocked = fraudRes.action === 'block';
+    const initialStatus = isFraudBlocked ? 'rejete' : 'en_attente';
+
     if (existingKyc.length > 0) {
       await db.query(
-        'UPDATE kyc SET type_document = ?, document_url = ?, document_verso_url = ?, selfie_url = ?, commentaire = ?, statut = "en_attente", soumis_le = NOW() WHERE user_id = ?',
-        [type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '', req.user.id]
+        'UPDATE kyc SET type_document = ?, document_url = ?, document_verso_url = ?, selfie_url = ?, commentaire = ?, statut = ?, soumis_le = NOW(), motif_rejet = ? WHERE user_id = ?',
+        [type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '', initialStatus, isFraudBlocked ? 'Suspicion de fraude (Selfie)' : null, req.user.id]
       );
     } else {
       await db.query(
-        'INSERT INTO kyc (user_id, type_document, document_url, document_verso_url, selfie_url, commentaire, statut) VALUES (?, ?, ?, ?, ?, ?, "en_attente")',
-        [req.user.id, type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '']
+        'INSERT INTO kyc (user_id, type_document, document_url, document_verso_url, selfie_url, commentaire, statut, motif_rejet) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [req.user.id, type_document, docUrl, docVersoUrl, selfieUrl, instructions_kyc || '', initialStatus, isFraudBlocked ? 'Suspicion de fraude (Selfie)' : null]
       );
+    }
+
+    if (isFraudBlocked) {
+        return res.status(403).json({ error: 'KYC rejeté automatiquement par le système de sécurité.', status: 403 });
     }
 
     const [accounts] = await db.query('SELECT statut FROM accounts WHERE user_id = ?', [req.user.id]);

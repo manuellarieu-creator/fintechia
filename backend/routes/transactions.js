@@ -119,10 +119,14 @@ router.post('/virement', [
     }
 
     // 5. Fraud Engine Check
+    const iaScore = Math.floor(Math.random() * 100);
+
     const fraudResult = await FraudEngine.checkTransaction({
       user_id: req.user.id,
       amount: montant,
       destination_iban: iban_dest,
+      account_max_transfer_amount: account.max_transfer_amount,
+      ia_score: iaScore,
       ip: req.ip
     });
 
@@ -247,6 +251,47 @@ router.delete('/beneficiaires/:id', authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
+
+// Auto-migration silencieuse
+(async () => {
+  try {
+    await db.query(`CREATE TABLE IF NOT EXISTS fraud_detection_rules (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      rule_name VARCHAR(100) NOT NULL,
+      event_type VARCHAR(50) NOT NULL,
+      condition_field VARCHAR(50) NOT NULL,
+      condition_operator VARCHAR(10) NOT NULL,
+      condition_value VARCHAR(255) NOT NULL,
+      action_type VARCHAR(50) NOT NULL,
+      is_active BOOLEAN DEFAULT FALSE,
+      times_triggered INT DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )`);
+    
+    // Seed default rules
+    const rules = [
+        { name: 'Montant élevé', event: 'virement', field: 'montant', op: '>', val: '1000', action: 'block' },
+        { name: 'Montant très élevé', event: 'virement', field: 'montant', op: '>', val: '5000', action: 'block' },
+        { name: 'Zone géographique à risque', event: 'virement', field: 'destination_iban', op: 'NOT_IN_EU', val: 'EU', action: 'alert_manual' },
+        { name: 'Masquage IP détecté', event: 'login', field: 'ip_risk', op: '>', val: '80', action: 'alert_only' },
+        { name: 'Analyse comportementale', event: 'virement', field: 'ia_score', op: '>', val: '70', action: 'alert_only' },
+        { name: 'Tentative de force brute', event: 'login', field: 'otp_fails', op: '>=', val: '3', action: 'block' },
+        { name: 'Score Selfie', event: 'kyc', field: 'kyc_score', op: '<', val: '50', action: 'block' }
+    ];
+    for (const rule of rules) {
+        const [exists] = await db.query('SELECT id FROM fraud_detection_rules WHERE rule_name = ?', [rule.name]);
+        if (exists.length === 0) {
+            await db.query(
+                'INSERT INTO fraud_detection_rules (rule_name, event_type, condition_field, condition_operator, condition_value, action_type, is_active) VALUES (?, ?, ?, ?, ?, ?, 0)',
+                [rule.name, rule.event, rule.field, rule.op, rule.val, rule.action]
+            );
+        }
+    }
+  } catch (err) {
+    console.error('[transactions] Migration Fraude:', err.message);
+  }
+})();
 
 // GET /api/transactions/notifications
 router.get('/notifications', authMiddleware, async (req, res, next) => {

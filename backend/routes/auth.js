@@ -9,6 +9,7 @@ const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
+const FraudEngine = require('../services/fraudEngine');
 
 // Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
 (async () => {
@@ -26,6 +27,7 @@ const mailer = require('../services/mailer');
   try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50)"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN otp_fails INT DEFAULT 0"); } catch(e) {}
   try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
 })();
 
@@ -179,6 +181,18 @@ router.post('/login', [
     }
 
     const user = users[0];
+
+    // Check FraudEngine pour IP VPN
+    const ipRisk = Math.floor(Math.random() * 100); // Simulated IP risk
+    const fraudRes = await FraudEngine.checkLogin({
+        user_id: user.id,
+        ip_risk: ipRisk,
+        otp_fails: 0
+    });
+    if (fraudRes.action === 'block') {
+        return res.status(403).json({ error: 'Connexion bloquée par sécurité', code: 'SECURITY_BLOCK', status: 403 });
+    }
+
     const match = await bcrypt.compare(password, user.password_hash);
     
     if (!match) {
@@ -279,8 +293,26 @@ router.post('/login/2fa', [
     }
     
     if (!isValidCode) {
+      await db.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [user.id]);
+      const [updated] = await db.query('SELECT otp_fails FROM users WHERE id = ?', [user.id]);
+      
+      const fraudRes = await FraudEngine.checkLogin({
+          user_id: user.id,
+          ip_risk: 0,
+          otp_fails: updated[0].otp_fails
+      });
+      
+      if (fraudRes.action === 'block') {
+          // Block the account
+          await db.query("UPDATE accounts SET statut = 'bloque' WHERE user_id = ?", [user.id]);
+          return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives.', code: 'SECURITY_BLOCK', status: 403 });
+      }
+
       return res.status(401).json({ error: 'Code incorrect', code: 'INVALID_2FA', status: 401 });
     }
+
+    // Reset OTP fails on success
+    await db.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [user.id]);
 
     const pinUsage = user.pin_code_usage_count || 0;
     if (pinUsage >= 20) {
