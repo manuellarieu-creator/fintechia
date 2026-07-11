@@ -87,14 +87,16 @@ router.post('/virement', [
     }
 
     // 2. Vérifier la limite de montant
-    if (account.max_transfer_amount !== null && parseFloat(montant) > parseFloat(account.max_transfer_amount)) {
-      await connection.rollback();
-      return res.status(403).json({ error: `Vous ne pouvez pas virer plus de ${account.max_transfer_amount}€ en une seule fois. Veuillez contacter votre conseiller pour finaliser cette transaction.`, code: 'TRANSFER_LIMIT_EXCEEDED', status: 403 });
-    }
+    if (requestedType === 'immediat') {
+      if (account.max_transfer_amount !== null && parseFloat(montant) > parseFloat(account.max_transfer_amount)) {
+        await connection.rollback();
+        return res.status(403).json({ error: `L'opération de transfert de fonds n'a pu aboutir: Vous ne pouvez pas virer plus de ${account.max_transfer_amount}€ en virement instantanné. Veuillez contacter votre conseiller pour finaliser cette transaction.`, code: 'TRANSFER_LIMIT_EXCEEDED', status: 403 });
+      }
 
-    if (requestedType === 'immediat' && parseFloat(montant) > 900) {
-      await connection.rollback();
-      return res.status(403).json({ error: `Le montant maximum pour un virement instantané est de 900€. Veuillez choisir un virement standard.`, code: 'INSTANT_TRANSFER_LIMIT', status: 403 });
+      if (parseFloat(montant) > 900) {
+        await connection.rollback();
+        return res.status(403).json({ error: `L'opération de transfert de fonds n'a pu aboutir: Vous ne pouvez pas virer plus de 900.00€ en virement instantanné. Veuillez contacter votre conseiller pour finaliser cette transaction.`, code: 'INSTANT_TRANSFER_LIMIT', status: 403 });
+      }
     }
 
     // 3. Vérifier le solde
@@ -124,11 +126,16 @@ router.post('/virement', [
       ip: req.ip
     });
 
+    if (fraudResult.action === 'block') {
+      await connection.rollback();
+      return res.status(403).json({ error: `L'opération de transfert d'un montant de ${montant}€ n'a pu aboutir: Veuillez contacter votre gestionnaire de compte pour finaliser cette transaction.`, code: 'FRAUD_BLOCKED', status: 403 });
+    }
+
     const reference = 'VIR-' + crypto.randomUUID().slice(0, 12).toUpperCase().replace(/-/g, '');
     
     let statutVirement = (type_virement === 'immediat') ? 'valide' : 'en_attente';
     
-    if (fraudResult.action === 'block' || fraudResult.action === 'alert_manual') {
+    if (fraudResult.action === 'alert_manual') {
       statutVirement = 'en_attente'; // Force pending status for manual review
     }
     
