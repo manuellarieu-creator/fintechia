@@ -528,7 +528,7 @@ document.getElementById('form-step-1')?.addEventListener('submit', (e) => {
 });
 
 window.movePinFocus = function(el, num) {
-  if (el.value.length === 1 && num < 4) {
+  if (el.value.length === 1 && num < 6) {
     document.getElementById('reg-pin-' + (num + 1)).focus();
   }
 }

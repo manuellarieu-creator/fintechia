@@ -83,6 +83,10 @@ async function submitCreditRequest() {
     if (res.success) {
       document.getElementById('modalStep3').style.display = 'none';
       document.getElementById('modalSuccess').style.display = 'block';
+      const titleEl = document.getElementById('modalCreditTitle');
+      if(titleEl) titleEl.style.display = 'none';
+      const subEl = document.getElementById('modalSubtitle');
+      if(subEl) subEl.style.display = 'none';
       loadCredits();
       
       // Update sidebar active class if applicable

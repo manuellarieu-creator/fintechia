@@ -1638,6 +1638,31 @@
         </div>
     </div>
 
+    <div class="modal" id="modal-transfer-types" style="display:none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Gérer les types de virement</h3>
+            <input type="hidden" id="manage-types-user-id">
+            <div style="margin-top:16px;">
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px;">
+                    <input type="checkbox" id="tt-standard" value="standard"> Virement Standard
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px;">
+                    <input type="checkbox" id="tt-immediat" value="immediat"> Virement Instantané
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px;">
+                    <input type="checkbox" id="tt-swift" value="swift"> Virement SWIFT
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px;">
+                    <input type="checkbox" id="tt-programme" value="programme"> Virement Programmé
+                </label>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-outline" style="flex:1;" onclick="document.getElementById('modal-transfer-types').style.display='none'">Annuler</button>
+                <button class="btn-primary" style="flex:1;" onclick="confirmTransferTypes()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="modal-reject-kyc" style="display:none;">
         <div class="modal-content" style="max-width: 400px;">
             <h3>Rejeter le dossier KYC</h3>

@@ -67,7 +67,7 @@ router.get('/comptes', guard, async (req, res, next) => {
   try {
     const { statut } = req.query;
     let sql = `
-      SELECT a.*, u.prenom, u.nom, u.email, k.statut as kyc_statut, a.motif_blocage 
+      SELECT a.*, u.prenom, u.nom, u.email, u.transfer_types, k.statut as kyc_statut, a.motif_blocage 
       FROM accounts a 
       JOIN users u ON a.user_id = u.id 
       LEFT JOIN (SELECT user_id, statut FROM kyc WHERE id IN (SELECT MAX(id) FROM kyc GROUP BY user_id)) k ON k.user_id = u.id
@@ -111,6 +111,17 @@ router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], v
       await notifications.envoyer(accounts[0].user_id, 'Mise à jour du compte', `Votre compte est maintenant : ${statut}`, 'info');
     }
     res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/users/:userId/transfer-types
+router.patch('/users/:userId/transfer-types', [guard, body('transfer_types').isString()], validateReq, async (req, res, next) => {
+  try {
+    const { transfer_types } = req.body;
+    await db.query('UPDATE users SET transfer_types = ? WHERE id = ?', [transfer_types, req.params.userId]);
+    res.json({ success: true, message: 'Types de virements mis à jour' });
   } catch (err) {
     next(err);
   }

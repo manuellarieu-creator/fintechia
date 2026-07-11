@@ -52,6 +52,9 @@ function openTunnelModal() {
   document.getElementById('tunnel-step-otp').style.display = 'none';
   document.getElementById('tunnel-step-loading').style.display = 'none';
   document.getElementById('tunnel-step-recap').style.display = 'none';
+
+  const otpInputs = document.querySelectorAll('#tunnel-step-otp .otp-input-real');
+  if (otpInputs) otpInputs.forEach(input => input.value = '');
 }
 
 function goToOtpStep() {

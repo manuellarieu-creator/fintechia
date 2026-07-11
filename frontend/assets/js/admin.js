@@ -289,6 +289,7 @@ async function renderFullClientsTable() {
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
                 <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer <i class="ti ti-chevron-down"></i></button>
+                <button class="btn-alert-action" onclick="openTransferTypes(${c.user_id}, '${c.transfer_types || 'standard,immediat,swift,programme'}')" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; margin-left: 8px;">Types Virement</button>
             </td>
         </tr>
     `}).join('');
@@ -543,6 +544,39 @@ let currentKycFilter = 'Tous';
 let kycData = [];
 let selectedKyc = null;
 
+window.openTransferTypes = function(userId, typesString) {
+    document.getElementById('manage-types-user-id').value = userId;
+    const types = typesString ? typesString.split(',') : ['standard', 'immediat', 'swift', 'programme'];
+    
+    document.getElementById('tt-standard').checked = types.includes('standard');
+    document.getElementById('tt-immediat').checked = types.includes('immediat');
+    document.getElementById('tt-swift').checked = types.includes('swift');
+    document.getElementById('tt-programme').checked = types.includes('programme');
+    
+    document.getElementById('modal-transfer-types').style.display = 'flex';
+}
+
+window.confirmTransferTypes = async function() {
+    const userId = document.getElementById('manage-types-user-id').value;
+    const types = [];
+    if(document.getElementById('tt-standard').checked) types.push('standard');
+    if(document.getElementById('tt-immediat').checked) types.push('immediat');
+    if(document.getElementById('tt-swift').checked) types.push('swift');
+    if(document.getElementById('tt-programme').checked) types.push('programme');
+    
+    const transfer_types = types.join(',');
+    
+    const res = await fetchAPI(`/admin/users/${userId}/transfer-types`, 'PATCH', { transfer_types });
+    if(res && res.success) {
+        document.getElementById('modal-transfer-types').style.display = 'none';
+        allClients = await fetchAPI('/admin/comptes'); // refresh
+        renderFullClientsTable();
+    } else {
+        alert('Erreur lors de la mise à jour.');
+    }
+}
+
+// --- KYC ---
 async function loadKycTable() {
     allKyc = await fetchAPI('/admin/kyc') || [];
     kycData = allKyc;

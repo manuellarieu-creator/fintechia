@@ -58,7 +58,7 @@ router.post('/virement', [
     
     await connection.beginTransaction();
 
-    const [users] = await connection.query('SELECT pin_code FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await connection.query('SELECT pin_code, transfer_types FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0 || users[0].pin_code !== pin_code) {
       await connection.rollback();
       return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
@@ -76,6 +76,13 @@ router.post('/virement', [
     if (!account.transfer_allowed) {
       await connection.rollback();
       return res.status(403).json({ error: 'Les transferts sont temporairement désactivés sur ce compte.', code: 'TRANSFER_DISABLED', status: 403 });
+    }
+
+    const userTransferTypes = users[0].transfer_types ? users[0].transfer_types.split(',') : ['standard','immediat','swift','programme'];
+    const requestedType = type_virement || 'immediat';
+    if (!userTransferTypes.includes(requestedType)) {
+      await connection.rollback();
+      return res.status(403).json({ error: `Le type de virement "${requestedType}" n'est pas autorisé pour ce compte.`, code: 'TRANSFER_TYPE_NOT_ALLOWED', status: 403 });
     }
 
     // 2. Vérifier la limite de montant
