@@ -3,13 +3,19 @@
 async function handleVirementSubmit(e, isMobile) {
   e.preventDefault();
   
+  const formId = isMobile ? 'form-virement-mobile' : 'form-virement-desktop';
+  const formElement = document.getElementById(formId);
+  const activeTypeBtn = formElement ? formElement.querySelector('.segment-btn.active') : document.querySelector('.segment-btn.active');
+  const typeVirement = activeTypeBtn ? (activeTypeBtn.dataset.type || 'immediat') : 'immediat';
+
   const suffix = isMobile ? '-mobile' : '';
   const payload = {
     iban_dest: document.getElementById('vir-iban' + suffix).value,
     bic_dest: 'N/A', // Plus nécessaire ou mocké
     nom_dest: document.getElementById('vir-nom' + suffix).value,
     montant: document.getElementById('vir-montant' + suffix).value,
-    motif: document.getElementById('vir-motif' + suffix).value
+    motif: document.getElementById('vir-motif' + suffix).value,
+    type_virement: typeVirement
   };
 
   if(!payload.iban_dest) return alert('Veuillez sélectionner un bénéficiaire.');
