@@ -3,10 +3,7 @@
 async function handleVirementSubmit(e, isMobile) {
   e.preventDefault();
   
-  const formId = isMobile ? 'form-virement-mobile' : 'form-virement-desktop';
-  const formElement = document.getElementById(formId);
-  const activeTypeBtn = formElement ? formElement.querySelector('.segment-btn.active') : document.querySelector('.segment-btn.active');
-  const typeVirement = activeTypeBtn ? (activeTypeBtn.dataset.type || 'immediat') : 'immediat';
+  const typeVirement = document.getElementById(isMobile ? 'vir-type-mobile' : 'vir-type-desktop').value || 'immediat';
 
   const suffix = isMobile ? '-mobile' : '';
   const payload = {
@@ -102,8 +99,7 @@ async function submitTunnelOtp() {
   document.getElementById('tunnel-step-otp').style.display = 'none';
   document.getElementById('tunnel-step-loading').style.display = 'block';
   
-  const activeTypeBtn = document.querySelector('.segment-btn.active');
-  const typeVirement = activeTypeBtn ? (activeTypeBtn.dataset.type || 'immediat') : 'immediat';
+  const typeVirement = document.getElementById('vir-type-desktop').value || 'immediat';
   
   // Call the actual API
   const payload = {
