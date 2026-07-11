@@ -5,6 +5,15 @@ async function run() {
     await db.query('CREATE TABLE IF NOT EXISTS iban_rules (code_pays VARCHAR(2) PRIMARY KEY, longueur INT NOT NULL)');
     await db.query("INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), ('ES', 24), ('IT', 27), ('LU', 20), ('CH', 21), ('GB', 22), ('PT', 25), ('NL', 18)");
     await db.query('ALTER TABLE beneficiaires ADD COLUMN bic VARCHAR(20) DEFAULT NULL').catch(()=>console.log('bic existant'));
+    
+    await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50)").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN motif_blocage VARCHAR(255) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
+    await db.query("ALTER TABLE users ADD COLUMN transfer_types VARCHAR(255) DEFAULT 'standard,immediat,swift,programme'").catch(e => console.error("Migration error:", e.message));
+
+    await db.query(`
       CREATE TABLE IF NOT EXISTS credit_requests (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
