@@ -582,6 +582,19 @@ window.confirmTransferTypes = async function() {
     }
 }
 
+window.toggleGlobalTransfers = async function(allowed) {
+    if(!confirm(allowed ? 'Voulez-vous autoriser les virements pour TOUS les comptes ?' : 'Voulez-vous bloquer les virements pour TOUS les comptes ?')) return;
+    
+    const res = await fetchAPI('/admin/comptes/global-transfer-toggle', 'PATCH', { allowed });
+    if(res && res.success) {
+        alert('Paramètre appliqué avec succès.');
+        allClients = await fetchAPI('/admin/comptes'); // refresh
+        renderFullClientsTable();
+    } else {
+        alert('Erreur lors de la mise à jour globale.');
+    }
+}
+
 // --- KYC ---
 async function loadKycTable() {
     allKyc = await fetchAPI('/admin/kyc') || [];

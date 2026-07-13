@@ -178,6 +178,13 @@
                                 <button class="btn-primary full-width" onclick="alert('Création manuelle - Bientôt')">
                                     <i class="ti ti-user-plus"></i> Nouveau client
                                 </button>
+                                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                                <button class="full-width" style="background:#DC2626; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="toggleGlobalTransfers(false)">
+                                    <i class="ti ti-lock"></i> Bloquer tous virements
+                                </button>
+                                <button class="full-width" style="background:#16A34A; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px;" onclick="toggleGlobalTransfers(true)">
+                                    <i class="ti ti-lock-open"></i> Autoriser tous virements
+                                </button>
                             </div>
                         </div>
 

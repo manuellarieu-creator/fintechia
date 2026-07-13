@@ -129,6 +129,25 @@ router.get('/comptes', guard, async (req, res, next) => {
   }
 });
 
+// PATCH /api/admin/comptes/global-transfer-toggle
+router.patch('/comptes/global-transfer-toggle', [guard, body('allowed').isBoolean()], validateReq, async (req, res, next) => {
+  try {
+    const { allowed } = req.body;
+    await db.query('UPDATE accounts SET transfer_allowed = ?', [allowed]);
+    
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'global_transfer_toggle', categorie: audit.CATEGORIES.admin,
+      cible_type: 'system', cible_id: 0,
+      cible_detail: `Virements globaux ${allowed ? 'autorisés' : 'bloqués'}`, req
+    });
+    
+    res.json({ success: true, allowed });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PATCH /api/admin/comptes/:id/statut
 router.patch('/comptes/:accountId/statut', [guard, body('statut').notEmpty()], validateReq, async (req, res, next) => {
   try {

@@ -36,10 +36,12 @@ async function handleVirementSubmit(e, isMobile) {
     loadTransactions();
     checkAuth(); // Rafraichir le solde
   } catch (err) {
-    if (err.isPopupRule) {
+    if (err.code === 'TRANSFER_DISABLED') {
+      showTransferDisabledPopup();
+    } else if (err.isPopupRule) {
       showRulePopup(err.message);
     } else {
-      alert(err.message);
+      alert(err.message || 'Erreur lors de l\'initiation du virement');
     }
   }
 }
@@ -126,7 +128,10 @@ async function submitTunnelOtp() {
     checkAuth();
   } catch(err) {
     document.getElementById('tunnel-step-loading').style.display = 'none';
-    if (err.isPopupRule) {
+    if (err.code === 'TRANSFER_DISABLED') {
+      closeModal('modal-virement-tunnel');
+      showTransferDisabledPopup();
+    } else if (err.isPopupRule) {
       closeModal('modal-virement-tunnel');
       showRulePopup(err.message);
     } else {
@@ -134,6 +139,35 @@ async function submitTunnelOtp() {
       closeModal('modal-virement-tunnel');
     }
   }
+}
+
+function showTransferDisabledPopup() {
+    let modal = document.getElementById('modal-transfer-disabled-popup');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-transfer-disabled-popup';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:400px; padding:30px 20px; text-align:center; border-radius:16px;">
+                <div style="width:60px; height:60px; border-radius:50%; background:#FEF2F2; color:#DC2626; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                    <i class="ti ti-ban" style="font-size:32px;"></i>
+                </div>
+                <h3 style="margin-bottom:15px; font-size:20px; color:var(--text-main); font-weight:700;">Virement bloqué 🚫</h3>
+                <p style="color:var(--text-muted); font-size:15px; line-height:1.5; margin-bottom:15px;">
+                    Vous n'êtes pas autorisé à effectuer de transfert sortant depuis votre compte.
+                </p>
+                <p style="color:var(--text-muted); font-size:15px; line-height:1.5; margin-bottom:25px;">
+                    Veuillez contacter votre gestionnaire de compte pour résoudre cet incident. 📞
+                </p>
+                <p style="font-weight:600; color:var(--primary); font-size:15px; margin-bottom:25px;">
+                    Votre Banque FINETECHIA. 🏦
+                </p>
+                <button class="btn-primary full-width" onclick="closeModal('modal-transfer-disabled-popup')" style="padding:12px; font-size:15px;">J'ai compris</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    openModal('modal-transfer-disabled-popup');
 }
 
 function showRulePopup(message) {
