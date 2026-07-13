@@ -11,13 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Vérification de la configuration SMTP au démarrage
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('[MAILER] Erreur de connexion SMTP:', error);
-  } else {
-    console.log('[MAILER] Serveur SMTP prêt');
-  }
-});
+// Vérification supprimée pour éviter les lenteurs au démarrage sur Vercel
 
 async function envoyerResetMdp(email, prenom, lien) {
   const mailOptions = {

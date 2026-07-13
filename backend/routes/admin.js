@@ -7,7 +7,7 @@ const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 
 // Auto-migration pour les nouvelles colonnes accounts et account_rules
-(async () => {
+// (async () => {
   try {
     await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50)").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)").catch(e => console.error("Migration error:", e.message));

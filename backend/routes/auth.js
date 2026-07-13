@@ -12,7 +12,7 @@ const mailer = require('../services/mailer');
 const FraudEngine = require('../services/fraudEngine');
 
 // Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
-(async () => {
+// (async () => {
   try {
     await db.query(`CREATE TABLE IF NOT EXISTS user_devices (
       id INT AUTO_INCREMENT PRIMARY KEY,
