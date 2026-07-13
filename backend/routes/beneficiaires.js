@@ -47,8 +47,8 @@ router.post('/', authMiddleware, async (req, res) => {
       }
     }
 
-    // 2. Récupération automatique du BIC via openiban.com
-    let bic = null;
+    // 2. Récupération automatique du BIC via openiban.com ou fallback utilisateur
+    let bic = req.body.bic || null;
     try {
       const ibanResponse = await fetch(`https://openiban.com/validate/${iban}?getBIC=true`);
       if (ibanResponse.ok) {

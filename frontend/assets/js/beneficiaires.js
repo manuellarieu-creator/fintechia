@@ -75,12 +75,20 @@ async function loadBeneficiaires() {
 async function ajouterBeneficiaire() {
   const nom = document.getElementById('new-ben-nom').value;
   const iban = document.getElementById('new-ben-iban').value;
+  const bicInput = document.getElementById('new-ben-bic');
+  let bic = bicInput ? bicInput.value : '';
+  
   if(!nom || !iban) return alert('Remplissez tous les champs');
   
+  if(bic.includes('Recherche') || bic.includes('Erreur') || bic.includes('requis')) {
+    bic = '';
+  }
+  
   try {
-    await apiCall('/beneficiaires', 'POST', { nom, iban });
+    await apiCall('/beneficiaires', 'POST', { nom, iban, bic });
     document.getElementById('new-ben-nom').value = '';
     document.getElementById('new-ben-iban').value = '';
+    if(bicInput) bicInput.value = '';
     closeModal('modal-add-beneficiaire');
     loadBeneficiaires();
     if (typeof loadBeneficiairesForSelect === 'function') {
@@ -220,12 +228,18 @@ async function previewBIC() {
   if (!bicInput) return;
   
   if (iban.length < 15) {
-    bicInput.value = '';
+    if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) {
+      bicInput.value = '';
+    }
+    bicInput.style.background = '#FFFFFF';
     return;
   }
   
   clearTimeout(bicTimeout);
-  bicInput.value = 'Recherche en cours...';
+  if (bicInput.value === '' || bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) {
+      bicInput.value = '';
+      bicInput.placeholder = 'Recherche du BIC en cours...';
+  }
   
   bicTimeout = setTimeout(async () => {
     try {
@@ -235,13 +249,17 @@ async function previewBIC() {
         if (data.valid && data.bankData && data.bankData.bic) {
           bicInput.value = data.bankData.bic;
         } else {
-          bicInput.value = 'Code BIC requis';
+          if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+          bicInput.placeholder = 'BIC introuvable, veuillez le saisir';
         }
       } else {
-        bicInput.value = 'Erreur réseau';
+        if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+        bicInput.placeholder = 'Saisissez le code BIC manuellement';
       }
     } catch(err) {
-      bicInput.value = 'Erreur de recherche';
+      if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+      bicInput.placeholder = 'Saisissez le code BIC manuellement';
     }
+    bicInput.style.background = '#FFFFFF';
   }, 500);
 }
