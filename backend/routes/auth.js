@@ -12,24 +12,7 @@ const mailer = require('../services/mailer');
 const FraudEngine = require('../services/fraudEngine');
 
 // Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
-// (async () => {
-  try {
-    await db.query(`CREATE TABLE IF NOT EXISTS user_devices (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT NOT NULL,
-      device_token VARCHAR(255) NOT NULL UNIQUE,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )`);
-  } catch(e) { console.error('[auth] Migration user_devices:', e.message); }
-  try { await db.query("ALTER TABLE users ADD COLUMN pin_code_usage_count INT DEFAULT 0"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN numero_client VARCHAR(50)"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN otp_fails INT DEFAULT 0"); } catch(e) {}
-  try { await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0"); } catch(e) {}
-})();
+
 
 const validateReq = (req, res, next) => {
   const errors = validationResult(req);
