@@ -1755,7 +1755,7 @@ window.openEmitCardModal = async function() {
     const select = document.getElementById('emit-card-client');
     if (allClients.length === 0) allClients = await fetchAPI('/admin/comptes') || [];
     
-    select.innerHTML = allClients.map(c => `<option value="${c.id}">${c.prenom} ${c.nom} (ID: ${c.id})</option>`).join('');
+    select.innerHTML = allClients.map(c => `<option value="${c.user_id}">${c.prenom} ${c.nom} (User ID: ${c.user_id})</option>`).join('');
     document.getElementById('modal-emit-card').style.display = 'flex';
 }
 
