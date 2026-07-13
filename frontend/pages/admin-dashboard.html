@@ -629,14 +629,13 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                         <option value="solde_desc">Trier par : Solde décroissant</option>
                                     </select>
                                 </div>
-                                <button class="btn-primary full-width" onclick="alert('Création manuelle - Bientôt')">
+                                <button class="btn-primary" style="padding:10px 16px; border-radius:8px; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="openNewClientModal()">
                                     <i class="ti ti-user-plus"></i> Nouveau client
                                 </button>
-                                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
-                                <button class="full-width" style="background:#DC2626; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="toggleGlobalTransfers(false)">
+                                <button style="background:#DC2626; color:white; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; flex-shrink:0;" onclick="openTransferModal(false)">
                                     <i class="ti ti-lock"></i> Bloquer virements
                                 </button>
-                                <button class="full-width" style="background:#16A34A; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px;" onclick="openTransferModal(true)">
+                                <button style="background:#16A34A; color:white; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; flex-shrink:0;" onclick="openTransferModal(true)">
                                     <i class="ti ti-lock-open"></i> Autoriser virements
                                 </button>
                             </div>

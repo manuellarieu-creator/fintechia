@@ -2317,6 +2317,10 @@ async function submitTransferAction() {
 // ============================
 // NEW CLIENT ACTION
 // ============================
+function openNewClientModal() {
+    document.getElementById('modal-new-client').style.display = 'flex';
+}
+
 async function submitNewClient() {
     const prenom = document.getElementById('new-client-prenom').value.trim();
     const nom = document.getElementById('new-client-nom').value.trim();
