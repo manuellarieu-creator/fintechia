@@ -75,7 +75,7 @@
                 </a>
 
                 <div class="nav-section">SYSTÈME</div>
-                <a href="#" class="nav-item" onclick="document.getElementById('modal-settings').style.display='flex'">
+                <a href="#" class="nav-item" onclick="openSettingsModal()">
                     <i class="ti ti-settings"></i>
                     <span>Paramètres Globaux</span>
                 </a>
@@ -1647,6 +1647,581 @@
         </div>
     </div>
 
+        <!-- Modal Settings -->
+    <div class="modal" id="modal-settings" style="display:none; z-index:9999;">
+        <div class="modal-content" style="max-width: 1100px; padding:0; overflow:hidden; border-radius:14px;">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body,html{font-family:'Inter',system-ui,sans-serif;}
+.ni{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;}
+.ni.act{background:rgba(255,255,255,.12);color:#fff;font-weight:500;}
+.ni:hover{background:rgba(255,255,255,.07);}
+.ni i{font-size:15px;flex-shrink:0;}
+.ni-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.28);padding:12px 10px 4px;}
+.bk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;}
+.bs{background:#F0FDF4;color:#15803D;}
+.bn{background:#F1F5F9;color:#475569;}
+.bw{background:#FFFBEB;color:#B45309;}
+.bd{background:#FEF2F2;color:#B91C1C;}
+.ba{background:#EFF6FF;color:#1D4ED8;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
+.card{background:#fff;border:0.5px solid #E2E8F0;border-radius:12px;padding:16px 18px;}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.ch h3{margin:0;font-size:13px;font-weight:700;color:#0F172A;}
+.ch p{margin:2px 0 0;font-size:10px;color:#94A3B8;}
+.tg{width:36px;height:20px;border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+.tg.on{background:#2563EB;}
+.tg.off{background:#CBD5E1;}
+.tg span{width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;top:2.5px;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s;}
+.tg.on span{left:18px;}
+.tg.off span{left:2.5px;}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid #F1F5F9;}
+.sr:last-child{border-bottom:none;}
+.sr-lbl{font-size:12px;font-weight:500;color:#0F172A;}
+.sr-sub{font-size:10px;color:#94A3B8;margin-top:1px;}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.field:last-child{margin-bottom:0;}
+.field label{font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.4px;}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;color:#0F172A;outline:none;transition:border .15s;}
+.field input:focus,.field select:focus{border-color:#2563EB;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+.field textarea{resize:none;height:60px;font-family:inherit;}
+.role-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #F1F5F9;}
+.role-row:last-child{border-bottom:none;}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.section-tab{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;color:#475569;background:transparent;white-space:nowrap;transition:all .15s;}
+.section-tab.act{background:#2563EB;color:#fff;font-weight:600;}
+.section-tab:hover:not(.act){background:#F1F5F9;}
+.log-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:0.5px solid #F8FAFC;}
+.log-row:last-child{border-bottom:none;}
+.log-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.badge-role{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;}
+</style>
+
+<div style="display:flex;background:#F1F5F9;border-radius:14px;overflow:hidden;border:0.5px solid #E2E8F0;height:600px;">
+
+  <!-- SIDEBAR NAV -->
+  <div style="width:158px;flex-shrink:0;background:#0F172A;padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;scrollbar-width:none;">
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 10px 14px;">
+      <div style="width:24px;height:24px;border-radius:6px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#fff;flex-shrink:0;">N</div>
+      <div><p style="font-size:11px;font-weight:700;color:#fff;margin:0;">NovaBanque</p><p style="font-size:9px;color:rgba(255,255,255,.35);margin:0;">Admin Console</p></div>
+    </div>
+    <div class="ni"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+    <div class="ni-sec">Clients</div>
+    <div class="ni"><i class="ti ti-users"></i>Comptes clients</div>
+    <div class="ni"><i class="ti ti-id-badge"></i>KYC / Vérification</div>
+    <div class="ni"><i class="ti ti-user-exclamation"></i>Clients bloqués</div>
+    <div class="ni-sec">Transactions</div>
+    <div class="ni"><i class="ti ti-arrows-exchange"></i>Virements</div>
+    <div class="ni"><i class="ti ti-flag"></i>Fraudes & alertes</div>
+    <div class="ni"><i class="ti ti-eye"></i>Supervision live</div>
+    <div class="ni-sec">Produits</div>
+    <div class="ni"><i class="ti ti-credit-card"></i>Cartes émises</div>
+    <div class="ni"><i class="ti ti-building-bank"></i>Comptes & IBAN</div>
+    <div class="ni"><i class="ti ti-chart-bar"></i>Reporting</div>
+    <div class="ni-sec">Système</div>
+    <div class="ni"><i class="ti ti-shield-lock"></i>Sécurité</div>
+    <div class="ni act"><i class="ti ti-settings"></i>Paramètres</div>
+    <div class="ni"><i class="ti ti-file-analytics"></i>Logs système</div>
+    <div style="flex:1;"></div>
+    <div style="display:flex;align-items:center;gap:7px;padding:8px 10px;border-top:0.5px solid rgba(255,255,255,.08);margin-top:6px;">
+      <div style="width:26px;height:26px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">AD</div>
+      <div><p style="font-size:10px;font-weight:500;color:#fff;margin:0;">Admin</p><p style="font-size:9px;color:rgba(255,255,255,.35);margin:0;">Super Admin</p></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;">
+
+    <!-- Topbar -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0;">Paramètres</h2>
+        <p style="font-size:11px;color:#94A3B8;margin:3px 0 0;">Configuration générale, sécurité, accès et notifications</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="document.getElementById('modal-settings').style.display='none'"><i class="ti ti-x" style="font-size:13px;"></i>Fermer</button>
+        <button class="btn" style="background:#2563EB;color:#fff;" onclick="saveSystemSettings()"><i class="ti ti-device-floppy" style="font-size:13px;"></i>Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- Onglets sections -->
+    <div style="background:#fff;border-bottom:0.5px solid #E2E8F0;padding:8px 20px;display:flex;gap:4px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
+      <div class="section-tab act" onclick="showSettingsTab('etablissement', this)"><i class="ti ti-building-bank" style="font-size:12px;margin-right:5px;"></i>Établissement</div>
+      <div class="section-tab" onclick="showSettingsTab('securite', this)"><i class="ti ti-shield-lock" style="font-size:12px;margin-right:5px;"></i>Sécurité</div>
+      <div class="section-tab" onclick="showSettingsTab('equipe', this)"><i class="ti ti-users" style="font-size:12px;margin-right:5px;"></i>Équipe & accès</div>
+      <div class="section-tab" onclick="showSettingsTab('notifications', this)"><i class="ti ti-bell" style="font-size:12px;margin-right:5px;"></i>Notifications</div>
+      <div class="section-tab" onclick="showSettingsTab('virements', this)"><i class="ti ti-arrows-exchange" style="font-size:12px;margin-right:5px;"></i>Virements</div>
+      <div class="section-tab" onclick="showSettingsTab('cartes', this)"><i class="ti ti-credit-card" style="font-size:12px;margin-right:5px;"></i>Cartes</div>
+      <div class="section-tab" onclick="showSettingsTab('api', this)"><i class="ti ti-plug" style="font-size:12px;margin-right:5px;"></i>API & intégrations</div>
+      <div class="section-tab" onclick="showSettingsTab('conformite', this)"><i class="ti ti-file-analytics" style="font-size:12px;margin-right:5px;"></i>Conformité</div>
+    </div>
+
+    <!-- Corps : grille 3 colonnes -->
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none;">
+
+      <!-- ÉTABLISSEMENT -->
+      <div id="tab-etablissement" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;">
+
+        <!-- Identité de l'établissement -->
+        <div class="card">
+          <div class="ch">
+            <div><h3>Identité de l'établissement</h3><p>Informations légales et branding</p></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;">
+            <div style="width:60px;height:60px;border-radius:12px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:800;color:#2563EB;cursor:pointer;position:relative;">
+              N
+              <div style="position:absolute;bottom:-4px;right:-4px;width:18px;height:18px;background:#2563EB;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;">
+                <i class="ti ti-camera" style="font-size:9px;color:#fff;"></i>
+              </div>
+            </div>
+            <div style="flex:1;">
+              <div class="field">
+                <label>Nom de l'établissement</label>
+                <input id="set-etablissement_nom" value="NovaBanque SAS">
+              </div>
+              <div class="field" style="margin:0;">
+                <label>Slogan</label>
+                <input id="set-etablissement_slogan" value="La banque qui vous ressemble">
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="field"><label>SIREN</label><input id="set-etablissement_siren" value="832 145 789"></div>
+            <div class="field"><label>Numéro ACPR</label><input id="set-etablissement_acpr" value="17432-A"></div>
+            <div class="field"><label>Code BIC</label><input id="set-etablissement_bic" value="NVAFRPPXXX"></div>
+            <div class="field" style="margin:0;"><label>Code banque</label><input id="set-etablissement_code_banque" value="30004"></div>
+          </div>
+        </div>
+
+        <!-- Coordonnées & contact -->
+        <div class="card">
+          <div class="ch"><div><h3>Coordonnées</h3><p>Adresse & contacts officiels</p></div></div>
+          <div class="field"><label>Adresse siège social</label><input id="set-etablissement_adresse" value="14 avenue de l'Opéra, 75001 Paris"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="field"><label>Code postal</label><input id="set-etablissement_cp" value="75001"></div>
+            <div class="field"><label>Ville</label><input id="set-etablissement_ville" value="Paris"></div>
+          </div>
+          <div class="field"><label>Email support client</label><input id="set-etablissement_email" value="support@novabanque.fr"></div>
+          <div class="field"><label>Téléphone</label><input id="set-etablissement_tel" value="+33 1 80 00 12 34"></div>
+          <div class="field" style="margin:0;"><label>Site web</label><input id="set-etablissement_site" value="https://www.novabanque.fr"></div>
+        </div>
+      </div>
+
+      <!-- SÉCURITÉ -->
+      <div id="tab-securite" style="display:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>Sécurité & authentification</h3><p>MFA, sessions, mots de passe</p></div></div>
+          <div class="sr">
+            <div><p class="sr-lbl">Double authentification (MFA)</p><p class="sr-sub">Obligatoire pour tous les admins</p></div>
+            <div class="tg on" id="tg-secu_mfa_obligatoire" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">OTP par SMS</p><p class="sr-sub">Code 6 chiffres à chaque connexion</p></div>
+            <div class="tg on" id="tg-secu_otp_sms" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Expiration session</p><p class="sr-sub">Déconnexion après inactivité</p></div>
+            <select id="set-secu_expiration_session" style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;">
+              <option>30 minutes</option><option>1 heure</option><option>4 heures</option>
+            </select>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">IP autorisées (whitelist)</p><p class="sr-sub">Accès admin restreint</p></div>
+            <div class="tg on" id="tg-secu_ip_whitelist" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Tentatives login max</p><p class="sr-sub">Avant blocage du compte</p></div>
+            <select id="set-secu_login_max" style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;">
+              <option>3 tentatives</option><option>5 tentatives</option><option>10 tentatives</option>
+            </select>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Journalisation des accès</p><p class="sr-sub">Logs de toutes les actions admin</p></div>
+            <div class="tg on" id="tg-secu_logs_acces" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Mode maintenance</p><p class="sr-sub">Bloquer l'accès client temporairement</p></div>
+            <div class="tg off" id="tg-secu_maintenance" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid #F1F5F9;">
+            <button class="btn" onclick="executePurgeSessions()" style="width:100%;justify-content:center;background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;font-size:11px;">
+              <i class="ti ti-lock-access" style="font-size:13px;"></i>Révoquer toutes les sessions actives
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉQUIPE -->
+      <div id="tab-equipe" style="display:none;grid-template-columns:minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div><h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Équipe & accès</h3><p style="font-size:10px;color:#94A3B8;margin:2px 0 0;">Rôles et permissions des admins</p></div>
+            <button class="btn" style="background:#EFF6FF;color:#1D4ED8;padding:5px 10px;font-size:10px;"><i class="ti ti-user-plus" style="font-size:11px;"></i>Inviter</button>
+          </div>
+
+          <div class="role-row">
+            <div class="av" style="background:#EFF6FF;color:#1D4ED8;">AD</div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Admin Principal</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">admin@novabanque.fr</p>
+            </div>
+            <span class="badge-role" style="background:#EFF6FF;color:#1D4ED8;">Super Admin</span>
+          </div>
+          <div class="role-row">
+            <div class="av" style="background:#F0FDF4;color:#166534;">MC</div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Marie Coulomb</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">m.coulomb@novabanque.fr</p>
+            </div>
+            <span class="badge-role" style="background:#F0FDF4;color:#15803D;">KYC Officer</span>
+          </div>
+          <div class="role-row">
+            <div class="av" style="background:#FEF3C7;color:#B45309;">JR</div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Jean Roche</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">j.roche@novabanque.fr</p>
+            </div>
+            <span class="badge-role" style="background:#FFFBEB;color:#B45309;">Analyste Fraude</span>
+          </div>
+
+          <div style="margin-top:12px;padding-top:10px;border-top:0.5px solid #F1F5F9;">
+            <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Matrice des permissions</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:#F8FAFC;border-radius:5px;border:0.5px solid #E2E8F0;">
+                <span style="font-size:10px;color:#475569;">KYC</span>
+                <div class="tg on" style="transform:scale(.8);transform-origin:right;"><span></span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:#F8FAFC;border-radius:5px;border:0.5px solid #E2E8F0;">
+                <span style="font-size:10px;color:#475569;">Fraudes</span>
+                <div class="tg on" style="transform:scale(.8);transform-origin:right;"><span></span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:#F8FAFC;border-radius:5px;border:0.5px solid #E2E8F0;">
+                <span style="font-size:10px;color:#475569;">Reporting</span>
+                <div class="tg on" style="transform:scale(.8);transform-origin:right;"><span></span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:#F8FAFC;border-radius:5px;border:0.5px solid #E2E8F0;">
+                <span style="font-size:10px;color:#475569;">Paramètres</span>
+                <div class="tg off" style="transform:scale(.8);transform-origin:right;"><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div id="tab-notifications" style="display:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>Notifications système</h3><p>Alertes email, SMS & push admin</p></div></div>
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Alertes critiques</p>
+          <div class="sr">
+            <div><p class="sr-lbl">Fraude détectée</p><p class="sr-sub">Email + SMS immédiat</p></div>
+            <div class="tg on" id="tg-notif_fraude" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Compte client bloqué</p><p class="sr-sub">Notification email</p></div>
+            <div class="tg on" id="tg-notif_compte_bloque" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">KYC en attente &gt; 24h</p><p class="sr-sub">Rappel automatique</p></div>
+            <div class="tg on" id="tg-notif_kyc_attente" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px;">Rapports automatiques</p>
+          <div class="sr">
+            <div><p class="sr-lbl">Rapport journalier</p><p class="sr-sub">Envoi à 08h00</p></div>
+            <div class="tg on" id="tg-notif_rap_jour" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Rapport hebdomadaire</p><p class="sr-sub">Lundi matin, récapitulatif</p></div>
+            <div class="tg on" id="tg-notif_rap_hebdo" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Rapport mensuel ACPR</p><p class="sr-sub">Génération le 1er du mois</p></div>
+            <div class="tg on" id="tg-notif_rap_mensuel" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px;">Destinataires</p>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Emails de réception</label>
+            <input id="set-notif_emails_dest" value="admin@novabanque.fr, compliance@novabanque.fr">
+          </div>
+          <div class="field" style="margin:0;">
+            <label>Téléphone SMS urgences</label>
+            <input id="set-notif_tel_urgences" value="+33 6 00 00 00 00">
+          </div>
+        </div>
+      </div>
+
+      <!-- VIREMENTS -->
+      <div id="tab-virements" style="display:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>Règles de virements</h3><p>Plafonds et validations globaux</p></div></div>
+          <div class="field"><label>Plafond journalier max (par client)</label>
+            <div style="position:relative;"><input id="set-virement_plafond_jour" value="5 000"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Seuil de blocage automatique</label>
+            <div style="position:relative;"><input id="set-virement_seuil_blocage" value="4 999"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Délai de revue manuelle IBAN hors UE</label>
+            <select id="set-virement_delai_revue"><option>Revue systématique</option><option>Si montant > 2 000 €</option><option>Désactivé</option></select>
+          </div>
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px;">Options globales</p>
+          <div class="sr">
+            <div><p class="sr-lbl">Virements instantanés SEPA</p><p class="sr-sub">Disponible 24h/24</p></div>
+            <div class="tg on" id="tg-virement_instantanés" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Virements internationaux</p><p class="sr-sub">Hors zone euro</p></div>
+            <div class="tg on" id="tg-virement_internationaux" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">OTP obligatoire &gt; 500 €</p><p class="sr-sub">Confirmation 2FA client</p></div>
+            <div class="tg on" id="tg-virement_otp_obligatoire" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Virements récurrents</p><p class="sr-sub">Autoriser les paiements programmés</p></div>
+            <div class="tg on" id="tg-virement_recurrents" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARTES -->
+      <div id="tab-cartes" style="display:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>Règles des cartes</h3><p>Plafonds et options par défaut</p></div></div>
+          <div class="field"><label>Plafond paiement mensuel (Classic)</label>
+            <div style="position:relative;"><input id="set-cartes_plafond_classic" value="3000"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Plafond paiement mensuel (Platinum)</label>
+            <div style="position:relative;"><input id="set-cartes_plafond_platinum" value="5000"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Plafond retrait hebdomadaire</label>
+            <div style="position:relative;"><input id="set-cartes_plafond_retrait" value="500"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field" style="margin-bottom:12px;"><label>Limite sans contact (cumul)</label>
+            <div style="position:relative;"><input id="set-cartes_limite_nfc" value="150"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Options par défaut (à l'émission)</p>
+          <div class="sr">
+            <div><p class="sr-lbl">NFC activé par défaut</p><p class="sr-sub">Paiement sans contact</p></div>
+            <div class="tg on" id="tg-cartes_nfc_defaut" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Paiements en ligne activés</p><p class="sr-sub">E-commerce & abonnements</p></div>
+            <div class="tg on" id="tg-cartes_online_defaut" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Paiements à l'étranger</p><p class="sr-sub">Désactivé par défaut</p></div>
+            <div class="tg off" id="tg-cartes_etranger_defaut" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Renouvellement automatique</p><p class="sr-sub">30 jours avant expiration</p></div>
+            <div class="tg on" id="tg-cartes_renouv_auto" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API & INTÉGRATIONS -->
+      <div id="tab-api" style="display:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>API & Intégrations</h3><p>Clés d'accès et webhooks</p></div></div>
+          <div style="margin-bottom:12px;">
+            <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px;">Clé API Production</p>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="flex:1;padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:7px;font-family:monospace;font-size:10px;color:#475569;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="disp-api_cle_prod">nva_live_sk_••••••••••••••••••••4821</div>
+              <button class="btn" style="background:#EFF6FF;color:#1D4ED8;padding:6px 9px;font-size:10px;border-radius:6px;"><i class="ti ti-copy" style="font-size:11px;"></i></button>
+              <button class="btn" style="background:#FFFBEB;color:#B45309;padding:6px 9px;font-size:10px;border-radius:6px;"><i class="ti ti-refresh" style="font-size:11px;"></i></button>
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px;">Clé API Sandbox</p>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="flex:1;padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:7px;font-family:monospace;font-size:10px;color:#94A3B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="disp-api_cle_sandbox">nva_test_sk_••••••••••••••••••••9912</div>
+              <button class="btn" style="background:#EFF6FF;color:#1D4ED8;padding:6px 9px;font-size:10px;border-radius:6px;"><i class="ti ti-copy" style="font-size:11px;"></i></button>
+            </div>
+          </div>
+          <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Intégrations actives</p>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#F0FDF4;border-radius:7px;border:0.5px solid #BBF7D0;">
+              <i class="ti ti-circle-check" style="font-size:14px;color:#16A34A;"></i>
+              <span style="font-size:11px;font-weight:500;color:#0F172A;flex:1;">Stripe Connect</span>
+              <div class="tg on" id="tg-api_stripe_connect" onclick="toggleSwitch(this)"><span></span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#F0FDF4;border-radius:7px;border:0.5px solid #BBF7D0;">
+              <i class="ti ti-circle-check" style="font-size:14px;color:#16A34A;"></i>
+              <span style="font-size:11px;font-weight:500;color:#0F172A;flex:1;">Twilio SMS</span>
+              <div class="tg on" id="tg-api_twilio_sms" onclick="toggleSwitch(this)"><span></span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#F8FAFC;border-radius:7px;border:0.5px solid #E2E8F0;">
+              <i class="ti ti-circle-x" style="font-size:14px;color:#94A3B8;"></i>
+              <span style="font-size:11px;font-weight:500;color:#94A3B8;flex:1;">Docusign</span>
+              <div class="tg off" id="tg-api_docusign" onclick="toggleSwitch(this)"><span></span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#F8FAFC;border-radius:7px;border:0.5px solid #E2E8F0;">
+              <i class="ti ti-circle-x" style="font-size:14px;color:#94A3B8;"></i>
+              <span style="font-size:11px;font-weight:500;color:#94A3B8;flex:1;">Webhook Tracfin</span>
+              <div class="tg off" id="tg-api_tracfin" onclick="toggleSwitch(this)"><span></span></div>
+            </div>
+          </div>
+          <div class="field" style="margin:0;">
+            <label>URL Webhook (événements)</label>
+            <input id="set-api_webhook_url" value="https://api.novabanque.fr/webhooks/events" placeholder="https://…">
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFORMITÉ -->
+      <div id="tab-conformite" style="display:none;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;">
+        <!-- Conformité -->
+        <div class="card">
+          <div class="ch"><div><h3>Conformité & réglementation</h3><p>Paramètres LCB-FT, RGPD, ACPR</p></div></div>
+          <div class="sr">
+            <div><p class="sr-lbl">Conservation des données (RGPD)</p><p class="sr-sub">Durée de rétention des logs</p></div>
+            <select id="set-conf_rgpd" style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;">
+              <option>5 ans</option><option>7 ans</option><option>10 ans</option>
+            </select>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Signalement auto Tracfin</p><p class="sr-sub">Tx suspectes &gt; seuil</p></div>
+            <div class="tg on" id="tg-conf_tracfin_auto" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Chiffrement données au repos</p><p class="sr-sub">AES-256 — Obligatoire</p></div>
+            <div class="tg on" id="tg-conf_aes256" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Audit trail immuable</p><p class="sr-sub">Logs non modifiables</p></div>
+            <div class="tg on" id="tg-conf_audit_immuable" onclick="toggleSwitch(this)"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-lbl">Seuil KYC renforcé (EDD)</p><p class="sr-sub">Clients à risque élevé</p></div>
+            <select id="set-conf_kyc_renforce" style="padding:4px 8px;border-radius:6px;border:0.5px solid #E2E8F0;background:#F8FAFC;font-size:11px;color:#0F172A;outline:none;">
+              <option>Automatique (IA)</option><option>Manuel</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Zone de danger -->
+        <div style="background:#fff;border:1.5px solid #FECACA;border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:12px;">
+            <i class="ti ti-alert-triangle" style="font-size:16px;color:#DC2626;"></i>
+            <h3 style="font-size:13px;font-weight:700;color:#B91C1C;margin:0;">Zone de danger</h3>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#FEF2F2;border-radius:8px;">
+              <div><p style="font-size:11px;font-weight:500;color:#B91C1C;margin:0;">Mode maintenance</p><p style="font-size:9px;color:#DC2626;margin:1px 0 0;opacity:.8;">Bloquer l'accès à l'app client</p></div>
+              <button class="btn" onclick="executeMaintenanceMode()" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;padding:5px 10px;font-size:10px;">Activer</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#FEF2F2;border-radius:8px;">
+              <div><p style="font-size:11px;font-weight:500;color:#B91C1C;margin:0;">Geler tous les virements</p><p style="font-size:9px;color:#DC2626;margin:1px 0 0;opacity:.8;">Suspension immédiate globale</p></div>
+              <button class="btn" onclick="toggleGlobalTransfers(false)" style="background:#FEF2F2;color:#B91C1C;border:0.5px solid #FECACA;padding:5px 10px;font-size:10px;">Activer</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#FEF2F2;border-radius:8px;">
+              <div><p style="font-size:11px;font-weight:500;color:#B91C1C;margin:0;">Purger les sessions actives</p><p style="font-size:9px;color:#DC2626;margin:1px 0 0;opacity:.8;">Déconnecter tous les utilisateurs</p></div>
+              <button class="btn" onclick="executePurgeSessions()" style="background:#DC2626;color:#fff;padding:5px 10px;font-size:10px;">Exécuter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+        </div>
+    </div>
+
+    <!-- Modal Create Alerte -->
+    <div class="modal" id="modal-create-alerte" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Créer une alerte de fraude</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Déclarer manuellement une activité suspecte.</p>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">ID Utilisateur</label>
+                <input type="number" id="create-alerte-user" class="input" style="width:100%;" placeholder="Ex: 1">
+            </div>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Type de Fraude</label>
+                <select id="create-alerte-type" class="input" style="width:100%;">
+                    <option value="phishing">Phishing</option>
+                    <option value="virement_suspect">Virement suspect</option>
+                    <option value="login_anormal">Login anormal</option>
+                    <option value="kyc_multiple">KYC multiple</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Sévérité</label>
+                <select id="create-alerte-severite" class="input" style="width:100%;">
+                    <option value="low">Faible</option>
+                    <option value="medium">Moyenne</option>
+                    <option value="high">Critique / Élevée</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom:24px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Description</label>
+                <textarea id="create-alerte-desc" class="input" style="width:100%; min-height:80px;" placeholder="Détails de la fraude..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-create-alerte').style.display='none'">Annuler</button>
+                <button class="btn-primary" style="background:#DC2626; border-color:#DC2626;" onclick="submitCreateAlerte()">Créer l'alerte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Manage Rules -->
+    <div class="modal" id="modal-manage-rules" style="display:none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Gestion des règles de détection</h3>
+            <p class="text-muted" style="margin-bottom:16px;">Activer, désactiver ou supprimer les règles de détection de fraude automatiques.</p>
+            
+            <div id="manage-rules-list" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;padding-right:10px;margin-bottom:20px;">
+                <!-- Populated by JS -->
+                <div class="text-center text-muted">Chargement...</div>
+            </div>
+
+            <div style="background:#F8FAFC;border:0.5px solid #E2E8F0;border-radius:8px;padding:12px;margin-bottom:24px;">
+                <h4 style="font-size:12px;font-weight:700;margin:0 0 10px;">Ajouter une règle</h4>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="new-rule-name" class="input" style="flex:1;" placeholder="Nom de la règle">
+                        <input type="text" id="new-rule-desc" class="input" style="flex:2;" placeholder="Description">
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                        <select id="new-rule-event" class="input" style="flex:1;min-width:100px;font-size:11px;">
+                            <option value="virement">Virement</option>
+                            <option value="login">Connexion</option>
+                            <option value="kyc">KYC</option>
+                        </select>
+                        <select id="new-rule-field" class="input" style="flex:1;min-width:100px;font-size:11px;">
+                            <option value="montant">Montant</option>
+                            <option value="destination_iban">IBAN Dest</option>
+                            <option value="ip">Adresse IP</option>
+                        </select>
+                        <select id="new-rule-operator" class="input" style="flex:1;min-width:80px;font-size:11px;">
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value="==">Égal à</option>
+                            <option value="LIKE">Commence par</option>
+                            <option value="NOT_LIKE">Sauf (NOT LIKE)</option>
+                        </select>
+                        <input type="text" id="new-rule-value" class="input" style="flex:1;min-width:100px;font-size:11px;" placeholder="Valeur (ex: 5000)">
+                        <select id="new-rule-action" class="input" style="flex:1;min-width:120px;font-size:11px;">
+                            <option value="block">Bloquer</option>
+                            <option value="alert_manual">Revue Manuelle</option>
+                            <option value="alert_only">Alerte Simple</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;">
+                        <button class="btn-primary" onclick="addFraudRule()">Créer</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
     <!-- Modal Create Alerte -->
     <div class="modal" id="modal-create-alerte" style="display:none;">
         <div class="modal-content" style="max-width: 500px;">
@@ -1746,5 +2321,6 @@
 
     <!-- Scripts -->
     <script src="../assets/js/admin.js"></script>
+    <script src="../assets/js/admin-settings.js"></script>
 </body>
 </html>

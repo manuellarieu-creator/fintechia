@@ -15,6 +15,81 @@ const notifications = require('../services/notifications');
     await db.query("ALTER TABLE accounts ADD COLUMN transfer_allowed BOOLEAN DEFAULT TRUE").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE accounts ADD COLUMN max_transfer_amount DECIMAL(15,2) DEFAULT NULL").catch(e => console.error("Migration error:", e.message));
     await db.query("ALTER TABLE users ADD COLUMN transfer_types VARCHAR(255) DEFAULT 'standard,immediat,swift,programme'").catch(e => console.error("Migration error:", e.message));
+    
+    // Auto-migration pour system_settings
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS system_settings (
+        setting_key VARCHAR(100) PRIMARY KEY,
+        setting_value TEXT NOT NULL,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `).catch(e => console.error("Migration error system_settings:", e.message));
+    
+    // Insérer des valeurs par défaut si vide
+    await db.query(`
+      INSERT IGNORE INTO system_settings (setting_key, setting_value) VALUES
+      ('etablissement_nom', 'NovaBanque SAS'),
+      ('etablissement_slogan', 'La banque qui vous ressemble'),
+      ('etablissement_siren', '832 145 789'),
+      ('etablissement_acpr', '17432-A'),
+      ('etablissement_bic', 'NVAFRPPXXX'),
+      ('etablissement_code_banque', '30004'),
+      ('etablissement_adresse', '14 avenue de l''Opéra, 75001 Paris'),
+      ('etablissement_cp', '75001'),
+      ('etablissement_ville', 'Paris'),
+      ('etablissement_email', 'support@novabanque.fr'),
+      ('etablissement_tel', '+33 1 80 00 12 34'),
+      ('etablissement_site', 'https://www.novabanque.fr'),
+      
+      ('secu_mfa_obligatoire', 'true'),
+      ('secu_otp_sms', 'true'),
+      ('secu_expiration_session', '1 heure'),
+      ('secu_ip_whitelist', 'true'),
+      ('secu_login_max', '3 tentatives'),
+      ('secu_logs_acces', 'true'),
+      ('secu_maintenance', 'false'),
+      
+      ('notif_fraude', 'true'),
+      ('notif_compte_bloque', 'true'),
+      ('notif_kyc_attente', 'true'),
+      ('notif_rap_jour', 'true'),
+      ('notif_rap_hebdo', 'true'),
+      ('notif_rap_mensuel', 'true'),
+      ('notif_emails_dest', 'admin@novabanque.fr, compliance@novabanque.fr'),
+      ('notif_tel_urgences', '+33 6 00 00 00 00'),
+      
+      ('virement_plafond_jour', '5000'),
+      ('virement_seuil_blocage', '4999'),
+      ('virement_delai_revue', 'Revue systématique'),
+      ('virement_instantanés', 'true'),
+      ('virement_internationaux', 'true'),
+      ('virement_otp_obligatoire', 'true'),
+      ('virement_recurrents', 'true'),
+      
+      ('cartes_plafond_classic', '3000'),
+      ('cartes_plafond_platinum', '5000'),
+      ('cartes_plafond_retrait', '500'),
+      ('cartes_limite_nfc', '150'),
+      ('cartes_nfc_defaut', 'true'),
+      ('cartes_online_defaut', 'true'),
+      ('cartes_etranger_defaut', 'false'),
+      ('cartes_renouv_auto', 'true'),
+      
+      ('api_cle_prod', 'nva_live_sk_8f7d6s87df6s87df6s84821'),
+      ('api_cle_sandbox', 'nva_test_sk_9d8s7d98s7d98s7d9912'),
+      ('api_stripe_connect', 'true'),
+      ('api_twilio_sms', 'true'),
+      ('api_docusign', 'false'),
+      ('api_tracfin', 'false'),
+      ('api_webhook_url', 'https://api.novabanque.fr/webhooks/events'),
+      
+      ('conf_rgpd', '5 ans'),
+      ('conf_tracfin_auto', 'true'),
+      ('conf_aes256', 'true'),
+      ('conf_audit_immuable', 'true'),
+      ('conf_kyc_renforce', 'Automatique (IA)')
+    `).catch(e => console.error("Migration error insert system_settings:", e.message));
+
     await db.query(`
       CREATE TABLE IF NOT EXISTS account_rules (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,6 +218,56 @@ router.patch('/comptes/global-transfer-toggle', [guard, body('allowed').isBoolea
     });
     
     res.json({ success: true, allowed });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/settings
+router.get('/settings', guard, async (req, res, next) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM system_settings');
+    const settings = {};
+    rows.forEach(r => settings[r.setting_key] = r.setting_value);
+    res.json(settings);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/settings
+router.patch('/settings', [guard, body('settings').isObject()], validateReq, async (req, res, next) => {
+  try {
+    const { settings } = req.body;
+    for (const [key, value] of Object.entries(settings)) {
+      await db.query('INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?', [key, String(value), String(value)]);
+    }
+    
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'settings_update', categorie: audit.CATEGORIES.admin,
+      cible_type: 'system', cible_id: 0,
+      cible_detail: `Mise à jour de ${Object.keys(settings).length} paramètres`, req
+    });
+    
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/admin/system/purge-sessions
+router.post('/system/purge-sessions', guard, async (req, res, next) => {
+  try {
+    // Dans une implémentation réelle on invaliderait les tokens JWT (liste noire ou rotation de la clé secrète).
+    // Pour l'instant on trace juste l'action pour simuler.
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'purge_sessions', categorie: audit.CATEGORIES.securite,
+      cible_type: 'system', cible_id: 0,
+      cible_detail: 'Purge des sessions actives demandée', req
+    });
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }
