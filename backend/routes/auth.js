@@ -298,10 +298,11 @@ router.post('/login/2fa', [
     await db.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [user.id]);
 
     const pinUsage = user.pin_code_usage_count || 0;
-    if (pinUsage >= 20) {
+    if (pinUsage >= 20 && user.role !== 'admin') {
       const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
       return res.json({ requirePinReset: true, resetToken });
     }
+
 
     // Increment PIN usage count (safe)
     try { await db.query('UPDATE users SET pin_code_usage_count = pin_code_usage_count + 1 WHERE id = ?', [user.id]); } catch(e) { console.error('[2fa] pin_code_usage_count update:', e.message); }
