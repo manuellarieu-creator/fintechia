@@ -20,14 +20,6 @@ pool.query(`
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const [cartes] = await pool.query('SELECT * FROM cartes WHERE user_id = ?', [req.user.id]);
-    if(cartes.length === 0) {
-      // Create a default virtual card
-      const pan = '45' + Math.floor(Math.random() * 100000000000000).toString().padStart(14, '0');
-      const cvv = Math.floor(Math.random() * 900 + 100).toString();
-      const exp_date = '12/28';
-      const [r] = await pool.query('INSERT INTO cartes (user_id, pan, cvv, exp_date) VALUES (?, ?, ?, ?)', [req.user.id, pan, cvv, exp_date]);
-      return res.json([{ id: r.insertId, pan, cvv, exp_date, bloquee: 0, plafond: 1500.00 }]);
-    }
     res.json(cartes);
   } catch (err) {
     console.error(err);

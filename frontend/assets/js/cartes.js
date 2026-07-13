@@ -37,6 +37,40 @@ async function loadCartes() {
       console.warn('Could not fetch txs for cartes', e);
     }
 
+    if(cartes.length === 0) {
+      const pulseStyle = `<style>@keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }</style>`;
+      const emptyDesktopHtml = pulseStyle + `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; height: 100%; min-height: 60vh;">
+          <div style="position: relative; width: 300px; height: 180px; border-radius: 16px; background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(30,58,138,0.1) 100%); border: 1px solid rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 30px; box-shadow: 0 10px 40px -10px rgba(37,99,235,0.2); backdrop-filter: blur(10px); overflow: hidden;">
+            <div style="position: absolute; top: -50px; left: -50px; width: 120px; height: 120px; background: rgba(37,99,235,0.3); filter: blur(40px); border-radius: 50%;"></div>
+            <div style="position: absolute; bottom: -50px; right: -50px; width: 120px; height: 120px; background: rgba(16,185,129,0.15); filter: blur(40px); border-radius: 50%;"></div>
+            <i class="ti ti-credit-card" style="font-size: 48px; color: var(--primary); opacity: 0.8; animation: pulse 2s infinite ease-in-out;"></i>
+            <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; opacity: 0.5;">
+               <div style="width: 40px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 4px;"></div>
+               <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+            </div>
+          </div>
+          <h2 style="font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Création de carte en cours</h2>
+          <p style="font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.6;">Notre équipe finalise la configuration de votre nouvelle carte de paiement NovaBanque. Vous y aurez accès dès sa validation.</p>
+        </div>
+      `;
+
+      const emptyMobileHtml = pulseStyle + `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; height: calc(100vh - 200px);">
+          <div style="position: relative; width: 260px; height: 160px; border-radius: 14px; background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(30,58,138,0.1) 100%); border: 1px solid rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 10px 30px -10px rgba(37,99,235,0.2); overflow: hidden;">
+            <div style="position: absolute; top: -30px; left: -30px; width: 80px; height: 80px; background: rgba(37,99,235,0.2); filter: blur(30px); border-radius: 50%;"></div>
+            <i class="ti ti-credit-card" style="font-size: 40px; color: var(--primary); opacity: 0.8; animation: pulse 2s infinite ease-in-out;"></i>
+          </div>
+          <h2 style="font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">Carte en préparation</h2>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; max-width: 280px;">Votre carte de paiement est en cours d'émission par notre équipe. Merci de patienter.</p>
+        </div>
+      `;
+
+      if(container) container.innerHTML = emptyDesktopHtml;
+      if(containerMobile) containerMobile.innerHTML = emptyMobileHtml;
+      return;
+    }
+
     if(container) {
       container.innerHTML = cartes.map(c => `
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; padding-top:20px;">
