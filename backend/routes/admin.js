@@ -912,7 +912,7 @@ router.post('/users', guard, async (req, res, next) => {
 
     await connection.commit();
 
-    const kycLink = `${req.protocol}://${req.get('host')}/app/kyc.html?ref=${kycRef}`;
+    const kycLink = `${req.protocol}://${req.get('host')}/app/kyc.html`;
 
     res.status(201).json({ success: true, userId, kycLink });
   } catch (err) {
