@@ -866,7 +866,8 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 router.post('/users', guard, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { prenom, nom, email, password, tel } = req.body;
+    const { prenom, nom, email, password, tel, telephone } = req.body;
+    const phoneVal = telephone || tel || null;
     
     if (!prenom || !nom || !email || !password) {
       return res.status(400).json({ error: 'Champs obligatoires manquants' });
@@ -882,9 +883,13 @@ router.post('/users', guard, async (req, res, next) => {
     const bcrypt = require('bcrypt');
     const hashedPassword = await bcrypt.hash(password, 10);
     
+    const timestamp = Date.now().toString().slice(-7);
+    const random = Math.floor(10000 + Math.random() * 90000).toString();
+    const numero_client = `${timestamp}${random}`;
+    
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, mot_de_passe, role, telephone) VALUES (?, ?, ?, ?, "client", ?)',
-      [prenom, nom, email, hashedPassword, tel || null]
+      'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client) VALUES (?, ?, ?, ?, "client", ?, ?)',
+      [prenom, nom, email, hashedPassword, phoneVal, numero_client]
     );
     const userId = userRes.insertId;
 
