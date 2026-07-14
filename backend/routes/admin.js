@@ -898,10 +898,9 @@ router.post('/users', guard, async (req, res, next) => {
       [userId]
     );
 
-    const kycRef = 'KYC' + Date.now() + Math.floor(Math.random() * 1000);
     await connection.query(
-      'INSERT INTO kyc (user_id, statut, reference) VALUES (?, "en_attente", ?)',
-      [userId, kycRef]
+      'INSERT INTO kyc (user_id, statut) VALUES (?, "en_attente")',
+      [userId]
     );
 
     await audit.log({
