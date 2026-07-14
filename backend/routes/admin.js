@@ -879,7 +879,7 @@ router.post('/users', guard, async (req, res, next) => {
 
     await connection.beginTransaction();
 
-    const bcrypt = require('bcryptjs');
+    const bcrypt = require('bcrypt');
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const [userRes] = await connection.query(
