@@ -123,7 +123,7 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
         return res.status(403).json({ error: 'KYC rejeté automatiquement par le système de sécurité.', status: 403 });
     }
 
-    const [accounts] = await db.query('SELECT statut FROM accounts WHERE user_id = ?', [req.user.id]);
+    const [accounts] = await db.query('SELECT statut FROM accounts WHERE user_id = ? ORDER BY id ASC', [req.user.id]);
     if (accounts.length > 0 && accounts[0].statut === 'en_attente') {
       await db.query('UPDATE accounts SET statut = "kyc_requis" WHERE user_id = ?', [req.user.id]);
     }

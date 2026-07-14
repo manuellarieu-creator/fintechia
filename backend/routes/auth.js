@@ -189,7 +189,7 @@ router.post('/login', [
 
     let accounts = [];
     try {
-      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ?', [user.id]);
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     } catch(e) {
       console.error('[login] Erreur chargement comptes:', e.message);
     }
@@ -316,7 +316,7 @@ router.post('/login/2fa', [
 
     let accounts = [];
     try {
-      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ?', [user.id]);
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     } catch(e) { console.error('[2fa] accounts select:', e.message); }
     const account = accounts.length > 0 ? accounts[0] : null;
 
@@ -370,7 +370,7 @@ router.post('/reset-pin', [
     const deviceToken = crypto.randomBytes(32).toString('hex');
     await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
 
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ?', [user.id]);
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
@@ -407,7 +407,7 @@ router.get('/me', authMiddleware, async (req, res, next) => {
     if (users.length === 0) return res.status(404).json({ error: 'User not found', code: 'NOT_FOUND', status: 404 });
     const user = users[0];
     
-    const [accounts] = await db.query('SELECT * FROM accounts WHERE user_id = ?', [user.id]);
+    const [accounts] = await db.query('SELECT * FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     let account = accounts.length > 0 ? accounts[0] : null;
     
     if (account && account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
@@ -452,7 +452,7 @@ router.get('/me', authMiddleware, async (req, res, next) => {
 // POST /api/auth/verify-deposit
 router.post('/verify-deposit', authMiddleware, async (req, res, next) => {
   try {
-    const [accounts] = await db.query('SELECT id, solde, depot_initial_requis FROM accounts WHERE user_id = ?', [req.user.id]);
+    const [accounts] = await db.query('SELECT id, solde, depot_initial_requis FROM accounts WHERE user_id = ? ORDER BY id ASC', [req.user.id]);
     if (accounts.length === 0) return res.status(404).json({ error: 'Compte introuvable' });
     
     const account = accounts[0];

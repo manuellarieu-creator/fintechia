@@ -20,7 +20,7 @@ const validateReq = (req, res, next) => {
 router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const { limit = 20, offset = 0, type, date_debut, date_fin } = req.query;
-    const [accounts] = await db.query('SELECT id FROM accounts WHERE user_id = ?', [req.user.id]);
+    const [accounts] = await db.query('SELECT id FROM accounts WHERE user_id = ? ORDER BY id ASC', [req.user.id]);
     if (accounts.length === 0) return res.json([]);
 
     const accountId = accounts[0].id;
@@ -65,7 +65,7 @@ router.post('/virement', [
       return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
     }
 
-    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ?', [req.user.id]);
+    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? ORDER BY id ASC', [req.user.id]);
     if (accounts.length === 0 || accounts[0].statut !== 'actif') {
       await connection.rollback();
       return res.status(400).json({ error: 'Compte inactif ou inexistant', code: 'ACCOUNT_INVALID', status: 400 });
