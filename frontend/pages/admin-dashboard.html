@@ -878,6 +878,19 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     e.preventDefault();
                                     modalBlock.style.display = 'flex';
                                     
+                                    // Ajouter un élément de statut s'il n'existe pas
+                                    let statusDiv = document.getElementById('iso-block-status');
+                                    if (!statusDiv) {
+                                        statusDiv = document.createElement('div');
+                                        statusDiv.id = 'iso-block-status';
+                                        statusDiv.style.marginBottom = '16px';
+                                        statusDiv.style.fontSize = '13px';
+                                        statusDiv.style.color = '#DC2626';
+                                        statusDiv.style.fontWeight = '600';
+                                        selectUser.parentNode.insertBefore(statusDiv, selectUser.nextSibling);
+                                    }
+                                    statusDiv.textContent = '';
+                                    
                                     // Charger les utilisateurs
                                     selectUser.innerHTML = '<option value="">Chargement...</option>';
                                     const token = localStorage.getItem('fintech_token');
@@ -890,6 +903,8 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                         const data = await res.json();
                                         if (res.ok && Array.isArray(data)) {
                                             selectUser.innerHTML = '<option value="">-- Sélectionnez un compte --</option>';
+                                            window.currentAllAccountsData = data;
+                                            
                                             data.forEach(account => {
                                                 const opt = document.createElement('option');
                                                 opt.value = account.user_id;
@@ -901,6 +916,34 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                         }
                                     } catch (err) {
                                         selectUser.innerHTML = '<option value="">Erreur réseau</option>';
+                                    }
+                                });
+                                
+                                selectUser.addEventListener('change', (e) => {
+                                    const statusDiv = document.getElementById('iso-block-status');
+                                    const userId = e.target.value;
+                                    
+                                    if (!userId || !window.currentAllAccountsData) {
+                                        if (statusDiv) statusDiv.textContent = '';
+                                        return;
+                                    }
+                                    
+                                    const acc = window.currentAllAccountsData.find(a => String(a.user_id) === String(userId));
+                                    if (acc && statusDiv) {
+                                        const isOutBlocked = (acc.transfer_allowed === 0 || acc.transfer_allowed === false);
+                                        const isInBlocked = (acc.transfer_in_allowed === 0 || acc.transfer_in_allowed === false);
+                                        
+                                        if (!isOutBlocked && !isInBlocked) {
+                                            statusDiv.textContent = 'Statut : Actif (Aucun blocage actuel)';
+                                            statusDiv.style.color = '#16A34A';
+                                        } else {
+                                            statusDiv.style.color = '#DC2626';
+                                            let text = 'Déjà bloqué : ';
+                                            if (isOutBlocked && isInBlocked) text += 'Virements Entrants ET Sortants';
+                                            else if (isOutBlocked) text += 'Virements Sortants uniquement';
+                                            else if (isInBlocked) text += 'Virements Entrants uniquement';
+                                            statusDiv.textContent = text;
+                                        }
                                     }
                                 });
                             }
