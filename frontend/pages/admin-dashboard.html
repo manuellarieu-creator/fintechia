@@ -712,14 +712,12 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                     <div class="card-header border-bottom">
                         <h2>Base complète des comptes (<span id="comptes-full-count">0</span>)</h2>
                         <div class="header-actions" style="display:flex; align-items:center; gap: 12px;">
-                            <button style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;" onclick="openTransferModal(false)">
-                                <i class="ti ti-lock"></i> Bloquer virements
-                            </button>
-                            <button style="background:#16A34A; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;" onclick="openTransferModal(true)">
-                                <i class="ti ti-lock-open"></i> Autoriser virements
-                            </button>
+
                             <button class="btn-primary" id="btn-isolated-new-client" style="padding:8px 16px; border-radius:6px; display:flex; align-items:center; gap:8px; border:none; cursor:pointer;">
                                 <i class="ti ti-user-plus"></i> Nouveau client
+                            </button>
+                            <button id="btn-isolated-block-transfer" style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;">
+                                <i class="ti ti-lock"></i> Bloquer virement
                             </button>
                             <input type="text" id="search-comptes" class="admin-input" placeholder="Rechercher par nom, email..." onkeyup="filterComptesList()" style="padding: 6px 12px; border:1px solid #e2e8f0; border-radius: 6px;">
                             <a href="#" class="export-link" onclick="exportCSV()">Exporter CSV</a>
@@ -740,6 +738,35 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                 <div style="display:flex; justify-content:flex-end; gap:12px;">
                                     <button class="btn-outline" style="padding:8px 16px; border-radius:6px; background:#fff; border:1px solid #e2e8f0; cursor:pointer;" onclick="document.getElementById('modal-isolated-new-client').style.display='none'">Annuler</button>
                                     <button class="btn-primary" id="btn-isolated-submit" style="padding:8px 16px; border-radius:6px; border:none; cursor:pointer;">Créer le client</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Isolated Bloquer Virement -->
+                        <div id="modal-isolated-block-transfer" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.6); backdrop-filter:blur(4px); z-index:10000; justify-content:center; align-items:center;">
+                            <div style="background:#fff; padding:24px; border-radius:12px; width:450px; max-width:90%; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+                                <h3 style="margin-bottom:16px;">Bloquer Virement</h3>
+                                <p class="text-muted" style="margin-bottom:16px; font-size:14px;">Sélectionnez un compte utilisateur et le type de virement à bloquer.</p>
+                                
+                                <div style="margin-bottom:16px;">
+                                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Compte Utilisateur</label>
+                                    <select id="iso-block-user-id" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
+                                        <option value="">Chargement...</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="margin-bottom:24px;">
+                                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Type de virement à bloquer</label>
+                                    <select id="iso-block-type" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
+                                        <option value="ALL">Les deux (Entrants et Sortants)</option>
+                                        <option value="INCOMING">Virements Entrants uniquement</option>
+                                        <option value="OUTGOING">Virements Sortants uniquement</option>
+                                    </select>
+                                </div>
+
+                                <div style="display:flex; justify-content:flex-end; gap:12px;">
+                                    <button class="btn-outline" style="padding:8px 16px; border-radius:6px; background:#fff; border:1px solid #e2e8f0; cursor:pointer;" onclick="document.getElementById('modal-isolated-block-transfer').style.display='none'">Annuler</button>
+                                    <button id="btn-isolated-block-submit" style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600;">Confirmer le blocage</button>
                                 </div>
                             </div>
                         </div>
@@ -791,7 +818,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
 
                                         const data = await res.json();
                                         if (res.ok && data.success !== false) {
-                                            alert('Client créé avec succès !\\n\\nLien KYC :\\n' + (data.kycLink || ''));
+                                            alert('Client créé avec succès !\n\nLien KYC :\n' + (data.kycLink || ''));
                                             modal.style.display = 'none';
                                             if (typeof loadClientsTable === 'function') loadClientsTable();
                                         } else {
@@ -803,6 +830,93 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     } finally {
                                         btnSubmit.innerText = oldText;
                                         btnSubmit.disabled = false;
+                                    }
+                                });
+                            }
+
+                            // Logique pour le bouton Bloquer virement
+                            const btnBlockOpen = document.getElementById('btn-isolated-block-transfer');
+                            const modalBlock = document.getElementById('modal-isolated-block-transfer');
+                            const btnBlockSubmit = document.getElementById('btn-isolated-block-submit');
+                            const selectUser = document.getElementById('iso-block-user-id');
+                            const selectType = document.getElementById('iso-block-type');
+
+                            if (btnBlockOpen && modalBlock) {
+                                btnBlockOpen.addEventListener('click', async (e) => {
+                                    e.preventDefault();
+                                    modalBlock.style.display = 'flex';
+                                    
+                                    // Charger les utilisateurs
+                                    selectUser.innerHTML = '<option value="">Chargement...</option>';
+                                    const token = localStorage.getItem('fintech_token');
+                                    if (!token) return;
+                                    
+                                    try {
+                                        const res = await fetch('/api/admin/comptes', {
+                                            headers: { 'Authorization': 'Bearer ' + token }
+                                        });
+                                        const data = await res.json();
+                                        if (res.ok && Array.isArray(data)) {
+                                            selectUser.innerHTML = '<option value="">-- Sélectionnez un compte --</option>';
+                                            data.forEach(account => {
+                                                const opt = document.createElement('option');
+                                                opt.value = account.user_id;
+                                                opt.textContent = `${account.prenom} ${account.nom} (${account.email})`;
+                                                selectUser.appendChild(opt);
+                                            });
+                                        } else {
+                                            selectUser.innerHTML = '<option value="">Erreur de chargement</option>';
+                                        }
+                                    } catch (err) {
+                                        selectUser.innerHTML = '<option value="">Erreur réseau</option>';
+                                    }
+                                });
+                            }
+
+                            if (btnBlockSubmit) {
+                                btnBlockSubmit.addEventListener('click', async (e) => {
+                                    e.preventDefault();
+                                    const userId = selectUser.value;
+                                    const type = selectType.value;
+                                    
+                                    if (!userId) {
+                                        return alert('Veuillez sélectionner un compte utilisateur.');
+                                    }
+                                    
+                                    const token = localStorage.getItem('fintech_token');
+                                    if (!token) {
+                                        return alert('Erreur : Token admin manquant. Veuillez vous reconnecter.');
+                                    }
+                                    
+                                    const oldText = btnBlockSubmit.innerText;
+                                    btnBlockSubmit.innerText = 'Blocage...';
+                                    btnBlockSubmit.disabled = true;
+                                    
+                                    try {
+                                        // Appel API pour bloquer les virements (action="block")
+                                        const res = await fetch(`/api/admin/users/${userId}/transfers/block`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Authorization': 'Bearer ' + token
+                                            },
+                                            body: JSON.stringify({ type })
+                                        });
+                                        
+                                        const data = await res.json();
+                                        if (res.ok && data.success !== false) {
+                                            alert('Les virements ont été bloqués avec succès pour cet utilisateur.');
+                                            modalBlock.style.display = 'none';
+                                            if (typeof filterComptesList === 'function') filterComptesList();
+                                        } else {
+                                            alert('Erreur: ' + (data.error || 'Impossible de bloquer les virements.'));
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Erreur réseau. Voir console.');
+                                    } finally {
+                                        btnBlockSubmit.innerText = oldText;
+                                        btnBlockSubmit.disabled = false;
                                     }
                                 });
                             }
