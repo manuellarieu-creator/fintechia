@@ -818,4 +818,123 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 });
 
 
+// POST /api/admin/users
+// Création manuelle d'un compte client
+router.post('/users', guard, async (req, res, next) => {
+  const connection = await db.getConnection();
+  try {
+    const { prenom, nom, email, password, tel } = req.body;
+    
+    if (!prenom || !nom || !email || !password) {
+      return res.status(400).json({ error: 'Champs obligatoires manquants' });
+    }
+
+    const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [email]);
+    if (existing.length > 0) {
+      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    }
+
+    await connection.beginTransaction();
+
+    const bcrypt = require('bcryptjs');
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const [userRes] = await connection.query(
+      'INSERT INTO users (prenom, nom, email, mot_de_passe, role, telephone) VALUES (?, ?, ?, ?, "client", ?)',
+      [prenom, nom, email, hashedPassword, tel || null]
+    );
+    const userId = userRes.insertId;
+
+    const { v4: uuidv4 } = require('uuid');
+    const accountId = uuidv4();
+    const iban = 'CH' + Math.floor(Math.random() * 10000000000000000000).toString().padStart(19, '0');
+    
+    await connection.query(
+      'INSERT INTO accounts (id, user_id, type_compte, iban, solde, devise, statut) VALUES (?, ?, "courant", ?, 0.00, "EUR", "en_attente")',
+      [accountId, userId, iban]
+    );
+
+    const kycRef = 'KYC' + Date.now() + Math.floor(Math.random() * 1000);
+    await connection.query(
+      'INSERT INTO kyc (user_id, statut, reference) VALUES (?, "en_attente", ?)',
+      [userId, kycRef]
+    );
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'utilisateur_cree', categorie: audit.CATEGORIES.admin,
+      cible_type: 'user', cible_id: userId,
+      cible_detail: `Création manuelle: ${email}`, req
+    });
+
+    await connection.commit();
+
+    const kycLink = `${req.protocol}://${req.get('host')}/app/kyc.html?ref=${kycRef}`;
+
+    res.status(201).json({ success: true, userId, kycLink });
+  } catch (err) {
+    await connection.rollback();
+    next(err);
+  } finally {
+    connection.release();
+  }
+});
+
+// Auto-add transfer_in_allowed column if not exists
+const ensureTransferColumns = async () => {
+  try {
+    await db.query("ALTER TABLE accounts ADD COLUMN transfer_in_allowed BOOLEAN DEFAULT TRUE");
+  } catch(e) {} // Ignore if already exists
+};
+ensureTransferColumns();
+
+// POST /api/admin/users/:userId/transfers/:action (block|unblock)
+router.post('/users/:userId/transfers/:action', guard, async (req, res, next) => {
+  try {
+    const { userId, action } = req.params;
+    const { type } = req.body; // ALL, INCOMING, OUTGOING
+    
+    if (!['block', 'unblock'].includes(action)) {
+      return res.status(400).json({ error: 'Action invalide' });
+    }
+
+    const isAllowed = action === 'unblock';
+    let queryParts = [];
+    let queryParams = [];
+
+    if (type === 'ALL' || type === 'OUTGOING') {
+      queryParts.push('transfer_allowed = ?');
+      queryParams.push(isAllowed);
+    }
+    if (type === 'ALL' || type === 'INCOMING') {
+      queryParts.push('transfer_in_allowed = ?');
+      queryParams.push(isAllowed);
+    }
+
+    if (queryParts.length === 0) {
+      return res.status(400).json({ error: 'Type de virement invalide' });
+    }
+
+    queryParams.push(userId);
+    const sql = `UPDATE accounts SET ${queryParts.join(', ')} WHERE user_id = ?`;
+
+    const [result] = await db.query(sql, queryParams);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Compte introuvable pour cet utilisateur' });
+    }
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: `transfers_${action}`, categorie: audit.CATEGORIES.admin,
+      cible_type: 'user', cible_id: userId,
+      cible_detail: `Virements ${type} ${action === 'block' ? 'bloqués' : 'autorisés'}`, req
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

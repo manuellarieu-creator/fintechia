@@ -2347,6 +2347,35 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
         </div>
     </div>
 
+    <!-- Modal Transfer Action -->
+    <div class="modal" id="modal-transfer-action" style="display:none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 id="transfer-action-title">Bloquer virements</h3>
+            <p class="text-muted" id="transfer-action-desc" style="margin-bottom:16px;">Sélectionnez un utilisateur et le type de virements.</p>
+            
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Utilisateur</label>
+                <select id="transfer-action-user-id" class="input" style="width:100%;">
+                    <option value="">Chargement des utilisateurs...</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom:24px;">
+                <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Type de virements</label>
+                <select id="transfer-action-type" class="input" style="width:100%;">
+                    <option value="ALL">Entrants et Sortants</option>
+                    <option value="INCOMING">Entrants uniquement</option>
+                    <option value="OUTGOING">Sortants uniquement</option>
+                </select>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn-outline" onclick="document.getElementById('modal-transfer-action').style.display='none'">Annuler</button>
+                <button id="btn-transfer-action" class="btn-primary" onclick="submitTransferAction()">Bloquer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="../assets/js/admin.js?v=2"></script>
     <script src="../assets/js/admin-settings.js?v=2"></script>

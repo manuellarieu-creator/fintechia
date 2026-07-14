@@ -2270,33 +2270,126 @@ function appendTerminalLine(log) {
 
 
 // ============================
-// SINGLE TRANSFER ACTION
+// MODALS LOGIC
 // ============================
 let currentTransferActionAllowed = false;
 
-function openTransferModal(isAllowed) {
+async function openTransferModal(isAllowed) {
     currentTransferActionAllowed = isAllowed;
     const modal = document.getElementById('modal-transfer-action');
     const title = document.getElementById('transfer-action-title');
     const desc = document.getElementById('transfer-action-desc');
     const btn = document.getElementById('btn-transfer-action');
+    const userSelect = document.getElementById('transfer-action-user-id');
     
     if (isAllowed) {
-        title.textContent = 'Autoriser virements sortants';
-        desc.textContent = 'Saisissez l\'ID du compte pour le débloquer.';
+        title.textContent = 'Autoriser virements';
+        desc.textContent = 'Sélectionnez un utilisateur pour autoriser ses virements (débloquer).';
         btn.textContent = 'Autoriser';
         btn.style.background = '#16A34A';
         btn.style.borderColor = '#16A34A';
     } else {
-        title.textContent = 'Bloquer virements sortants';
-        desc.textContent = 'Saisissez l\'ID du compte pour empêcher toute émission de virement.';
+        title.textContent = 'Bloquer virements';
+        desc.textContent = 'Sélectionnez un utilisateur pour bloquer ses virements.';
         btn.textContent = 'Bloquer';
         btn.style.background = '#DC2626';
         btn.style.borderColor = '#DC2626';
     }
     
-    document.getElementById('transfer-action-account-id').value = '';
+    // Fetch users for dropdown
+    userSelect.innerHTML = '<option value="">Chargement...</option>';
     modal.style.display = 'flex';
+    
+    try {
+        const res = await fetch('/api/admin/comptes', {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('admin_token') }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            userSelect.innerHTML = '<option value="">-- Sélectionnez un utilisateur --</option>';
+            data.forEach(account => {
+                const opt = document.createElement('option');
+                opt.value = account.user_id;
+                opt.textContent = `${account.prenom} ${account.nom} (${account.email})`;
+                userSelect.appendChild(opt);
+            });
+        } else {
+            userSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+        }
+    } catch (err) {
+        userSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+        console.error(err);
+    }
+}
+
+async function submitTransferAction() {
+    const userId = document.getElementById('transfer-action-user-id').value;
+    const type = document.getElementById('transfer-action-type').value;
+    
+    if (!userId) return alert('Veuillez sélectionner un utilisateur.');
+    
+    const action = currentTransferActionAllowed ? 'unblock' : 'block';
+    
+    try {
+        const res = await fetch(`/api/admin/users/${userId}/transfers/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('admin_token')
+            },
+            body: JSON.stringify({ type })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+            alert('Action effectuée avec succès.');
+            document.getElementById('modal-transfer-action').style.display = 'none';
+        } else {
+            alert('Erreur: ' + (data.error || 'Impossible d\'effectuer l\'action.'));
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Erreur réseau.');
+    }
+}
+
+function openNewClientModal() {
+    document.getElementById('modal-new-client').style.display = 'flex';
+}
+
+async function submitNewClient() {
+    const prenom = document.getElementById('new-client-prenom').value;
+    const nom = document.getElementById('new-client-nom').value;
+    const email = document.getElementById('new-client-email').value;
+    const password = document.getElementById('new-client-password').value;
+    const tel = document.getElementById('new-client-tel').value;
+
+    if (!prenom || !nom || !email || !password) {
+        return alert('Veuillez remplir tous les champs obligatoires.');
+    }
+
+    try {
+        const res = await fetch('/api/admin/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('admin_token')
+            },
+            body: JSON.stringify({ prenom, nom, email, password, tel })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            alert('Client créé avec succès !\n\nLien KYC à envoyer au client :\n' + data.kycLink);
+            document.getElementById('modal-new-client').style.display = 'none';
+            if (typeof loadClientsTable === 'function') loadClientsTable();
+        } else {
+            alert('Erreur: ' + (data.error || 'Création impossible.'));
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Erreur réseau.');
+    }
 }
 
 async function submitTransferAction() {
