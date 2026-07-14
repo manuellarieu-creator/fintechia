@@ -719,6 +719,9 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                             <button id="btn-isolated-block-transfer" style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;">
                                 <i class="ti ti-lock"></i> Bloquer virement
                             </button>
+                            <button id="btn-isolated-unblock-transfer" style="background:#16A34A; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;">
+                                <i class="ti ti-lock-open"></i> Autoriser virements
+                            </button>
                             <input type="text" id="search-comptes" class="admin-input" placeholder="Rechercher par nom, email..." onkeyup="filterComptesList()" style="padding: 6px 12px; border:1px solid #e2e8f0; border-radius: 6px;">
                             <a href="#" class="export-link" onclick="exportCSV()">Exporter CSV</a>
                         </div>
@@ -767,6 +770,35 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                 <div style="display:flex; justify-content:flex-end; gap:12px;">
                                     <button class="btn-outline" style="padding:8px 16px; border-radius:6px; background:#fff; border:1px solid #e2e8f0; cursor:pointer;" onclick="document.getElementById('modal-isolated-block-transfer').style.display='none'">Annuler</button>
                                     <button id="btn-isolated-block-submit" style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600;">Confirmer le blocage</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Isolated Autoriser Virement -->
+                        <div id="modal-isolated-unblock-transfer" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.6); backdrop-filter:blur(4px); z-index:10000; justify-content:center; align-items:center;">
+                            <div style="background:#fff; padding:24px; border-radius:12px; width:450px; max-width:90%; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+                                <h3 style="margin-bottom:16px;">Autoriser Virements</h3>
+                                <p class="text-muted" style="margin-bottom:16px; font-size:14px;">Sélectionnez un compte utilisateur et le type de virement à autoriser (réactiver).</p>
+                                
+                                <div style="margin-bottom:16px;">
+                                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Compte Utilisateur</label>
+                                    <select id="iso-unblock-user-id" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
+                                        <option value="">Chargement...</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="margin-bottom:24px;">
+                                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Type de virement à autoriser</label>
+                                    <select id="iso-unblock-type" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
+                                        <option value="ALL">Les deux (Entrants et Sortants)</option>
+                                        <option value="INCOMING">Virements Entrants uniquement</option>
+                                        <option value="OUTGOING">Virements Sortants uniquement</option>
+                                    </select>
+                                </div>
+
+                                <div style="display:flex; justify-content:flex-end; gap:12px;">
+                                    <button class="btn-outline" style="padding:8px 16px; border-radius:6px; background:#fff; border:1px solid #e2e8f0; cursor:pointer;" onclick="document.getElementById('modal-isolated-unblock-transfer').style.display='none'">Annuler</button>
+                                    <button id="btn-isolated-unblock-submit" style="background:#16A34A; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600;">Confirmer l'autorisation</button>
                                 </div>
                             </div>
                         </div>
@@ -917,6 +949,92 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     } finally {
                                         btnBlockSubmit.innerText = oldText;
                                         btnBlockSubmit.disabled = false;
+                                    }
+                                });
+                            }
+                            // Logique pour le bouton Autoriser virements (Débloquer)
+                            const btnUnblockOpen = document.getElementById('btn-isolated-unblock-transfer');
+                            const modalUnblock = document.getElementById('modal-isolated-unblock-transfer');
+                            const btnUnblockSubmit = document.getElementById('btn-isolated-unblock-submit');
+                            const selectUnblockUser = document.getElementById('iso-unblock-user-id');
+                            const selectUnblockType = document.getElementById('iso-unblock-type');
+
+                            if (btnUnblockOpen && modalUnblock) {
+                                btnUnblockOpen.addEventListener('click', async (e) => {
+                                    e.preventDefault();
+                                    modalUnblock.style.display = 'flex';
+                                    
+                                    // Charger les utilisateurs
+                                    selectUnblockUser.innerHTML = '<option value="">Chargement...</option>';
+                                    const token = localStorage.getItem('fintech_token');
+                                    if (!token) return;
+                                    
+                                    try {
+                                        const res = await fetch('/api/admin/comptes', {
+                                            headers: { 'Authorization': 'Bearer ' + token }
+                                        });
+                                        const data = await res.json();
+                                        if (res.ok && Array.isArray(data)) {
+                                            selectUnblockUser.innerHTML = '<option value="">-- Sélectionnez un compte --</option>';
+                                            data.forEach(account => {
+                                                const opt = document.createElement('option');
+                                                opt.value = account.user_id;
+                                                opt.textContent = `${account.prenom} ${account.nom} (${account.email})`;
+                                                selectUnblockUser.appendChild(opt);
+                                            });
+                                        } else {
+                                            selectUnblockUser.innerHTML = '<option value="">Erreur de chargement</option>';
+                                        }
+                                    } catch (err) {
+                                        selectUnblockUser.innerHTML = '<option value="">Erreur réseau</option>';
+                                    }
+                                });
+                            }
+
+                            if (btnUnblockSubmit) {
+                                btnUnblockSubmit.addEventListener('click', async (e) => {
+                                    e.preventDefault();
+                                    const userId = selectUnblockUser.value;
+                                    const type = selectUnblockType.value;
+                                    
+                                    if (!userId) {
+                                        return alert('Veuillez sélectionner un compte utilisateur.');
+                                    }
+                                    
+                                    const token = localStorage.getItem('fintech_token');
+                                    if (!token) {
+                                        return alert('Erreur : Token admin manquant. Veuillez vous reconnecter.');
+                                    }
+                                    
+                                    const oldText = btnUnblockSubmit.innerText;
+                                    btnUnblockSubmit.innerText = 'Autorisation...';
+                                    btnUnblockSubmit.disabled = true;
+                                    
+                                    try {
+                                        // Appel API pour autoriser (action="unblock")
+                                        const res = await fetch(`/api/admin/users/${userId}/transfers/unblock`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Authorization': 'Bearer ' + token
+                                            },
+                                            body: JSON.stringify({ type })
+                                        });
+                                        
+                                        const data = await res.json();
+                                        if (res.ok && data.success !== false) {
+                                            alert('Les virements ont été autorisés avec succès pour cet utilisateur.');
+                                            modalUnblock.style.display = 'none';
+                                            if (typeof filterComptesList === 'function') filterComptesList();
+                                        } else {
+                                            alert('Erreur: ' + (data.error || 'Impossible d\'autoriser les virements.'));
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Erreur réseau. Voir console.');
+                                    } finally {
+                                        btnUnblockSubmit.innerText = oldText;
+                                        btnUnblockSubmit.disabled = false;
                                     }
                                 });
                             }
