@@ -2274,9 +2274,14 @@ function appendTerminalLine(log) {
 // ============================
 let currentTransferActionAllowed = false;
 
-async function openTransferModal(isAllowed) {
+window.openTransferModal = async function(isAllowed) {
+    console.log("openTransferModal clicked. isAllowed:", isAllowed);
     currentTransferActionAllowed = isAllowed;
     const modal = document.getElementById('modal-transfer-action');
+    if (!modal) {
+        console.error("modal-transfer-action not found!");
+        return;
+    }
     const title = document.getElementById('transfer-action-title');
     const desc = document.getElementById('transfer-action-desc');
     const btn = document.getElementById('btn-transfer-action');
@@ -2318,11 +2323,12 @@ async function openTransferModal(isAllowed) {
         }
     } catch (err) {
         userSelect.innerHTML = '<option value="">Erreur de chargement</option>';
-        console.error(err);
+        console.error("Fetch error:", err);
     }
-}
+};
 
-async function submitTransferAction() {
+window.submitTransferAction = async function() {
+    console.log("submitTransferAction clicked");
     const userId = document.getElementById('transfer-action-user-id').value;
     const type = document.getElementById('transfer-action-type').value;
     
@@ -2351,13 +2357,19 @@ async function submitTransferAction() {
         console.error(err);
         alert('Erreur réseau.');
     }
-}
+};
 
-function openNewClientModal() {
-    document.getElementById('modal-new-client').style.display = 'flex';
-}
+window.openNewClientModal = function() {
+    console.log("openNewClientModal clicked");
+    const modal = document.getElementById('modal-new-client');
+    if (!modal) {
+        console.error("modal-new-client not found!");
+        return;
+    }
+    modal.style.display = 'flex';
+};
 
-async function submitNewClient() {
+window.submitNewClient = async function() {
     const prenom = document.getElementById('new-client-prenom').value;
     const nom = document.getElementById('new-client-nom').value;
     const email = document.getElementById('new-client-email').value;
