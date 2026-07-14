@@ -147,27 +147,28 @@ function showTransferDisabledPopup() {
         modal = document.createElement('div');
         modal.id = 'modal-transfer-disabled-popup';
         modal.className = 'modal';
+        modal.setAttribute('style', 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; justify-content: center; align-items: center;');
         modal.innerHTML = `
-            <div class="modal-content" style="max-width:400px; padding:30px 20px; text-align:center; border-radius:16px;">
-                <div style="width:60px; height:60px; border-radius:50%; background:#FEF2F2; color:#DC2626; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-                    <i class="ti ti-ban" style="font-size:32px;"></i>
+            <div class="modal-content" style="background: white; max-width: 450px; width: 90%; border-radius: 16px; padding: 32px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 28px;">
+                    <i class="ti ti-ban"></i>
                 </div>
-                <h3 style="margin-bottom:15px; font-size:20px; color:var(--text-main); font-weight:700;">Virement bloqué 🚫</h3>
-                <p style="color:var(--text-muted); font-size:15px; line-height:1.5; margin-bottom:15px;">
+                <h3 style="margin-bottom: 12px; color: #1e293b; font-size: 1.25rem;">Virement bloqué 🚫</h3>
+                <p style="color: #475569; font-size: 15px; line-height: 1.5; margin-bottom: 15px;">
                     Vous n'êtes pas autorisé à effectuer de transfert sortant depuis votre compte.
                 </p>
-                <p style="color:var(--text-muted); font-size:15px; line-height:1.5; margin-bottom:25px;">
+                <p style="color: #475569; font-size: 15px; line-height: 1.5; margin-bottom: 25px;">
                     Veuillez contacter votre gestionnaire de compte pour résoudre cet incident. 📞
                 </p>
-                <p style="font-weight:600; color:var(--primary); font-size:15px; margin-bottom:25px;">
+                <p style="font-weight: 600; color: var(--primary); font-size: 15px; margin-bottom: 25px;">
                     Votre Banque FINETECHIA. 🏦
                 </p>
-                <button class="btn-primary full-width" onclick="closeModal('modal-transfer-disabled-popup')" style="padding:12px; font-size:15px;">J'ai compris</button>
+                <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="document.getElementById('modal-transfer-disabled-popup').style.display='none'">J'ai compris</button>
             </div>
         `;
         document.body.appendChild(modal);
     }
-    openModal('modal-transfer-disabled-popup');
+    modal.style.display = 'flex';
 }
 
 function showRulePopup(message) {
