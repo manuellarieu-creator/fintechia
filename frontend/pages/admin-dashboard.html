@@ -964,6 +964,19 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     e.preventDefault();
                                     modalUnblock.style.display = 'flex';
                                     
+                                    // Ajouter un élément de statut s'il n'existe pas
+                                    let statusDiv = document.getElementById('iso-unblock-status');
+                                    if (!statusDiv) {
+                                        statusDiv = document.createElement('div');
+                                        statusDiv.id = 'iso-unblock-status';
+                                        statusDiv.style.marginBottom = '16px';
+                                        statusDiv.style.fontSize = '13px';
+                                        statusDiv.style.color = '#DC2626';
+                                        statusDiv.style.fontWeight = '600';
+                                        selectUnblockUser.parentNode.insertBefore(statusDiv, selectUnblockUser.nextSibling);
+                                    }
+                                    statusDiv.textContent = '';
+                                    
                                     // Charger les utilisateurs
                                     selectUnblockUser.innerHTML = '<option value="">Chargement...</option>';
                                     const token = localStorage.getItem('fintech_token');
@@ -975,18 +988,55 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                         });
                                         const data = await res.json();
                                         if (res.ok && Array.isArray(data)) {
+                                            // Filtrer UNIQUEMENT les comptes qui ont un blocage partiel ou total
+                                            const blockedAccounts = data.filter(acc => 
+                                                acc.transfer_allowed === 0 || acc.transfer_allowed === false || 
+                                                acc.transfer_in_allowed === 0 || acc.transfer_in_allowed === false
+                                            );
+                                            
                                             selectUnblockUser.innerHTML = '<option value="">-- Sélectionnez un compte --</option>';
-                                            data.forEach(account => {
-                                                const opt = document.createElement('option');
-                                                opt.value = account.user_id;
-                                                opt.textContent = `${account.prenom} ${account.nom} (${account.email})`;
-                                                selectUnblockUser.appendChild(opt);
-                                            });
+                                            
+                                            // Stocker les données pour les utiliser au changement de sélection
+                                            window.currentBlockedAccountsData = blockedAccounts;
+                                            
+                                            if (blockedAccounts.length === 0) {
+                                                selectUnblockUser.innerHTML = '<option value="">Aucun compte bloqué trouvé</option>';
+                                            } else {
+                                                blockedAccounts.forEach(account => {
+                                                    const opt = document.createElement('option');
+                                                    opt.value = account.user_id;
+                                                    opt.textContent = `${account.prenom} ${account.nom} (${account.email})`;
+                                                    selectUnblockUser.appendChild(opt);
+                                                });
+                                            }
                                         } else {
                                             selectUnblockUser.innerHTML = '<option value="">Erreur de chargement</option>';
                                         }
                                     } catch (err) {
                                         selectUnblockUser.innerHTML = '<option value="">Erreur réseau</option>';
+                                    }
+                                });
+                                
+                                selectUnblockUser.addEventListener('change', (e) => {
+                                    const statusDiv = document.getElementById('iso-unblock-status');
+                                    const userId = e.target.value;
+                                    
+                                    if (!userId || !window.currentBlockedAccountsData) {
+                                        if (statusDiv) statusDiv.textContent = '';
+                                        return;
+                                    }
+                                    
+                                    const acc = window.currentBlockedAccountsData.find(a => String(a.user_id) === String(userId));
+                                    if (acc && statusDiv) {
+                                        const isOutBlocked = (acc.transfer_allowed === 0 || acc.transfer_allowed === false);
+                                        const isInBlocked = (acc.transfer_in_allowed === 0 || acc.transfer_in_allowed === false);
+                                        
+                                        let text = 'Actuellement bloqué : ';
+                                        if (isOutBlocked && isInBlocked) text += 'Virements Entrants ET Sortants';
+                                        else if (isOutBlocked) text += 'Virements Sortants uniquement';
+                                        else if (isInBlocked) text += 'Virements Entrants uniquement';
+                                        
+                                        statusDiv.textContent = text;
                                     }
                                 });
                             }
