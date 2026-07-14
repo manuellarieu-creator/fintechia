@@ -893,13 +893,9 @@ router.post('/users', guard, async (req, res, next) => {
     );
     const userId = userRes.insertId;
 
-    const crypto = require('crypto');
-    const accountId = crypto.randomUUID();
-    const iban = 'CH' + Math.floor(Math.random() * 10000000000000000000).toString().padStart(19, '0');
-    
     await connection.query(
-      'INSERT INTO accounts (id, user_id, type_compte, iban, solde, devise, statut) VALUES (?, ?, "courant", ?, 0.00, "EUR", "en_attente")',
-      [accountId, userId, iban]
+      'INSERT INTO accounts (user_id, type_compte, statut) VALUES (?, "courant", "en_attente")',
+      [userId]
     );
 
     const kycRef = 'KYC' + Date.now() + Math.floor(Math.random() * 1000);
