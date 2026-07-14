@@ -630,12 +630,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     </select>
                                 </div>
 
-                                <button style="background:#DC2626; color:white; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; flex-shrink:0;" onclick="openTransferModal(false)">
-                                    <i class="ti ti-lock"></i> Bloquer virements
-                                </button>
-                                <button style="background:#16A34A; color:white; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; flex-shrink:0;" onclick="openTransferModal(true)">
-                                    <i class="ti ti-lock-open"></i> Autoriser virements
-                                </button>
+
                             </div>
                         </div>
 
@@ -717,6 +712,12 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                     <div class="card-header border-bottom">
                         <h2>Base complète des comptes (<span id="comptes-full-count">0</span>)</h2>
                         <div class="header-actions" style="display:flex; align-items:center; gap: 12px;">
+                            <button style="background:#DC2626; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;" onclick="openTransferModal(false)">
+                                <i class="ti ti-lock"></i> Bloquer virements
+                            </button>
+                            <button style="background:#16A34A; color:white; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;" onclick="openTransferModal(true)">
+                                <i class="ti ti-lock-open"></i> Autoriser virements
+                            </button>
                             <button class="btn-primary" id="btn-isolated-new-client" style="padding:8px 16px; border-radius:6px; display:flex; align-items:center; gap:8px; border:none; cursor:pointer;">
                                 <i class="ti ti-user-plus"></i> Nouveau client
                             </button>
