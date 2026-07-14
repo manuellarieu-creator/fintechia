@@ -2306,11 +2306,8 @@ window.openTransferModal = async function(isAllowed) {
     modal.style.display = 'flex';
     
     try {
-        const res = await fetch('/api/admin/comptes', {
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('admin_token') }
-        });
-        const data = await res.json();
-        if (res.ok) {
+        const data = await fetchAPI('/admin/comptes');
+        if (data && !data.error) {
             userSelect.innerHTML = '<option value="">-- Sélectionnez un utilisateur --</option>';
             data.forEach(account => {
                 const opt = document.createElement('option');
@@ -2337,21 +2334,13 @@ window.submitTransferAction = async function() {
     const action = currentTransferActionAllowed ? 'unblock' : 'block';
     
     try {
-        const res = await fetch(`/api/admin/users/${userId}/transfers/${action}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('admin_token')
-            },
-            body: JSON.stringify({ type })
-        });
-        const data = await res.json();
+        const data = await fetchAPI(`/admin/users/${userId}/transfers/${action}`, 'POST', { type });
         
-        if (res.ok) {
+        if (data && data.success) {
             alert('Action effectuée avec succès.');
             document.getElementById('modal-transfer-action').style.display = 'none';
         } else {
-            alert('Erreur: ' + (data.error || 'Impossible d\'effectuer l\'action.'));
+            alert('Erreur: ' + (data?.error || 'Impossible d\'effectuer l\'action.'));
         }
     } catch (err) {
         console.error(err);
@@ -2381,25 +2370,18 @@ window.submitNewClient = async function() {
     }
 
     try {
-        const res = await fetch('/api/admin/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('admin_token')
-            },
-            body: JSON.stringify({ prenom, nom, email, password, tel })
-        });
-        const data = await res.json();
+        const data = await fetchAPI('/admin/users', 'POST', { prenom, nom, email, password, telephone: tel });
 
-        if (res.ok) {
-            alert('Client créé avec succès !\n\nLien KYC à envoyer au client :\n' + data.kycLink);
+        if (data && data.success !== false && !data.error) {
+            alert('Client créé avec succès !\n\nLien KYC à envoyer au client :\n' + (data.kycLink || ''));
             document.getElementById('modal-new-client').style.display = 'none';
             if (typeof loadClientsTable === 'function') loadClientsTable();
         } else {
-            alert('Erreur: ' + (data.error || 'Création impossible.'));
+            alert('Erreur: ' + (data?.error || 'Création impossible.'));
         }
     } catch (err) {
         console.error(err);
         alert('Erreur réseau.');
     }
 }
+

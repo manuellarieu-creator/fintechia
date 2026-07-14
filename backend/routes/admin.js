@@ -177,6 +177,49 @@ router.patch('/users/:userId/transfer-types', [guard, body('transfer_types').isS
   }
 });
 
+// PATCH /api/admin/users/:userId/transfers/:action
+router.patch('/users/:userId/transfers/:action', [
+  guard, 
+  body('type').isIn(['ALL', 'INCOMING', 'OUTGOING'])
+], validateReq, async (req, res, next) => {
+  try {
+    const { action, userId } = req.params;
+    const { type } = req.body;
+    
+    // Auto-migration
+    try { await db.query("ALTER TABLE users ADD COLUMN block_incoming BOOLEAN DEFAULT FALSE"); } catch(e) {}
+    try { await db.query("ALTER TABLE users ADD COLUMN block_outgoing BOOLEAN DEFAULT FALSE"); } catch(e) {}
+    
+    const block = action === 'block';
+    
+    let query = '';
+    const params = [];
+    if (type === 'ALL') {
+      query = 'UPDATE users SET block_incoming = ?, block_outgoing = ? WHERE id = ?';
+      params.push(block, block, userId);
+    } else if (type === 'INCOMING') {
+      query = 'UPDATE users SET block_incoming = ? WHERE id = ?';
+      params.push(block, userId);
+    } else if (type === 'OUTGOING') {
+      query = 'UPDATE users SET block_outgoing = ? WHERE id = ?';
+      params.push(block, userId);
+    }
+    
+    await db.query(query, params);
+    
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
+      action: 'transfer_block_action', categorie: audit.CATEGORIES.admin,
+      cible_type: 'user', cible_id: userId,
+      cible_detail: `Virements ${type} ${block ? 'bloqués' : 'autorisés'}`, req
+    });
+    
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/admin/comptes/:accountId/audit
 router.get('/comptes/:accountId/audit', guard, async (req, res, next) => {
   try {
