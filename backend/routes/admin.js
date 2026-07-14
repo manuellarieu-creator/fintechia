@@ -893,8 +893,8 @@ router.post('/users', guard, async (req, res, next) => {
     );
     const userId = userRes.insertId;
 
-    const { v4: uuidv4 } = require('uuid');
-    const accountId = uuidv4();
+    const crypto = require('crypto');
+    const accountId = crypto.randomUUID();
     const iban = 'CH' + Math.floor(Math.random() * 10000000000000000000).toString().padStart(19, '0');
     
     await connection.query(
