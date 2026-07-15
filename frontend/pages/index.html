@@ -270,8 +270,8 @@
             <input class="nb-range" type="range" min="12" max="300" step="12" value="120" id="nbDuration" style="width:100%;">
           </div>
         </div>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
-          <span style="font-size:13px;color:#5B5546;">Mensualité estimée (taux indicatif 3,9 %)</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
+          <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(taux indicatif 3,9 %)</span></span>
           <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">494 €</span>
         </div>
         <div style="margin-top:22px;">
@@ -353,8 +353,8 @@
         <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
       </div>
 
-      <div style="display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
-        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualité estimée (TAEG indicatif: 2.5%)</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
+        <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;" id="modalRateLabel">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(TAEG indicatif: 2.5%)</span></span>
         <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">625 €</span>
       </div>
 
@@ -511,7 +511,7 @@
     mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
     mDurationOut.textContent = Math.round(n) + ' mois';
     mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
-    mRateLabel.textContent = "Mensualité estimée (TAEG indicatif: " + (rate*100) + "%)";
+    mRateLabel.innerHTML = "Mensualité estimée<br><span style=\"font-size:12px;color:#8A8676;font-weight:normal;\">(TAEG indicatif: " + (rate*100) + "%)</span>";
   }
   
   if(mAmount) {
