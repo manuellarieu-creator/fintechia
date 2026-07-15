@@ -1,27 +1,10 @@
 const fs = require('fs');
+let html = fs.readFileSync('frontend/pages/app.html', 'utf8');
 
-function removeMigration(filePath) {
-    let content = fs.readFileSync(filePath, 'utf8');
-    
-    // Some lines might have the // from the previous bad patch.
-    // Let's just find the start of the block and the end.
-    let startIndex = content.indexOf('// (async () => {');
-    if (startIndex === -1) {
-        startIndex = content.indexOf('(async () => {');
-    }
-    
-    if (startIndex !== -1) {
-        const matchStr = '})();';
-        let endIndex = content.indexOf(matchStr, startIndex);
-        if (endIndex !== -1) {
-            endIndex += matchStr.length;
-            // Remove the whole block
-            content = content.substring(0, startIndex) + content.substring(endIndex);
-            fs.writeFileSync(filePath, content);
-            console.log('Removed migration block in ' + filePath);
-        }
-    }
-}
+const brokenStr = "function openDesktopViewMobile('view-settings') {";
+const fixedStr = "function openDesktopViewMobile(viewId) {";
 
-removeMigration('c:/Users/ariol/.gemini/fintechia/backend/routes/auth.js');
-removeMigration('c:/Users/ariol/.gemini/fintechia/backend/routes/admin.js');
+html = html.replace(brokenStr, fixedStr);
+
+fs.writeFileSync('frontend/pages/app.html', html);
+console.log("Fixed syntax error");
