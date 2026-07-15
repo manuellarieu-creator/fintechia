@@ -91,3 +91,15 @@
     display: none;
   }
 }
+
+/* Overrides for unified desktop views on mobile */
+@media (max-width: 768px) {
+  .nb-main {
+    padding: 16px !important;
+  }
+  .nb-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
