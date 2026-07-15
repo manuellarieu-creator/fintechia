@@ -451,7 +451,6 @@
         <div class="dynamic-island"></div>
       </div>
 
-      <!-- Topbar -->
       <div class="topbar">
         <div style="display:flex; align-items:center;">
           <div class="mobile-hamburger" onclick="toggleMobileSidebar()">
@@ -459,7 +458,8 @@
           </div>
           <div>
             <div class="topbar-greeting">Bonjour 👋</div>
-          <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
+            <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
+          </div>
         </div>
         <div class="topbar-right">
           <div class="notif-wrap" onclick="window.location.href='index.html'" title="Retour au site" style="background:#EEF2FF; color:#4F46E5;">
@@ -2670,5 +2670,39 @@ function switchSettingsTab(el) {
 
 
 <script src="../assets/js/credits.js"></script>
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="mobile-nav-item active" onclick="showMobileView('m-view-dashboard'); updateMobileNav(this)">
+      <i class="ti ti-home"></i>
+      <span>Accueil</span>
+    </a>
+    <a href="#" class="mobile-nav-item" onclick="showMobileView('m-view-releves'); updateMobileNav(this)">
+      <i class="ti ti-bell"></i>
+      <span>Notifs</span>
+    </a>
+    <a href="#" class="mobile-nav-item" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings'); updateMobileNav(this)">
+      <i class="ti ti-settings"></i>
+      <span>Paramètres</span>
+    </a>
+  </nav>
+  
+  <div class="mobile-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+  
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.querySelector('.nb-sidebar');
+      const overlay = document.querySelector('.mobile-sidebar-overlay');
+      if (sidebar && overlay) {
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('active');
+      }
+    }
+    
+    function updateMobileNav(clickedEl) {
+      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+      if (clickedEl) clickedEl.classList.add('active');
+    }
+  </script>
+
 </body>
 </html>
