@@ -446,11 +446,6 @@
     
     <!-- === LAYOUT MOBILE (Bleu NovaBanque) === -->
     <div class="mobile-layout">
-      <!-- Status bar -->
-      <div class="status-bar">
-        <div class="dynamic-island"></div>
-      </div>
-
       <div class="topbar">
         <div style="display:flex; align-items:center;">
           <div class="mobile-hamburger" onclick="toggleMobileSidebar()">
@@ -2690,7 +2685,7 @@ function switchSettingsTab(el) {
   
   <script>
     function toggleMobileSidebar() {
-      const sidebar = document.querySelector('.nb-sidebar');
+      const sidebar = document.querySelector('.mobile-sidebar-menu');
       const overlay = document.querySelector('.mobile-sidebar-overlay');
       if (sidebar && overlay) {
         sidebar.classList.toggle('mobile-open');
