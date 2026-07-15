@@ -2734,26 +2734,22 @@ function switchSettingsTab(el) {
       if (clickedEl) clickedEl.classList.add('active');
     }
     
-    function openSettingsMobile() {
-      // Hide mobile layout, show desktop layout (which contains settings)
+    function openDesktopViewMobile(viewId) {
       document.querySelector('.mobile-layout').style.display = 'none';
       const desktopLayout = document.querySelector('.desktop-layout');
       desktopLayout.style.display = 'flex';
       desktopLayout.style.setProperty('display', 'flex', 'important');
       
-      // Hide the desktop sidebar since we are on mobile
       const desktopSidebar = document.querySelector('.desktop-layout .nb-sidebar:not(.mobile-sidebar-menu)');
       if (desktopSidebar) desktopSidebar.style.display = 'none';
       
-      // Show settings view
       document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active'));
-      showView('view-settings');
+      showView(viewId);
       
-      // Add a back button to the topbar of settings view for mobile
-      const settingsView = document.getElementById('view-settings');
-      if (settingsView && !document.getElementById('mobile-back-settings')) {
+      const viewEl = document.getElementById(viewId);
+      if (viewEl && !document.getElementById('mobile-back-' + viewId)) {
          const backBtn = document.createElement('div');
-         backBtn.id = 'mobile-back-settings';
+         backBtn.id = 'mobile-back-' + viewId;
          backBtn.innerHTML = '<i class="ti ti-arrow-left"></i> Retour';
          backBtn.style.padding = '16px';
          backBtn.style.cursor = 'pointer';
@@ -2764,9 +2760,16 @@ function switchSettingsTab(el) {
             document.querySelector('.desktop-layout').style.display = '';
             desktopLayout.style.removeProperty('display');
             if (desktopSidebar) desktopSidebar.style.display = '';
+            if(viewId === 'view-virements') {
+                document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active'));
+            }
          };
-         settingsView.insertBefore(backBtn, settingsView.firstChild);
+         viewEl.insertBefore(backBtn, viewEl.firstChild);
       }
+    }
+    
+    function openSettingsMobile() {
+        openDesktopViewMobile('view-settings');
     }
   </script>
 
