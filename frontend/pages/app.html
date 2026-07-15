@@ -460,13 +460,13 @@
           <div class="notif-wrap" onclick="window.location.href='index.html'" title="Retour au site" style="background:#EEF2FF; color:#4F46E5;">
             <i class="ti ti-home"></i>
           </div>
-          <div class="notif-wrap" onclick="window.location.href='releves.html'" title="Relevés">
+          <div class="notif-wrap" onclick="showMobileView('m-view-releves')" title="Relevés">
             <i class="ti ti-file-text"></i>
           </div>
-          <div class="notif-wrap" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">
+          <div class="notif-wrap" onclick="openSettingsMobile()">
             <i class="ti ti-settings"></i>
           </div>
-          <div class="avatar-sm" id="user-avatar-mobile" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">..</div>
+          <div class="avatar-sm" id="user-avatar-mobile" onclick="openSettingsMobile()">..</div>
         </div>
       </div>
 
@@ -2675,12 +2675,39 @@ function switchSettingsTab(el) {
       <i class="ti ti-bell"></i>
       <span>Notifs</span>
     </a>
-    <a href="#" class="mobile-nav-item" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings'); updateMobileNav(this)">
+    <a href="#" class="mobile-nav-item" onclick="openSettingsMobile(); updateMobileNav(this)">
       <i class="ti ti-settings"></i>
       <span>Paramètres</span>
     </a>
   </nav>
   
+  <!-- Mobile Sidebar Menu -->
+  <aside class="nb-sidebar mobile-sidebar-menu" style="display:none;">
+    <div class="nb-logo" style="padding: 24px;">
+      <div class="nb-logo-icon">N</div>
+      <span>NovaBanque</span>
+    </div>
+    <nav class="nb-nav">
+      <a href="#" class="active" onclick="updateMobileNav(this); showMobileView('m-view-dashboard'); toggleMobileSidebar()"><span class="nb-icon">🏠</span> Accueil</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-cartes'); toggleMobileSidebar()"><span class="nb-icon">💳</span> Cartes</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-budget'); toggleMobileSidebar()"><span class="nb-icon">📊</span> Budget</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-releves'); toggleMobileSidebar()"><span class="nb-icon">📄</span> Relevés</a>
+      <a href="#" onclick="updateMobileNav(this); openSettingsMobile(); toggleMobileSidebar()"><span class="nb-icon">⚙️</span> Paramètres</a>
+    </nav>
+  </aside>
+
+  <style>
+    @media (max-width: 900px) {
+      .mobile-sidebar-menu {
+        display: flex !important;
+        flex-direction: column;
+        background: white;
+        width: 280px;
+      }
+    }
+  </style>
+
   <div class="mobile-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
   
   <script>
@@ -2696,6 +2723,41 @@ function switchSettingsTab(el) {
     function updateMobileNav(clickedEl) {
       document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
       if (clickedEl) clickedEl.classList.add('active');
+    }
+    
+    function openSettingsMobile() {
+      // Hide mobile layout, show desktop layout (which contains settings)
+      document.querySelector('.mobile-layout').style.display = 'none';
+      const desktopLayout = document.querySelector('.desktop-layout');
+      desktopLayout.style.display = 'flex';
+      desktopLayout.style.setProperty('display', 'flex', 'important');
+      
+      // Hide the desktop sidebar since we are on mobile
+      const desktopSidebar = document.querySelector('.desktop-layout .nb-sidebar:not(.mobile-sidebar-menu)');
+      if (desktopSidebar) desktopSidebar.style.display = 'none';
+      
+      // Show settings view
+      document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active'));
+      showView('view-settings');
+      
+      // Add a back button to the topbar of settings view for mobile
+      const settingsView = document.getElementById('view-settings');
+      if (settingsView && !document.getElementById('mobile-back-settings')) {
+         const backBtn = document.createElement('div');
+         backBtn.id = 'mobile-back-settings';
+         backBtn.innerHTML = '<i class="ti ti-arrow-left"></i> Retour';
+         backBtn.style.padding = '16px';
+         backBtn.style.cursor = 'pointer';
+         backBtn.style.color = '#4F46E5';
+         backBtn.style.fontWeight = '600';
+         backBtn.onclick = function() {
+            document.querySelector('.mobile-layout').style.display = '';
+            document.querySelector('.desktop-layout').style.display = '';
+            desktopLayout.style.removeProperty('display');
+            if (desktopSidebar) desktopSidebar.style.display = '';
+         };
+         settingsView.insertBefore(backBtn, settingsView.firstChild);
+      }
     }
   </script>
 
