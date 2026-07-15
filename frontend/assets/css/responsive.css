@@ -103,3 +103,16 @@
     gap: 12px;
   }
 }
+
+/* Hide desktop topbar on mobile to save space and avoid duplicate headers */
+@media (max-width: 768px) {
+  .nb-header {
+    display: none !important;
+  }
+  .nb-main {
+    padding-top: 0 !important;
+  }
+  #view-virements {
+    padding-top: 16px;
+  }
+}
