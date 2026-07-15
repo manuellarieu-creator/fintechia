@@ -463,10 +463,10 @@
           <div class="notif-wrap" onclick="showMobileView('m-view-releves')" title="Relevés">
             <i class="ti ti-file-text"></i>
           </div>
-          <div class="notif-wrap" onclick="openSettingsMobile()">
+          <div class="notif-wrap" onclick="openDesktopViewMobile('view-settings')">
             <i class="ti ti-settings"></i>
           </div>
-          <div class="avatar-sm" id="user-avatar-mobile" onclick="openSettingsMobile()">..</div>
+          <div class="avatar-sm" id="user-avatar-mobile" onclick="openDesktopViewMobile('view-settings')">..</div>
         </div>
       </div>
 
@@ -510,10 +510,10 @@
           <div class="mobile-card">
             <div class="card-head">
               <h2>Virements rapides</h2>
-              <a href="#" onclick="showMobileView('m-view-virements')">Gérer →</a>
+              <a href="#" onclick="openDesktopViewMobile('view-virements')">Gérer →</a>
             </div>
             <div class="bene-list" id="beneficiaires-mobile-list">
-              <div class="bene bene-add" onclick="showMobileView('m-view-virements')">
+              <div class="bene bene-add" onclick="openDesktopViewMobile('view-virements')">
                 <div class="bene-av"><i class="ti ti-plus"></i></div>
                 <span class="bene-n">Nouveau</span>
               </div>
@@ -546,606 +546,6 @@
           <div id="budget-page-list-mobile">Chargement...</div>
         </div>
 
-        <div id="m-view-virements" class="m-view" style="display:none; position:absolute; top:0; left:0; width:100%; min-height:100vh; background:var(--bg-body); z-index:50; padding:16px; padding-bottom:100px;">
-          <!-- Mobile Header -->
-          <div class="mobile-header mobile-only" style="display:flex;">
-              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
-              <div class="mobile-title-area">
-                  <div class="mobile-title">Nouveau virement</div>
-                  <div class="mobile-subtitle">Solde : 12 480,32 €</div>
-              </div>
-              <div class="user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">MR</div>
-          </div>
-
-          <!-- Progress Steps -->
-          <div class="steps-container" style="padding: 16px 0; border: none; background: transparent; margin-bottom: 16px;">
-              <div class="step completed">
-                  <div class="step-circle"><i class="ti ti-check"></i></div>
-                  <span class="mobile-only" style="color: var(--success);">Bénéficiaire</span>
-              </div>
-              <div class="step-divider" style="background-color: var(--success); opacity: 1;"></div>
-              <div class="step active">
-                  <div class="step-circle">2</div>
-                  <span class="mobile-only" style="color: var(--primary);">Détails</span>
-              </div>
-              <div class="step-divider" style="opacity: 0.3;"></div>
-              <div class="step" style="opacity: 0.5;">
-                  <div class="step-circle">3</div>
-                  <span class="mobile-only">Confirmation</span>
-              </div>
-          </div>
-
-          <form id="form-virement-mobile">
-          <div class="grid-layout">
-              <!-- Column 1: Beneficiary -->
-              <div class="card" style="margin-bottom: 16px;">
-                  <div class="card-header">
-                      <h3 class="card-title">Bénéficiaire</h3>
-                      <a href="#" class="link">Changer &rarr;</a>
-                  </div>
-                  
-                  <div class="beneficiary-selected" id="mobile-beneficiary-selected" style="display:none; justify-content: space-between; align-items: center;">
-                      <div style="display: flex; gap: 12px; align-items: center;">
-                          <div class="avatar-green" id="mobile-ben-avatar">MB</div>
-                          <div class="beneficiary-info">
-                              <h4 id="mobile-ben-name">Sélectionnez un bénéficiaire</h4>
-                              <p id="mobile-ben-iban">-</p>
-                          </div>
-                      </div>
-                      <button type="button" onclick="unselectBeneficiary(true)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">✕</button>
-                  </div>
-
-                  <div id="mobile-recents-container" style="display:none;">
-                      <div class="recents-title">Récents</div>
-                      <div class="recents-grid" id="mobile-recents-grid">
-                          <!-- Dynamique -->
-                      </div>
-                  </div>
-
-                  <div class="recents-title" style="margin-top: 24px;">Tous les bénéficiaires</div>
-                  <div class="recents-grid" id="mobile-all-grid">
-                      <!-- Dynamique -->
-                  </div>
-              </div>
-
-              <!-- Column 2: Details -->
-              <div class="card" style="margin-bottom: 16px;">
-                  <div class="form-group">
-                      <label class="form-label">Type de virement</label>
-                      <select class="form-control" id="vir-type-mobile" onchange="toggleDateProgrammee(this.value, 'mobile')" style="background-color: white;">
-                          <option value="standard">Virement Standard</option>
-                          <option value="swift">Virement SWIFT</option>
-                          <option value="immediat">Instantanné</option>
-                          <option value="programme">Virement Programmé</option>
-                      </select>
-                  </div>
-
-                  <div class="mobile-only" style="flex-direction: column;">
-                      <div class="card-header" style="margin-top: 8px;">
-                          <h3 class="card-title">Détails</h3>
-                      </div>
-                      <div class="form-group">
-                          <label class="form-label">Compte débiteur</label>
-                          <select class="form-control" style="background-color: white;">
-                              <option>Courant **** 4821 — 12 480.32 €</option>
-                          </select>
-                      </div>
-                  </div>
-
-                  <div class="grid-2">
-                      <div class="form-group">
-                          <label class="form-label">Montant</label>
-                          <div class="input-with-icon">
-                              <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                              <span class="input-icon">€</span>
-                          </div>
-                          <div class="help-text">Plafond : 5 000 €/j</div>
-                      </div>
-                      <div class="form-group">
-                          <label class="form-label">Date</label>
-                          <input type="text" id="vir-date-mobile" class="form-control" value="Aujourd'hui" readonly style="background: white; color: var(--text-main); font-weight: 500;">
-                      </div>
-                  </div>
-
-                  <div class="form-group">
-                      <label class="form-label">Motif</label>
-                      <input type="text" class="form-control" id="vir-motif-mobile" value="Remboursement weekend" required style="background-color: white;">
-                      <div class="help-text">Visible par le bénéficiaire - 140 car. max</div>
-                  </div>
-
-                  <div class="form-group">
-                      <label class="form-label">Référence (optionnel)</label>
-                      <input type="text" class="form-control" placeholder="Référence interne" style="background-color: white;">
-                  </div>
-              </div>
-
-              <!-- Column 3: Recap & Auth -->
-              <div class="mobile-only" style="flex-direction: column;">
-                  <div class="recap-card" style="margin-bottom: 16px;">
-                      <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
-                      
-                      <div class="recap-list">
-                          <div class="recap-item">
-                              <span class="recap-label">De</span>
-                              <span class="recap-value">**** 4821</span>
-                          </div>
-                          <div class="recap-item">
-                              <span class="recap-label">Vers</span>
-                              <span class="recap-value">Marc Beaumont</span>
-                          </div>
-                          <div class="recap-item">
-                              <span class="recap-label">Type</span>
-                              <span class="recap-value">Immédiat</span>
-                          </div>
-                          <div class="recap-item">
-                              <span class="recap-label">Motif</span>
-                              <span class="recap-value">Remboursement weekend</span>
-                          </div>
-                      </div>
-
-                      <div class="recap-divider"></div>
-
-                      <div class="amount-summary" style="background: transparent; box-shadow: none; padding: 0;">
-                          <div class="amount-label">Montant à débiter</div>
-                          <div class="amount-value">250,00 €</div>
-                          <div class="balance-after">Solde après : <span>12 230,32 €</span></div>
-                      </div>
-                  </div>
-
-                  <div class="auth-card" style="margin-bottom: 16px;">
-                      <div class="auth-header">
-                          <i class="ti ti-shield-check auth-icon"></i> Authentification
-                      </div>
-                      <p class="auth-desc">Code envoyé au +33 6 ** ** ** 42</p>
-                      
-                      <div class="otp-inputs">
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input empty"></div>
-                          <div class="otp-input empty"></div>
-                      </div>
-                      <div class="auth-phone" style="margin-top: -8px; color: var(--primary); font-weight: 500; cursor: pointer;">Renvoyer le code</div>
-
-                      <div class="footer-note" style="margin-top: 16px; margin-bottom: 24px;">
-                          <i class="ti ti-info-circle"></i>
-                          <div>Virement immédiat exécuté sous <strong>10 secondes</strong>, 24h/24 et 7j/7.</div>
-                      </div>
-
-                      <div class="auth-actions">
-                          <button type="button" class="btn-cancel" onclick="showMobileView('m-view-dashboard')">Annuler</button>
-                          <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
-                      </div>
-                  </div>
-              </div>
-                            <input type="hidden" id="vir-iban-mobile" value="">
-                  <input type="hidden" id="vir-nom-mobile" value="">
-
-          </div>
-          </form>
-        </div>
-
-      </div>
-
-      
-<div id="m-view-releves" class="m-view" style="display:none; background:var(--bg-body); position:absolute; top:0; left:0; width:100%; min-height:100vh; z-index:50; padding:16px; padding-bottom:100px;">
-          <div class="mobile-header mobile-only" style="display:flex; margin-bottom: 24px;">
-              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
-              <div class="mobile-title-area">
-                  <div class="mobile-title">Relevés</div>
-              </div>
-          </div>
-          
-  
-  <!-- Header -->
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Relevés de compte</h1>
-      <p class="page-subtitle">Consultez et téléchargez vos relevés mensuels</p>
-    </div>
-    <div class="header-actions">
-      <button class="btn btn-outline"><i class="ti ti-mail"></i> Envoi auto</button>
-      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout télécharger</button>
-    </div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">RELEVÉS DISPO</div>
-      <div class="kpi-value" id="kpi-dispo-val">-</div>
-      <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">PROCHAIN RELEVÉ</div>
-      <div class="kpi-value" id="kpi-next-val">-</div>
-      <div class="kpi-sub" id="kpi-next-sub">-</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">FORMAT</div>
-      <div class="kpi-value" id="kpi-format-val">PDF</div>
-      <div class="kpi-sub" id="kpi-format-sub">+ CSV disponible</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">ENVOI EMAIL</div>
-      <div class="kpi-value" id="kpi-email-val" style="font-size: 20px;">-</div>
-      <div class="kpi-sub" id="kpi-email-sub">-</div>
-    </div>
-  </div>
-
-  <!-- Layout 3 colonnes -->
-  <div class="layout-grid">
-    
-    <!-- Left Column: Historique -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Historique</h3>
-        <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
-            <!-- Généré par JS -->
-        </div>
-        <div class="select-wrapper desktop-only" style="display:none;">
-            <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
-                <!-- Généré par JS -->
-            </select>
-        </div>
-      </div>
-      
-      <div id="releves-history-list">
-        <!-- Contenu injecté par JS -->
-        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
-      </div>
-    </div>
-
-    <!-- Center Column: Relevé Détail -->
-    <div class="card center-card">
-      <div class="card-header">
-        <div>
-            <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
-                Relevé 
-                <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
-            </h3>
-            <div class="releve-meta" id="center-meta">Chargement...</div>
-        </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;" id="btn-download-csv"><i class="ti ti-file-spreadsheet"></i> CSV</button>
-      </div>
-
-      <div class="balances-grid" id="releves-balances">
-        <!-- Rempli par JS -->
-      </div>
-
-      <div class="filters-bar">
-        <div class="search-input">
-          <i class="ti ti-search"></i>
-          <input type="text" placeholder="Rechercher..." />
-        </div>
-        <button class="btn btn-outline" style="padding: 6px 12px;">Toutes <i class="ti ti-filter"></i></button>
-        <button class="btn btn-outline" style="padding: 6px 12px;">Tous <i class="ti ti-arrows-sort"></i></button>
-      </div>
-
-      <div class="tx-header">
-        <div class="tx-header-libelle">Libellé</div>
-        <div class="tx-header-date">Date</div>
-        <div class="tx-header-cat">Catégorie</div>
-      </div>
-
-      <div class="tx-list" id="releves-tx-list">
-        <!-- Rempli par JS -->
-        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement des transactions...</div>
-      </div>
-    </div>
-
-    <!-- Right Column: Settings & Export -->
-    <div style="display:flex; flex-direction: column; gap:24px;">
-        
-      <!-- Aperçu PDF -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Aperçu PDF</h3>
-        </div>
-        <div class="card-body">
-          <div class="pdf-preview-box">
-            <div class="pdf-mock">
-              <div class="pdf-line w-half" style="height: 6px; background:#2563EB;"></div>
-              <div style="display:flex; justify-content:space-between; margin-top:4px;">
-                  <div class="pdf-line w-third"></div>
-                  <div class="pdf-line w-third"></div>
-              </div>
-              <div class="pdf-line w-full" style="margin-top:12px;"></div>
-              <div class="pdf-block">
-                  <div class="pdf-block-blue"></div>
-                  <div class="pdf-block-green"></div>
-                  <div class="pdf-block-red"></div>
-              </div>
-              <div class="pdf-line w-full" style="margin-top:12px;"></div>
-              <div class="pdf-line w-full"></div>
-            </div>
-          </div>
-          <div class="preview-actions">
-            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
-            <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Envoi Automatique -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Envoi automatique</h3>
-        </div>
-        <div class="settings-list">
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Email mensuel</div>
-              <div class="setting-desc">manuela@email.fr</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Archivage cloud</div>
-              <div class="setting-desc">Google Drive</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">Format CSV inclus</div>
-              <div class="setting-desc">Avec le PDF</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Export personnalisé -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Export personnalisé</h3>
-        </div>
-        <div class="card-body">
-          <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label">Période</label>
-            <div class="select-wrapper">
-              <select class="form-select" id="export-periode-select">
-                <!-- Rempli par JS -->
-              </select>
-            </div>
-          </div>
-          <div class="export-form-row">
-              <div class="form-group">
-                <label class="form-label">Format</label>
-                <div class="select-wrapper">
-                  <select class="form-select" id="export-format-select">
-                    <option value="pdf">PDF</option>
-                    <option value="csv">CSV</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Compte</label>
-                <div class="select-wrapper">
-                  <select class="form-select" id="export-compte-select">
-                    <!-- Rempli par JS -->
-                  </select>
-                </div>
-              </div>
-          </div>
-          <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
-            <i class="ti ti-file-export"></i> Générer l'export
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-        </div>
-
-
-<!-- MOBILE VUE CRÉDITS -->
-        <div id="m-view-credits" class="mobile-view" style="display:none; padding-bottom:100px;">
-          <div class="m-header">
-            <h1 class="m-title">Mes Crédits</h1>
-            <div class="m-actions">
-              <button class="m-btn-icon" onclick="openCreditModal()"><i class="ti ti-plus"></i></button>
-            </div>
-          </div>
-          <div class="m-content">
-            <div class="card" style="margin-bottom: 16px;">
-              <div class="card-header">
-                <h3 class="card-title">Historique des demandes</h3>
-              </div>
-              <div id="credits-list-mobile" style="margin-top: 10px;">
-                <p style="text-align:center; color:var(--text-muted); font-size:14px; padding:20px;">Chargement...</p>
-              </div>
-            </div>
-            <button class="btn-primary" style="width:100%; margin-top: 10px;" onclick="openCreditModal()">Nouvelle demande</button>
-          </div>
-        </div>
-
-<!-- Bottom nav -->
-      <div class="bottom-nav">
-        <div class="nb-item active" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-dashboard')">
-          <i class="ti ti-home"></i>
-          <span>Accueil</span>
-        </div>
-        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-cartes')">
-          <i class="ti ti-credit-card"></i>
-          <span>Cartes</span>
-        </div>
-        <div class="nb-fab" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); showMobileView('m-view-virements')">
-          <div class="nb-fab-btn"><i class="ti ti-arrows-exchange"></i></div>
-          <span>Virements</span>
-        </div>
-        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-budget')">
-          <i class="ti ti-chart-pie"></i>
-          <span>Budget</span>
-        </div>
-        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-credits')">
-          <i class="ti ti-building-bank"></i>
-          <span>Crédits</span>
-        </div>
-        <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-releves')">
-          <i class="ti ti-file-text"></i>
-          <span>Relevés</span>
-        </div>
-        <div class="nb-item" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">
-          <i class="ti ti-user"></i>
-          <span>Profil</span>
-        </div>
-      </div>
-
-      <div class="home-indicator">
-        <div class="home-bar"></div>
-      </div>
-    </div>
-
-    <!-- === LAYOUT DESKTOP (Bleu NovaBanque) === -->
-    <div class="desktop-layout">
-      <aside class="nb-sidebar">
-        <div class="nb-logo">
-          <div class="nb-logo-icon">N</div>
-          <span>NovaBanque</span>
-        </div>
-        <nav class="nb-nav">
-          <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">🏠</span> Accueil</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-virements')"><span class="nb-icon">⇄</span> Virements</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">💳</span> Cartes</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-credits')"><span class="nb-icon">🏦</span> Crédits</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-releves')"><span class="nb-icon">📄</span> Relevés</a>
-        </nav>
-        <div class="nb-footer">
-          <a href="#" class="nb-settings" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')"><span class="nb-icon">⚙️</span> Paramètres</a>
-          <div class="nb-user-profile">
-            <div class="nb-avatar" id="user-avatar-desktop">..</div>
-            <div class="nb-user-info">
-              <div class="nb-name"><span id="user-prenom-desktop"></span> <span id="user-nom-desktop"></span></div>
-              <div class="nb-plan">Premium</div>
-            </div>
-          </div>
-          <button class="nb-logout" onclick="logout()">Se déconnecter</button>
-        </div>
-      </aside>
-
-      <div class="nb-main">
-        <header class="nb-header">
-          <div class="nb-header-left">
-            <h1 class="nb-greeting">Bonjour, <span id="user-prenom-greeting"></span> 👋</h1>
-            <p class="nb-date" id="nb-current-date"></p>
-          </div>
-          <div class="nb-header-right">
-            <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement ↗</button>
-            <button class="nb-btn-icon">🔔</button>
-          </div>
-        </header>
-        
-        <div class="kyc-banner" id="kyc-alert-desktop" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:12px; margin-bottom:20px; font-weight:bold;">
-          ⚠️ Action requise : Veuillez fournir vos documents d'identité.
-        </div>
-
-        <div id="view-dashboard" class="nb-view">
-        <div class="nb-grid">
-          <!-- Row 1 -->
-          <div class="nb-card nb-card-blue nb-solde-card">
-            <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
-            <div class="nb-solde-amount" id="solde-display-desktop">0,00 €</div>
-            <div class="nb-solde-footer">
-              <span id="type-compte-display-desktop">Compte principal</span>
-              <span class="nb-iban-masked" id="iban-display-desktop">- ****</span>
-            </div>
-          </div>
-
-          <div class="nb-card nb-revenus-card">
-            <div class="nb-card-title-grey">REVENUS — TOUT TEMPS</div>
-            <div class="nb-card-value" id="revenus-total-desktop">0,00 €</div>
-            <div class="nb-stats-list" id="revenus-list-desktop">
-              <!-- Dynamique -->
-            </div>
-          </div>
-
-          <div class="nb-card nb-depenses-card">
-            <div class="nb-card-title-grey">DÉPENSES — TOUT TEMPS</div>
-            <div class="nb-card-value text-red" id="depenses-total-desktop">0,00 €</div>
-            <div class="nb-stats-list" id="depenses-list-desktop">
-              <!-- Dynamique -->
-            </div>
-          </div>
-
-          <!-- Row 2 -->
-          <div class="nb-card nb-transactions-card" style="grid-column: 1 / span 2;">
-            <div class="nb-tx-header">
-              <h2>Transactions récentes</h2>
-              <div class="nb-tx-filters">
-                <select><option>Toutes catégories</option></select>
-                <a href="#" onclick="showView('view-releves')">Voir tout →</a>
-              </div>
-            </div>
-            <table class="nb-tx-table">
-              <thead>
-                <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
-              </thead>
-              <tbody id="tx-tbody-desktop">
-                <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="nb-card nb-budget-card" id="budget-card-desktop">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <div class="nb-card-title-grey" style="margin-bottom:0;">BUDGET MENSUEL</div>
-              <button onclick="openModal('modal-budgets')" style="background:none; border:none; color:#2563EB; font-weight:600; font-size:12px; cursor:pointer;">⚙️ Gérer</button>
-            </div>
-            <div id="budget-list-desktop">
-              <p style="font-size:13px; color:#64748B;">Chargement des budgets...</p>
-            </div>
-          </div>
-        </div> <!-- /nb-grid -->
-        </div> <!-- /view-dashboard -->
-
-        <!-- VUE CRÉDITS -->
-        <div id="view-credits" class="nb-view" style="display:none; padding-bottom: 40px;">
-          <div class="nb-grid" style="margin-top: 24px;">
-            <div class="nb-card" style="grid-column: 1 / -1; margin-bottom: 0;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                      <h2 style="margin:0;">Mes Crédits</h2>
-                      <p style="color:var(--text-muted); font-size:14px; margin:4px 0 0;">Gérez vos demandes de financement.</p>
-                  </div>
-                  <button class="nb-btn-primary" onclick="openCreditModal()">
-                      <i class="ti ti-plus"></i> Nouvelle demande
-                  </button>
-              </div>
-            </div>
-            
-            <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1; margin-top: 24px;">
-              <div class="nb-tx-header">
-                <h2>Historique des demandes</h2>
-              </div>
-              <table class="nb-tx-table">
-                <thead>
-                  <tr><th>Référence</th><th>Date</th><th>Motif</th><th>Montant</th><th>Durée</th><th>Statut</th></tr>
-                </thead>
-                <tbody id="credits-tbody-desktop">
-                  <tr><td colspan="6" style="text-align:center; padding: 20px;">Chargement...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
         <!-- VUE VIREMENTS -->
         <div id="view-virements" class="nb-view" style="display:none; padding-bottom: 40px;">
           <div class="nb-grid" style="margin-top: 24px;">
@@ -1159,7 +559,7 @@
                         <span class="nb-iban-masked" id="virement-iban-display">- ****</span>
                       </div>
                   </div>
-                  <button class="btn-outline desktop-only" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
+                  <button class="btn-outline" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
                       <i class="ti ti-plus"></i> Nouveau virement
                   </button>
               </div>
@@ -1168,9 +568,10 @@
             <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1;">
               <div class="nb-tx-header">
                 <h2>Mes transactions</h2>
-                <button class="btn-outline desktop-only" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> Télécharger historique</button>
+                <button class="btn-outline" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> Télécharger historique</button>
               </div>
-              <table class="nb-tx-table">
+              <div style="overflow-x: auto; max-width: 100vw;">
+                <table class="nb-tx-table">
                 <thead>
                   <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
                 </thead>
@@ -1178,6 +579,7 @@
                   <tr><td colspan="4" style="text-align:center; padding:20px;">Chargement...</td></tr>
                 </tbody>
               </table>
+              </div>
               
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
                   <span style="color:var(--text-muted); font-size:13px;" id="virement-tx-info">Page 1</span>
@@ -2675,7 +2077,7 @@ function switchSettingsTab(el) {
       <i class="ti ti-bell"></i>
       <span>Notifs</span>
     </a>
-    <a href="#" class="mobile-nav-item" onclick="openSettingsMobile(); updateMobileNav(this)">
+    <a href="#" class="mobile-nav-item" onclick="openDesktopViewMobile('view-settings'); updateMobileNav(this)">
       <i class="ti ti-settings"></i>
       <span>Paramètres</span>
     </a>
@@ -2689,11 +2091,11 @@ function switchSettingsTab(el) {
     </div>
     <div class="nb-nav">
       <a href="#" class="active" onclick="updateMobileNav(this); showMobileView('m-view-dashboard'); toggleMobileSidebar()"><span class="nb-icon">🏠</span> Accueil</a>
-      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
+      <a href="#" onclick="updateMobileNav(this); openDesktopViewMobile('view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-cartes'); toggleMobileSidebar()"><span class="nb-icon">💳</span> Cartes</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-budget'); toggleMobileSidebar()"><span class="nb-icon">📊</span> Budget</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-releves'); toggleMobileSidebar()"><span class="nb-icon">📄</span> Relevés</a>
-      <a href="#" onclick="updateMobileNav(this); openSettingsMobile(); toggleMobileSidebar()"><span class="nb-icon">⚙️</span> Paramètres</a>
+      <a href="#" onclick="updateMobileNav(this); openDesktopViewMobile('view-settings'); toggleMobileSidebar()"><span class="nb-icon">⚙️</span> Paramètres</a>
     </div>
   </aside>
 
@@ -2732,7 +2134,7 @@ function switchSettingsTab(el) {
       if (clickedEl) clickedEl.classList.add('active');
     }
     
-    function openSettingsMobile() {
+    function openDesktopViewMobile('view-settings') {
       // Hide mobile layout, show desktop layout (which contains settings)
       document.querySelector('.mobile-layout').style.display = 'none';
       const desktopLayout = document.querySelector('.desktop-layout');
