@@ -116,3 +116,42 @@
     padding-top: 16px;
   }
 }
+
+/* Settings Page Mobile Overrides */
+@media (max-width: 768px) {
+  #view-settings .settings-layout-container {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  #view-settings .settings-tabs-menu {
+    padding: 10px;
+    gap: 8px;
+  }
+  #view-settings .settings-tabs-menu .tab-side {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  #view-settings .settings-content-area {
+    padding: 16px !important;
+  }
+  #view-settings .settings-header-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+  #view-settings .settings-header-flex button {
+    width: 100%;
+    justify-content: center;
+  }
+  #view-settings .settings-grid-fields {
+    grid-template-columns: 1fr !important;
+  }
+  #view-settings .settings-grid-main {
+    grid-template-columns: 1fr !important;
+  }
+  #view-settings {
+    height: 100vh !important;
+    padding-bottom: 80px !important; /* space for bottom nav */
+  }
+}
