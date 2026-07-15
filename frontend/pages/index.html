@@ -80,14 +80,15 @@
 
   <div class="nb-header">
     <!-- Logo -->
-    <div style="display:flex;align-items:center;gap:10px; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-      <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
-      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">Novabanque</span>
+    <div style="display:flex;align-items:center; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <div style="width:36px;height:36px;border:2px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#C99A3B;background:rgba(201,154,59,0.1);">N</div>
     </div>
     
     <!-- Actions -->
     <div style="display:flex; align-items:center; gap:16px;">
-      <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Demander un crédit</button>
+      <div class="nb-btn" style="background:#C99A3B;color:#0F1B33; display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%;" onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})" title="Demander un crédit">
+        <i class="ti ti-piggy-bank" style="font-size:20px;"></i>
+      </div>
       
       <div style="cursor:pointer; display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; border:1px solid rgba(233,230,221,0.25); color:#E9E6DD; transition:background 0.2s;" onclick="window.location.href='app.html'" title="Espace Client" onmouseover="this.style.background='rgba(233,230,221,0.1)'" onmouseout="this.style.background='transparent'">
         <i class="ti ti-user" style="font-size:18px;"></i>
