@@ -842,12 +842,12 @@
                 padding: 16px;
             }
             .recents-grid {
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr;
             }
             .recent-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 12px 8px;
+                flex-direction: row;
+                text-align: left;
+                padding: 12px;
             }
             .recent-info h5 {
                 font-size: 0.75rem;

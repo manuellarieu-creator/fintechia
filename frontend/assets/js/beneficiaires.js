@@ -206,6 +206,12 @@ window.selectBeneficiary = function(iban, nom, isMobile) {
   if(avatar) avatar.innerText = nom.substring(0, 2).toUpperCase();
   if(nameLabel) nameLabel.innerText = nom;
   if(ibanLabel) ibanLabel.innerText = iban;
+
+  // Hide the lists
+  const recentsContainer = document.getElementById(prefix + '-recents-container');
+  const allContainer = document.getElementById(prefix + '-all-container');
+  if(recentsContainer) recentsContainer.style.display = 'none';
+  if(allContainer) allContainer.style.display = 'none';
 }
 
 window.unselectBeneficiary = function(isMobile) {
@@ -219,6 +225,16 @@ window.unselectBeneficiary = function(isMobile) {
 
   const blockSelected = document.getElementById(prefix + '-beneficiary-selected');
   if(blockSelected) blockSelected.style.display = 'none';
+
+  // Show the lists
+  const recentsContainer = document.getElementById(prefix + '-recents-container');
+  const allContainer = document.getElementById(prefix + '-all-container');
+  // Only show recents if it has children
+  const recentsGrid = document.getElementById(prefix + '-recents-grid');
+  if(recentsContainer && recentsGrid && recentsGrid.children.length > 0) {
+      recentsContainer.style.display = 'block';
+  }
+  if(allContainer) allContainer.style.display = 'block';
 }
 
 let bicTimeout = null;
