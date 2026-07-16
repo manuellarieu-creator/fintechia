@@ -1148,24 +1148,24 @@
 
         <!-- VUE VIREMENTS -->
         <div id="view-virements" class="nb-view" style="display:none; padding-bottom: 40px;">
-          <div class="nb-grid" style="margin-top: 24px;">
+          <div class="nb-grid virements-grid-mobile" style="margin-top: 8px;">
             <div class="nb-card nb-card-blue nb-solde-card" style="grid-column: 1 / -1; margin-bottom: 0;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="virements-solde-flex" style="display:flex; justify-content:space-between; align-items:center;">
                   <div>
                       <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
                       <div class="nb-solde-amount" id="virement-solde-display">0,00 €</div>
-                      <div class="nb-solde-footer">
+                      <div class="nb-solde-footer" style="display:flex; flex-direction:column; gap:4px; font-size:14px; opacity:0.9;">
                         <span>Compte principal</span>
                         <span class="nb-iban-masked" id="virement-iban-display">- ****</span>
                       </div>
                   </div>
-                  <button class="btn-outline" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
+                  <button class="btn-primary" style="background:white; color:#2563EB; font-weight:600; padding:10px 16px; border:none; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" onclick="openTunnelModal()">
                       <i class="ti ti-plus"></i> Nouveau virement
                   </button>
               </div>
             </div>
 
-            <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1;">
+            <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1; margin-top: -8px;">
               <div class="nb-tx-header">
                 <h2>Mes transactions</h2>
                 <button class="btn-outline" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> Télécharger historique</button>
