@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NovaBanque — Votre argent mérite mieux</title>
+  <title>NovaBanque ÔÇö Votre argent m├®rite mieux</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
   
@@ -61,7 +61,7 @@
     }
     
     @media (max-width: 768px) {
-      .nb-header { flex-direction: row; justify-content: space-between; gap: 10px; padding: 16px 20px; }
+      .nb-header { flex-direction: column; gap: 20px; padding: 20px; }
       .nb-nav-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
       .nb-credit-grid { grid-template-columns:repeat(1,1fr); }
       .nb-hero-text h1 { font-size: 32px !important; }
@@ -69,136 +69,44 @@
       .nb-hero-text > div > span { width: 100%; text-align: center; }
       #nbCredit { padding: 60px 20px !important; }
       .nb-sim-row { flex-direction: column; gap: 24px; }
-      
-      .desktop-only { display: none !important; }
-      .mobile-only { display: flex !important; }
-      .mobile-only-text { display: inline-block !important; }
     }
   </style>
 </head>
 <body>
 
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Maquette de la landing page NovaBanque avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page.</h2>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Maquette de la landing page NovaBanque avec h├®ro d'ouverture de compte, section cr├®dits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualit├®, offres et pied de page.</h2>
 
 <div class="nb">
 
   <div class="nb-header">
-    <!-- Logo -->
     <div style="display:flex;align-items:center;gap:10px; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-      <div style="width:36px;height:36px;border:2px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#C99A3B;background:rgba(201,154,59,0.1);">N</div>
-      <span class="nb-serif mobile-only-text" style="font-size:18px;font-weight:500;letter-spacing:.2px;display:none;">Novabanque</span>
+      <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
+      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">Novabanque</span>
     </div>
-    
-    <!-- Desktop Navigation Links -->
-    <div class="nb-nav-links desktop-only" style="display:flex;">
+    <div class="nb-nav-links">
       <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Comptes</span>
-      <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Crédits</span>
+      <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Cr├®dits</span>
       <span>Tarifs</span>
-      <span>Sécurité</span>
+      <span>S├®curit├®</span>
       <div style="display:flex; gap:12px;">
         <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">Se connecter</button>
         <button id="header-cta-btn" class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
       </div>
     </div>
-
-    <!-- Mobile Actions & Hamburger -->
-    <div class="mobile-only" style="display:none; align-items:center; gap:16px;">
-      <div class="nb-btn" style="background:#C99A3B;color:#0F1B33; display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%;" onclick="openCreditModal()" title="Demander un crédit">
-        <i class="ti ti-wallet" style="font-size:20px;"></i>
-      </div>
-      
-      <div style="cursor:pointer; display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; border:1px solid rgba(233,230,221,0.25); color:#E9E6DD; transition:background 0.2s;" onclick="window.location.href='app.html'" title="Espace Client" onmouseover="this.style.background='rgba(233,230,221,0.1)'" onmouseout="this.style.background='transparent'">
-        <i class="ti ti-user" style="font-size:18px;"></i>
-      </div>
-      
-      <div style="cursor:pointer; display:flex; align-items:center; justify-content:center; width:38px; height:38px; color:#E9E6DD;" onclick="document.querySelector('.nb-landing-sidebar').classList.add('open')">
-        <i class="ti ti-menu-2" style="font-size:24px;"></i>
-      </div>
-    </div>
   </div>
-  
-  <!-- Landing Sidebar Overlay & Menu -->
-  <div class="nb-landing-sidebar-overlay" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open')"></div>
-  <aside class="nb-landing-sidebar">
-    <div style="padding: 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(233,230,221,0.1);">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
-        <span class="nb-serif" style="font-size:18px;font-weight:500;color:#E9E6DD;">Novabanque</span>
-      </div>
-      <i class="ti ti-x" style="font-size:24px; color:#B9B4A6; cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open')"></i>
-    </div>
-    <div style="display:flex; flex-direction:column; padding: 24px; gap: 24px; font-size:16px; color:#E9E6DD;">
-      <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Comptes</span>
-      <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Crédits</span>
-      <span style="cursor:pointer;">Tarifs</span>
-      <span style="cursor:pointer;">Sécurité</span>
-      <div style="height:1px; background:rgba(233,230,221,0.1); margin: 8px 0;"></div>
-      <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:12px;border-radius:6px;width:100%;" onclick="window.location.href='app.html'">Se connecter</button>
-      <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px;border-radius:6px;width:100%;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
-    </div>
-  </aside>
-  
-  <style>
-    .nb-landing-sidebar {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 300px;
-      height: 100vh;
-      background: #0B1428;
-      z-index: 3000;
-      transition: right 0.3s ease;
-      box-shadow: -4px 0 24px rgba(0,0,0,0.5);
-    }
-    .nb-landing-sidebar.open {
-      right: 0;
-    }
-    .nb-landing-sidebar-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.6);
-      z-index: 2999;
-      display: none;
-      backdrop-filter: blur(2px);
-    }
-    .nb-landing-sidebar.open ~ .nb-landing-sidebar-overlay, 
-    .nb-landing-sidebar.open + .nb-landing-sidebar-overlay,
-    .nb-landing-sidebar-overlay:has(~ .nb-landing-sidebar.open) {
-      /* Hack since overlay is above, better to just use JS to toggle class on overlay */
-    }
-  </style>
-  <script>
-    // To handle overlay correctly
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          const isOpen = mutation.target.classList.contains('open');
-          document.querySelector('.nb-landing-sidebar-overlay').style.display = isOpen ? 'block' : 'none';
-        }
-      });
-    });
-    window.addEventListener('DOMContentLoaded', () => {
-       const sidebar = document.querySelector('.nb-landing-sidebar');
-       if(sidebar) observer.observe(sidebar, { attributes: true });
-    });
-  </script>
-
 
   <div class="nb-hero">
     <div class="nb-hero-text">
-      <p class="nb-mono" style="font-size:12px;letter-spacing:.14em;color:#C99A3B;margin:0 0 18px;">Banque en ligne · Régulée ACPR</p>
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.14em;color:#C99A3B;margin:0 0 18px;">Banque en ligne ┬À R├®gul├®e ACPR</p>
       <h1 class="nb-serif" style="font-size:52px;line-height:1.08;font-weight:400;margin:0 0 22px;color:#F4F1E9;">
-        Votre argent mérite<br>mieux qu'une file d'attente.
+        Votre argent m├®rite<br>mieux qu'une file d'attente.
       </h1>
       <p style="font-size:16px;line-height:1.7;color:#B9B4A6;max-width:440px;margin:0 0 32px;">
-        Un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. Sans agence, sans papier, sans frais cachés.
+        Un compte courant, une carte et une pi├¿ce d'identit├® v├®rifi├®e pendant que votre caf├® infuse. Sans agence, sans papier, sans frais cach├®s.
       </p>
       <div style="display:flex;gap:14px;align-items:center;">
         <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
-        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">Simuler un crédit</button>
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">Simuler un cr├®dit</button>
       </div>
     </div>
 
@@ -207,14 +115,14 @@
         <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Temps moyen d'ouverture</p>
         <p class="nb-mono nb-tick" id="nbTimer" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">05:00</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
-        <p style="font-size:13px;color:#B9B4A6;margin:0;">Carte Visa incluse<br>dès la validation KYC</p>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Carte Visa incluse<br>d├¿s la validation KYC</p>
       </div>
       <div id="hero-block-2" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; display: none; opacity: 0; transition: opacity 0.5s;">
-        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Simulation crédit</p>
-        <p class="nb-mono" style="font-size:24px;color:#C99A3B;margin:0;font-weight:500;">62 000 €</p>
-        <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Mensualité : 625 €</p>
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Simulation cr├®dit</p>
+        <p class="nb-mono" style="font-size:24px;color:#C99A3B;margin:0;font-weight:500;">62 000 Ôé¼</p>
+        <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Mensualit├® : 625 Ôé¼</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
-        <p style="font-size:13px;color:#B9B4A6;margin:0;">Accord de principe immédiat</p>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Accord de principe imm├®diat</p>
       </div>
     </div>
   </div>
@@ -222,15 +130,15 @@
   <div class="nb-features">
     <div class="nb-features-inner">
       <div class="nb-feature-item">
-        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">100 000 €</p>
+        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">100 000 Ôé¼</p>
         <p style="font-size:12px;color:#8A8676;margin:0;">Fonds garantis FGDR</p>
       </div>
       <div class="nb-feature-item">
         <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">5 min</p>
-        <p style="font-size:12px;color:#8A8676;margin:0;">Vérification KYC</p>
+        <p style="font-size:12px;color:#8A8676;margin:0;">V├®rification KYC</p>
       </div>
       <div class="nb-feature-item">
-        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">0 €</p>
+        <p class="nb-mono" style="color:#5FB88A;font-size:14px;margin:0 0 2px;">0 Ôé¼</p>
         <p style="font-size:12px;color:#8A8676;margin:0;">Frais de tenue de compte</p>
       </div>
     </div>
@@ -238,61 +146,61 @@
 
   <div id="nbCredit" style="background:#F4F1E9;color:#1C2436;padding:80px 40px;">
     <div style="max-width:1180px;margin:0 auto;">
-      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">Les crédits</p>
-      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;white-space:nowrap;">Un projet à financer ? On a le crédit qu'il faut.</h2>
-      <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">Immobilier, personnel, consommation ou financement de grands projets — Demande en ligne, réponse de principe sous 48h.</p>
+      <p class="nb-mono" style="font-size:12px;letter-spacing:.12em;color:#8A6D1F;margin:0 0 10px;">Les cr├®dits</p>
+      <h2 class="nb-serif" style="font-size:30px;font-weight:400;margin:0 0 12px;white-space:nowrap;">Un projet ├á financer ? On a le cr├®dit qu'il faut.</h2>
+      <p style="font-size:14px;color:#5B5546;margin:0 0 40px;max-width:520px;">Immobilier, personnel, consommation ou financement de grands projets ÔÇö Demande en ligne, r├®ponse de principe sous 48h.</p>
 
       <div class="nb-credit-grid">
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-home-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit immobilier</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Achat, construction ou renégociation.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 3,2 %</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Cr├®dit immobilier</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Achat, construction ou ren├®gociation.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux d├¿s 3,2 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-user-dollar" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit personnel</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Cr├®dit personnel</p>
           <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Sans justificatif, libre d'usage.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 4,9 %</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux d├¿s 4,9 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-shopping-cart" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
-          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Crédit consommation</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Travaux, véhicule, équipement.</p>
-          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux dès 5,4 %</p>
+          <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Cr├®dit consommation</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Travaux, v├®hicule, ├®quipement.</p>
+          <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Taux d├¿s 5,4 %</p>
         </div>
         <div class="nb-card" style="border:1px solid #DEDACB;border-radius:8px;padding:22px;background:white;">
           <i class="ti ti-building-skyscraper" style="font-size:22px;color:#8A6D1F;" aria-hidden="true"></i>
           <p style="font-weight:500;font-size:14px;margin:14px 0 4px;">Grands projets</p>
-          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Financement structuré, montant élevé.</p>
+          <p style="font-size:12px;color:#5B5546;line-height:1.6;margin:0 0 10px;">Financement structur├®, montant ├®lev├®.</p>
           <p class="nb-mono" style="font-size:12px;color:#8A6D1F;margin:0;">Sur dossier</p>
         </div>
       </div>
 
       <div style="border:1px solid #DEDACB;border-radius:8px;padding:32px;background:#FFFFFF;">
-        <p class="nb-mono" style="font-size:11px;letter-spacing:.1em;color:#8A6D1F;margin:0 0 20px;">Simulateur de mensualité</p>
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.1em;color:#8A6D1F;margin:0 0 20px;">Simulateur de mensualit├®</p>
         <div class="nb-sim-row">
           <div class="nb-sim-col">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-              <span style="color:#5B5546;">Montant emprunté</span>
-              <span class="nb-mono" id="nbAmountOut" style="font-weight:500;">50 000 €</span>
+              <span style="color:#5B5546;">Montant emprunt├®</span>
+              <span class="nb-mono" id="nbAmountOut" style="font-weight:500;">50 000 Ôé¼</span>
             </div>
             <input class="nb-range" type="range" min="5000" max="250000" step="1000" value="50000" id="nbAmount" style="width:100%;">
           </div>
           <div class="nb-sim-col">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-              <span style="color:#5B5546;">Durée</span>
+              <span style="color:#5B5546;">Dur├®e</span>
               <span class="nb-mono" id="nbDurationOut" style="font-weight:500;">120 mois</span>
             </div>
             <input class="nb-range" type="range" min="12" max="300" step="12" value="120" id="nbDuration" style="width:100%;">
           </div>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
-          <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(taux indicatif 3,9 %)</span></span>
-          <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">494 €</span>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #EFEBDE;">
+          <span style="font-size:13px;color:#5B5546;">Mensualit├® estim├®e (taux indicatif 3,9 %)</span>
+          <span class="nb-mono" id="nbMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">494 Ôé¼</span>
         </div>
         <div style="margin-top:22px;">
-          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="openCreditModal()">Faire une demande de crédit</button>
+          <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px 24px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="openCreditModal()">Faire une demande de cr├®dit</button>
         </div>
       </div>
     </div>
@@ -311,13 +219,13 @@
         <div class="nb-card" style="border:1px solid #C99A3B;border-radius:8px;padding:26px;background:rgba(201,154,59,0.06);cursor:pointer;" onclick="window.location.href='app.html?action=register'">
           <p style="font-size:12px;color:#C99A3B;margin:0 0 10px;">Le plus choisi</p>
           <p style="font-size:14px;font-weight:600;margin:0 0 4px;">Premium</p>
-          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">9,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
-          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Visa Platinum + assurances + 0 € frais intl.</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">9,90 Ôé¼<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Visa Platinum + assurances + 0 Ôé¼ frais intl.</p>
         </div>
         <div class="nb-card" style="border:1px solid rgba(233,230,221,0.15);border-radius:8px;padding:26px;cursor:pointer;" onclick="window.location.href='app.html?action=register'">
           <p style="font-size:14px;font-weight:600;margin:0 0 4px;">Business</p>
-          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">24,90 €<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
-          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Multi-comptes + API + comptabilité</p>
+          <p class="nb-mono" style="font-size:24px;color:#F4F1E9;margin:0 0 14px;">24,90 Ôé¼<span style="font-size:13px;color:#B9B4A6;">/mois</span></p>
+          <p style="font-size:13px;color:#B9B4A6;line-height:1.6;margin:0;">Multi-comptes + API + comptabilit├®</p>
         </div>
       </div>
     </div>
@@ -329,8 +237,8 @@
   </div>
 
   <div style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
-    <span>Novabanque © 2026 · Établissement de paiement agréé</span>
-    <span style="display:flex;gap:18px;"><span>CGU</span><span>Confidentialité</span><span>Contact</span></span>
+    <span>Novabanque ┬® 2026 ┬À ├ëtablissement de paiement agr├®├®</span>
+    <span style="display:flex;gap:18px;"><span>CGU</span><span>Confidentialit├®</span><span>Contact</span></span>
   </div>
 
 </div>
@@ -339,40 +247,40 @@
 <div id="creditModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,27,51,0.8); z-index:1000; align-items:center; justify-content:center; overflow-y:auto; padding: 20px;">
   <div style="background:#fff; border-radius:12px; width:100%; max-width:600px; padding:30px; position:relative;">
     <button onclick="closeCreditModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer; color:#1C2436;">&times;</button>
-    <h2 class="nb-serif" style="font-size:24px; color:#1C2436; margin:0 0 10px;">Demande de crédit</h2>
-    <p style="font-size:14px; color:#5B5546; margin-bottom:24px;" id="modalSubtitle">Utilisez le simulateur pour estimer votre mensualité puis validez votre demande.</p>
+    <h2 class="nb-serif" style="font-size:24px; color:#1C2436; margin:0 0 10px;">Demande de cr├®dit</h2>
+    <p style="font-size:14px; color:#5B5546; margin-bottom:24px;" id="modalSubtitle">Utilisez le simulateur pour estimer votre mensualit├® puis validez votre demande.</p>
     
     <!-- Etape 1 : Simulation -->
     <div id="modalStep1">
       <div class="form-group" style="margin-bottom:20px;">
-        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du crédit</label>
+        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du cr├®dit</label>
         <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit;">
           <option value="immobilier">Immobilier</option>
-          <option value="personnel">Prêt personnel</option>
-          <option value="consommation">Crédit consommation</option>
+          <option value="personnel">Pr├¬t personnel</option>
+          <option value="consommation">Cr├®dit consommation</option>
           <option value="grands_projets">Financement grands projets</option>
         </select>
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-          <span style="color:#5B5546;">Montant emprunté</span>
-          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 €</span>
+          <span style="color:#5B5546;">Montant emprunt├®</span>
+          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 Ôé¼</span>
         </div>
         <input class="nb-range" type="range" min="5000" max="2000000" step="1000" value="62000" id="modalAmount" style="width:100%;">
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-          <span style="color:#5B5546;">Durée</span>
+          <span style="color:#5B5546;">Dur├®e</span>
           <span class="nb-mono" id="modalDurationOut" style="font-weight:500;">120 mois</span>
         </div>
         <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
-        <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;" id="modalRateLabel">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(TAEG indicatif: 2.5%)</span></span>
-        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">625 €</span>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
+        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualit├® estim├®e (TAEG indicatif: 2.5%)</span>
+        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">625 Ôé¼</span>
       </div>
 
       <button id="btnRequestAmount" class="nb-btn" style="width:100%; margin-top:24px; background:#C99A3B; color:#0F1B33; font-weight:600; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep2()">Demander ce montant</button>
@@ -381,28 +289,28 @@
     <!-- Etape 2 : Infos -->
     <div id="modalStep2" style="display:none;">
       <div style="display:flex; gap:16px; margin-bottom:16px;">
-        <div style="flex:1;"><input type="text" id="reqPrenom" placeholder="Prénom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="text" id="reqPrenom" placeholder="Pr├®nom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
         <div style="flex:1;"><input type="text" id="reqNom" placeholder="Nom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
       </div>
       <div style="display:flex; gap:16px; margin-bottom:16px;">
         <div style="flex:1;"><input type="email" id="reqEmail" placeholder="Email" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
-        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
+        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="T├®l├®phone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
       </div>
       
       <div style="margin-bottom:16px;">
         <select id="reqProfession" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" onchange="toggleRevenu()">
           <option value="" disabled selected>Profession</option>
-          <option value="Salarie">Salarié(e)</option>
-          <option value="Independant">Indépendant(e) / Freelance</option>
-          <option value="Etudiant">Étudiant(e)</option>
-          <option value="Retraite">Retraité(e)</option>
-          <option value="Chomage">Au chômage</option>
+          <option value="Salarie">Salari├®(e)</option>
+          <option value="Independant">Ind├®pendant(e) / Freelance</option>
+          <option value="Etudiant">├ëtudiant(e)</option>
+          <option value="Retraite">Retrait├®(e)</option>
+          <option value="Chomage">Au ch├┤mage</option>
           <option value="Autre">Autre</option>
         </select>
       </div>
 
       <div style="margin-bottom:16px;" id="revenuContainer">
-        <input type="number" id="reqRevenu" placeholder="Revenu mensuel net (€)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;">
+        <input type="number" id="reqRevenu" placeholder="Revenu mensuel net (Ôé¼)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;">
       </div>
 
       <div style="margin-bottom:16px;">
@@ -417,13 +325,13 @@
       <h3 style="font-size:16px; margin-bottom:16px; color:#1C2436;">Documents requis</h3>
       
       <div style="display:flex; gap:8px; border-bottom:1px solid #DEDACB; margin-bottom:16px;">
-        <button class="doc-tab active" id="tab-personnel" onclick="switchDocTab('personnel')" style="padding:8px 12px; background:none; border:none; cursor:pointer; font-weight:600; color:#C99A3B; border-bottom:2px solid #C99A3B;">Prêt personnel</button>
-        <button class="doc-tab" id="tab-immobilier" onclick="switchDocTab('immobilier')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Prêt Immobilier</button>
+        <button class="doc-tab active" id="tab-personnel" onclick="switchDocTab('personnel')" style="padding:8px 12px; background:none; border:none; cursor:pointer; font-weight:600; color:#C99A3B; border-bottom:2px solid #C99A3B;">Pr├¬t personnel</button>
+        <button class="doc-tab" id="tab-immobilier" onclick="switchDocTab('immobilier')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Pr├¬t Immobilier</button>
         <button class="doc-tab" id="tab-projets" onclick="switchDocTab('projets')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Grands projets</button>
       </div>
 
       <div id="doc-list-container" style="margin-bottom:24px;">
-        <!-- Docs injectés par JS -->
+        <!-- Docs inject├®s par JS -->
       </div>
 
       <div style="display:flex; gap:16px;">
@@ -436,9 +344,9 @@
        <div style="width:60px; height:60px; border-radius:50%; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 30px;">
           <i class="ti ti-check"></i>
        </div>
-       <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">Demande envoyée !</h3>
-       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client.</p>
-       <button class="nb-btn" style="background:#C99A3B; color:#0F1B33; padding:12px 24px; border-radius:6px; font-weight:600;" onclick="window.location.href='app.html'">Aller à mon espace</button>
+       <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">Demande envoy├®e !</h3>
+       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a ├®t├® soumise avec succ├¿s. Vous pouvez suivre son avancement depuis votre espace client.</p>
+       <button class="nb-btn" style="background:#C99A3B; color:#0F1B33; padding:12px 24px; border-radius:6px; font-weight:600;" onclick="window.location.href='app.html'">Aller ├á mon espace</button>
     </div>
 
   </div>
@@ -497,9 +405,9 @@
       var r = rate / 12;
       var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
       
-      amountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+      amountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' Ôé¼';
       durationOut.textContent = Math.round(n) + ' mois';
-      monthlyOut.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
+      monthlyOut.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' Ôé¼';
     }
     amountEl.addEventListener('input', computeMonthly);
     durationEl.addEventListener('input', computeMonthly);
@@ -525,10 +433,10 @@
     var r = rate / 12;
     var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
     
-    mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+    mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' Ôé¼';
     mDurationOut.textContent = Math.round(n) + ' mois';
-    mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
-    mRateLabel.innerHTML = "Mensualité estimée<br><span style=\"font-size:12px;color:#8A8676;font-weight:normal;\">(TAEG indicatif: " + (rate*100) + "%)</span>";
+    mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' Ôé¼';
+    mRateLabel.textContent = "Mensualit├® estim├®e (TAEG indicatif: " + (rate*100) + "%)";
   }
   
   if(mAmount) {
@@ -602,9 +510,9 @@
     }
 
     var docs = [];
-    if(type === 'personnel') docs = [{id:'cni', name:'Pièce d\'identité', info:'CNI, Passeport ou Titre de séjour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture d\'eau, gaz ou électricité de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire ou avis d\'imposition'}];
-    if(type === 'immobilier') docs = [{id:'cni', name:'Pièce d\'identité', info:'CNI, Passeport ou Titre de séjour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire'}, {id:'compromis', name:'Compromis de vente', info:'Signé par les deux parties'}, {id:'apport', name:'Justificatif d\'apport', info:'Relevés de comptes d\'épargne'}];
-    if(type === 'projets') docs = [{id:'cni', name:'Pièce d\'identité', info:'Identité du gérant ou porteur de projet'}, {id:'business_plan', name:'Business Plan', info:'Plan d\'affaires détaillé sur 3 ans'}, {id:'bilan', name:'Bilans comptables', info:'2 derniers bilans si existant'}, {id:'devis', name:'Devis estimatifs', info:'Devis des prestataires ou fournisseurs'}];
+    if(type === 'personnel') docs = [{id:'cni', name:'Pi├¿ce d\'identit├®', info:'CNI, Passeport ou Titre de s├®jour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture d\'eau, gaz ou ├®lectricit├® de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire ou avis d\'imposition'}];
+    if(type === 'immobilier') docs = [{id:'cni', name:'Pi├¿ce d\'identit├®', info:'CNI, Passeport ou Titre de s├®jour valide'}, {id:'domicile', name:'Justificatif de domicile', info:'Facture de moins de 3 mois'}, {id:'revenus', name:'Justificatifs de revenus', info:'3 derniers bulletins de salaire'}, {id:'compromis', name:'Compromis de vente', info:'Sign├® par les deux parties'}, {id:'apport', name:'Justificatif d\'apport', info:'Relev├®s de comptes d\'├®pargne'}];
+    if(type === 'projets') docs = [{id:'cni', name:'Pi├¿ce d\'identit├®', info:'Identit├® du g├®rant ou porteur de projet'}, {id:'business_plan', name:'Business Plan', info:'Plan d\'affaires d├®taill├® sur 3 ans'}, {id:'bilan', name:'Bilans comptables', info:'2 derniers bilans si existant'}, {id:'devis', name:'Devis estimatifs', info:'Devis des prestataires ou fournisseurs'}];
 
     var html = docs.map(d => `
       <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid #EFEBDE; border-radius:6px; margin-bottom:8px; background:#FAFAFA;">
@@ -615,7 +523,7 @@
             <div style="font-size:12px; color:#8A8676;">${d.info}</div>
           </div>
         </div>
-        <input type="file" id="file-${d.id}" style="display:none;" onchange="document.getElementById('lbl-${d.id}').innerText = 'Ajouté'; document.getElementById('lbl-${d.id}').style.color = '#16A34A';">
+        <input type="file" id="file-${d.id}" style="display:none;" onchange="document.getElementById('lbl-${d.id}').innerText = 'Ajout├®'; document.getElementById('lbl-${d.id}').style.color = '#16A34A';">
         <button onclick="document.getElementById('file-${d.id}').click()" style="background:none; border:none; cursor:pointer; color:#2563EB; font-size:13px; font-weight:600;" id="lbl-${d.id}">Uploader</button>
       </div>
     `).join('');
@@ -624,8 +532,8 @@
   }
 
   function submitCreditRequest(when) {
-    // Dans une implémentation réelle, nous enverrions un FormData avec fetch au backend ici.
-    // Pour l'instant on simule le succès.
+    // Dans une impl├®mentation r├®elle, nous enverrions un FormData avec fetch au backend ici.
+    // Pour l'instant on simule le succ├¿s.
     
     document.getElementById('modalStep3').style.display = 'none';
     document.getElementById('modalSuccess').style.display = 'block';

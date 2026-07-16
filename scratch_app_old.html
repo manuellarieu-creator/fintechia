@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fintechia — Mon Espace Client</title>
+  <title>Fintechia ÔÇö Mon Espace Client</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
@@ -17,111 +17,6 @@
   <link rel="stylesheet" href="../assets/css/releves.css">
   <link rel="stylesheet" href="../assets/css/settings.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <style>
-    /* Mobile Navbar Styles */
-    .mobile-bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 65px;
-      background: white;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-      z-index: 1000;
-      justify-content: space-around;
-      align-items: center;
-      padding-bottom: env(safe-area-inset-bottom, 10px);
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-    }
-    
-    @media (max-width: 900px) {
-      .mobile-bottom-nav {
-        display: flex;
-      }
-      
-      .nb-sidebar {
-        position: fixed;
-        left: -100%;
-        top: 0;
-        bottom: 0;
-        z-index: 2000;
-        transition: left 0.3s ease;
-      }
-      
-      .nb-sidebar.mobile-open {
-        left: 0;
-        box-shadow: 4px 0 24px rgba(0,0,0,0.1);
-      }
-      
-      .mobile-sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 1999;
-        backdrop-filter: blur(2px);
-      }
-      
-      .mobile-sidebar-overlay.active {
-        display: block;
-      }
-      
-      .scroll-area {
-        padding-bottom: 80px !important;
-      }
-    }
-    
-    .mobile-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted, #64748B);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 600;
-      gap: 4px;
-      flex: 1;
-      height: 100%;
-      transition: color 0.2s;
-    }
-    
-    .mobile-nav-item i {
-      font-size: 22px;
-    }
-    
-    .mobile-nav-item.active {
-      color: var(--primary, #4F46E5);
-    }
-    
-    .mobile-nav-item.active i {
-      transform: translateY(-2px);
-    }
-    
-    .mobile-hamburger {
-      margin-right: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: var(--bg-body, #F8FAFC);
-      color: var(--text-main, #1E293B);
-      transition: all 0.2s;
-    }
-    
-    .mobile-hamburger:active {
-      background: #E2E8F0;
-    }
-  </style>
-
 </head>
 <body class="app-body">
 
@@ -140,22 +35,22 @@
         <div class="login-left-content">
           <div class="logo-box">N</div>
           <h1>Bienvenue sur<br/>NovaBanque</h1>
-          <p>Votre banque 100% en ligne,<br/>sécurisée et disponible 24h/24.</p>
+          <p>Votre banque 100% en ligne,<br/>s├®curis├®e et disponible 24h/24.</p>
         </div>
         <div class="login-left-features">
-          <div class="feature-item"><div class="feature-icon"></div> Connexion sécurisée SSL</div>
+          <div class="feature-item"><div class="feature-icon"></div> Connexion s├®curis├®e SSL</div>
           <div class="feature-item"><div class="feature-icon"></div> Double authentification</div>
-          <div class="feature-item"><div class="feature-icon"></div> Données chiffrées</div>
+          <div class="feature-item"><div class="feature-icon"></div> Donn├®es chiffr├®es</div>
         </div>
       </div>
       <div class="login-right">
         <div class="login-right-header" style="display:flex; justify-content:space-between; width:100%;">
-           <a href="index.html" style="text-decoration:none; color:#DC2626; font-size:13px; font-weight:500; display:flex; align-items:center; gap:4px; transition: color 0.2s;" onmouseover="this.style.color='#B91C1C'" onmouseout="this.style.color='#DC2626'"><i class="ti ti-arrow-left"></i> Retour à l'accueil</a>
+           <a href="index.html" style="text-decoration:none; color:#DC2626; font-size:13px; font-weight:500; display:flex; align-items:center; gap:4px; transition: color 0.2s;" onmouseover="this.style.color='#B91C1C'" onmouseout="this.style.color='#DC2626'"><i class="ti ti-arrow-left"></i> Retour ├á l'accueil</a>
            <span class="url-text">novabanque.fr/login</span>
         </div>
         <div class="login-right-body">
           <h2>Connexion</h2>
-          <p class="subtitle">Accédez à votre espace personnel</p>
+          <p class="subtitle">Acc├®dez ├á votre espace personnel</p>
           
           <form id="form-login-dynamic" class="login-form">
             <div class="form-group">
@@ -164,13 +59,13 @@
             </div>
             <div class="form-group" id="login-pwd-group" style="display:none; opacity:0; transition: opacity 0.3s ease;">
               <label>Mot de passe</label>
-              <input type="password" id="login-pwd" required placeholder="••••••••" oninput="handleLoginDynamic()" />
+              <input type="password" id="login-pwd" required placeholder="ÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇó" oninput="handleLoginDynamic()" />
             </div>
             
             <div class="form-options" id="login-options-group" style="display:none;">
               <label class="checkbox-label">
                 <input type="checkbox" checked />
-                <span>Rester connecté sur cet appareil</span>
+                <span>Rester connect├® sur cet appareil</span>
               </label>
             </div>
             
@@ -198,7 +93,7 @@
       <div class="login-right" style="width: 70%; background: #F8FAFC;">
         
         <div class="login-right-body" style="padding: 40px 60px; max-width: 900px;">
-          <a href="index.html" style="text-decoration:none; color:#DC2626; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:4px; margin-bottom: 24px; transition: color 0.2s;" onmouseover="this.style.color='#B91C1C'" onmouseout="this.style.color='#DC2626'"><i class="ti ti-arrow-left"></i> Retour à l'accueil</a>
+          <a href="index.html" style="text-decoration:none; color:#DC2626; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:4px; margin-bottom: 24px; transition: color 0.2s;" onmouseover="this.style.color='#B91C1C'" onmouseout="this.style.color='#DC2626'"><i class="ti ti-arrow-left"></i> Retour ├á l'accueil</a>
           <!-- Stepper -->
           <div class="register-stepper">
             <div class="register-step active" id="step-nav-1">
@@ -208,12 +103,12 @@
             <div class="register-step-line"></div>
             <div class="register-step" id="step-nav-2">
               <div class="register-step-num">2</div>
-              <span>Sécurité & mot de passe</span>
+              <span>S├®curit├® & mot de passe</span>
             </div>
             <div class="register-step-line"></div>
             <div class="register-step" id="step-nav-3">
               <div class="register-step-num">3</div>
-              <span>Vérification KYC</span>
+              <span>V├®rification KYC</span>
             </div>
             <div class="register-step-line"></div>
             <div class="register-step" id="step-nav-4">
@@ -223,7 +118,7 @@
             <div class="register-step-line"></div>
             <div class="register-step" id="step-nav-5">
               <div class="register-step-num">5</div>
-              <span>Compte activé</span>
+              <span>Compte activ├®</span>
             </div>
           </div>
 
@@ -234,12 +129,12 @@
             <form id="form-step-1" class="step-form">
               <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
                 <div class="register-step-num" style="background:#2563EB; color:white;">1</div>
-                <h2 style="font-size: 18px; color: #2563EB; margin:0;">1 — Informations personnelles</h2>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">1 ÔÇö Informations personnelles</h2>
               </div>
               
               <div class="nb-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
                 <div class="form-group">
-                  <label>Prénom</label>
+                  <label>Pr├®nom</label>
                   <input type="text" id="reg-prenom" required class="admin-input" placeholder="Manuela" style="width:100%;" />
                 </div>
                 <div class="form-group">
@@ -251,7 +146,7 @@
                   <input type="date" id="reg-dob" required class="admin-input" style="width:100%;" />
                 </div>
                 <div class="form-group">
-                  <label>Téléphone</label>
+                  <label>T├®l├®phone</label>
                   <input type="tel" id="reg-tel" required class="admin-input" placeholder="+33 6 12 34 56 78" style="width:100%;" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
                 </div>
               </div>
@@ -260,10 +155,10 @@
                 <input type="email" id="reg-email" required class="admin-input" placeholder="manuela@email.fr" style="width:100%;" />
               </div>
               
-              <button type="submit" class="btn-primary" id="btn-step-1">Valider cette étape</button>
+              <button type="submit" class="btn-primary" id="btn-step-1">Valider cette ├®tape</button>
               
               <div class="login-links" style="margin-top: 24px; text-align:center;">
-                <a href="#" onclick="showPage('pg-login')" style="color:var(--primary); font-size:14px;">Déjà un compte ? Se connecter</a>
+                <a href="#" onclick="showPage('pg-login')" style="color:var(--primary); font-size:14px;">D├®j├á un compte ? Se connecter</a>
               </div>
             </form>
 
@@ -271,25 +166,25 @@
             <form id="form-step-2" class="step-form" style="display:none;">
               <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
                 <div class="register-step-num" style="background:#2563EB; color:white;">2</div>
-                <h2 style="font-size: 18px; color: #2563EB; margin:0;">2 — Sécurité & mot de passe</h2>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">2 ÔÇö S├®curit├® & mot de passe</h2>
               </div>
 
               <div class="nb-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 8px;">
                 <div class="form-group">
                   <label>Mot de passe</label>
-                  <input type="password" id="reg-pwd" required class="admin-input" placeholder="••••••••" style="width:100%;" />
+                  <input type="password" id="reg-pwd" required class="admin-input" placeholder="ÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇó" style="width:100%;" />
                 </div>
                 <div class="form-group">
                   <label>Confirmer le mot de passe</label>
-                  <input type="password" id="reg-pwd-confirm" required class="admin-input" placeholder="••••••••" style="width:100%;" />
+                  <input type="password" id="reg-pwd-confirm" required class="admin-input" placeholder="ÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇó" style="width:100%;" />
                 </div>
               </div>
               <div style="font-size:12px; color:#64748B; margin-bottom: 30px;">
-                Trop faible · 0/4 critères
+                Trop faible ┬À 0/4 crit├¿res
               </div>
 
               <div class="form-group" style="margin-bottom: 30px;">
-                <label>Code secret (6 chiffres) - <span style="font-size:12px; color:#64748B;">À sauvegarder pour valider vos virements</span></label>
+                <label>Code secret (6 chiffres) - <span style="font-size:12px; color:#64748B;">├Ç sauvegarder pour valider vos virements</span></label>
                 <div class="pin-inputs">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-1" onkeyup="movePinFocus(this, 1)">
                   <input type="text" class="pin-box" maxlength="1" id="reg-pin-2" onkeyup="movePinFocus(this, 2)">
@@ -300,24 +195,24 @@
                 </div>
               </div>
 
-              <button type="submit" class="btn-primary" id="btn-step-2">Valider cette étape</button>
+              <button type="submit" class="btn-primary" id="btn-step-2">Valider cette ├®tape</button>
             </form>
 
             <!-- ETAPE 3 -->
             <form id="form-step-3" class="step-form" style="display:none;">
               <div style="display:flex; align-items:center; gap:12px; margin-bottom: 16px;">
                 <div class="register-step-num" style="background:#2563EB; color:white;">3</div>
-                <h2 style="font-size: 18px; color: #2563EB; margin:0;">3 — Vérification KYC</h2>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">3 ÔÇö V├®rification KYC</h2>
               </div>
-              <p style="color:#64748B; font-size:14px; margin-bottom: 24px;">Identifiez-vous pour activer votre compte. Requis par la réglementation bancaire.</p>
+              <p style="color:#64748B; font-size:14px; margin-bottom: 24px;">Identifiez-vous pour activer votre compte. Requis par la r├®glementation bancaire.</p>
 
               <div class="form-group" style="max-width: 300px; margin-bottom: 24px;">
-                <label>Type de pièce d'identité</label>
+                <label>Type de pi├¿ce d'identit├®</label>
                 <select id="reg-kyc-type" required class="admin-input" style="width:100%;">
-                  <option value="cni">Carte Nationale d'Identité</option>
+                  <option value="cni">Carte Nationale d'Identit├®</option>
                   <option value="passeport">Passeport</option>
                   <option value="permis">Permis de conduire</option>
-                  <option value="sejour">Titre de séjour</option>
+                  <option value="sejour">Titre de s├®jour</option>
                 </select>
               </div>
 
@@ -325,33 +220,33 @@
                 <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-recto').click()">
                   <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
                   <div style="font-weight:600; color:#0F172A; font-size:14px;">Recto de votre CNI</div>
-                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF · max 5 Mo</div>
+                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF ┬À max 5 Mo</div>
                   <input type="file" id="reg-kyc-recto" style="display:none;" onchange="let n = this.files[0].name; document.getElementById('recto-name').innerText = n.length > 18 ? n.substring(0,14) + n.substring(n.lastIndexOf('.')) : n;" />
                   <div id="recto-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
                 </div>
                 <div class="kyc-upload-zone" onclick="document.getElementById('reg-kyc-verso').click()">
                   <i class="ti ti-upload" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
                   <div style="font-weight:600; color:#0F172A; font-size:14px;">Verso</div>
-                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF · max 5 Mo</div>
+                  <div style="font-size:12px; color:#94A3B8;">JPG, PNG ou PDF ┬À max 5 Mo</div>
                   <input type="file" id="reg-kyc-verso" style="display:none;" onchange="let n = this.files[0].name; document.getElementById('verso-name').innerText = n.length > 18 ? n.substring(0,14) + n.substring(n.lastIndexOf('.')) : n;" />
                   <div id="verso-name" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
                 </div>
                 <div class="kyc-upload-zone" id="btn-start-video-kyc" onclick="startVideoKyc()">
                     <i class="ti ti-video" style="font-size:24px; color:#0F172A; margin-bottom:8px;"></i>
-                    <div style="font-weight:600; color:#0F172A; font-size:14px;">Vérification Vidéo (Selfie)</div>
+                    <div style="font-weight:600; color:#0F172A; font-size:14px;">V├®rification Vid├®o (Selfie)</div>
                     <div style="font-size:12px; color:#94A3B8;">Capture via webcam obligatoire</div>
                     <div id="video-kyc-status" style="margin-top:8px; font-size:12px; color:#2563EB;"></div>
                   </div>
               </div>
 
-              <button type="submit" class="btn-primary" id="btn-step-3">Soumettre pour vérification →</button>
+              <button type="submit" class="btn-primary" id="btn-step-3">Soumettre pour v├®rification ÔåÆ</button>
             </form>
 
             <!-- ETAPE 4 -->
             <form id="form-step-4" class="step-form" style="display:none;">
               <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
                 <div class="register-step-num" style="background:#2563EB; color:white;">4</div>
-                <h2 style="font-size: 18px; color: #2563EB; margin:0;">4 — Offre & finalisation</h2>
+                <h2 style="font-size: 18px; color: #2563EB; margin:0;">4 ÔÇö Offre & finalisation</h2>
               </div>
 
               <div style="display:flex; gap: 16px; margin-bottom: 24px;">
@@ -365,23 +260,23 @@
                 <div class="plan-card active" onclick="selectPlan(this, 'premium')">
                   <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                     <div style="font-weight:700;"><i class="ti ti-star" style="color:#F59E0B; margin-right:4px;"></i>Premium</div>
-                    <div style="font-weight:700;">9,90 €/mois</div>
+                    <div style="font-weight:700;">9,90 Ôé¼/mois</div>
                   </div>
-                  <div style="font-size:13px; color:#64748B;">Visa Platinum + assurances + 0 € frais intl.</div>
+                  <div style="font-size:13px; color:#64748B;">Visa Platinum + assurances + 0 Ôé¼ frais intl.</div>
                 </div>
                 <div class="plan-card" onclick="selectPlan(this, 'business')">
                   <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                     <div style="font-weight:700;">Business</div>
-                    <div style="font-weight:700;">24,90 €/mois</div>
+                    <div style="font-weight:700;">24,90 Ôé¼/mois</div>
                   </div>
-                  <div style="font-size:13px; color:#64748B;">Multi-comptes + API + comptabilité</div>
+                  <div style="font-size:13px; color:#64748B;">Multi-comptes + API + comptabilit├®</div>
                 </div>
               </div>
 
               <div style="margin-bottom: 24px;">
                 <label class="checkbox-label" style="margin-bottom: 8px;">
                   <input type="checkbox" id="reg-cgu" required />
-                  <span>J'accepte les <a href="#" style="color:#2563EB;">CGU</a> et la <a href="#" style="color:#2563EB;">politique de confidentialité</a></span>
+                  <span>J'accepte les <a href="#" style="color:#2563EB;">CGU</a> et la <a href="#" style="color:#2563EB;">politique de confidentialit├®</a></span>
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" />
@@ -389,7 +284,7 @@
                 </label>
               </div>
 
-              <button type="submit" id="btn-final-kyc" class="btn-primary"><i class="ti ti-lock" style="margin-right:8px;"></i>Valider et créer le compte</button>
+              <button type="submit" id="btn-final-kyc" class="btn-primary"><i class="ti ti-lock" style="margin-right:8px;"></i>Valider et cr├®er le compte</button>
             </form>
 
             <!-- ETAPE 5 -->
@@ -397,10 +292,10 @@
               <div style="width:80px; height:80px; border-radius:50%; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 40px;">
                 <i class="ti ti-check"></i>
               </div>
-              <h2 style="font-size: 24px; color: #0F172A; margin-bottom: 12px;">Création de compte soumise</h2>
-              <p style="color:#64748B; font-size:15px; margin-bottom: 20px;">Votre demande de création de compte bancaire a été soumise avec succès.</p>
+              <h2 style="font-size: 24px; color: #0F172A; margin-bottom: 12px;">Cr├®ation de compte soumise</h2>
+              <p style="color:#64748B; font-size:15px; margin-bottom: 20px;">Votre demande de cr├®ation de compte bancaire a ├®t├® soumise avec succ├¿s.</p>
               <div id="kyc-timer-final" style="font-size: 36px; font-weight: 700; color: #2563EB; margin-bottom: 20px;">05:00</div>
-              <p style="color:#64748B; font-size:15px; margin-bottom: 30px;">Veuillez patienter le temps du traitement de vos données.</p>
+              <p style="color:#64748B; font-size:15px; margin-bottom: 30px;">Veuillez patienter le temps du traitement de vos donn├®es.</p>
             </div>
 
           </div>
@@ -415,13 +310,13 @@
         <div style="width:80px; height:80px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
             <i class="ti ti-hourglass" style="font-size:36px; color:#2563EB;"></i>
         </div>
-        <h2 style="font-size:24px; color:#0F172A; margin-bottom:12px;">Vérification en cours</h2>
+        <h2 style="font-size:24px; color:#0F172A; margin-bottom:12px;">V├®rification en cours</h2>
         <p style="color:#64748B; font-size:15px; margin-bottom:20px;">
-            Votre création de compte est en cours de vérification.
+            Votre cr├®ation de compte est en cours de v├®rification.
         </p>
         <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:15px; border-radius:8px; text-align:left; margin-bottom:20px;">
             <p style="color:#B45309; font-size:13px; margin:0; line-height:1.5;">
-                <strong>Important :</strong> Si les éléments ou informations fournies ne sont pas 100% exactes, veuillez contacter le support client pour une mise à jour avant le traitement des données.
+                <strong>Important :</strong> Si les ├®l├®ments ou informations fournies ne sont pas 100% exactes, veuillez contacter le support client pour une mise ├á jour avant le traitement des donn├®es.
             </p>
         </div>
         <button class="btn-outline" style="width:100%;" onclick="window.location.href='mailto:support@fintechia.com'">Contacter le support</button>
@@ -433,11 +328,11 @@
       <div style="width:70px; height:70px; background:#F0FDF4; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
         <i class="ti ti-check" style="font-size:36px; color:#16A34A;"></i>
       </div>
-      <h3 style="margin-top: 0; font-size:22px; color:#0F172A;">🎉 Ourrah votre compte FINTECHIA a bien été créé et validé ! ✨</h3>
+      <h3 style="margin-top: 0; font-size:22px; color:#0F172A;">­ƒÄë Ourrah votre compte FINTECHIA a bien ├®t├® cr├®├® et valid├® ! Ô£¿</h3>
       <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
-        Découvrez votre espace client pour vos opérations bancaires 🏦💳.
+        D├®couvrez votre espace client pour vos op├®rations bancaires ­ƒÅª­ƒÆ│.
       </p>
-      <button class="btn-primary" style="width:100%; display: flex; justify-content: center; align-items: center; text-align: center; gap: 8px;" onclick="goToEspaceBancaire()">👀 Voir Espace Bancaire</button>
+      <button class="btn-primary" style="width:100%; display: flex; justify-content: center; align-items: center; text-align: center; gap: 8px;" onclick="goToEspaceBancaire()">­ƒæÇ Voir Espace Bancaire</button>
     </div>
   </div>
 
@@ -446,27 +341,28 @@
     
     <!-- === LAYOUT MOBILE (Bleu NovaBanque) === -->
     <div class="mobile-layout">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="dynamic-island"></div>
+      </div>
+
+      <!-- Topbar -->
       <div class="topbar">
-        <div style="display:flex; align-items:center;">
-          <div class="mobile-hamburger" onclick="toggleMobileSidebar()">
-            <i class="ti ti-menu-2"></i>
-          </div>
-          <div>
-            <div class="topbar-greeting">Bonjour 👋</div>
-            <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
-          </div>
+        <div>
+          <div class="topbar-greeting">Bonjour ­ƒæï</div>
+          <div class="topbar-name"><span id="user-prenom-mobile"></span> <span id="user-nom-mobile"></span></div>
         </div>
         <div class="topbar-right">
           <div class="notif-wrap" onclick="window.location.href='index.html'" title="Retour au site" style="background:#EEF2FF; color:#4F46E5;">
             <i class="ti ti-home"></i>
           </div>
-          <div class="notif-wrap" onclick="showMobileView('m-view-releves')" title="Relevés">
+          <div class="notif-wrap" onclick="window.location.href='releves.html'" title="Relev├®s">
             <i class="ti ti-file-text"></i>
           </div>
-          <div class="notif-wrap" onclick="openSettingsMobile()">
+          <div class="notif-wrap" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">
             <i class="ti ti-settings"></i>
           </div>
-          <div class="avatar-sm" id="user-avatar-mobile" onclick="openSettingsMobile()">..</div>
+          <div class="avatar-sm" id="user-avatar-mobile" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">..</div>
         </div>
       </div>
 
@@ -478,22 +374,22 @@
           <!-- Solde -->
           <div class="hero-card">
             <div class="hero-label">Solde disponible</div>
-            <div class="hero-amount" id="solde-display-mobile">€ 0.00</div>
+            <div class="hero-amount" id="solde-display-mobile">Ôé¼ 0.00</div>
             <div class="hero-footer">
               <span id="iban-display-mobile">**** **** **** 4821</span>
               <i class="ti ti-credit-card" style="font-size:20px;opacity:.7;"></i>
             </div>
           </div>
 
-          <!-- Revenus | Dépenses -->
+          <!-- Revenus | D├®penses -->
           <div class="grid-2">
             <div class="mobile-card">
               <span class="card-label">Revenus (mois)</span>
-              <div class="card-value" id="revenus-mobile">0,00 €</div>
+              <div class="card-value" id="revenus-mobile">0,00 Ôé¼</div>
             </div>
             <div class="mobile-card">
-              <span class="card-label">Dépenses (mois)</span>
-              <div class="card-value" style="color:var(--danger-text);" id="depenses-mobile">0,00 €</div>
+              <span class="card-label">D├®penses (mois)</span>
+              <div class="card-value" style="color:var(--danger-text);" id="depenses-mobile">0,00 Ôé¼</div>
             </div>
           </div>
 
@@ -501,7 +397,7 @@
           <div class="mobile-card">
             <div class="card-head">
               <h2>Budget mensuel</h2>
-              <a href="#" onclick="showMobileView('m-view-budget')">Détail →</a>
+              <a href="#" onclick="showMobileView('m-view-budget')">D├®tail ÔåÆ</a>
             </div>
             <div id="budget-list-mobile">Chargement...</div>
           </div>
@@ -510,10 +406,10 @@
           <div class="mobile-card">
             <div class="card-head">
               <h2>Virements rapides</h2>
-              <a href="#" onclick="openDesktopViewMobile('view-virements')">Gérer →</a>
+              <a href="#" onclick="showMobileView('m-view-virements')">G├®rer ÔåÆ</a>
             </div>
             <div class="bene-list" id="beneficiaires-mobile-list">
-              <div class="bene bene-add" onclick="openDesktopViewMobile('view-virements')">
+              <div class="bene bene-add" onclick="showMobileView('m-view-virements')">
                 <div class="bene-av"><i class="ti ti-plus"></i></div>
                 <span class="bene-n">Nouveau</span>
               </div>
@@ -523,19 +419,19 @@
           <!-- Transactions -->
           <div class="mobile-card">
             <div class="card-head" style="display:flex; justify-content:space-between; align-items:center;">
-              <h2>Transactions récentes</h2>
-              <a href="#" onclick="showMobileView('m-view-releves')" style="color:var(--primary); font-size:12px; font-weight:600; text-decoration:none;">Voir tout →</a>
+              <h2>Transactions r├®centes</h2>
+              <a href="#" onclick="showMobileView('m-view-releves')" style="color:var(--primary); font-size:12px; font-weight:600; text-decoration:none;">Voir tout ÔåÆ</a>
             </div>
             <div id="tx-tbody-mobile">Chargement...</div>
           </div>
         </div>
 
-        <!-- Vues supplémentaires (Cartes, Virements, etc) cachées par defaut -->
+        <!-- Vues suppl├®mentaires (Cartes, Virements, etc) cach├®es par defaut -->
         <div id="m-view-cartes" class="m-view" style="display:none;">
           <div class="cartes-header">
               <div>
                   <h1 class="cartes-title">Mes cartes</h1>
-                  <p class="cartes-subtitle">Gérez vos cartes bancaires</p>
+                  <p class="cartes-subtitle">G├®rez vos cartes bancaires</p>
               </div>
               <button class="btn-new"><i class="ti ti-plus"></i> Nouvelle</button>
           </div>
@@ -552,7 +448,7 @@
               <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
               <div class="mobile-title-area">
                   <div class="mobile-title">Nouveau virement</div>
-                  <div class="mobile-subtitle">Solde : 12 480,32 €</div>
+                  <div class="mobile-subtitle">Solde : 12 480,32 Ôé¼</div>
               </div>
               <div class="user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">MR</div>
           </div>
@@ -561,12 +457,12 @@
           <div class="steps-container" style="padding: 16px 0; border: none; background: transparent; margin-bottom: 16px;">
               <div class="step completed">
                   <div class="step-circle"><i class="ti ti-check"></i></div>
-                  <span class="mobile-only" style="color: var(--success);">Bénéficiaire</span>
+                  <span class="mobile-only" style="color: var(--success);">B├®n├®ficiaire</span>
               </div>
               <div class="step-divider" style="background-color: var(--success); opacity: 1;"></div>
               <div class="step active">
                   <div class="step-circle">2</div>
-                  <span class="mobile-only" style="color: var(--primary);">Détails</span>
+                  <span class="mobile-only" style="color: var(--primary);">D├®tails</span>
               </div>
               <div class="step-divider" style="opacity: 0.3;"></div>
               <div class="step" style="opacity: 0.5;">
@@ -580,7 +476,7 @@
               <!-- Column 1: Beneficiary -->
               <div class="card" style="margin-bottom: 16px;">
                   <div class="card-header">
-                      <h3 class="card-title">Bénéficiaire</h3>
+                      <h3 class="card-title">B├®n├®ficiaire</h3>
                       <a href="#" class="link">Changer &rarr;</a>
                   </div>
                   
@@ -588,21 +484,21 @@
                       <div style="display: flex; gap: 12px; align-items: center;">
                           <div class="avatar-green" id="mobile-ben-avatar">MB</div>
                           <div class="beneficiary-info">
-                              <h4 id="mobile-ben-name">Sélectionnez un bénéficiaire</h4>
+                              <h4 id="mobile-ben-name">S├®lectionnez un b├®n├®ficiaire</h4>
                               <p id="mobile-ben-iban">-</p>
                           </div>
                       </div>
-                      <button type="button" onclick="unselectBeneficiary(true)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">✕</button>
+                      <button type="button" onclick="unselectBeneficiary(true)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">Ô£ò</button>
                   </div>
 
                   <div id="mobile-recents-container" style="display:none;">
-                      <div class="recents-title">Récents</div>
+                      <div class="recents-title">R├®cents</div>
                       <div class="recents-grid" id="mobile-recents-grid">
                           <!-- Dynamique -->
                       </div>
                   </div>
 
-                  <div class="recents-title" style="margin-top: 24px;">Tous les bénéficiaires</div>
+                  <div class="recents-title" style="margin-top: 24px;">Tous les b├®n├®ficiaires</div>
                   <div class="recents-grid" id="mobile-all-grid">
                       <!-- Dynamique -->
                   </div>
@@ -615,19 +511,19 @@
                       <select class="form-control" id="vir-type-mobile" onchange="toggleDateProgrammee(this.value, 'mobile')" style="background-color: white;">
                           <option value="standard">Virement Standard</option>
                           <option value="swift">Virement SWIFT</option>
-                          <option value="immediat">Instantanné</option>
-                          <option value="programme">Virement Programmé</option>
+                          <option value="immediat">Instantann├®</option>
+                          <option value="programme">Virement Programm├®</option>
                       </select>
                   </div>
 
                   <div class="mobile-only" style="flex-direction: column;">
                       <div class="card-header" style="margin-top: 8px;">
-                          <h3 class="card-title">Détails</h3>
+                          <h3 class="card-title">D├®tails</h3>
                       </div>
                       <div class="form-group">
-                          <label class="form-label">Compte débiteur</label>
+                          <label class="form-label">Compte d├®biteur</label>
                           <select class="form-control" style="background-color: white;">
-                              <option>Courant **** 4821 — 12 480.32 €</option>
+                              <option>Courant **** 4821 ÔÇö 12 480.32 Ôé¼</option>
                           </select>
                       </div>
                   </div>
@@ -637,9 +533,9 @@
                           <label class="form-label">Montant</label>
                           <div class="input-with-icon">
                               <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                              <span class="input-icon">€</span>
+                              <span class="input-icon">Ôé¼</span>
                           </div>
-                          <div class="help-text">Plafond : 5 000 €/j</div>
+                          <div class="help-text">Plafond : 5 000 Ôé¼/j</div>
                       </div>
                       <div class="form-group">
                           <label class="form-label">Date</label>
@@ -650,19 +546,19 @@
                   <div class="form-group">
                       <label class="form-label">Motif</label>
                       <input type="text" class="form-control" id="vir-motif-mobile" value="Remboursement weekend" required style="background-color: white;">
-                      <div class="help-text">Visible par le bénéficiaire - 140 car. max</div>
+                      <div class="help-text">Visible par le b├®n├®ficiaire - 140 car. max</div>
                   </div>
 
                   <div class="form-group">
-                      <label class="form-label">Référence (optionnel)</label>
-                      <input type="text" class="form-control" placeholder="Référence interne" style="background-color: white;">
+                      <label class="form-label">R├®f├®rence (optionnel)</label>
+                      <input type="text" class="form-control" placeholder="R├®f├®rence interne" style="background-color: white;">
                   </div>
               </div>
 
               <!-- Column 3: Recap & Auth -->
               <div class="mobile-only" style="flex-direction: column;">
                   <div class="recap-card" style="margin-bottom: 16px;">
-                      <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
+                      <h3 class="card-title" style="margin-bottom: 20px;">R├®capitulatif</h3>
                       
                       <div class="recap-list">
                           <div class="recap-item">
@@ -675,7 +571,7 @@
                           </div>
                           <div class="recap-item">
                               <span class="recap-label">Type</span>
-                              <span class="recap-value">Immédiat</span>
+                              <span class="recap-value">Imm├®diat</span>
                           </div>
                           <div class="recap-item">
                               <span class="recap-label">Motif</span>
@@ -686,9 +582,9 @@
                       <div class="recap-divider"></div>
 
                       <div class="amount-summary" style="background: transparent; box-shadow: none; padding: 0;">
-                          <div class="amount-label">Montant à débiter</div>
-                          <div class="amount-value">250,00 €</div>
-                          <div class="balance-after">Solde après : <span>12 230,32 €</span></div>
+                          <div class="amount-label">Montant ├á d├®biter</div>
+                          <div class="amount-value">250,00 Ôé¼</div>
+                          <div class="balance-after">Solde apr├¿s : <span>12 230,32 Ôé¼</span></div>
                       </div>
                   </div>
 
@@ -696,7 +592,7 @@
                       <div class="auth-header">
                           <i class="ti ti-shield-check auth-icon"></i> Authentification
                       </div>
-                      <p class="auth-desc">Code envoyé au +33 6 ** ** ** 42</p>
+                      <p class="auth-desc">Code envoy├® au +33 6 ** ** ** 42</p>
                       
                       <div class="otp-inputs">
                           <div class="otp-input filled"><div class="otp-dot"></div></div>
@@ -710,7 +606,7 @@
 
                       <div class="footer-note" style="margin-top: 16px; margin-bottom: 24px;">
                           <i class="ti ti-info-circle"></i>
-                          <div>Virement immédiat exécuté sous <strong>10 secondes</strong>, 24h/24 et 7j/7.</div>
+                          <div>Virement imm├®diat ex├®cut├® sous <strong>10 secondes</strong>, 24h/24 et 7j/7.</div>
                       </div>
 
                       <div class="auth-actions">
@@ -733,7 +629,7 @@
           <div class="mobile-header mobile-only" style="display:flex; margin-bottom: 24px;">
               <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
               <div class="mobile-title-area">
-                  <div class="mobile-title">Relevés</div>
+                  <div class="mobile-title">Relev├®s</div>
               </div>
           </div>
           
@@ -741,24 +637,24 @@
   <!-- Header -->
   <div class="page-header">
     <div>
-      <h1 class="page-title">Relevés de compte</h1>
-      <p class="page-subtitle">Consultez et téléchargez vos relevés mensuels</p>
+      <h1 class="page-title">Relev├®s de compte</h1>
+      <p class="page-subtitle">Consultez et t├®l├®chargez vos relev├®s mensuels</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-outline"><i class="ti ti-mail"></i> Envoi auto</button>
-      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout télécharger</button>
+      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout t├®l├®charger</button>
     </div>
   </div>
 
   <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">RELEVÉS DISPO</div>
+      <div class="kpi-label">RELEV├ëS DISPO</div>
       <div class="kpi-value" id="kpi-dispo-val">-</div>
       <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">PROCHAIN RELEVÉ</div>
+      <div class="kpi-label">PROCHAIN RELEV├ë</div>
       <div class="kpi-value" id="kpi-next-val">-</div>
       <div class="kpi-sub" id="kpi-next-sub">-</div>
     </div>
@@ -782,27 +678,27 @@
       <div class="card-header">
         <h3 class="card-title">Historique</h3>
         <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
-            <!-- Généré par JS -->
+            <!-- G├®n├®r├® par JS -->
         </div>
         <div class="select-wrapper desktop-only" style="display:none;">
             <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
-                <!-- Généré par JS -->
+                <!-- G├®n├®r├® par JS -->
             </select>
         </div>
       </div>
       
       <div id="releves-history-list">
-        <!-- Contenu injecté par JS -->
+        <!-- Contenu inject├® par JS -->
         <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
       </div>
     </div>
 
-    <!-- Center Column: Relevé Détail -->
+    <!-- Center Column: Relev├® D├®tail -->
     <div class="card center-card">
       <div class="card-header">
         <div>
             <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
-                Relevé 
+                Relev├® 
                 <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
             </h3>
             <div class="releve-meta" id="center-meta">Chargement...</div>
@@ -824,9 +720,9 @@
       </div>
 
       <div class="tx-header">
-        <div class="tx-header-libelle">Libellé</div>
+        <div class="tx-header-libelle">Libell├®</div>
         <div class="tx-header-date">Date</div>
-        <div class="tx-header-cat">Catégorie</div>
+        <div class="tx-header-cat">Cat├®gorie</div>
       </div>
 
       <div class="tx-list" id="releves-tx-list">
@@ -838,10 +734,10 @@
     <!-- Right Column: Settings & Export -->
     <div style="display:flex; flex-direction: column; gap:24px;">
         
-      <!-- Aperçu PDF -->
+      <!-- Aper├ºu PDF -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Aperçu PDF</h3>
+          <h3 class="card-title">Aper├ºu PDF</h3>
         </div>
         <div class="card-body">
           <div class="pdf-preview-box">
@@ -862,7 +758,7 @@
             </div>
           </div>
           <div class="preview-actions">
-            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
+            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aper├ºu</button>
             <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
           </div>
         </div>
@@ -907,14 +803,14 @@
         </div>
       </div>
 
-      <!-- Export personnalisé -->
+      <!-- Export personnalis├® -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Export personnalisé</h3>
+          <h3 class="card-title">Export personnalis├®</h3>
         </div>
         <div class="card-body">
           <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label">Période</label>
+            <label class="form-label">P├®riode</label>
             <div class="select-wrapper">
               <select class="form-select" id="export-periode-select">
                 <!-- Rempli par JS -->
@@ -941,7 +837,7 @@
               </div>
           </div>
           <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
-            <i class="ti ti-file-export"></i> Générer l'export
+            <i class="ti ti-file-export"></i> G├®n├®rer l'export
           </button>
         </div>
       </div>
@@ -953,10 +849,10 @@
         </div>
 
 
-<!-- MOBILE VUE CRÉDITS -->
+<!-- MOBILE VUE CR├ëDITS -->
         <div id="m-view-credits" class="mobile-view" style="display:none; padding-bottom:100px;">
           <div class="m-header">
-            <h1 class="m-title">Mes Crédits</h1>
+            <h1 class="m-title">Mes Cr├®dits</h1>
             <div class="m-actions">
               <button class="m-btn-icon" onclick="openCreditModal()"><i class="ti ti-plus"></i></button>
             </div>
@@ -984,7 +880,7 @@
           <i class="ti ti-credit-card"></i>
           <span>Cartes</span>
         </div>
-        <div class="nb-fab" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); openDesktopViewMobile('view-virements')">
+        <div class="nb-fab" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); showMobileView('m-view-virements')">
           <div class="nb-fab-btn"><i class="ti ti-arrows-exchange"></i></div>
           <span>Virements</span>
         </div>
@@ -994,11 +890,11 @@
         </div>
         <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-credits')">
           <i class="ti ti-building-bank"></i>
-          <span>Crédits</span>
+          <span>Cr├®dits</span>
         </div>
         <div class="nb-item" onclick="document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active')); this.classList.add('active'); showMobileView('m-view-releves')">
           <i class="ti ti-file-text"></i>
-          <span>Relevés</span>
+          <span>Relev├®s</span>
         </div>
         <div class="nb-item" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')">
           <i class="ti ti-user"></i>
@@ -1019,16 +915,16 @@
           <span>NovaBanque</span>
         </div>
         <nav class="nb-nav">
-          <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">🏠</span> Accueil</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-virements')"><span class="nb-icon">⇄</span> Virements</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">💳</span> Cartes</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-credits')"><span class="nb-icon">🏦</span> Crédits</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
-          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-releves')"><span class="nb-icon">📄</span> Relevés</a>
+          <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">­ƒÅá</span> Accueil</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-virements')"><span class="nb-icon">Ôçä</span> Virements</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-cartes')"><span class="nb-icon">­ƒÆ│</span> Cartes</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-credits')"><span class="nb-icon">­ƒÅª</span> Cr├®dits</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">­ƒôè</span> Budget</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">­ƒæÑ</span> B├®n├®ficiaires</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-releves')"><span class="nb-icon">­ƒôä</span> Relev├®s</a>
         </nav>
         <div class="nb-footer">
-          <a href="#" class="nb-settings" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')"><span class="nb-icon">⚙️</span> Paramètres</a>
+          <a href="#" class="nb-settings" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')"><span class="nb-icon">ÔÜÖ´©Å</span> Param├¿tres</a>
           <div class="nb-user-profile">
             <div class="nb-avatar" id="user-avatar-desktop">..</div>
             <div class="nb-user-info">
@@ -1036,24 +932,24 @@
               <div class="nb-plan">Premium</div>
             </div>
           </div>
-          <button class="nb-logout" onclick="logout()">Se déconnecter</button>
+          <button class="nb-logout" onclick="logout()">Se d├®connecter</button>
         </div>
       </aside>
 
       <div class="nb-main">
         <header class="nb-header">
           <div class="nb-header-left">
-            <h1 class="nb-greeting">Bonjour, <span id="user-prenom-greeting"></span> 👋</h1>
+            <h1 class="nb-greeting">Bonjour, <span id="user-prenom-greeting"></span> ­ƒæï</h1>
             <p class="nb-date" id="nb-current-date"></p>
           </div>
           <div class="nb-header-right">
-            <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement ↗</button>
-            <button class="nb-btn-icon">🔔</button>
+            <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement Ôåù</button>
+            <button class="nb-btn-icon">­ƒöö</button>
           </div>
         </header>
         
         <div class="kyc-banner" id="kyc-alert-desktop" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:12px; margin-bottom:20px; font-weight:bold;">
-          ⚠️ Action requise : Veuillez fournir vos documents d'identité.
+          ÔÜá´©Å Action requise : Veuillez fournir vos documents d'identit├®.
         </div>
 
         <div id="view-dashboard" class="nb-view">
@@ -1061,7 +957,7 @@
           <!-- Row 1 -->
           <div class="nb-card nb-card-blue nb-solde-card">
             <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
-            <div class="nb-solde-amount" id="solde-display-desktop">0,00 €</div>
+            <div class="nb-solde-amount" id="solde-display-desktop">0,00 Ôé¼</div>
             <div class="nb-solde-footer">
               <span id="type-compte-display-desktop">Compte principal</span>
               <span class="nb-iban-masked" id="iban-display-desktop">- ****</span>
@@ -1069,16 +965,16 @@
           </div>
 
           <div class="nb-card nb-revenus-card">
-            <div class="nb-card-title-grey">REVENUS — TOUT TEMPS</div>
-            <div class="nb-card-value" id="revenus-total-desktop">0,00 €</div>
+            <div class="nb-card-title-grey">REVENUS ÔÇö TOUT TEMPS</div>
+            <div class="nb-card-value" id="revenus-total-desktop">0,00 Ôé¼</div>
             <div class="nb-stats-list" id="revenus-list-desktop">
               <!-- Dynamique -->
             </div>
           </div>
 
           <div class="nb-card nb-depenses-card">
-            <div class="nb-card-title-grey">DÉPENSES — TOUT TEMPS</div>
-            <div class="nb-card-value text-red" id="depenses-total-desktop">0,00 €</div>
+            <div class="nb-card-title-grey">D├ëPENSES ÔÇö TOUT TEMPS</div>
+            <div class="nb-card-value text-red" id="depenses-total-desktop">0,00 Ôé¼</div>
             <div class="nb-stats-list" id="depenses-list-desktop">
               <!-- Dynamique -->
             </div>
@@ -1087,15 +983,15 @@
           <!-- Row 2 -->
           <div class="nb-card nb-transactions-card" style="grid-column: 1 / span 2;">
             <div class="nb-tx-header">
-              <h2>Transactions récentes</h2>
+              <h2>Transactions r├®centes</h2>
               <div class="nb-tx-filters">
-                <select><option>Toutes catégories</option></select>
-                <a href="#" onclick="showView('view-releves')">Voir tout →</a>
+                <select><option>Toutes cat├®gories</option></select>
+                <a href="#" onclick="showView('view-releves')">Voir tout ÔåÆ</a>
               </div>
             </div>
             <table class="nb-tx-table">
               <thead>
-                <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
+                <tr><th>Libell├®</th><th>Date</th><th>Cat├®gorie</th><th>Montant</th></tr>
               </thead>
               <tbody id="tx-tbody-desktop">
                 <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
@@ -1106,7 +1002,7 @@
           <div class="nb-card nb-budget-card" id="budget-card-desktop">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <div class="nb-card-title-grey" style="margin-bottom:0;">BUDGET MENSUEL</div>
-              <button onclick="openModal('modal-budgets')" style="background:none; border:none; color:#2563EB; font-weight:600; font-size:12px; cursor:pointer;">⚙️ Gérer</button>
+              <button onclick="openModal('modal-budgets')" style="background:none; border:none; color:#2563EB; font-weight:600; font-size:12px; cursor:pointer;">ÔÜÖ´©Å G├®rer</button>
             </div>
             <div id="budget-list-desktop">
               <p style="font-size:13px; color:#64748B;">Chargement des budgets...</p>
@@ -1115,14 +1011,14 @@
         </div> <!-- /nb-grid -->
         </div> <!-- /view-dashboard -->
 
-        <!-- VUE CRÉDITS -->
+        <!-- VUE CR├ëDITS -->
         <div id="view-credits" class="nb-view" style="display:none; padding-bottom: 40px;">
           <div class="nb-grid" style="margin-top: 24px;">
             <div class="nb-card" style="grid-column: 1 / -1; margin-bottom: 0;">
-              <div class="virements-solde-flex" style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
                   <div>
-                      <h2 style="margin:0;">Mes Crédits</h2>
-                      <p style="color:var(--text-muted); font-size:14px; margin:4px 0 0;">Gérez vos demandes de financement.</p>
+                      <h2 style="margin:0;">Mes Cr├®dits</h2>
+                      <p style="color:var(--text-muted); font-size:14px; margin:4px 0 0;">G├®rez vos demandes de financement.</p>
                   </div>
                   <button class="nb-btn-primary" onclick="openCreditModal()">
                       <i class="ti ti-plus"></i> Nouvelle demande
@@ -1136,7 +1032,7 @@
               </div>
               <table class="nb-tx-table">
                 <thead>
-                  <tr><th>Référence</th><th>Date</th><th>Motif</th><th>Montant</th><th>Durée</th><th>Statut</th></tr>
+                  <tr><th>R├®f├®rence</th><th>Date</th><th>Motif</th><th>Montant</th><th>Dur├®e</th><th>Statut</th></tr>
                 </thead>
                 <tbody id="credits-tbody-desktop">
                   <tr><td colspan="6" style="text-align:center; padding: 20px;">Chargement...</td></tr>
@@ -1153,13 +1049,13 @@
               <div style="display:flex; justify-content:space-between; align-items:center;">
                   <div>
                       <div class="nb-card-title-light">SOLDE DISPONIBLE</div>
-                      <div class="nb-solde-amount" id="virement-solde-display">0,00 €</div>
+                      <div class="nb-solde-amount" id="virement-solde-display">0,00 Ôé¼</div>
                       <div class="nb-solde-footer">
                         <span>Compte principal</span>
                         <span class="nb-iban-masked" id="virement-iban-display">- ****</span>
                       </div>
                   </div>
-                  <button class="btn-outline" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
+                  <button class="btn-outline desktop-only" style="color:white; border-color:white; background:rgba(255,255,255,0.1);" onclick="openTunnelModal()">
                       <i class="ti ti-plus"></i> Nouveau virement
                   </button>
               </div>
@@ -1168,23 +1064,21 @@
             <div class="nb-card nb-transactions-card" style="grid-column: 1 / -1;">
               <div class="nb-tx-header">
                 <h2>Mes transactions</h2>
-                <button class="btn-outline" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> Télécharger historique</button>
+                <button class="btn-outline desktop-only" style="font-size:13px; padding:6px 12px;"><i class="ti ti-download"></i> T├®l├®charger historique</button>
               </div>
-              <div style="overflow-x: auto; max-width: 100vw;">
-                <table class="nb-tx-table">
+              <table class="nb-tx-table">
                 <thead>
-                  <tr><th>Libellé</th><th>Date</th><th>Catégorie</th><th>Montant</th></tr>
+                  <tr><th>Libell├®</th><th>Date</th><th>Cat├®gorie</th><th>Montant</th></tr>
                 </thead>
                 <tbody id="virement-tx-tbody">
                   <tr><td colspan="4" style="text-align:center; padding:20px;">Chargement...</td></tr>
                 </tbody>
               </table>
-              </div>
               
-              <div class="virements-pagination-flex" style="display:flex; justify-content:space-between; align-items:center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
                   <span style="color:var(--text-muted); font-size:13px;" id="virement-tx-info">Page 1</span>
                   <div style="display:flex; gap: 8px;">
-                      <button class="btn-outline" id="virement-btn-prev" onclick="changeVirementPage(-1)" disabled style="padding:6px 12px; font-size:13px;">&larr; Précédent</button>
+                      <button class="btn-outline" id="virement-btn-prev" onclick="changeVirementPage(-1)" disabled style="padding:6px 12px; font-size:13px;">&larr; Pr├®c├®dent</button>
                       <button class="btn-outline" id="virement-btn-next" onclick="changeVirementPage(1)" style="padding:6px 12px; font-size:13px;">Suivant &rarr;</button>
                   </div>
               </div>
@@ -1203,7 +1097,7 @@
           <div class="bdg-header">
             <div>
               <h1 class="page-title">Budget</h1>
-              <p class="page-subtitle">Suivez et maîtrisez vos dépenses par catégorie</p>
+              <p class="page-subtitle">Suivez et ma├«trisez vos d├®penses par cat├®gorie</p>
             </div>
             <div class="bdg-header-actions">
               <div class="bdg-month-selector">
@@ -1228,10 +1122,10 @@
                 <!-- Enveloppes -->
                 <div class="nb-card" style="margin-bottom: 24px;">
                    <div class="bdg-card-header">
-                      <h3>Enveloppes budgétaires</h3>
+                      <h3>Enveloppes budg├®taires</h3>
                       <div style="display:flex; background:var(--bg-body); border-radius:8px; padding:2px;">
                           <button style="padding:4px 12px; font-size:12px; border:none; border-radius:6px; background:var(--primary); color:white; font-weight:600; cursor:pointer;">Mois</button>
-                          <button style="padding:4px 12px; font-size:12px; border:none; border-radius:6px; background:transparent; color:var(--text-muted); cursor:pointer;">Année</button>
+                          <button style="padding:4px 12px; font-size:12px; border:none; border-radius:6px; background:transparent; color:var(--text-muted); cursor:pointer;">Ann├®e</button>
                       </div>
                    </div>
 
@@ -1243,7 +1137,7 @@
                 <!-- Evolution -->
                 <div class="nb-card" style="display:flex; justify-content:space-between;">
                    <div style="flex:1;">
-                       <h3 style="font-size:16px; margin-bottom:4px; margin-top:0;">Évolution des<br>dépenses</h3>
+                       <h3 style="font-size:16px; margin-bottom:4px; margin-top:0;">├ëvolution des<br>d├®penses</h3>
                    </div>
                    <div style="font-size:12px; color:var(--text-muted); text-align:right;">
                        6 derniers<br>mois
@@ -1263,7 +1157,7 @@
                 <!-- Repartition -->
                 <div class="nb-card" style="margin-bottom:24px;">
                    <div class="bdg-card-header" style="margin-bottom:16px;">
-                      <h3 style="margin:0;">Répartition</h3>
+                      <h3 style="margin:0;">R├®partition</h3>
                       <span style="font-size:12px; color:var(--text-muted);" id="bdg-repartition-month">Chargement...</span>
                    </div>
                    <div style="display:flex; align-items:center; gap:20px;">
@@ -1289,10 +1183,10 @@
                    </div>
                 </div>
 
-                <!-- Dernières dépenses -->
+                <!-- Derni├¿res d├®penses -->
                 <div class="nb-card">
                    <div class="bdg-card-header">
-                      <h3 style="margin:0;">Dernières dépenses</h3>
+                      <h3 style="margin:0;">Derni├¿res d├®penses</h3>
                       <a href="#" onclick="showView('view-releves')" style="font-size:12px; color:var(--primary); text-decoration:none; font-weight:600;">Voir tout &rarr;</a>
                    </div>
                    <div class="bdg-recent-tx" id="bdg-recent-tx-desktop">
@@ -1307,17 +1201,15 @@
         <div id="view-beneficiaires" class="nb-view" style="display:none;">
           <div class="nb-card" style="max-width:800px; margin:0 auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-              <h2>Mes Bénéficiaires</h2>
+              <h2>Mes B├®n├®ficiaires</h2>
               <button onclick="openModal('modal-add-beneficiaire')" class="nb-btn-primary">+ Ajouter</button>
             </div>
-            <div style="overflow-x: auto;">
-              <table class="nb-tx-table">
-                <thead><tr><th>Nom</th><th>IBAN</th><th>Date d'ajout</th><th>Action</th></tr></thead>
-                <tbody id="beneficiaires-tbody">
-                  <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
-                </tbody>
-              </table>
-            </div>
+            <table class="nb-tx-table">
+              <thead><tr><th>Nom</th><th>IBAN</th><th>Date d'ajout</th><th>Action</th></tr></thead>
+              <tbody id="beneficiaires-tbody">
+                <tr><td colspan="4" style="text-align:center; padding: 20px;">Chargement...</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -1329,24 +1221,24 @@
   <!-- Header -->
   <div class="page-header">
     <div>
-      <h1 class="page-title">Relevés de compte</h1>
-      <p class="page-subtitle">Consultez et téléchargez vos relevés mensuels</p>
+      <h1 class="page-title">Relev├®s de compte</h1>
+      <p class="page-subtitle">Consultez et t├®l├®chargez vos relev├®s mensuels</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-outline"><i class="ti ti-mail"></i> Envoi auto</button>
-      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout télécharger</button>
+      <button class="btn btn-primary"><i class="ti ti-download"></i> Tout t├®l├®charger</button>
     </div>
   </div>
 
   <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">RELEVÉS DISPO</div>
+      <div class="kpi-label">RELEV├ëS DISPO</div>
       <div class="kpi-value" id="kpi-dispo-val">-</div>
       <div class="kpi-sub" id="kpi-dispo-sub">- d'historique</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">PROCHAIN RELEVÉ</div>
+      <div class="kpi-label">PROCHAIN RELEV├ë</div>
       <div class="kpi-value" id="kpi-next-val">-</div>
       <div class="kpi-sub" id="kpi-next-sub">-</div>
     </div>
@@ -1370,27 +1262,27 @@
       <div class="card-header">
         <h3 class="card-title">Historique</h3>
         <div class="pill-tabs mobile-only" id="history-pills-mobile" style="display:flex;">
-            <!-- Généré par JS -->
+            <!-- G├®n├®r├® par JS -->
         </div>
         <div class="select-wrapper desktop-only" style="display:none;">
             <select class="form-select" id="history-select-desktop" style="padding: 4px 28px 4px 12px; width: auto; font-size: 13px;">
-                <!-- Généré par JS -->
+                <!-- G├®n├®r├® par JS -->
             </select>
         </div>
       </div>
       
       <div id="releves-history-list">
-        <!-- Contenu injecté par JS -->
+        <!-- Contenu inject├® par JS -->
         <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 14px;">Chargement de l'historique...</div>
       </div>
     </div>
 
-    <!-- Center Column: Relevé Détail -->
+    <!-- Center Column: Relev├® D├®tail -->
     <div class="card center-card">
       <div class="card-header">
         <div>
             <h3 class="card-title" style="display:flex; align-items:center; gap:8px;" id="center-title">
-                Relevé 
+                Relev├® 
                 <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:none;"></span>
             </h3>
             <div class="releve-meta" id="center-meta">Chargement...</div>
@@ -1412,9 +1304,9 @@
       </div>
 
       <div class="tx-header">
-        <div class="tx-header-libelle">Libellé</div>
+        <div class="tx-header-libelle">Libell├®</div>
         <div class="tx-header-date">Date</div>
-        <div class="tx-header-cat">Catégorie</div>
+        <div class="tx-header-cat">Cat├®gorie</div>
       </div>
 
       <div class="tx-list" id="releves-tx-list">
@@ -1426,10 +1318,10 @@
     <!-- Right Column: Settings & Export -->
     <div style="display:flex; flex-direction: column; gap:24px;">
         
-      <!-- Aperçu PDF -->
+      <!-- Aper├ºu PDF -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Aperçu PDF</h3>
+          <h3 class="card-title">Aper├ºu PDF</h3>
         </div>
         <div class="card-body">
           <div class="pdf-preview-box">
@@ -1450,7 +1342,7 @@
             </div>
           </div>
           <div class="preview-actions">
-            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aperçu</button>
+            <button class="btn btn-outline" id="btn-preview-pdf" style="display:none;"><i class="ti ti-eye"></i> Aper├ºu</button>
             <button class="btn btn-primary" id="btn-download-pdf"><i class="ti ti-download"></i> PDF</button>
           </div>
         </div>
@@ -1495,14 +1387,14 @@
         </div>
       </div>
 
-      <!-- Export personnalisé -->
+      <!-- Export personnalis├® -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Export personnalisé</h3>
+          <h3 class="card-title">Export personnalis├®</h3>
         </div>
         <div class="card-body">
           <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label">Période</label>
+            <label class="form-label">P├®riode</label>
             <div class="select-wrapper">
               <select class="form-select" id="export-periode-select">
                 <!-- Rempli par JS -->
@@ -1529,7 +1421,7 @@
               </div>
           </div>
           <button class="btn btn-primary" id="btn-export" style="width: 100%; justify-content: center; margin-top: 8px;">
-            <i class="ti ti-file-export"></i> Générer l'export
+            <i class="ti ti-file-export"></i> G├®n├®rer l'export
           </button>
         </div>
       </div>
@@ -1541,413 +1433,7 @@
         </div>
 
         
-
-<!-- ECRAN PARAMETRES (view-settings) -->
-
-<div id="view-settings" class="nb-view" style="display:none; height:calc(100vh - 80px); padding: 0;">
-  <div class="settings-layout-container" style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100%;background:#F8FAFC;border-radius:14px;border:0.5px solid #E2E8F0;margin:0 20px 20px 20px;">
-    
-    <!-- Sous-menu paramètres HORIZONTAL -->
-    <div class="settings-tabs-menu" style="flex-shrink:0;background:#F8FAFC;border-bottom:0.5px solid #E2E8F0;padding:12px 16px;display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none;white-space:nowrap;-webkit-overflow-scrolling: touch;">
-      <div class="tab-side act" onclick="switchSettingsTab(this, 'settings-tab-profil')"><i class="ti ti-user-circle"></i>Profil & identité</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-securite')"><i class="ti ti-shield-lock"></i>Sécurité</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-notifications')"><i class="ti ti-bell"></i>Notifications</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-cartes')"><i class="ti ti-credit-card"></i>Cartes & plafonds</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-virements')"><i class="ti ti-arrows-exchange"></i>Virements</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-apparence')"><i class="ti ti-palette"></i>Apparence</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-abonnement')"><i class="ti ti-file-invoice"></i>Abonnement</div>
-      <div class="tab-side" onclick="switchSettingsTab(this, 'settings-tab-confidentialite')"><i class="ti ti-lock-access"></i>Confidentialité</div>
-      
-      <div style="margin-left:auto; display:flex; gap:12px;">
-         <div class="tab-side" style="color:#B91C1C;" onclick="logout()"><i class="ti ti-logout" style="color:#B91C1C;"></i>Se déconnecter</div>
-         <div class="tab-side" style="color:#B91C1C;border-color:#FECACA;background:#FEF2F2;" onclick="alert('Veuillez contacter le support pour procéder à la suppression de votre compte.')"><i class="ti ti-trash" style="color:#B91C1C;"></i>Supprimer le compte</div>
-      </div>
-    </div>
-
-    <!-- Contenu principal -->
-    <div class="settings-content-area" style="flex:1;min-width:0;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none;position:relative;">
-      
-      <!-- =============================== -->
-      <!-- TAB: PROFIL & IDENTITE          -->
-      <!-- =============================== -->
-      <div id="settings-tab-profil" class="settings-tab-content active" style="display:flex; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Profil & identité</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Gérez vos informations personnelles et de contact</p>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-p" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="switchSettingsTab(document.querySelector('.tab-side'), 'settings-tab-profil')">Annuler</button>
-            <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Profil mis à jour avec succès')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-          </div>
-        </div>
-
-        <div class="settings-card">
-          <div class="ch"><div><p class="ch-title">Informations personnelles</p><p class="ch-sub">Votre identité telle qu'elle apparaît sur votre compte</p></div></div>
-          <div style="display:flex;gap:20px;align-items:flex-start; flex-wrap:wrap;">
-            <!-- Avatar -->
-            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
-              <div style="width:72px;height:72px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#1D4ED8;position:relative;border:3px solid #BFDBFE;">
-                <span id="settings-avatar-initials">MR</span>
-                <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:#2563EB;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;cursor:pointer;">
-                  <i class="ti ti-camera" style="font-size:10px;color:#fff;"></i>
-                </div>
-              </div>
-              <button style="font-size:10px;color:#2563EB;background:none;border:none;cursor:pointer;font-weight:500;">Modifier</button>
-            </div>
-            <!-- Champs -->
-            <div class="settings-grid-fields" style="flex:1;display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:10px;">
-              <div class="field" style="margin:0;">
-                <label>Prénom</label>
-                <input value="Manuela" id="settings-prenom">
-              </div>
-              <div class="field" style="margin:0;">
-                <label>Nom</label>
-                <input value="Rodriguez" id="settings-nom">
-              </div>
-              <div class="field" style="margin:0;">
-                <label>Date de naissance</label>
-                <input value="14/03/1991" type="text" id="settings-dob" disabled style="background:#F8FAFC; color:#64748B;">
-              </div>
-              <div class="field" style="margin:0;">
-                <label>Nationalité</label>
-                <select><option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option></select>
-              </div>
-              <div class="field" style="margin:0;grid-column:1/-1;">
-                <label>Adresse</label>
-                <input value="12 rue de la Paix, 75001 Paris" id="settings-adresse">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="settings-card">
-            <div class="ch"><div><p class="ch-title">Contact</p><p class="ch-sub">Email et téléphone associés au compte</p></div></div>
-            <div class="settings-grid-fields" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:14px;">
-              <div class="field" style="margin:0;">
-                <label>Adresse email</label>
-                <input value="manuela@email.fr" type="email" id="settings-email">
-              </div>
-              <div class="field" style="margin:0;">
-                <label>Téléphone</label>
-                <div style="display:flex;gap:8px;">
-                  <select style="width:80px;padding:9px 8px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;outline:none;flex-shrink:0;"><option>🇫🇷 +33</option><option>🇧🇪 +32</option></select>
-                  <input value="6 12 34 56 78" style="flex:1;" id="settings-phone">
-                </div>
-              </div>
-            </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: SÉCURITÉ                   -->
-      <!-- =============================== -->
-      <div id="settings-tab-securite" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Sécurité</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Protégez l'accès à votre compte</p>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Paramètres de sécurité mis à jour')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-          </div>
-        </div>
-
-        <div class="settings-grid-main" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:14px;">
-            <div class="settings-card">
-              <div class="ch"><div><p class="ch-title">Mot de passe</p><p class="ch-sub">Modifiez votre mot de passe de connexion</p></div></div>
-              <div class="field">
-                <label>Mot de passe actuel</label>
-                <div style="position:relative;">
-                  <input type="password" value="••••••••••" placeholder="Mot de passe actuel">
-                </div>
-              </div>
-              <div class="field">
-                <label>Nouveau mot de passe</label>
-                <input type="password" placeholder="Nouveau mot de passe">
-                <div style="display:flex;gap:4px;margin-top:4px;">
-                  <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
-                  <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
-                  <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
-                  <div style="flex:1;height:3px;border-radius:2px;background:#E2E8F0;"></div>
-                </div>
-                <span class="hint">Fort · Min. 8 caractères, 1 maj, 1 chiffre</span>
-              </div>
-              <div class="field" style="margin-bottom:14px;">
-                <label>Confirmer le nouveau mot de passe</label>
-                <input type="password" placeholder="Confirmer">
-              </div>
-              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;" onclick="saveSettingsMock('Mot de passe mis à jour')">Mettre à jour le mot de passe</button>
-            </div>
-
-            <div class="settings-card">
-              <div class="ch"><div><p class="ch-title">Double authentification (2FA)</p><p class="ch-sub">Sécurité supplémentaire pour la connexion</p></div></div>
-              
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:12px;">
-                <div style="display:flex;gap:12px;align-items:center;">
-                  <i class="ti ti-device-mobile-message" style="font-size:20px;color:#2563EB;"></i>
-                  <div><p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">SMS OTP</p><p style="font-size:11px;color:#64748B;margin:0;">Code envoyé au +33 6 ** ** ** 78</p></div>
-                </div>
-                <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-              </div>
-
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:12px;">
-                <div style="display:flex;gap:12px;align-items:center;">
-                  <i class="ti ti-mail" style="font-size:20px;color:#2563EB;"></i>
-                  <div><p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">Email OTP</p><p style="font-size:11px;color:#64748B;margin:0;">Code envoyé à manuela@...</p></div>
-                </div>
-                <div class="tg" onclick="this.classList.toggle('on')"><span></span></div>
-              </div>
-            </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: NOTIFICATIONS              -->
-      <!-- =============================== -->
-      <div id="settings-tab-notifications" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Notifications</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Contrôlez les alertes que vous recevez</p>
-          </div>
-          <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Préférences de notifications enregistrées')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-        </div>
-
-        <div class="settings-card">
-           <div class="ch"><div><p class="ch-title">Alertes de transaction</p><p class="ch-sub">Soyez notifié à chaque mouvement</p></div></div>
-           
-           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E2E8F0;padding-bottom:12px;margin-bottom:12px;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Virements reçus</p><p style="font-size:12px;color:#64748B;margin:0;">Notification push & Email</p></div>
-              <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E2E8F0;padding-bottom:12px;margin-bottom:12px;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Virements émis</p><p style="font-size:12px;color:#64748B;margin:0;">Notification push uniquement</p></div>
-              <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-           <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Paiements par carte refusés</p><p style="font-size:12px;color:#64748B;margin:0;">Alerte immédiate par SMS</p></div>
-              <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-        </div>
-
-        <div class="settings-card">
-           <div class="ch"><div><p class="ch-title">Alertes de sécurité</p><p class="ch-sub">Surveillance de l'activité du compte</p></div></div>
-           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E2E8F0;padding-bottom:12px;margin-bottom:12px;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Nouvelles connexions</p><p style="font-size:12px;color:#64748B;margin:0;">Alerte sur les nouveaux appareils</p></div>
-              <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-           <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Changement de mot de passe</p><p style="font-size:12px;color:#64748B;margin:0;">Requis par défaut</p></div>
-              <div class="tg on disabled" style="opacity:0.5; cursor:not-allowed;"><span></span></div>
-           </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: CARTES & PLAFONDS          -->
-      <!-- =============================== -->
-      <div id="settings-tab-cartes" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Cartes & plafonds</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Gérez vos cartes bancaires et limites</p>
-          </div>
-          <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Plafonds mis à jour avec succès')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-        </div>
-
-        <div class="settings-card">
-          <div class="ch"><div><p class="ch-title">Ma Carte NovaBanque</p><p class="ch-sub">Carte physique **** 1234</p></div></div>
-          
-          <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom: 20px;">
-            <div style="width:120px; height:80px; background:linear-gradient(135deg, #1E3A8A, #3B82F6); border-radius:10px; position:relative; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                <i class="ti ti-brand-mastercard" style="position:absolute; bottom:8px; right:8px; color:white; font-size:24px;"></i>
-                <div style="position:absolute; top:8px; left:8px; width:16px; height:12px; background:#F59E0B; border-radius:2px;"></div>
-            </div>
-            <div style="flex:1;">
-                <div style="display:flex;justify-content:space-between;align-items:center; margin-bottom:12px;">
-                    <span style="font-size:14px;font-weight:600;color:#0F172A;">Paiement sans contact</span>
-                    <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center; margin-bottom:12px;">
-                    <span style="font-size:14px;font-weight:600;color:#0F172A;">Paiements à l'étranger</span>
-                    <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <span style="font-size:14px;font-weight:600;color:#B91C1C;">Bloquer la carte</span>
-                    <div class="tg" onclick="this.classList.toggle('on')"><span></span></div>
-                </div>
-            </div>
-          </div>
-
-          <div style="border-top:1px solid #E2E8F0; padding-top:20px;">
-            <p style="font-size:14px;font-weight:600;margin:0 0 12px 0;">Plafonds sur 30 jours</p>
-            
-            <div style="margin-bottom:16px;">
-                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-                    <span>Paiements (1 200 € / 3 000 €)</span>
-                    <span style="font-weight:600;">Modifiable</span>
-                </div>
-                <input type="range" min="500" max="5000" value="3000" style="width:100%;">
-            </div>
-            
-            <div>
-                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-                    <span>Retraits (300 € / 1 000 €)</span>
-                    <span style="font-weight:600;">Modifiable</span>
-                </div>
-                <input type="range" min="100" max="2000" value="1000" style="width:100%;">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: VIREMENTS                  -->
-      <!-- =============================== -->
-      <div id="settings-tab-virements" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Virements</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Gérez vos bénéficiaires et limites de transferts</p>
-          </div>
-          <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Paramètres de virements mis à jour')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-        </div>
-
-        <div class="settings-card">
-            <div class="ch"><div><p class="ch-title">Plafonds de virements</p><p class="ch-sub">Sécurité anti-fraude</p></div></div>
-            <div class="field">
-              <label>Plafond journalier (Virements SEPA)</label>
-              <select style="width:100%;padding:10px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;">
-                  <option>1 000 €</option>
-                  <option selected>5 000 €</option>
-                  <option>10 000 €</option>
-              </select>
-            </div>
-            <div class="field" style="margin-top:14px;">
-              <label>Validation forte requise au-delà de</label>
-              <select style="width:100%;padding:10px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;">
-                  <option>100 €</option>
-                  <option selected>500 €</option>
-                  <option>Toutes les transactions</option>
-              </select>
-            </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: APPARENCE                  -->
-      <!-- =============================== -->
-      <div id="settings-tab-apparence" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Apparence</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Personnalisez l'interface</p>
-          </div>
-          <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Préférences d\'apparence appliquées')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-        </div>
-
-        <div class="settings-card">
-            <div class="ch"><div><p class="ch-title">Thème de l'application</p><p class="ch-sub">Mode clair ou sombre</p></div></div>
-            <div style="display:flex; gap:16px;">
-                <div id="theme-btn-light" onclick="applyTheme('light')" style="flex:1; border:2px solid #2563EB; border-radius:12px; padding:16px; text-align:center; cursor:pointer; background:#F8FAFC;">
-                    <i class="ti ti-sun" style="font-size:32px; color:#F59E0B; margin-bottom:8px;"></i>
-                    <p style="margin:0; font-weight:600; font-size:14px;">Mode Clair</p>
-                </div>
-                <div id="theme-btn-dark" onclick="applyTheme('dark')" style="flex:1; border:1px solid #E2E8F0; border-radius:12px; padding:16px; text-align:center; cursor:pointer; background:#1E293B;">
-                    <i class="ti ti-moon" style="font-size:32px; color:#F8FAFC; margin-bottom:8px;"></i>
-                    <p style="margin:0; font-weight:600; font-size:14px; color:#F8FAFC;">Mode Sombre</p>
-                </div>
-            </div>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: ABONNEMENT                 -->
-      <!-- =============================== -->
-      <div id="settings-tab-abonnement" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Abonnement</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Votre forfait actuel et factures</p>
-          </div>
-        </div>
-
-        <div class="settings-card" style="background:linear-gradient(135deg, #F8FAFC, #EFF6FF); border-color:#BFDBFE;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-                <div>
-                    <span style="background:#2563EB; color:white; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; text-transform:uppercase;">Plan Standard</span>
-                    <h3 style="font-size:24px; font-weight:800; color:#0F172A; margin:8px 0 4px 0;">0,00 € / mois</h3>
-                    <p style="font-size:13px; color:#64748B; margin:0;">Inclus toutes les opérations courantes</p>
-                </div>
-                <i class="ti ti-shield-check" style="font-size:36px; color:#2563EB;"></i>
-            </div>
-            
-            <button class="btn-p" style="width:100%; background:white; color:#2563EB; border:1px solid #2563EB; font-weight:600;" onclick="alert('L\'offre Premium sera bientôt disponible !')">Découvrir l'offre Premium</button>
-        </div>
-      </div>
-
-      <!-- =============================== -->
-      <!-- TAB: CONFIDENTIALITÉ            -->
-      <!-- =============================== -->
-      <div id="settings-tab-confidentialite" class="settings-tab-content" style="display:none; flex-direction:column; gap:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;" class="settings-header-flex">
-          <div>
-            <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Confidentialité</h2>
-            <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">Contrôle de vos données</p>
-          </div>
-          <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Préférences de confidentialité enregistrées')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
-        </div>
-
-        <div class="settings-card">
-           <div class="ch"><div><p class="ch-title">Utilisation des données</p><p class="ch-sub">Consentements RGPD</p></div></div>
-           
-           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E2E8F0;padding-bottom:12px;margin-bottom:12px;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Offres personnalisées</p><p style="font-size:12px;color:#64748B;margin:0;">Autoriser l'analyse pour des offres ciblées</p></div>
-              <div class="tg" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-           <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div><p style="font-size:14px;font-weight:600;margin:0;color:#0F172A;">Partage avec des partenaires</p><p style="font-size:12px;color:#64748B;margin:0;">Services tiers</p></div>
-              <div class="tg" onclick="this.classList.toggle('on')"><span></span></div>
-           </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- SCRIPT SETTINGS -->
-
-<script>
-function switchSettingsTab(el, targetId) {
-  // Update active styling on the horizontal menu
-  const tabsMenu = el.closest('.settings-tabs-menu');
-  if (tabsMenu) {
-      tabsMenu.querySelectorAll('.tab-side').forEach(t => t.classList.remove('act'));
-      el.classList.add('act');
-  }
-  
-  // Hide all contents and show target
-  const container = document.querySelector('.settings-content-area');
-  if (container) {
-      container.querySelectorAll('.settings-tab-content').forEach(content => {
-          content.style.display = 'none';
-          content.classList.remove('active');
-      });
-      const target = document.getElementById(targetId);
-      if (target) {
-          target.style.display = 'flex';
-          target.classList.add('active');
-      }
-  }
-}
-
-function saveSettingsMock(msg) {
-    alert(msg || 'Paramètres enregistrés avec succès');
-}
-</script>
-
-\n</div> <!-- /nb-main -->
+</div> <!-- /nb-main -->
     </div> <!-- /desktop-layout -->
   </div> <!-- /pg-dash -->
 
@@ -1961,8 +1447,8 @@ function saveSettingsMock(msg) {
       
       <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
         <h4 style="margin-bottom:10px; font-size:14px; color:#0F172A;">Ajouter une enveloppe</h4>
-        <input type="text" id="new-budget-cat" placeholder="Catégorie (ex: Casino)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
-        <input type="number" id="new-budget-limite" placeholder="Limite (€)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <input type="text" id="new-budget-cat" placeholder="Cat├®gorie (ex: Casino)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
+        <input type="number" id="new-budget-limite" placeholder="Limite (Ôé¼)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
         <button onclick="ajouterBudget()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Ajouter</button>
       </div>
 
@@ -1975,13 +1461,13 @@ function saveSettingsMock(msg) {
   <!-- Drawer Menu Espace Client -->
   <div class="mobile-overlay" id="app-overlay" style="display:none;" onclick="closeAppDrawer()"></div>
   <div class="mobile-drawer" id="app-drawer" style="display:none; position:fixed; top:0; right:0; width:250px; height:100%; background:white; z-index:9999; padding:20px; box-shadow:-5px 0 15px rgba(0,0,0,0.1); transition:transform 0.3s; font-family:'Nunito', sans-serif;">
-    <button class="drawer-close" onclick="closeAppDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer; float:right;">✕</button>
+    <button class="drawer-close" onclick="closeAppDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer; float:right;">Ô£ò</button>
     <h3 style="margin-top:40px; color:#1a1a1a;">Menu</h3>
     <nav style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
-      <a href="#" onclick="closeAppDrawer(); showPage('pg-profile-settings')" style="color:#555; text-decoration:none; font-weight:700;">👤 Mon Profil</a>
-      <a href="#" onclick="closeAppDrawer(); showMobileView('m-view-releves')" style="color:#555; text-decoration:none; font-weight:700;">📄 Relevés</a>
-      <a href="#" onclick="closeAppDrawer(); showPage('pg-security-settings')" style="color:#555; text-decoration:none; font-weight:700;">🔒 Sécurité</a>
-      <a href="#" onclick="logout()" style="color:#c0392b; text-decoration:none; font-weight:700;">🚪 Se déconnecter</a>
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-profile-settings')" style="color:#555; text-decoration:none; font-weight:700;">­ƒæñ Mon Profil</a>
+      <a href="#" onclick="closeAppDrawer(); showMobileView('m-view-releves')" style="color:#555; text-decoration:none; font-weight:700;">­ƒôä Relev├®s</a>
+      <a href="#" onclick="closeAppDrawer(); showPage('pg-security-settings')" style="color:#555; text-decoration:none; font-weight:700;">­ƒöÆ S├®curit├®</a>
+      <a href="#" onclick="logout()" style="color:#c0392b; text-decoration:none; font-weight:700;">­ƒÜ¬ Se d├®connecter</a>
     </nav>
   </div>
 
@@ -1991,7 +1477,7 @@ function saveSettingsMock(msg) {
       <h2 class="login-title">Mon Profil</h2>
       <form id="form-profile" class="login-form">
         <div class="form-group">
-          <label>Prénom</label>
+          <label>Pr├®nom</label>
           <input type="text" id="prof-prenom" required />
         </div>
         <div class="form-group">
@@ -1999,13 +1485,13 @@ function saveSettingsMock(msg) {
           <input type="text" id="prof-nom" required />
         </div>
         <div class="form-group">
-          <label>Téléphone</label>
+          <label>T├®l├®phone</label>
           <input type="text" id="prof-tel" />
         </div>
         <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Enregistrer</button>
       </form>
       <div class="login-links">
-        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+        <a href="#" onclick="showPage('pg-dash')">ÔåÉ Retour au tableau de bord</a>
       </div>
     </div>
   </div>
@@ -2013,7 +1499,7 @@ function saveSettingsMock(msg) {
   <!-- ECRAN SECURITE (Mot de passe) -->
   <div id="pg-security-settings" class="page flex-col" style="display:none;">
     <div class="login-container">
-      <h2 class="login-title">Sécurité</h2>
+      <h2 class="login-title">S├®curit├®</h2>
       <form id="form-security" class="login-form">
         <div class="form-group">
           <label>Mot de passe actuel</label>
@@ -2023,24 +1509,24 @@ function saveSettingsMock(msg) {
           <label>Nouveau mot de passe</label>
           <input type="password" id="sec-new-pwd" required minlength="6" />
         </div>
-        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Mettre à jour</button>
+        <button type="submit" class="btn-primary w-full" style="background:#F15A22; color:white;">Mettre ├á jour</button>
       </form>
       <div class="login-links">
-        <a href="#" onclick="showPage('pg-dash')">← Retour au tableau de bord</a>
+        <a href="#" onclick="showPage('pg-dash')">ÔåÉ Retour au tableau de bord</a>
       </div>
     </div>
   </div>
 
   
 
-        <!-- Modal Ajout Bénéficiaire -->
+        <!-- Modal Ajout B├®n├®ficiaire -->
   <div class="modal" id="modal-add-beneficiaire" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
     <div class="modal-content" style="background:white; max-width:400px; width:90%; border-radius:16px; padding:24px;">
-      <h2 style="font-size:18px; margin-bottom:16px;">Ajouter un bénéficiaire</h2>
+      <h2 style="font-size:18px; margin-bottom:16px;">Ajouter un b├®n├®ficiaire</h2>
       <div style="background:#F8FAFC; padding:15px; border-radius:12px;">
         <input type="text" id="new-ben-nom" placeholder="Nom complet (ex: Jean Dupont)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
         <input type="text" id="new-ben-iban" oninput="previewBIC()" placeholder="IBAN (FR76...)" class="w-full" style="padding:10px; margin-bottom:10px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box;">
-        <input type="text" id="new-ben-bic" placeholder="BIC (sera résolu automatiquement)" class="w-full" style="padding:10px; margin-bottom:15px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box; background:#F1F5F9; color:#64748B;">
+        <input type="text" id="new-ben-bic" placeholder="BIC (sera r├®solu automatiquement)" class="w-full" style="padding:10px; margin-bottom:15px; border:1px solid #E2E8F0; border-radius:8px; width:100%; box-sizing:border-box; background:#F1F5F9; color:#64748B;">
         <button onclick="ajouterBeneficiaire()" style="background:#2563EB; color:white; width:100%; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">+ Enregistrer</button>
       </div>
       <div style="text-align:right; margin-top:20px;">
@@ -2063,7 +1549,7 @@ function saveSettingsMock(msg) {
                   </div>
               </div>
               <button class="btn-outline" onclick="closeModal('modal-virement-tunnel')">
-                  ✕ Fermer
+                  Ô£ò Fermer
               </button>
           </div>
 
@@ -2073,28 +1559,28 @@ function saveSettingsMock(msg) {
               <!-- Column 1: Beneficiary -->
               <div class="card" style="box-shadow:none;">
                   <div class="card-header">
-                      <h3 class="card-title">Bénéficiaire</h3>
+                      <h3 class="card-title">B├®n├®ficiaire</h3>
                   </div>
                   
                   <div class="beneficiary-selected" id="desktop-beneficiary-selected" style="display:none; justify-content: space-between; align-items: center;">
                       <div style="display: flex; gap: 12px; align-items: center;">
                           <div class="avatar-green" id="desktop-ben-avatar">MB</div>
                           <div class="beneficiary-info">
-                              <h4 id="desktop-ben-name">Sélectionnez un bénéficiaire</h4>
+                              <h4 id="desktop-ben-name">S├®lectionnez un b├®n├®ficiaire</h4>
                               <p id="desktop-ben-iban">-</p>
                           </div>
                       </div>
-                      <button type="button" onclick="unselectBeneficiary(false)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">✕</button>
+                      <button type="button" onclick="unselectBeneficiary(false)" style="background: none; border: none; cursor: pointer; color: #64748B; font-size: 18px;">Ô£ò</button>
                   </div>
 
                   <div id="desktop-recents-container" style="display:none;">
-                      <div class="recents-title">Récents</div>
+                      <div class="recents-title">R├®cents</div>
                       <div class="recents-grid" id="desktop-recents-grid">
                           <!-- Dynamique -->
                       </div>
                   </div>
 
-                  <div class="recents-title" style="margin-top: 24px;">Tous les bénéficiaires</div>
+                  <div class="recents-title" style="margin-top: 24px;">Tous les b├®n├®ficiaires</div>
                   <div class="recents-grid" id="desktop-all-grid">
                       <!-- Dynamique -->
                   </div>
@@ -2103,7 +1589,7 @@ function saveSettingsMock(msg) {
               <!-- Column 2: Details -->
               <div class="card" style="box-shadow:none;">
                   <div class="card-header desktop-only">
-                      <h3 class="card-title">Détails du virement</h3>
+                      <h3 class="card-title">D├®tails du virement</h3>
                   </div>
 
                   <div class="form-group">
@@ -2111,8 +1597,8 @@ function saveSettingsMock(msg) {
                       <select class="form-control" id="vir-type-desktop" onchange="toggleDateProgrammee(this.value, 'desktop')" style="background-color: white;">
                           <option value="standard">Virement Standard</option>
                           <option value="swift">Virement SWIFT</option>
-                          <option value="immediat">Instantanné</option>
-                          <option value="programme">Virement Programmé</option>
+                          <option value="immediat">Instantann├®</option>
+                          <option value="programme">Virement Programm├®</option>
                       </select>
                   </div>
 
@@ -2121,7 +1607,7 @@ function saveSettingsMock(msg) {
                           <label class="form-label">Montant</label>
                           <div class="input-with-icon">
                               <input type="number" class="form-control" id="vir-montant" value="" placeholder="0.00" required oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                              <span class="input-icon">€</span>
+                              <span class="input-icon">Ôé¼</span>
                           </div>
                       </div>
                       <div class="form-group">
@@ -2151,7 +1637,7 @@ function saveSettingsMock(msg) {
           <div class="auth-header" style="justify-content: center; margin-bottom: 16px;">
               <i class="ti ti-shield-check auth-icon"></i> Authentification
           </div>
-          <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'opération avec votre code secret à 6 chiffres.</p>
+          <p class="auth-desc" style="text-align: center; margin-bottom: 24px;">Confirmez l'op├®ration avec votre code secret ├á 6 chiffres.</p>
           
           <div class="otp-inputs" style="justify-content: center; margin-bottom: 32px;">
               <input type="password" maxlength="1" class="otp-input-real" onkeyup="moveOtpFocus(this, event)" style="width: 45px; height: 50px; text-align: center; font-size: 24px; border: 1px solid var(--border); border-radius: 8px; margin: 0 4px;" autofocus>
@@ -2171,19 +1657,19 @@ function saveSettingsMock(msg) {
       <!-- Vue: Loading -->
       <div id="tunnel-step-loading" style="display:none; text-align: center; padding: 40px 0;">
           <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px;"></div>
-          <h3 style="font-size: 18px; color: var(--text-main);">Virement en cours d'émission...</h3>
-          <p style="color: var(--text-muted); margin-top: 8px;">Veuillez patienter pendant le traitement sécurisé de votre demande.</p>
+          <h3 style="font-size: 18px; color: var(--text-main);">Virement en cours d'├®mission...</h3>
+          <p style="color: var(--text-muted); margin-top: 8px;">Veuillez patienter pendant le traitement s├®curis├® de votre demande.</p>
           <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
       </div>
 
-      <!-- Vue: Recapitulatif (Succès) -->
+      <!-- Vue: Recapitulatif (Succ├¿s) -->
       <div id="tunnel-step-recap" style="display:none;">
           <div style="text-align: center; margin-bottom: 24px;">
               <div style="display: inline-flex; justify-content: center; align-items: center; width: 64px; height: 64px; background: var(--success-light); color: var(--success); border-radius: 50%; font-size: 32px; margin-bottom: 16px;">
                   <i class="ti ti-check"></i>
               </div>
-              <h2 style="font-size: 22px; color: var(--text-main);">Virement émis avec succès</h2>
-              <p style="color: var(--text-muted); margin-top: 8px;">Votre demande a bien été prise en compte.</p>
+              <h2 style="font-size: 22px; color: var(--text-main);">Virement ├®mis avec succ├¿s</h2>
+              <p style="color: var(--text-muted); margin-top: 8px;">Votre demande a bien ├®t├® prise en compte.</p>
           </div>
           
           <div class="recap-card" style="border: none; padding: 0; margin-bottom: 32px; box-shadow: none;">
@@ -2198,14 +1684,14 @@ function saveSettingsMock(msg) {
                   </div>
                   <div class="recap-item">
                       <span class="recap-label">Type</span>
-                      <span class="recap-value">Immédiat</span>
+                      <span class="recap-value">Imm├®diat</span>
                   </div>
               </div>
               <div class="recap-divider"></div>
               <div class="amount-summary" style="background: var(--bg-body); box-shadow: none;">
-                  <div class="amount-label">Montant débité</div>
-                  <div class="amount-value" id="recap-montant">250,00 €</div>
-                  <div class="balance-after">Solde après virement : <br><span id="recap-balance-after">12 230,32 €</span></div>
+                  <div class="amount-label">Montant d├®bit├®</div>
+                  <div class="amount-value" id="recap-montant">250,00 Ôé¼</div>
+                  <div class="balance-after">Solde apr├¿s virement : <br><span id="recap-balance-after">12 230,32 Ôé¼</span></div>
               </div>
           </div>
 
@@ -2232,7 +1718,7 @@ function saveSettingsMock(msg) {
 <div id="modal-export-settings" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
   <div class="modal-content" style="background: white; border-radius: 12px; width: 100%; max-width: 400px; padding: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h3 style="margin: 0; font-size: 18px;">Paramètres d'export</h3>
+      <h3 style="margin: 0; font-size: 18px;">Param├¿tres d'export</h3>
       <button onclick="document.getElementById('modal-export-settings').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
     </div>
     
@@ -2240,7 +1726,7 @@ function saveSettingsMock(msg) {
       <label class="form-label">Action</label>
       <div class="select-wrapper">
         <select class="form-select" id="export-action">
-          <option value="download">Télécharger sur l'appareil</option>
+          <option value="download">T├®l├®charger sur l'appareil</option>
           <option value="email">Envoyer par Email</option>
         </select>
       </div>
@@ -2269,15 +1755,15 @@ function saveSettingsMock(msg) {
         <p style="margin: 4px 0 0; font-size: 12px; color: #666;">La banque qui vous comprend</p>
       </div>
       <div style="text-align: right; font-size: 14px;">
-        <h2 style="margin: 0; font-size: 18px;" id="pdf-month-title">Relevé Mensuel</h2>
-        <p style="margin: 4px 0 0;" id="pdf-date-range">Période du -- au --</p>
+        <h2 style="margin: 0; font-size: 18px;" id="pdf-month-title">Relev├® Mensuel</h2>
+        <p style="margin: 4px 0 0;" id="pdf-date-range">P├®riode du -- au --</p>
       </div>
     </div>
     
     <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
       <div>
         <h3 style="margin: 0 0 8px; font-size: 14px; color: #666;">Titulaire du compte</h3>
-        <p style="margin: 0; font-size: 16px; font-weight: 600;" id="pdf-user-name">Prénom Nom</p>
+        <p style="margin: 0; font-size: 16px; font-weight: 600;" id="pdf-user-name">Pr├®nom Nom</p>
         <p style="margin: 4px 0 0; font-size: 14px;" id="pdf-user-email">email@domain.com</p>
       </div>
       <div style="text-align: right;">
@@ -2290,19 +1776,19 @@ function saveSettingsMock(msg) {
     <div style="display: flex; justify-content: space-between; background: #F8FAFC; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
       <div style="text-align: center;">
         <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Solde Initial</p>
-        <p style="margin: 0; font-size: 18px; font-weight: 600;" id="pdf-balance-start">0,00 €</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600;" id="pdf-balance-start">0,00 Ôé¼</p>
       </div>
       <div style="text-align: center;">
-        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total Crédits</p>
-        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #16a34a;" id="pdf-balance-credits">+0,00 €</p>
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total Cr├®dits</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #16a34a;" id="pdf-balance-credits">+0,00 Ôé¼</p>
       </div>
       <div style="text-align: center;">
-        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total Débits</p>
-        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #dc2626;" id="pdf-balance-debits">-0,00 €</p>
+        <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Total D├®bits</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #dc2626;" id="pdf-balance-debits">-0,00 Ôé¼</p>
       </div>
       <div style="text-align: center;">
         <p style="margin: 0 0 8px; font-size: 12px; color: #666; text-transform: uppercase;">Solde Final</p>
-        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #2563EB;" id="pdf-balance-end">0,00 €</p>
+        <p style="margin: 0; font-size: 18px; font-weight: 600; color: #2563EB;" id="pdf-balance-end">0,00 Ôé¼</p>
       </div>
     </div>
 
@@ -2310,24 +1796,24 @@ function saveSettingsMock(msg) {
       <thead>
         <tr style="border-bottom: 2px solid #E2E8F0;">
           <th style="text-align: left; padding: 12px 8px; color: #64748b;">Date</th>
-          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Libellé</th>
-          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Catégorie</th>
+          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Libell├®</th>
+          <th style="text-align: left; padding: 12px 8px; color: #64748b;">Cat├®gorie</th>
           <th style="text-align: right; padding: 12px 8px; color: #64748b;">Montant</th>
         </tr>
       </thead>
       <tbody id="pdf-tx-tbody">
-        <!-- TX générées ici -->
+        <!-- TX g├®n├®r├®es ici -->
       </tbody>
     </table>
     
     <div style="margin-top: 40px; text-align: center; font-size: 10px; color: #94A3B8;">
-      <p>NovaBanque - Document généré électroniquement - Ne peut servir de justificatif officiel sans signature.</p>
+      <p>NovaBanque - Document g├®n├®r├® ├®lectroniquement - Ne peut servir de justificatif officiel sans signature.</p>
     </div>
   </div>
 </div>
 
 
-<!-- Modale 2FA centrée -->
+<!-- Modale 2FA centr├®e -->
 <div id="modal-2fa-login" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
   <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:400px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
     <div class="auth-title" style="font-size:22px; margin-bottom:12px;">Double authentification</div>
@@ -2348,7 +1834,7 @@ function saveSettingsMock(msg) {
 <div id="modal-reset-pin" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
   <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:450px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
     <div class="auth-title" style="font-size:22px; margin-bottom:12px; color: #EAB308;"><i class="ti ti-alert-triangle"></i> Changement de code PIN requis</div>
-    <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Vous avez atteint la limite de 20 connexions avec votre code actuel. Veuillez définir un nouveau code PIN à 6 chiffres pour continuer.</p>
+    <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Vous avez atteint la limite de 20 connexions avec votre code actuel. Veuillez d├®finir un nouveau code PIN ├á 6 chiffres pour continuer.</p>
     
     <label style="display:block; text-align:left; font-size:13px; font-weight:600; color:#334155; margin-bottom:8px;">Nouveau code PIN</label>
     <div class="otp-inputs reset-pin-inputs" style="justify-content:center; gap:12px; margin-bottom:20px;">
@@ -2544,11 +2030,11 @@ function saveSettingsMock(msg) {
   }
 </script>
 
-<!-- Modal Vidéo KYC -->
+<!-- Modal Vid├®o KYC -->
 <div class="modal" id="modal-video-kyc" style="display:none; z-index: 1000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
   <div class="modal-content" style="max-width: 600px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 20px; position: relative;">
-    <h3 style="margin-top: 0;">Vérification Vidéo (Max 30s)</h3>
-    <p class="text-muted" style="margin-bottom: 16px;">Veuillez suivre les instructions à l'écran tout en vous filmant.</p>
+    <h3 style="margin-top: 0;">V├®rification Vid├®o (Max 30s)</h3>
+    <p class="text-muted" style="margin-bottom: 16px;">Veuillez suivre les instructions ├á l'├®cran tout en vous filmant.</p>
     
     <div style="position: relative; width: 100%; max-width: 480px; margin: 0 auto; background: #000; border-radius: 8px; overflow: hidden; height: 360px;">
       <video id="kyc-video-preview" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
@@ -2576,69 +2062,69 @@ function saveSettingsMock(msg) {
     </div>
     <h3 style="margin-top: 0;">Alimentation de compte requise</h3>
     <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
-      Pour activer pleinement votre compte et accéder à toutes nos fonctionnalités (virements, cartes, etc.), veuillez effectuer un premier dépôt d'au moins <strong id="activation-fee-amount" style="color:#0F172A;">25€</strong>.
+      Pour activer pleinement votre compte et acc├®der ├á toutes nos fonctionnalit├®s (virements, cartes, etc.), veuillez effectuer un premier d├®p├┤t d'au moins <strong id="activation-fee-amount" style="color:#0F172A;">25Ôé¼</strong>.
     </p>
     <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:16px; margin-bottom:24px; text-align:left;">
-      <p style="margin:0 0 8px; font-size:13px; font-weight:600; color:#475569; text-transform:uppercase;">Coordonnées bancaires (IBAN)</p>
+      <p style="margin:0 0 8px; font-size:13px; font-weight:600; color:#475569; text-transform:uppercase;">Coordonn├®es bancaires (IBAN)</p>
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span id="activation-fee-iban" style="font-family:monospace; font-size:16px; font-weight:500; color:#0F172A;">En attente</span>
       </div>
       <p style="margin:8px 0 0; font-size:12px; color:#64748B;">Veuillez effectuer un virement vers cet IBAN pour alimenter votre compte.</p>
     </div>
-    <button class="btn-primary" style="width:100%;" onclick="verifyInitialDeposit()" id="btn-verify-deposit">J'ai effectué mon dépôt</button>
+    <button class="btn-primary" style="width:100%;" onclick="verifyInitialDeposit()" id="btn-verify-deposit">J'ai effectu├® mon d├®p├┤t</button>
   </div>
 </div>
 
 <div class="modal" id="modal-activation-success" style="display:none; z-index: 10001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
   <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 30px;">
-    <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-    <h3 style="margin-top: 0; margin-bottom: 32px; color: #10B981;">L'activation de votre compte NovaBanque est finalisée avec succès.</h3>
+    <div style="font-size: 48px; margin-bottom: 16px;">­ƒÄë</div>
+    <h3 style="margin-top: 0; margin-bottom: 32px; color: #10B981;">L'activation de votre compte NovaBanque est finalis├®e avec succ├¿s.</h3>
     <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
-      Vous pouvez à présent profiter des nombreuses fonctionnalités à disposition (Transférer, Recevoir, Emprunter, Trader) 🚀<br><br>
-      Nous vous remercions pour votre confiance. 🙏
+      Vous pouvez ├á pr├®sent profiter des nombreuses fonctionnalit├®s ├á disposition (Transf├®rer, Recevoir, Emprunter, Trader) ­ƒÜÇ<br><br>
+      Nous vous remercions pour votre confiance. ­ƒÖÅ
     </p>
-    <button class="btn-primary" style="width:100%;" onclick="closeActivationSuccess()">Accéder à mon compte</button>
+    <button class="btn-primary" style="width:100%;" onclick="closeActivationSuccess()">Acc├®der ├á mon compte</button>
   </div>
 </div>
 
-<!-- Modal Demande de Crédit -->
+<!-- Modal Demande de Cr├®dit -->
 <div class="modal" id="modal-demande-credit" style="display:none; z-index: 1000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; overflow-y:auto; padding: 20px;">
   <div class="modal-content" style="background:#fff; border-radius:12px; width:100%; max-width:600px; padding:30px; position:relative;">
     <button onclick="closeModal('modal-demande-credit')" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer; color:#1C2436;">&times;</button>
-    <h2 class="nb-serif" id="modalCreditTitle" style="font-size:24px; color:#1C2436; margin:0 0 10px;">Demande de crédit</h2>
-    <p style="font-size:14px; color:#5B5546; margin-bottom:24px;" id="modalSubtitle">Utilisez le simulateur pour estimer votre mensualité puis validez votre demande.</p>
+    <h2 class="nb-serif" id="modalCreditTitle" style="font-size:24px; color:#1C2436; margin:0 0 10px;">Demande de cr├®dit</h2>
+    <p style="font-size:14px; color:#5B5546; margin-bottom:24px;" id="modalSubtitle">Utilisez le simulateur pour estimer votre mensualit├® puis validez votre demande.</p>
     
     <!-- Etape 1 : Simulation -->
     <div id="modalStep1">
       <div class="form-group" style="margin-bottom:20px;">
-        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du crédit</label>
+        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du cr├®dit</label>
         <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit;">
           <option value="immobilier">Immobilier</option>
-          <option value="personnel">Prêt personnel</option>
-          <option value="consommation">Crédit consommation</option>
+          <option value="personnel">Pr├¬t personnel</option>
+          <option value="consommation">Cr├®dit consommation</option>
           <option value="grands_projets">Financement grands projets</option>
         </select>
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-          <span style="color:#5B5546;">Montant emprunté</span>
-          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 €</span>
+          <span style="color:#5B5546;">Montant emprunt├®</span>
+          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 Ôé¼</span>
         </div>
         <input class="nb-range" type="range" min="5000" max="2000000" step="1000" value="62000" id="modalAmount" style="width:100%;">
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
-          <span style="color:#5B5546;">Durée</span>
+          <span style="color:#5B5546;">Dur├®e</span>
           <span class="nb-mono" id="modalDurationOut" style="font-weight:500;">120 mois</span>
         </div>
         <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
       </div>
 
       <div style="display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
-        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualité estimée (TAEG indicatif: 2.5%)</span>
-        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">625 €</span>
+        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualit├® estim├®e (TAEG indicatif: 2.5%)</span>
+        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">625 Ôé¼</span>
       </div>
 
       <button id="btnRequestAmount" class="btn-primary" style="width:100%; margin-top:24px; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep2()">Demander ce montant</button>
@@ -2647,28 +2133,28 @@ function saveSettingsMock(msg) {
     <!-- Etape 2 : Infos -->
     <div id="modalStep2" style="display:none;">
       <div style="display:flex; gap:16px; margin-bottom:16px;">
-        <div style="flex:1;"><input type="text" id="reqPrenom" placeholder="Prénom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
+        <div style="flex:1;"><input type="text" id="reqPrenom" placeholder="Pr├®nom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
         <div style="flex:1;"><input type="text" id="reqNom" placeholder="Nom" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
       </div>
       <div style="display:flex; gap:16px; margin-bottom:16px;">
         <div style="flex:1;"><input type="email" id="reqEmail" placeholder="Email" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required></div>
-        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="Téléphone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
+        <div style="flex:1;"><input type="tel" id="reqTel" placeholder="T├®l├®phone" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')"></div>
       </div>
       
       <div style="margin-bottom:16px;">
         <select id="reqProfession" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;" onchange="toggleRevenu()">
           <option value="" disabled selected>Profession</option>
-          <option value="Salarie">Salarié(e)</option>
-          <option value="Independant">Indépendant(e) / Freelance</option>
-          <option value="Etudiant">Étudiant(e)</option>
-          <option value="Retraite">Retraité(e)</option>
-          <option value="Chomage">Au chômage</option>
+          <option value="Salarie">Salari├®(e)</option>
+          <option value="Independant">Ind├®pendant(e) / Freelance</option>
+          <option value="Etudiant">├ëtudiant(e)</option>
+          <option value="Retraite">Retrait├®(e)</option>
+          <option value="Chomage">Au ch├┤mage</option>
           <option value="Autre">Autre</option>
         </select>
       </div>
 
       <div style="margin-bottom:16px;" id="revenuContainer">
-        <input type="number" id="reqRevenu" placeholder="Revenu mensuel net (€)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;">
+        <input type="number" id="reqRevenu" placeholder="Revenu mensuel net (Ôé¼)" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px;">
       </div>
 
       <div style="margin-bottom:16px;">
@@ -2683,13 +2169,13 @@ function saveSettingsMock(msg) {
       <h3 style="font-size:16px; margin-bottom:16px; color:#1C2436;">Documents requis</h3>
       
       <div style="display:flex; gap:8px; border-bottom:1px solid #DEDACB; margin-bottom:16px;">
-        <button class="doc-tab active" id="tab-personnel" onclick="switchDocTab('personnel')" style="padding:8px 12px; background:none; border:none; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">Prêt personnel</button>
-        <button class="doc-tab" id="tab-immobilier" onclick="switchDocTab('immobilier')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Prêt Immobilier</button>
+        <button class="doc-tab active" id="tab-personnel" onclick="switchDocTab('personnel')" style="padding:8px 12px; background:none; border:none; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">Pr├¬t personnel</button>
+        <button class="doc-tab" id="tab-immobilier" onclick="switchDocTab('immobilier')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Pr├¬t Immobilier</button>
         <button class="doc-tab" id="tab-projets" onclick="switchDocTab('projets')" style="padding:8px 12px; background:none; border:none; cursor:pointer; color:#8A8676;">Grands projets</button>
       </div>
 
       <div id="doc-list-container" style="margin-bottom:24px;">
-        <!-- Docs injectés par JS -->
+        <!-- Docs inject├®s par JS -->
       </div>
 
       <div style="display:flex; gap:16px;">
@@ -2702,8 +2188,8 @@ function saveSettingsMock(msg) {
        <div style="width:60px; height:60px; border-radius:50%; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 30px;">
           <i class="ti ti-check"></i>
        </div>
-       <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">🎉 Demande envoyée !</h3>
-       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client. 🚀</p>
+       <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">­ƒÄë Demande envoy├®e !</h3>
+       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a ├®t├® soumise avec succ├¿s. Vous pouvez suivre son avancement depuis votre espace client. ­ƒÜÇ</p>
        <div style="display:flex; justify-content:center; gap:16px;">
          <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#2563EB;" onclick="closeModal('modal-demande-credit');">Suivre ma demande</button>
          <button class="btn-outline" style="padding:12px 24px; border-radius:6px; font-weight:600;" onclick="closeModal('modal-demande-credit'); loadCredits();">Fermer</button>
@@ -2723,7 +2209,7 @@ function saveSettingsMock(msg) {
         </div>
         
         <div style="background:#F8FAFC; padding:16px; border-radius:8px; margin-bottom:24px;">
-            <p style="margin:0 0 4px; font-size:12px; color:#64748B;">Référence</p>
+            <p style="margin:0 0 4px; font-size:12px; color:#64748B;">R├®f├®rence</p>
             <p id="suivi-ref" style="margin:0 0 12px; font-weight:600; font-size:14px;">-</p>
             
             <div style="display:flex; justify-content:space-between;">
@@ -2749,7 +2235,7 @@ function saveSettingsMock(msg) {
                 </div>
                 <div class="suivi-step" id="suivi-step-2" style="display:flex; flex-direction:column; align-items:center; width:70px;">
                     <div class="suivi-node" style="width:26px; height:26px; border-radius:50%; background:#F1F5F9; color:#94A3B8; display:flex; align-items:center; justify-content:center; font-size:12px; margin-bottom:8px; border:2px solid white; box-shadow:0 0 0 2px #E2E8F0;">2</div>
-                    <span style="font-size:10px; font-weight:500; color:#64748B; text-align:center;">En étude</span>
+                    <span style="font-size:10px; font-weight:500; color:#64748B; text-align:center;">En ├®tude</span>
                 </div>
                 <div class="suivi-step" id="suivi-step-3" style="display:flex; flex-direction:column; align-items:center; width:70px;">
                     <div class="suivi-node" style="width:26px; height:26px; border-radius:50%; background:#F1F5F9; color:#94A3B8; display:flex; align-items:center; justify-content:center; font-size:12px; margin-bottom:8px; border:2px solid white; box-shadow:0 0 0 2px #E2E8F0;">3</div>
@@ -2757,7 +2243,7 @@ function saveSettingsMock(msg) {
                 </div>
                 <div class="suivi-step" id="suivi-step-4" style="display:flex; flex-direction:column; align-items:center; width:70px;">
                     <div class="suivi-node" style="width:26px; height:26px; border-radius:50%; background:#F1F5F9; color:#94A3B8; display:flex; align-items:center; justify-content:center; font-size:12px; margin-bottom:8px; border:2px solid white; box-shadow:0 0 0 2px #E2E8F0;">4</div>
-                    <span style="font-size:10px; font-weight:500; color:#64748B; text-align:center;">Crédité</span>
+                    <span style="font-size:10px; font-weight:500; color:#64748B; text-align:center;">Cr├®dit├®</span>
                 </div>
             </div>
         </div>
@@ -2772,114 +2258,298 @@ function saveSettingsMock(msg) {
     </div>
 
 
-<script src="../assets/js/credits.js"></script>
-  <!-- Mobile Bottom Nav -->
-  <nav class="mobile-bottom-nav">
-    <a href="#" class="mobile-nav-item active" onclick="showMobileView('m-view-dashboard'); updateMobileNav(this)">
-      <i class="ti ti-home"></i>
-      <span>Accueil</span>
-    </a>
-    <a href="#" class="mobile-nav-item" onclick="showMobileView('m-view-releves'); updateMobileNav(this)">
-      <i class="ti ti-bell"></i>
-      <span>Notifs</span>
-    </a>
-    <a href="#" class="mobile-nav-item" onclick="openSettingsMobile(); updateMobileNav(this)">
-      <i class="ti ti-settings"></i>
-      <span>Paramètres</span>
-    </a>
-  </nav>
-  
-  <!-- Mobile Sidebar Menu -->
-  <aside class="nb-sidebar mobile-sidebar-menu" style="display:none;">
-    <div class="nb-logo" style="padding: 24px;">
-      <div class="nb-logo-icon">N</div>
-      <span>NovaBanque</span>
+<!-- ECRAN PARAMETRES (view-settings) -->
+<div id="view-settings" class="nb-view" style="display:none; height:calc(100vh - 80px); padding: 0;">
+  <div style="flex:1;min-width:0;display:flex;overflow:hidden;height:100%;background:#F8FAFC;border-radius:14px;border:0.5px solid #E2E8F0;margin:0 20px 20px 20px;">
+    <!-- Sous-menu param├¿tres -->
+    <div style="width:210px;flex-shrink:0;background:#F8FAFC;border-right:0.5px solid #E2E8F0;padding:16px 12px;display:flex;flex-direction:column;gap:4px;">
+      <p style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;padding:0 4px;margin-bottom:8px;">Param├¿tres</p>
+      <div class="tab-side act"><i class="ti ti-user-circle"></i>Profil & identit├®</div>
+      <div class="tab-side"><i class="ti ti-shield-lock"></i>S├®curit├®</div>
+      <div class="tab-side"><i class="ti ti-bell"></i>Notifications</div>
+      <div class="tab-side"><i class="ti ti-credit-card"></i>Cartes & plafonds</div>
+      <div class="tab-side"><i class="ti ti-arrows-exchange"></i>Virements</div>
+      <div class="tab-side"><i class="ti ti-palette"></i>Apparence</div>
+      <div class="tab-side"><i class="ti ti-file-invoice"></i>Abonnement</div>
+      <div class="tab-side"><i class="ti ti-lock-access"></i>Confidentialit├®</div>
+      <div style="flex:1;"></div>
+      <div class="tab-side" style="color:#B91C1C;"><i class="ti ti-logout" style="color:#B91C1C;"></i>Se d├®connecter</div>
+      <div class="tab-side" style="color:#B91C1C;border-color:#FECACA;background:#FEF2F2;margin-top:4px;"><i class="ti ti-trash" style="color:#B91C1C;"></i>Supprimer le compte</div>
     </div>
-    <div class="nb-nav">
-      <a href="#" class="active" onclick="updateMobileNav(this); showMobileView('m-view-dashboard'); toggleMobileSidebar()"><span class="nb-icon">🏠</span> Accueil</a>
-      <a href="#" onclick="updateMobileNav(this); openDesktopViewMobile('view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
-      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-cartes'); toggleMobileSidebar()"><span class="nb-icon">💳</span> Cartes</a>
-      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-credits'); toggleMobileSidebar()"><span class="nb-icon">🏦</span> Crédits</a>
-      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-budget'); toggleMobileSidebar()"><span class="nb-icon">📊</span> Budget</a>
-      <a href="#" onclick="updateMobileNav(this); openDesktopViewMobile('view-beneficiaires'); toggleMobileSidebar()"><span class="nb-icon">👥</span> Bénéficiaires</a>
-      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-releves'); toggleMobileSidebar()"><span class="nb-icon">📄</span> Relevés</a>
-      <a href="#" onclick="updateMobileNav(this); openSettingsMobile(); toggleMobileSidebar()"><span class="nb-icon">⚙️</span> Paramètres</a>
+
+    <!-- Contenu principal -->
+    <div style="flex:1;min-width:0;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none;">
+      <!-- En-t├¬te section -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 style="font-size:18px;font-weight:700;color:#0F172A;margin:0;">Profil & identit├®</h2>
+          <p style="font-size:12px;color:#94A3B8;margin:3px 0 0;">G├®rez vos informations personnelles et bancaires</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-p" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;">Annuler</button>
+          <button class="btn-p" style="background:#2563EB;color:#fff;"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
+        </div>
+      </div>
+
+      <!-- BLOC : Avatar + infos principales -->
+      <div class="settings-card">
+        <div class="ch"><div><p class="ch-title">Informations personnelles</p><p class="ch-sub">Votre identit├® telle qu'elle appara├«t sur votre compte</p></div></div>
+        <div style="display:flex;gap:20px;align-items:flex-start;">
+          <!-- Avatar -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+            <div style="width:72px;height:72px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#1D4ED8;position:relative;border:3px solid #BFDBFE;">
+              MR
+              <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:#2563EB;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;cursor:pointer;">
+                <i class="ti ti-camera" style="font-size:10px;color:#fff;"></i>
+              </div>
+            </div>
+            <button style="font-size:10px;color:#2563EB;background:none;border:none;cursor:pointer;font-weight:500;">Modifier</button>
+          </div>
+          <!-- Champs -->
+          <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="field" style="margin:0;">
+              <label>Pr├®nom</label>
+              <input value="Manuela">
+            </div>
+            <div class="field" style="margin:0;">
+              <label>Nom</label>
+              <input value="Rodriguez">
+            </div>
+            <div class="field" style="margin:0;">
+              <label>Date de naissance</label>
+              <input value="14/03/1991" type="text">
+            </div>
+            <div class="field" style="margin:0;">
+              <label>Nationalit├®</label>
+              <select><option>­ƒç½­ƒçÀ Fran├ºaise</option><option>­ƒçº­ƒç¬ Belge</option><option>­ƒç¿­ƒç¡ Suisse</option></select>
+            </div>
+            <div class="field" style="margin:0;grid-column:1/-1;">
+              <label>Adresse</label>
+              <input value="12 rue de la Paix, 75001 Paris">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOC : Contact & connexion -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="settings-card">
+          <div class="ch"><div><p class="ch-title">Contact</p><p class="ch-sub">Email et t├®l├®phone associ├®s au compte</p></div></div>
+          <div class="field">
+            <label>Adresse email</label>
+            <input value="manuela@email.fr" type="email">
+            <span class="hint">Utilis├® pour les notifications et la connexion</span>
+          </div>
+          <div class="field">
+            <label>T├®l├®phone</label>
+            <div style="display:flex;gap:8px;">
+              <select style="width:80px;padding:9px 8px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;outline:none;flex-shrink:0;"><option>­ƒç½­ƒçÀ +33</option><option>­ƒçº­ƒç¬ +32</option></select>
+              <input value="6 12 34 56 78" style="flex:1;">
+            </div>
+            <span class="hint">Utilis├® pour les codes OTP et alertes SMS</span>
+          </div>
+          <div class="field" style="margin:0;">
+            <label>Email secondaire (optionnel)</label>
+            <input placeholder="email de secoursÔÇª">
+          </div>
+        </div>
+        <!-- Mot de passe & s├®curit├® -->
+        <div class="settings-card">
+          <div class="ch"><div><p class="ch-title">S├®curit├® du compte</p><p class="ch-sub">Mot de passe, PIN et double authentification</p></div></div>
+          <div class="field">
+            <label>Mot de passe actuel</label>
+            <div style="position:relative;">
+              <input type="password" value="ÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇóÔÇó" placeholder="Mot de passe actuel">
+              <i class="ti ti-eye" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;color:#94A3B8;cursor:pointer;"></i>
+            </div>
+          </div>
+          <div class="field">
+            <label>Nouveau mot de passe</label>
+            <input type="password" placeholder="Nouveau mot de passe">
+            <!-- Jauge force -->
+            <div style="display:flex;gap:4px;margin-top:4px;">
+              <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
+              <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
+              <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
+              <div style="flex:1;height:3px;border-radius:2px;background:#E2E8F0;"></div>
+            </div>
+            <span class="hint">Fort ┬À Utilisez min. 8 caract├¿res, 1 majuscule, 1 chiffre</span>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label>Confirmer le nouveau mot de passe</label>
+            <input type="password" placeholder="Confirmer">
+          </div>
+          <div class="sr">
+            <div><p class="sr-l">Double authentification (OTP)</p><p class="sr-s">Code SMS ├á chaque connexion</p></div>
+            <div class="tg on"><span></span></div>
+          </div>
+          <div class="sr">
+            <div><p class="sr-l">Biom├®trie / Face ID</p><p class="sr-s">Connexion rapide sur mobile</p></div>
+            <div class="tg on"><span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOC : Notifications -->
+      <div class="settings-card">
+        <div class="ch"><div><p class="ch-title">Notifications</p><p class="ch-sub">Choisissez quand et comment ├¬tre alert├®</p></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 30px;">
+          <!-- Colonne 1 -->
+          <div>
+            <p class="notif-cat">Transactions</p>
+            <div class="sr">
+              <div><p class="sr-l">Paiement effectu├®</p><p class="sr-s">Push + email</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Virement re├ºu</p><p class="sr-s">Push + SMS</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Solde bas (&lt; 200 Ôé¼)</p><p class="sr-s">Alerte SMS</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+          </div>
+          <!-- Colonne 2 -->
+          <div>
+            <p class="notif-cat">S├®curit├®</p>
+            <div class="sr">
+              <div><p class="sr-l">Nouvelle connexion</p><p class="sr-s">Email + SMS</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Modification profil</p><p class="sr-s">Email de confirmation</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Tentative OTP ├®chou├®e</p><p class="sr-s">Alerte imm├®diate SMS</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+          </div>
+          <!-- Colonne 3 -->
+          <div>
+            <p class="notif-cat">Compte & offres</p>
+            <div class="sr">
+              <div><p class="sr-l">Relev├® mensuel disponible</p><p class="sr-s">Email automatique</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Rappels budget</p><p class="sr-s">D├®passement enveloppe</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Offres & actualit├®s</p><p class="sr-s">Newsletter NovaBanque</p></div>
+              <div class="tg off"><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOC : Apparence + Abonnement + Sessions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+        <!-- Apparence -->
+        <div class="settings-card">
+          <div class="ch"><div><p class="ch-title">Apparence</p><p class="ch-sub">Th├¿me et langue de l'application</p></div></div>
+          <p style="font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">Th├¿me</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <div class="theme-btn act">
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#fff 50%,#F1F5F9 50%);border:1px solid #E2E8F0;margin:0 auto 6px;"></div>
+              <p style="font-size:11px;font-weight:500;color:#0F172A;margin:0;">Clair</p>
+            </div>
+            <div class="theme-btn">
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#1E293B 50%,#0F172A 50%);margin:0 auto 6px;"></div>
+              <p style="font-size:11px;font-weight:500;color:#0F172A;margin:0;">Sombre</p>
+            </div>
+            <div class="theme-btn">
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#fff 50%,#1E293B 50%);border:1px solid #E2E8F0;margin:0 auto 6px;"></div>
+              <p style="font-size:11px;font-weight:500;color:#0F172A;margin:0;">Auto</p>
+            </div>
+          </div>
+          <p style="font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">Langue</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div class="lang-opt act">­ƒç½­ƒçÀ Fran├ºais</div>
+            <div class="lang-opt">­ƒç¼­ƒçº English</div>
+            <div class="lang-opt">­ƒç¬­ƒç© Espa├▒ol</div>
+          </div>
+          <p style="font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px;">Devise d'affichage</p>
+          <select style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:12px;color:#0F172A;outline:none;">
+            <option>Ôé¼ Euro (EUR)</option><option>$ Dollar (USD)</option><option>┬ú Livre sterling (GBP)</option>
+          </select>
+        </div>
+        <!-- Abonnement -->
+        <div class="settings-card">
+          <div class="ch"><div><p class="ch-title">Mon abonnement</p><p class="ch-sub">Offre active et facturation</p></div></div>
+          <div style="background:linear-gradient(135deg,#1e40af,#2563EB);border-radius:12px;padding:14px 16px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:-15px;right:-15px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08);"></div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+              <div><p style="font-size:11px;opacity:.75;margin:0;">Offre actuelle</p><p style="font-size:16px;font-weight:700;margin:3px 0 0;">Premium Ô¡É</p></div>
+              <span style="background:rgba(255,255,255,.2);color:#fff;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:500;">Actif</span>
+            </div>
+            <p style="font-size:20px;font-weight:800;margin:0 0 4px;">9,90 Ôé¼ <span style="font-size:12px;font-weight:400;opacity:.7;">/ mois</span></p>
+            <p style="font-size:10px;opacity:.7;margin:0;">Prochain pr├®l├¿vement : 01/07/2026</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:7px;"><i class="ti ti-check" style="font-size:13px;color:#16A34A;"></i><span style="font-size:12px;color:#475569;">Visa Platinum incluse</span></div>
+            <div style="display:flex;align-items:center;gap:7px;"><i class="ti ti-check" style="font-size:13px;color:#16A34A;"></i><span style="font-size:12px;color:#475569;">0 Ôé¼ frais internationaux</span></div>
+            <div style="display:flex;align-items:center;gap:7px;"><i class="ti ti-check" style="font-size:13px;color:#16A34A;"></i><span style="font-size:12px;color:#475569;">Assurance voyage incluse</span></div>
+            <div style="display:flex;align-items:center;gap:7px;"><i class="ti ti-check" style="font-size:13px;color:#16A34A;"></i><span style="font-size:12px;color:#475569;">Support prioritaire 24h/24</span></div>
+          </div>
+          <div style="display:flex;gap:7px;">
+            <button class="btn-p" style="flex:1;justify-content:center;background:#F5F3FF;color:#6D28D9;font-size:11px;"><i class="ti ti-arrow-up" style="font-size:13px;"></i>Upgrader</button>
+            <button class="btn-p" style="flex:1;justify-content:center;background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;font-size:11px;"><i class="ti ti-file-invoice" style="font-size:13px;"></i>Factures</button>
+          </div>
+        </div>
+        <!-- Sessions actives -->
+        <div class="settings-card">
+          <div class="ch"><div><p class="ch-title">Sessions actives</p><p class="ch-sub">Appareils connect├®s ├á votre compte</p></div><a style="font-size:11px;color:#B91C1C;cursor:pointer;font-weight:500;">Tout r├®voquer</a></div>
+          <div class="session-row">
+            <div style="width:34px;height:34px;border-radius:9px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-device-laptop" style="font-size:17px;color:#1D4ED8;"></i></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:12px;font-weight:600;margin:0;color:#0F172A;">MacBook Pro ÔÇö Chrome</p>
+              <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Paris ┬À Maintenant <span style="background:#F0FDF4;color:#15803D;font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600;margin-left:4px;">Actif</span></p>
+            </div>
+          </div>
+          <div class="session-row">
+            <div style="width:34px;height:34px;border-radius:9px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-device-mobile" style="font-size:17px;color:#15803D;"></i></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:12px;font-weight:600;margin:0;color:#0F172A;">iPhone 15 ÔÇö App iOS</p>
+              <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Paris ┬À Il y a 2 heures</p>
+            </div>
+            <button style="font-size:10px;color:#B91C1C;background:none;border:none;cursor:pointer;font-weight:500;">R├®voquer</button>
+          </div>
+          <div class="session-row">
+            <div style="width:34px;height:34px;border-radius:9px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-device-tablet" style="font-size:17px;color:#6D28D9;"></i></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:12px;font-weight:600;margin:0;color:#0F172A;">iPad Air ÔÇö Safari</p>
+              <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Lyon ┬À Hier 20:14</p>
+            </div>
+            <button style="font-size:10px;color:#B91C1C;background:none;border:none;cursor:pointer;font-weight:500;">R├®voquer</button>
+          </div>
+          <div class="session-row">
+            <div style="width:34px;height:34px;border-radius:9px;background:#FEF2F2;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-device-desktop" style="font-size:17px;color:#B91C1C;"></i></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:12px;font-weight:600;margin:0;color:#B91C1C;">Windows ÔÇö Firefox <span style="font-size:10px;background:#FEF2F2;color:#B91C1C;padding:1px 6px;border-radius:4px;border:0.5px solid #FECACA;margin-left:4px;">Inconnu</span></p>
+              <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Marseille ┬À Hier 08:32</p>
+            </div>
+            <button style="font-size:10px;color:#B91C1C;background:none;border:none;cursor:pointer;font-weight:500;">R├®voquer</button>
+          </div>
+          <!-- Confidentialit├® rapide -->
+          <div style="margin-top:14px;padding-top:12px;border-top:0.5px solid #F1F5F9;">
+            <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;">Confidentialit├®</p>
+            <div class="sr">
+              <div><p class="sr-l">Partage de donn├®es analytiques</p><p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Am├®liorer l'exp├®rience</p></div>
+              <div class="tg off"><span></span></div>
+            </div>
+            <div class="sr">
+              <div><p class="sr-l">Cookies de personnalisation</p><p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">Adapter l'interface</p></div>
+              <div class="tg on"><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </aside>
-
-  <style>
-    @media (max-width: 900px) {
-      .mobile-sidebar-menu {
-        display: flex !important;
-        flex-direction: column;
-        background: white;
-        width: 280px;
-        padding: 24px 20px;
-      }
-      .mobile-sidebar-menu .nb-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; font-weight: 800; font-size: 20px; color: #0F172A; padding: 0 !important; }
-      .mobile-sidebar-menu .nb-logo-icon { width: 32px; height: 32px; background: #2563EB; color: white; display: flex; justify-content: center; align-items: center; border-radius: 8px; font-size: 16px; font-weight: bold; }
-      .mobile-sidebar-menu .nb-nav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-      .mobile-sidebar-menu .nb-nav a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: #64748B; text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; }
-      .mobile-sidebar-menu .nb-nav a.active { background: #EFF6FF; color: #2563EB; }
-      .mobile-sidebar-menu .nb-icon { font-size: 16px; }
-    }
-  </style>
-
-  <div class="mobile-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
-  
-  <script>
-    function toggleMobileSidebar() {
-      const sidebar = document.querySelector('.mobile-sidebar-menu');
-      const overlay = document.querySelector('.mobile-sidebar-overlay');
-      if (sidebar && overlay) {
-        sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('active');
-      }
-    }
-    
-    function updateMobileNav(clickedEl) {
-      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
-      if (clickedEl) clickedEl.classList.add('active');
-    }
-    
-    function openDesktopViewMobile(viewId) {
-      document.querySelector('.mobile-layout').style.display = 'none';
-      const desktopLayout = document.querySelector('.desktop-layout');
-      desktopLayout.style.display = 'flex';
-      desktopLayout.style.setProperty('display', 'flex', 'important');
-      
-      const desktopSidebar = document.querySelector('.desktop-layout .nb-sidebar:not(.mobile-sidebar-menu)');
-      if (desktopSidebar) desktopSidebar.style.display = 'none';
-      
-      document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active'));
-      showView(viewId);
-      
-      const viewEl = document.getElementById(viewId);
-      if (viewEl && !document.getElementById('mobile-back-' + viewId)) {
-         const backBtn = document.createElement('div');
-         backBtn.id = 'mobile-back-' + viewId;
-         backBtn.innerHTML = '<i class="ti ti-arrow-left"></i> Retour';
-         backBtn.style.padding = '16px';
-         backBtn.style.cursor = 'pointer';
-         backBtn.style.color = '#4F46E5';
-         backBtn.style.fontWeight = '600';
-         backBtn.onclick = function() {
-            document.querySelector('.mobile-layout').style.display = '';
-            document.querySelector('.desktop-layout').style.display = '';
-            desktopLayout.style.removeProperty('display');
-            if (desktopSidebar) desktopSidebar.style.display = '';
-            if(viewId === 'view-virements') {
-                document.querySelectorAll('.bottom-nav .nb-item').forEach(i=>i.classList.remove('active'));
-            }
-         };
-         viewEl.insertBefore(backBtn, viewEl.firstChild);
-      }
-    }
-    
-    function openSettingsMobile() {
-        openDesktopViewMobile('view-settings');
-    }
-  </script>
-
+  </div>
+</div>
+\n<script src="../assets/js/credits.js"></script>
 </body>
 </html>

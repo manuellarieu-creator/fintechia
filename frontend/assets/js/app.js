@@ -908,3 +908,30 @@ window.closeActivationSuccess = function() {
   document.getElementById('modal-activation-success').style.display = 'none';
   window.location.reload();
 }
+
+
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+        const btnDark = document.getElementById('theme-btn-dark');
+        if(btnDark) btnDark.style.border = '2px solid #2563EB';
+        const btnLight = document.getElementById('theme-btn-light');
+        if(btnLight) btnLight.style.border = '1px solid #E2E8F0';
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+        const btnLight = document.getElementById('theme-btn-light');
+        if(btnLight) btnLight.style.border = '2px solid #2563EB';
+        const btnDark = document.getElementById('theme-btn-dark');
+        if(btnDark) btnDark.style.border = '1px solid #E2E8F0';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+});
+
