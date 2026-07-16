@@ -199,7 +199,8 @@
   background: white;
 }
 .otp-box.empty {
-  border-color: #CBD5E1;
+  border-color: #2563EB;
+  border-width: 2px;
 }
 .resend-link {
   color: #2563EB;

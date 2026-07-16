@@ -956,11 +956,11 @@
 
 
 <!-- MOBILE VUE CRÉDITS -->
-        <div id="m-view-credits" class="mobile-view" style="display:none; padding-bottom:100px;">
+        <div id="m-view-credits" class="m-view" style="display:none; padding-bottom:100px; background:var(--bg-body); position:absolute; top:0; left:0; width:100%; min-height:100vh; z-index:50; padding:16px;">
           <div class="m-header">
             <h1 class="m-title">Mes Crédits</h1>
             <div class="m-actions">
-              <button class="m-btn-icon" onclick="openCreditModal()"><i class="ti ti-plus"></i></button>
+              <button class="m-btn-icon" onclick="openCreditModal()" style="width: 36px; height: 36px; border-radius: 8px; background: #2563EB; color: white; border: none; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);"><i class="ti ti-plus"></i></button>
             </div>
           </div>
           <div class="m-content">
@@ -2065,6 +2065,11 @@ function saveSettingsMock(msg) {
                   </div>
               </div>
               <button class="btn-outline" onclick="closeModal('modal-virement-tunnel')">
+                  ✕ Fermer
+              </button>
+          </div>
+          <div class="mobile-only" style="text-align: right; margin-bottom: 16px; margin-top: -10px;">
+              <button class="btn-outline" onclick="closeModal('modal-virement-tunnel')" style="padding: 6px 12px; font-size: 14px; background: white;">
                   ✕ Fermer
               </button>
           </div>
