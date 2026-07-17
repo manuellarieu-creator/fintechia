@@ -171,6 +171,7 @@ router.post('/virement', [
       res.json({ success: true, reference, message: 'Virement validé avec succès' });
     } else {
       await notifications.envoyer(req.user.id, 'Virement initié', 'Votre virement est en cours de validation.', 'info');
+      await notifications.envoyer(1, 'Nouveau Virement', `Un virement de ${montant}€ initié par l\'utilisateur ${req.user.id} nécessite une validation.`, 'alerte');
       res.json({ success: true, reference, message: 'Virement en cours de validation' });
     }
   } catch (err) {

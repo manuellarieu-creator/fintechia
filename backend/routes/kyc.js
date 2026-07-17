@@ -136,6 +136,7 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     });
 
     await notifications.envoyer(req.user.id, 'KYC Soumis', 'Documents KYC reçus, délai de traitement 24-48h.', 'info');
+    await notifications.envoyer(1, 'KYC Soumis', `L\'utilisateur ${req.user.id} a soumis ses documents KYC.`, 'info');
 
     res.json({ success: true, message: 'KYC soumis avec succès' });
   } catch (err) {
