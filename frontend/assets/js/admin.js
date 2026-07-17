@@ -109,6 +109,9 @@ async function showAdminView(viewId, navElement) {
         case 'view-iban':
             await renderIbanTable();
             break;
+        case 'view-chat':
+            if (typeof loadAdminChats === 'function') await loadAdminChats();
+            break;
         case 'view-logs':
             await loadLogsTable();
             break;
