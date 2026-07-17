@@ -132,6 +132,8 @@ function showMobileView(viewId) {
     loadCredits();
   } else if (viewId === 'm-view-releves' && typeof loadRelevesData === 'function') {
     loadRelevesData();
+  } else if (viewId === 'm-view-beneficiaires' && typeof loadBeneficiaires === 'function') {
+    loadBeneficiaires();
   }
 }
 
