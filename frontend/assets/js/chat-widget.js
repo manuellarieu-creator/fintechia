@@ -45,7 +45,7 @@ function initChatWidgetUI() {
       <div id="chat-input-area" style="padding:15px; border-top:1px solid #e2e8f0; display:flex; gap:10px; background:white; display:none;">
         <input type="text" id="chat-input-field" placeholder="Votre message..." style="flex:1; padding:10px; border:1px solid #cbd5e1; border-radius:20px; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
         <button onclick="sendChatMessage()" style="background:#F05A28; color:white; border:none; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14l11 -11" /><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
         </button>
       </div>
     </div>
@@ -175,6 +175,9 @@ function renderChatMessages(messages) {
   // Save scroll state
   const isAtBottom = area.scrollHeight - area.scrollTop === area.clientHeight;
   
+  // Forcer le scroll si c'est le premier chargement ou si on est en bas
+  const forceScroll = (area.children.length === 0) || isAtBottom;
+  
   area.innerHTML = '';
   
   if (messages.length === 0) {
@@ -208,7 +211,7 @@ function renderChatMessages(messages) {
     area.appendChild(bubble);
   });
   
-  if (isAtBottom) {
+  if (forceScroll || isAtBottom) {
     area.scrollTop = area.scrollHeight;
   }
 }

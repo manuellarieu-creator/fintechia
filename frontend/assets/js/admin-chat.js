@@ -90,6 +90,7 @@ function renderAdminMessages(messages) {
   if (!area) return;
   
   const isAtBottom = area.scrollHeight - area.scrollTop === area.clientHeight;
+  const forceScroll = (area.children.length === 0) || isAtBottom;
   
   area.innerHTML = '';
   if (messages.length === 0) {
@@ -124,7 +125,7 @@ function renderAdminMessages(messages) {
     area.appendChild(bubble);
   });
 
-  if (isAtBottom) {
+  if (forceScroll || isAtBottom) {
     area.scrollTop = area.scrollHeight;
   }
 }
