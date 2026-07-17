@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Fintechia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 0; }
+        .page-header { background: #3b82f6; color: white; padding: 60px 20px; text-align: center; }
+        .page-header h1 { margin: 0; font-size: 36px; font-weight: 800; }
+        .container { max-width: 800px; margin: 40px auto; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .back-btn:hover { text-decoration: underline; }
+        
+        .contact-info { background: #eff6ff; padding: 20px; border-radius: 8px; border: 1px solid #bfdbfe; margin-bottom: 30px; text-align: center; }
+        .contact-info h3 { margin-top: 0; color: #1e40af; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        button { background: #F05A28; color: white; border: none; padding: 14px 24px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        button:hover { background: #ea580c; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Contactez-nous</h1>
+    </div>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Retour à l'accueil</a>
+        
+        <div class="contact-info">
+            <h3>Besoin d'une réponse rapide ?</h3>
+            <p>Nos conseillers sont disponibles via le <strong>Chat en direct</strong> en bas à droite de votre écran.</p>
+            <p>Vous pouvez également nous écrire directement à : <br><strong><a href="mailto:info@fintechia.co" style="color:#F05A28; font-size:18px;">info@fintechia.co</a></strong></p>
+        </div>
+
+        <form onsubmit="alert('Votre message a bien été envoyé. Nous vous répondrons sous 24h.'); event.preventDefault();">
+            <div style="display:flex; gap:20px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Prénom</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Nom</label>
+                    <input type="text" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Adresse Email</label>
+                <input type="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Sujet de votre demande</label>
+                <input type="text" required>
+            </div>
+
+            <div class="form-group">
+                <label>Votre message</label>
+                <textarea rows="5" required></textarea>
+            </div>
+            
+            <button type="submit">Envoyer le message</button>
+        </form>
+    </div>
+    
+    <!-- Intégration du Chat Widget -->
+    <script src="../assets/js/chat-widget.js"></script>
+</body>
+</html>

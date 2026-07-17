@@ -20,6 +20,7 @@ const cartesRoutes = require('./routes/cartes');
 const settingsRoutes = require('./routes/settings');
 const alertesRoutes = require('./routes/alertes');
 const notificationsRoutes = require('./routes/notifications');
+const chatRoutes = require('./routes/chat');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -91,6 +92,7 @@ app.use('/api/cartes', cartesRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/admin/alertes', alertesRoutes);
 app.use('/api/notifications', notificationsRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -188,6 +190,33 @@ if (!process.env.VERCEL) {
           FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
       `).catch(err => console.error("Erreur création notifications:", err.message));
+
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS chat_conversations (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id INT DEFAULT NULL,
+          visitor_name VARCHAR(100) DEFAULT NULL,
+          visitor_email VARCHAR(100) DEFAULT NULL,
+          visitor_phone VARCHAR(50) DEFAULT NULL,
+          status ENUM('open', 'closed') DEFAULT 'open',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+      `).catch(err => console.error("Erreur création chat_conversations:", err.message));
+
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS chat_messages (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          conversation_id INT NOT NULL,
+          sender_type ENUM('visitor', 'user', 'admin') NOT NULL,
+          sender_id INT DEFAULT NULL,
+          content TEXT NOT NULL,
+          is_read BOOLEAN DEFAULT FALSE,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (conversation_id) REFERENCES chat_conversations(id) ON DELETE CASCADE
+        )
+      `).catch(err => console.error("Erreur création chat_messages:", err.message));
 
       await db.query(`INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES 
         ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), 
