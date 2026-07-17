@@ -5,6 +5,16 @@ const { authMiddleware } = require('../middleware/auth');
 
 // === VISITOR ROUTES ===
 
+router.get('/test/db', async (req, res) => {
+  try {
+    const [tables] = await db.query('SHOW TABLES');
+    const [desc] = await db.query('DESCRIBE chat_conversations').catch(() => [[{error: 'Table not found'}]]);
+    res.json({ tables, desc });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
 // Initialiser un chat visiteur
 router.post('/visitor/init', async (req, res) => {
   try {
