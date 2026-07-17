@@ -73,7 +73,10 @@ const I18N = {
     this.nodesToTranslate.forEach(n => {
       const orig = n._originalText;
       if (orig) {
-        const trans = this.dict[orig] || orig;
+        let trans = this.dict[orig] || orig;
+        if (typeof trans === 'string' && trans.length > 0) {
+          trans = trans.charAt(0).toUpperCase() + trans.slice(1);
+        }
         const current = n._currentTrans || orig;
         n.nodeValue = n.nodeValue.replace(current, trans);
         n._currentTrans = trans;
@@ -83,7 +86,10 @@ const I18N = {
     this.attributesToTranslate.forEach(item => {
       const orig = item.el['_original' + item.attr.charAt(0).toUpperCase() + item.attr.slice(1)];
       if (orig) {
-        const trans = this.dict[orig] || orig;
+        let trans = this.dict[orig] || orig;
+        if (typeof trans === 'string' && trans.length > 0) {
+          trans = trans.charAt(0).toUpperCase() + trans.slice(1);
+        }
         item.el[item.attr] = trans;
       }
     });
