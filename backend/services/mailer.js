@@ -77,7 +77,55 @@ async function envoyerConfirmationMdp(email, prenom, ip) {
   }
 }
 
+async function envoyerBienvenue(email, prenom) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Bienvenue chez Fintechia !',
+    text: `Bonjour ${prenom},\n\nBienvenue chez Fintechia ! Votre compte a été créé avec succès. Découvrez notre espace client pour gérer vos finances en toute simplicité.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #0F1B33; padding: 20px; text-align: center; color: white;">
+          <h1 style="margin: 0; color: #4F46E5;">Fintechia</h1>
+        </div>
+        <div style="padding: 20px;">
+          <h2>Bonjour ${prenom}, bienvenue à bord ! 🎉</h2>
+          <p>Votre compte Fintechia a été créé avec succès.</p>
+          <p>Nous sommes ravis de vous compter parmi nos membres. Vous pouvez dès à présent vous connecter à votre espace client pour consulter votre solde, effectuer des virements et gérer vos cartes.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://fintechia.vercel.app/login" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Accéder à mon espace</a>
+          </div>
+        </div>
+      </div>
+    `
+  };
+  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+}
+
+async function envoyerConfirmationVirement(email, prenom, montant, destinataire, reference) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Confirmation de virement Fintechia',
+    text: `Virement de ${montant}€ envoyé à ${destinataire}.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #0F1B33; padding: 20px; text-align: center; color: white;">
+          <h1 style="margin: 0; color: #4F46E5;">Fintechia</h1>
+        </div>
+        <div style="padding: 20px;">
+          <h2>Bonjour ${prenom},</h2>
+          <p>Votre virement de <strong>${montant} €</strong> vers <strong>${destinataire}</strong> a bien été initié (Réf: ${reference}).</p>
+        </div>
+      </div>
+    `
+  };
+  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+}
+
 module.exports = {
   envoyerResetMdp,
-  envoyerConfirmationMdp
+  envoyerConfirmationMdp,
+  envoyerBienvenue,
+  envoyerConfirmationVirement
 };

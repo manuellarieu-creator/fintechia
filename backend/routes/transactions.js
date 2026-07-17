@@ -6,6 +6,9 @@ const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
+const mailer = require('../services/mailer');
+const notifications = require('../services/notifications');
+const mailer = require('../services/mailer');
 const FraudEngine = require('../services/fraudEngine');
 
 const validateReq = (req, res, next) => {
@@ -59,7 +62,7 @@ router.post('/virement', [
     
     await connection.beginTransaction();
 
-    const [users] = await connection.query('SELECT pin_code, transfer_types FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await connection.query('SELECT prenom, pin_code, transfer_types FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0 || users[0].pin_code !== pin_code) {
       await connection.rollback();
       return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
@@ -168,6 +171,7 @@ router.post('/virement', [
 
     if (statutVirement === 'valide') {
       await notifications.envoyer(req.user.id, 'Virement validé', 'Votre virement immédiat a été exécuté avec succès.', 'succes');
+      await mailer.envoyerConfirmationVirement(req.user.email, users[0].prenom, montant, nom_dest, reference);
       res.json({ success: true, reference, message: 'Virement validé avec succès' });
     } else {
       await notifications.envoyer(req.user.id, 'Virement initié', 'Votre virement est en cours de validation.', 'info');

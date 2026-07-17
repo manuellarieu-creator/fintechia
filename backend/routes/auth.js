@@ -104,6 +104,7 @@ router.post('/register', [
     });
 
     await notifications.envoyer(userId, 'Bienvenue chez Fintechia', 'Votre compte a été créé avec succès.', 'succes');
+    await mailer.envoyerBienvenue(email, prenom);
     await notifications.envoyer(1, 'Nouvel Utilisateur', `Un nouvel utilisateur s\'est inscrit (ID: ${userId}).`, 'info');
 
     const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
