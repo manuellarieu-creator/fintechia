@@ -83,4 +83,37 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+router.put('/:id', authMiddleware, async (req, res) => {
+  const { nom } = req.body;
+  const iban = req.body.iban ? req.body.iban.replace(/\s+/g, '').toUpperCase() : null;
+  const bic = req.body.bic || null;
+
+  if(!nom || !iban) return res.status(400).json({ error: 'Nom et IBAN requis' });
+  
+  try {
+    // Basic length validation (optional here since POST handles it, but good to have)
+    const codePays = iban.substring(0, 2);
+    const [rules] = await pool.query('SELECT longueur FROM iban_rules WHERE code_pays = ?', [codePays]);
+    if (rules.length > 0) {
+      if (iban.length !== rules[0].longueur) {
+        return res.status(400).json({ error: `L'IBAN n'est pas valide (longueur incorrecte pour le pays ${codePays})`, code: 'INVALID_IBAN_LENGTH' });
+      }
+    }
+
+    const [result] = await pool.query(
+      'UPDATE beneficiaires SET nom = ?, iban = ?, bic = ? WHERE id = ? AND user_id = ?',
+      [nom, iban, bic, req.params.id, req.user.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Bénéficiaire non trouvé ou non autorisé' });
+    }
+
+    res.json({ success: true, id: req.params.id, nom, iban, bic });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur modification beneficiaire' });
+  }
+});
+
 module.exports = router;

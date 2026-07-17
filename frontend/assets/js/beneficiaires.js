@@ -23,6 +23,7 @@ async function loadBeneficiaires() {
             <td>${b.iban}</td>
             <td>${date}</td>
             <td>
+              <button onclick="preparerModificationBeneficiaire(${b.id}, '${b.nom.replace(/'/g, "\\'")}', '${b.iban}', '${b.bic || ''}')" style="color:#2563EB; background:none; border:none; cursor:pointer; font-weight:bold; margin-right: 10px;">Modifier</button>
               <button onclick="supprimerBeneficiaire(${b.id})" style="color:#EF4444; background:none; border:none; cursor:pointer; font-weight:bold;">Supprimer</button>
             </td>
           </tr>
@@ -61,7 +62,10 @@ async function loadBeneficiaires() {
                 <span style="font-size:10px; color:var(--text-muted);">${b.iban}</span>
               </div>
             </div>
-            <button onclick="supprimerBeneficiaire(${b.id})" style="color:var(--danger); background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-trash" style="font-size:18px;"></i></button>
+            <div style="display:flex; gap: 8px;">
+              <button onclick="preparerModificationBeneficiaire(${b.id}, '${b.nom.replace(/'/g, "\\'")}', '${b.iban}', '${b.bic || ''}')" style="color:#2563EB; background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-edit" style="font-size:18px;"></i></button>
+              <button onclick="supprimerBeneficiaire(${b.id})" style="color:var(--danger); background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-trash" style="font-size:18px;"></i></button>
+            </div>
           </div>
         `;
       }).join('');
@@ -258,6 +262,85 @@ async function previewBIC() {
   }
   
   bicTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://openiban.com/validate/${iban}?getBIC=true`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.valid && data.bankData && data.bankData.bic) {
+          bicInput.value = data.bankData.bic;
+        } else {
+          if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+          bicInput.placeholder = 'BIC introuvable, veuillez le saisir';
+        }
+      } else {
+        if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+        bicInput.placeholder = 'Saisissez le code BIC manuellement';
+      }
+    } catch(err) {
+      if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) bicInput.value = '';
+      bicInput.placeholder = 'Saisissez le code BIC manuellement';
+    }
+    bicInput.style.background = '#FFFFFF';
+  }, 500);
+}
+
+// === FONCTIONS MODIFICATION ===
+window.preparerModificationBeneficiaire = function(id, nom, iban, bic) {
+  document.getElementById('edit-ben-id').value = id;
+  document.getElementById('edit-ben-nom').value = nom;
+  document.getElementById('edit-ben-iban').value = iban;
+  const bicInput = document.getElementById('edit-ben-bic');
+  if (bicInput) bicInput.value = bic;
+  openModal('modal-edit-beneficiaire');
+}
+
+window.validerModificationBeneficiaire = async function() {
+  const id = document.getElementById('edit-ben-id').value;
+  const nom = document.getElementById('edit-ben-nom').value;
+  const iban = document.getElementById('edit-ben-iban').value;
+  const bicInput = document.getElementById('edit-ben-bic');
+  let bic = bicInput ? bicInput.value : '';
+  
+  if(!nom || !iban) return alert('Remplissez tous les champs');
+  
+  if(bic.includes('Recherche') || bic.includes('Erreur') || bic.includes('requis')) {
+    bic = '';
+  }
+  
+  try {
+    await apiCall(`/beneficiaires/${id}`, 'PUT', { nom, iban, bic });
+    closeModal('modal-edit-beneficiaire');
+    loadBeneficiaires();
+    if (typeof loadBeneficiairesForSelect === 'function') {
+      loadBeneficiairesForSelect();
+    }
+    alert('Bénéficiaire modifié avec succès');
+  } catch(err) {
+    alert(err.message || 'Erreur lors de la modification du bénéficiaire');
+  }
+}
+
+let bicEditTimeout = null;
+window.previewBICEdit = async function() {
+  const iban = document.getElementById('edit-ben-iban').value.replace(/\s+/g, '').toUpperCase();
+  const bicInput = document.getElementById('edit-ben-bic');
+  if (!bicInput) return;
+  
+  if (iban.length < 15) {
+    if(bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) {
+      bicInput.value = '';
+    }
+    bicInput.style.background = '#FFFFFF';
+    return;
+  }
+  
+  clearTimeout(bicEditTimeout);
+  if (bicInput.value === '' || bicInput.value.includes('Recherche') || bicInput.value.includes('Erreur') || bicInput.value.includes('requis')) {
+      bicInput.value = '';
+      bicInput.placeholder = 'Recherche du BIC en cours...';
+  }
+  
+  bicEditTimeout = setTimeout(async () => {
     try {
       const res = await fetch(`https://openiban.com/validate/${iban}?getBIC=true`);
       if (res.ok) {
