@@ -91,19 +91,19 @@ const I18N = {
 
   setupLanguageSwitcher: function() {
     const langs = [
-      { code: 'fr', flag: '🇫🇷', label: 'Français' },
-      { code: 'en', flag: '🇬🇧', label: 'English' },
-      { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
-      { code: 'es', flag: '🇪🇸', label: 'Español' },
-      { code: 'da', flag: '🇩🇰', label: 'Dansk' },
-      { code: 'hu', flag: '🇭🇺', label: 'Magyar' },
-      { code: 'hr', flag: '🇭🇷', label: 'Hrvatski' }
+      { code: 'fr', flag: '<img src="https://flagcdn.com/w20/fr.png" width="16" alt="FR" style="border-radius:2px;">', label: 'Français' },
+      { code: 'en', flag: '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN" style="border-radius:2px;">', label: 'English' },
+      { code: 'de', flag: '<img src="https://flagcdn.com/w20/de.png" width="16" alt="DE" style="border-radius:2px;">', label: 'Deutsch' },
+      { code: 'es', flag: '<img src="https://flagcdn.com/w20/es.png" width="16" alt="ES" style="border-radius:2px;">', label: 'Español' },
+      { code: 'da', flag: '<img src="https://flagcdn.com/w20/dk.png" width="16" alt="DK" style="border-radius:2px;">', label: 'Dansk' },
+      { code: 'hu', flag: '<img src="https://flagcdn.com/w20/hu.png" width="16" alt="HU" style="border-radius:2px;">', label: 'Magyar' },
+      { code: 'hr', flag: '<img src="https://flagcdn.com/w20/hr.png" width="16" alt="HR" style="border-radius:2px;">', label: 'Hrvatski' }
     ];
 
     const switcherHTML = `
       <div id="i18n-switcher" style="position:relative; font-family:'Inter',sans-serif; display:inline-block;">
         <button id="i18n-btn" style="background:white; border:1px solid #E2E8F0; padding:10px 15px; border-radius:30px; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.05); display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px; color:#0F172A;">
-          <span id="i18n-current-flag">🇫🇷</span> <span id="i18n-current-code">FR</span>
+          <span id="i18n-current-flag" style="display:flex;"><img src="https://flagcdn.com/w20/fr.png" width="16" alt="FR" style="border-radius:2px;"></span> <span id="i18n-current-code">FR</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="i18n-menu" style="display:none; position:absolute; top:100%; margin-top:10px; right:0; background:white; border:1px solid #E2E8F0; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:150px; overflow:hidden;">
@@ -145,9 +145,17 @@ const I18N = {
   },
 
   updateSwitcherUI: function() {
-    const flags = { fr: '🇫🇷', en: '🇬🇧', de: '🇩🇪', es: '🇪🇸', da: '🇩🇰', hu: '🇭🇺', hr: '🇭🇷' };
+    const flags = { 
+      fr: '<img src="https://flagcdn.com/w20/fr.png" width="16" alt="FR" style="border-radius:2px;">', 
+      en: '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN" style="border-radius:2px;">', 
+      de: '<img src="https://flagcdn.com/w20/de.png" width="16" alt="DE" style="border-radius:2px;">', 
+      es: '<img src="https://flagcdn.com/w20/es.png" width="16" alt="ES" style="border-radius:2px;">', 
+      da: '<img src="https://flagcdn.com/w20/dk.png" width="16" alt="DK" style="border-radius:2px;">', 
+      hu: '<img src="https://flagcdn.com/w20/hu.png" width="16" alt="HU" style="border-radius:2px;">', 
+      hr: '<img src="https://flagcdn.com/w20/hr.png" width="16" alt="HR" style="border-radius:2px;">' 
+    };
     document.querySelectorAll('#i18n-current-flag').forEach(btnFlag => {
-      btnFlag.innerText = flags[this.currentLang] || '🇫🇷';
+      btnFlag.innerHTML = flags[this.currentLang] || flags['fr'];
     });
     document.querySelectorAll('#i18n-current-code').forEach(btnCode => {
       btnCode.innerText = this.currentLang.toUpperCase();
