@@ -535,6 +535,46 @@
         </div>
 
         <!-- Vues supplémentaires (Cartes, Virements, etc) cachées par defaut -->
+
+        <!-- KYC Mobile View -->
+        <div id="m-view-kyc" class="m-view" style="display:none; padding: 20px;">
+          <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: var(--text-primary);">Vérification d'identité</h2>
+          <div id="kyc-main-view-m">
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.</p>
+            
+            <div class="card" style="margin-bottom: 16px; padding: 16px;">
+              <label style="display:block; margin-bottom:8px; font-weight:500;">Type de document</label>
+              <select id="kyc-type-m" class="input-field" style="width:100%; margin-bottom: 16px;">
+                <option value="cni">Carte Nationale d'Identité</option>
+                <option value="passeport">Passeport</option>
+                <option value="titre_sejour">Titre de séjour</option>
+              </select>
+
+              <button id="btn-capture-recto-m" type="button" class="btn" style="width: 100%; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: var(--accent); border: 1px solid var(--accent);" onclick="openCameraView('recto')">
+                <i class="ti ti-camera"></i> Prendre en photo le Recto
+              </button>
+              
+              <button id="btn-capture-verso-m" type="button" class="btn" style="width: 100%; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: var(--accent); border: 1px solid var(--accent);" onclick="openCameraView('verso')">
+                <i class="ti ti-camera"></i> Prendre en photo le Verso (Optionnel)
+              </button>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px; padding: 16px;">
+              <h3 style="font-size: 16px; margin-top:0; margin-bottom: 12px;">Vérification faciale</h3>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.</p>
+              <button id="btn-capture-selfie-m" type="button" class="btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: var(--accent); border: 1px solid var(--accent);" onclick="openCameraView('selfie')">
+                <i class="ti ti-user-scan"></i> Prendre un Selfie
+              </button>
+            </div>
+
+            <form onsubmit="submitKYC(event)">
+              <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 16px;">
+                Soumettre pour vérification
+              </button>
+            </form>
+          </div>
+        </div>
+
         <div id="m-view-cartes" class="m-view" style="display:none;">
           <div class="cartes-header">
               <div>
@@ -3034,5 +3074,17 @@ function saveSettingsMock(msg) {
   <script src="../assets/js/notifications.js"></script>
   <script src="../assets/js/i18n.js"></script>
   <script src="../assets/js/chat-widget.js"></script>
+
+  <!-- GLOBAL CAMERA VIEW (Overlay plein écran) -->
+  <div id="kyc-camera-view" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center;">
+    <h3 style="color: white; margin-top: 20px; position: absolute; top: 20px;">Positionnez le document / votre visage</h3>
+    <video id="kyc-video" style="width: 100%; max-width: 600px; height: auto; max-height: 80vh; background: #111; border-radius: 12px;" playsinline autoplay></video>
+    
+    <div style="position: absolute; bottom: 40px; display: flex; gap: 20px;">
+      <button class="btn" style="background: white; color: black; border-radius: 30px; padding: 15px 30px; font-weight: bold;" onclick="closeCameraView()">Annuler</button>
+      <button class="btn" style="background: #2563EB; color: white; border-radius: 30px; padding: 15px 40px; font-weight: bold;" onclick="captureImage()"><i class="ti ti-camera" style="margin-right:8px;"></i> Capturer</button>
+    </div>
+  </div>
+
 </body>
 </html>

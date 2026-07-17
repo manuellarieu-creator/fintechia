@@ -203,19 +203,30 @@ async function checkAuth() {
 }
 
 async function initDashboard(user, account, kycStatut = null) {
-  if ((kycStatut === null || kycStatut === 'rejete' || kycStatut === 'a_refaire') && user.role !== 'admin') {
-    showPage('pg-register');
-    setStep(3);
-    if (kycStatut === 'rejete') {
-      alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.');
+  const alert = document.getElementById('kyc-alert');
+  if (alert) {
+    if ((kycStatut === null || kycStatut === 'rejete' || kycStatut === 'a_refaire') && user.role !== 'admin') {
+      alert.style.display = 'block';
+      alert.style.backgroundColor = 'var(--danger-bg)';
+      alert.style.border = '1px solid var(--danger)';
+      alert.innerHTML = `
+        <strong style="color:var(--danger-text);">Action requise : Vérification d'identité</strong>
+        <p style="margin-top: 4px; font-size: 14px; color: var(--text-secondary);">Pour débloquer vos virements, la loi exige une vérification KYC.</p>
+        <button class="btn" style="margin-top:12px; background:var(--danger); color:white;" onclick="showView('view-kyc'); if(window.innerWidth<=768) showMobileView('m-view-kyc');">
+          <i class="ti ti-camera" style="margin-right:8px;"></i> Vérifier mon identité
+        </button>
+      `;
+    } else if (kycStatut === 'en_attente') {
+      alert.style.display = 'block';
+      alert.style.backgroundColor = 'var(--warning-bg)';
+      alert.style.border = '1px solid var(--warning)';
+      alert.innerHTML = `
+        <strong style="color:var(--warning-text);">Vérification en cours</strong>
+        <p style="margin-top: 4px; font-size: 14px; color: var(--text-secondary);">Vos documents sont en cours d'analyse par nos équipes. Vous serez notifié très bientôt.</p>
+      `;
+    } else {
+      alert.style.display = 'none';
     }
-    return;
-  }
-
-  if (kycStatut === 'en_attente') {
-    showPage('pg-kyc-waiting');
-    startKycPolling();
-    return;
   }
 
   const savedView = localStorage.getItem('activeClientView');
