@@ -116,26 +116,26 @@ const I18N = {
       </div>
     `;
 
-    const container = document.getElementById('i18n-container');
-if (container) {
-  container.innerHTML = switcherHTML;
-} else {
-  const floatingSwitcher = switcherHTML.replace('position:relative;', 'position:fixed; bottom:90px; right:20px; z-index:100;');
-  document.body.insertAdjacentHTML('beforeend', floatingSwitcher);
-}
+    const containers = document.querySelectorAll('.i18n-container, #i18n-container');
+    if (containers.length > 0) {
+      containers.forEach(c => c.innerHTML = switcherHTML);
+    } else {
+      const floatingSwitcher = switcherHTML.replace('position:relative;', 'position:fixed; bottom:90px; right:20px; z-index:100;');
+      document.body.insertAdjacentHTML('beforeend', floatingSwitcher);
+    }
 
-    const btn = document.getElementById('i18n-btn');
-    const menu = document.getElementById('i18n-menu');
-    
-    btn.addEventListener('click', () => {
-      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    document.querySelectorAll('#i18n-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const menu = e.currentTarget.nextElementSibling;
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+      });
     });
 
     document.querySelectorAll('.i18n-option').forEach(opt => {
       opt.addEventListener('click', (e) => {
         const lang = e.currentTarget.getAttribute('data-lang');
         this.setLanguage(lang);
-        menu.style.display = 'none';
+        document.querySelectorAll('#i18n-menu').forEach(m => m.style.display = 'none');
       });
       opt.addEventListener('mouseover', e => e.currentTarget.style.background = '#F8FAFC');
       opt.addEventListener('mouseout', e => e.currentTarget.style.background = 'white');
@@ -146,10 +146,12 @@ if (container) {
 
   updateSwitcherUI: function() {
     const flags = { fr: '🇫🇷', en: '🇬🇧', de: '🇩🇪', es: '🇪🇸', da: '🇩🇰', hu: '🇭🇺', hr: '🇭🇷' };
-    const btnFlag = document.getElementById('i18n-current-flag');
-    const btnCode = document.getElementById('i18n-current-code');
-    if (btnFlag) btnFlag.innerText = flags[this.currentLang] || '🇫🇷';
-    if (btnCode) btnCode.innerText = this.currentLang.toUpperCase();
+    document.querySelectorAll('#i18n-current-flag').forEach(btnFlag => {
+      btnFlag.innerText = flags[this.currentLang] || '🇫🇷';
+    });
+    document.querySelectorAll('#i18n-current-code').forEach(btnCode => {
+      btnCode.innerText = this.currentLang.toUpperCase();
+    });
     
     document.querySelectorAll('.i18n-option').forEach(opt => {
       if (opt.getAttribute('data-lang') === this.currentLang) {
