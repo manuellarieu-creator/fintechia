@@ -157,8 +157,8 @@ router.get('/admin/conversations', authMiddleware, async (req, res) => {
     const [rows] = await db.query(`
       SELECT c.*, 
         u.prenom, u.nom, u.email as user_email,
-        (SELECT content FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
-        (SELECT created_at FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_date
+        (SELECT content FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message,
+        (SELECT m.created_at FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message_date
       FROM chat_conversations c
       LEFT JOIN users u ON c.user_id = u.id
       ORDER BY last_message_date DESC
