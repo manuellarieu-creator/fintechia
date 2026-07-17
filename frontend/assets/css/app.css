@@ -337,8 +337,6 @@
   .nb-plan { font-size: 12px; color: #64748B; }
   .nb-logout { background: none; border: none; color: #EF4444; text-align: left; padding: 8px 16px; font-weight: 600; font-size: 13px; cursor: pointer; border-radius: 8px; }
   .nb-logout:hover { background: #FEF2F2; }
-  }
-
   /* MAIN CONTENT */
   .nb-main { flex: 1; padding: 32px 40px; max-width: 1300px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 24px; overflow-x: hidden; }
   
