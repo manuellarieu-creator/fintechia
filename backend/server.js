@@ -19,6 +19,7 @@ const creditRoutes = require('./routes/credits');
 const cartesRoutes = require('./routes/cartes');
 const settingsRoutes = require('./routes/settings');
 const alertesRoutes = require('./routes/alertes');
+const notificationsRoutes = require('./routes/notifications');
 
 // Import services
 const notificationsService = require('./services/notifications');
@@ -89,6 +90,7 @@ app.use('/api/credits', creditRoutes);
 app.use('/api/cartes', cartesRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/admin/alertes', alertesRoutes);
+app.use('/api/notifications', notificationsRoutes);
 
 // Fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -173,6 +175,19 @@ if (!process.env.VERCEL) {
           longueur INT NOT NULL
         )
       `).catch(err => console.error("Erreur création iban_rules:", err.message));
+
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS notifications (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id INT DEFAULT NULL,
+          type VARCHAR(50) NOT NULL,
+          titre VARCHAR(255) NOT NULL,
+          message TEXT NOT NULL,
+          lu BOOLEAN DEFAULT FALSE,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+      `).catch(err => console.error("Erreur création notifications:", err.message));
 
       await db.query(`INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES 
         ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), 

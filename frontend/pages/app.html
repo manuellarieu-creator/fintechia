@@ -1083,7 +1083,10 @@
           </div>
           <div class="nb-header-right">
             <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement ↗</button>
-            <button class="nb-btn-icon">🔔</button>
+            <button class="nb-btn-icon" style="position:relative;" id="btn-notifications-desktop" onclick="toggleNotificationDropdown(event)">
+              🔔
+              <div class="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#ef4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; align-items:center; justify-content:center;"></div>
+            </button>
           </div>
         </header>
         
@@ -2838,8 +2841,11 @@ function saveSettingsMock(msg) {
       <i class="ti ti-home"></i>
       <span>Accueil</span>
     </a>
-    <a href="#" class="mobile-nav-item" onclick="showMobileView('m-view-releves'); updateMobileNav(this)">
-      <i class="ti ti-bell"></i>
+    <a href="#" class="mobile-nav-item" id="mobile-bell-icon" onclick="toggleNotificationDropdown(event)">
+      <div style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <div class="notif-badge" style="display:none; position:absolute; top:-4px; right:-8px; background:#ef4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; align-items:center; justify-content:center;"></div>
+      </div>
       <span>Notifs</span>
     </a>
     <a href="#" class="mobile-nav-item" onclick="openSettingsMobile(); updateMobileNav(this)">
@@ -2950,5 +2956,6 @@ function saveSettingsMock(msg) {
     }
   </script>
 
+  <script src="../assets/js/notifications.js"></script>
 </body>
 </html>

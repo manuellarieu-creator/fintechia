@@ -108,9 +108,10 @@
                         <i class="ti ti-search"></i>
                         <input type="text" placeholder="Rechercher client, IBAN...">
                     </div>
-                    <button class="icon-btn" id="btn-notifications">
-                        <i class="ti ti-bell"></i>
-                    </button>
+                    <button class="icon-btn" id="btn-notifications" style="position:relative;" onclick="toggleNotificationDropdown(event)">
+                            <i class="ti ti-bell"></i>
+                            <div class="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#ef4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; align-items:center; justify-content:center;"></div>
+                        </button>
                     <div class="header-avatar" onclick="localStorage.removeItem('fintech_token'); window.location.href='admin.html'" style="cursor:pointer;" title="Déconnexion">AD</div>
                 </div>
             </header>
@@ -2772,5 +2773,6 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
     <!-- Scripts -->
     <script src="../assets/js/admin.js?v=4"></script>
     <script src="../assets/js/admin-settings.js?v=4"></script>
+  <script src="../assets/js/notifications.js"></script>
 </body>
 </html>
