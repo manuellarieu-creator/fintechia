@@ -2868,7 +2868,7 @@ function saveSettingsMock(msg) {
     }
     
     function updateMobileNav(clickedEl) {
-      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav-item, .nb-nav a').forEach(el => el.classList.remove('active'));
       if (clickedEl) clickedEl.classList.add('active');
     }
     

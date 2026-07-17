@@ -216,31 +216,29 @@ async function initDashboard(user, account, kycStatut = null) {
     return;
   }
 
-  showPage('pg-dash');
-  
-  setTimeout(() => {
-      const savedView = localStorage.getItem('activeClientView');
-      if (savedView) {
-          if (window.innerWidth <= 768) {
-              const savedMobileView = localStorage.getItem('activeClientMobileView') || 'm-' + savedView;
-              showMobileView(savedMobileView);
-              document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
-                  i.classList.remove('active');
-                  if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(savedMobileView)) {
-                      i.classList.add('active');
-                  }
-              });
-          } else {
-              showView(savedView);
-              document.querySelectorAll('.nb-nav a').forEach(a => {
-                  a.classList.remove('active');
-                  if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(savedView)) {
-                      a.classList.add('active');
-                  }
-              });
-          }
+  const savedView = localStorage.getItem('activeClientView');
+  if (savedView) {
+      if (window.innerWidth <= 768) {
+          const savedMobileView = localStorage.getItem('activeClientMobileView') || 'm-' + savedView;
+          showMobileView(savedMobileView);
+          document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
+              i.classList.remove('active');
+              if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(savedMobileView)) {
+                  i.classList.add('active');
+              }
+          });
+      } else {
+          showView(savedView);
+          document.querySelectorAll('.nb-nav a').forEach(a => {
+              a.classList.remove('active');
+              if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(savedView)) {
+                  a.classList.add('active');
+              }
+          });
       }
-  }, 100);
+  }
+
+  showPage('pg-dash');
   
   if (account && user.role !== 'admin') {
     if (account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
