@@ -40,6 +40,23 @@ router.get('/test/db', async (req, res) => {
   }
 });
 
+router.get('/test/query', async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT c.*, 
+        u.prenom, u.nom, u.email as user_email,
+        (SELECT content FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message,
+        (SELECT m.created_at FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message_date
+      FROM chat_conversations c
+      LEFT JOIN users u ON c.user_id = u.id
+      ORDER BY last_message_date DESC
+    `);
+    res.json({ success: true, rows });
+  } catch (err) {
+    res.json({ error: err.message, stack: err.stack, sql: err.sql, sqlMessage: err.sqlMessage });
+  }
+});
+
 // Initialiser un chat visiteur
 router.post('/visitor/init', async (req, res) => {
   try {
