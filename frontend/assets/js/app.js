@@ -490,8 +490,52 @@ window.closeAppDrawer = function() {
 // Logout
 function logout() {
   localStorage.removeItem('fintech_token');
-  window.location.reload();
+  window.location.href = 'index.html';
 }
+
+// Téléchargement PDF (RIB & Relevé)
+async function downloadPDF(type) {
+  try {
+    const token = localStorage.getItem('fintech_token');
+    if (!token) return alert('Vous devez être connecté');
+    
+    // Animation de chargement sur le bouton
+    const btnText = event.currentTarget.innerHTML;
+    event.currentTarget.innerHTML = '<i class="ti ti-loader ti-spin"></i> Téléchargement...';
+    event.currentTarget.disabled = true;
+
+    const res = await fetch(`${API_URL}/documents/${type}`, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    event.currentTarget.innerHTML = btnText;
+    event.currentTarget.disabled = false;
+
+    if (!res.ok) {
+      const err = await res.json();
+      return alert('Erreur: ' + (err.error || 'Impossible de télécharger le document.'));
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    const d = new Date();
+    const dateStr = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0');
+    
+    a.download = type === 'rib' ? 'RIB_Fintechia.pdf' : `Releve_Fintechia_${dateStr}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (err) {
+    console.error('Erreur download:', err);
+    alert('Une erreur est survenue lors du téléchargement.');
+  }
+}
+window.downloadPDF = downloadPDF;
 
 // ==========================================
 // TUNNEL ONBOARDING (MULTI-ETAPES)

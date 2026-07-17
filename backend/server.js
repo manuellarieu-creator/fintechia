@@ -93,6 +93,8 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/admin/alertes', alertesRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/chat', chatRoutes);
+const documentsRoutes = require('./routes/documents');
+app.use('/api/documents', documentsRoutes);
 
 // Fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
