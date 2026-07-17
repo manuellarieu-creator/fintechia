@@ -39,7 +39,7 @@ async function loadTransactions() {
         `;
       }).join('');
 
-      // Lignes Desktop (Format NovaBanque)
+      // Lignes Desktop (Format Fintechia)
       const desktopRows = txs.map(tx => {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
         const typeLabel = isCredit ? 'Crédit' : 'Débit';

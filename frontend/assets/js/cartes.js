@@ -51,7 +51,7 @@ async function loadCartes() {
             </div>
           </div>
           <h2 style="font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Création de carte en cours</h2>
-          <p style="font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.6;">Notre équipe finalise la configuration de votre nouvelle carte de paiement NovaBanque. Vous y aurez accès dès sa validation.</p>
+          <p style="font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.6;">Notre équipe finalise la configuration de votre nouvelle carte de paiement Fintechia. Vous y aurez accès dès sa validation.</p>
         </div>
       `;
 
@@ -78,7 +78,7 @@ async function loadCartes() {
           <div style="display: flex; flex-direction: column; gap: 24px;">
             <div class="nb-card" style="background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); color:white; border-radius:16px; padding:25px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); margin-bottom:0;">
               <div style="display:flex; justify-content:space-between; margin-bottom:40px; align-items:center;">
-                <h3 style="margin:0; font-size:20px;">NovaBanque</h3>
+                <h3 style="margin:0; font-size:20px;">Fintechia</h3>
                 <span style="font-size:12px; background:rgba(255,255,255,0.2); padding:4px 8px; border-radius:4px; font-weight:bold;">${c.bloquee ? '🔒 BLOQUÉE' : 'ACTIVE'}</span>
               </div>
               <div style="font-size:24px; letter-spacing:3px; margin-bottom:20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
@@ -194,7 +194,7 @@ async function loadCartes() {
         <div class="card-view" style="display: ${i === 0 ? 'block' : 'none'};">
             <!-- Visual Card -->
             <div class="credit-card">
-                <div class="cc-bank">NovaBanque</div>
+                <div class="cc-bank">Fintechia</div>
                 <div class="cc-badge">${c.bloquee ? 'BLOQUÉE' : 'ACTIVE'}</div>
             </div>
 

@@ -224,7 +224,7 @@ const newSettingsHTML = `
         </div>
 
         <div class="settings-card">
-          <div class="ch"><div><p class="ch-title">Ma Carte NovaBanque</p><p class="ch-sub">Carte physique **** 1234</p></div></div>
+          <div class="ch"><div><p class="ch-title">Ma Carte Fintechia</p><p class="ch-sub">Carte physique **** 1234</p></div></div>
           
           <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom: 20px;">
             <div style="width:120px; height:80px; background:linear-gradient(135deg, #1E3A8A, #3B82F6); border-radius:10px; position:relative; box-shadow:0 4px 10px rgba(0,0,0,0.1);">

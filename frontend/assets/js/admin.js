@@ -1670,7 +1670,7 @@ window.exportCSV = function() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `nova_clients_export_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute("download", `fintechia_clients_export_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

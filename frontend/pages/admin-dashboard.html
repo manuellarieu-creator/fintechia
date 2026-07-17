@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Administration — NovaBanque</title>
+    <title>Dashboard Administration — Fintechia</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="../assets/css/global.css?v=2">
     <link rel="stylesheet" href="../assets/css/admin.css?v=4">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 </head>
 <body>
     
@@ -15,9 +16,9 @@
         <!-- SIDEBAR -->
         <aside class="admin-sidebar">
             <div class="admin-logo">
-                <div class="admin-logo-icon">N</div>
+                <img src="../assets/favicon.svg" alt="Fintechia Icon" style="width:36px; height:36px;">
                 <div class="admin-logo-text">
-                    <span class="logo-title">NovaBanque</span>
+                    <span class="logo-title">Fintechia</span>
                     <span class="logo-subtitle">Admin Console</span>
                 </div>
             </div>
@@ -219,7 +220,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
             <div style="flex:1;">
               <div class="field">
                 <label>Nom de l'établissement</label>
-                <input id="set-etablissement_nom" value="NovaBanque SAS">
+                <input id="set-etablissement_nom" value="Fintechia SAS">
               </div>
               <div class="field" style="margin:0;">
                 <label>Slogan</label>
@@ -243,9 +244,9 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
             <div class="field"><label>Code postal</label><input id="set-etablissement_cp" value="75001"></div>
             <div class="field"><label>Ville</label><input id="set-etablissement_ville" value="Paris"></div>
           </div>
-          <div class="field"><label>Email support client</label><input id="set-etablissement_email" value="support@novabanque.fr"></div>
+          <div class="field"><label>Email support client</label><input id="set-etablissement_email" value="support@fintechia.fr"></div>
           <div class="field"><label>Téléphone</label><input id="set-etablissement_tel" value="+33 1 80 00 12 34"></div>
-          <div class="field" style="margin:0;"><label>Site web</label><input id="set-etablissement_site" value="https://www.novabanque.fr"></div>
+          <div class="field" style="margin:0;"><label>Site web</label><input id="set-etablissement_site" value="https://www.fintechia.fr"></div>
         </div>
       </div>
 
@@ -305,7 +306,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
             <div class="av" style="background:#EFF6FF;color:#1D4ED8;">AD</div>
             <div style="flex:1;min-width:0;">
               <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Admin Principal</p>
-              <p style="font-size:9px;color:#94A3B8;margin:0;">admin@novabanque.fr</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">admin@fintechia.fr</p>
             </div>
             <span class="badge-role" style="background:#EFF6FF;color:#1D4ED8;">Super Admin</span>
           </div>
@@ -313,7 +314,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
             <div class="av" style="background:#F0FDF4;color:#166534;">MC</div>
             <div style="flex:1;min-width:0;">
               <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Marie Coulomb</p>
-              <p style="font-size:9px;color:#94A3B8;margin:0;">m.coulomb@novabanque.fr</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">m.coulomb@fintechia.fr</p>
             </div>
             <span class="badge-role" style="background:#F0FDF4;color:#15803D;">KYC Officer</span>
           </div>
@@ -321,7 +322,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
             <div class="av" style="background:#FEF3C7;color:#B45309;">JR</div>
             <div style="flex:1;min-width:0;">
               <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">Jean Roche</p>
-              <p style="font-size:9px;color:#94A3B8;margin:0;">j.roche@novabanque.fr</p>
+              <p style="font-size:9px;color:#94A3B8;margin:0;">j.roche@fintechia.fr</p>
             </div>
             <span class="badge-role" style="background:#FFFBEB;color:#B45309;">Analyste Fraude</span>
           </div>
@@ -385,7 +386,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
           <p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px;">Destinataires</p>
           <div class="field" style="margin-bottom:8px;">
             <label>Emails de réception</label>
-            <input id="set-notif_emails_dest" value="admin@novabanque.fr, compliance@novabanque.fr">
+            <input id="set-notif_emails_dest" value="admin@fintechia.fr, compliance@fintechia.fr">
           </div>
           <div class="field" style="margin:0;">
             <label>Téléphone SMS urgences</label>
@@ -507,7 +508,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
           </div>
           <div class="field" style="margin:0;">
             <label>URL Webhook (événements)</label>
-            <input id="set-api_webhook_url" value="https://api.novabanque.fr/webhooks/events" placeholder="https://…">
+            <input id="set-api_webhook_url" value="https://api.fintechia.fr/webhooks/events" placeholder="https://…">
           </div>
         </div>
       </div>
@@ -736,7 +737,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     <input type="text" id="iso-nom" placeholder="Nom" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
                                 </div>
                                 <input type="email" id="iso-email" placeholder="Email" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%; margin-bottom:12px;">
-                                <input type="text" id="iso-password" placeholder="Mot de passe provisoire" value="ClientNova2026!" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%; margin-bottom:12px;">
+                                <input type="text" id="iso-password" placeholder="Mot de passe provisoire" value="ClientFintechia2026!" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%; margin-bottom:12px;">
                                 <input type="text" id="iso-tel" placeholder="Téléphone (optionnel)" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%; margin-bottom:24px;">
                                 <div style="display:flex; justify-content:flex-end; gap:12px;">
                                     <button class="btn-outline" style="padding:8px 16px; border-radius:6px; background:#fff; border:1px solid #e2e8f0; cursor:pointer;" onclick="document.getElementById('modal-isolated-new-client').style.display='none'">Annuler</button>
@@ -1985,7 +1986,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                         <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07);"></div>
                         <div style="position:absolute;bottom:-30px;left:-10px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
                         <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;">
-                          <div><p style="font-size:10px;opacity:.75;margin:0;">NovaBanque</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
+                          <div><p style="font-size:10px;opacity:.75;margin:0;">Fintechia</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;" id="fiche-carte-type">-</p></div>
                           <div style="display:flex;gap:6px;align-items:center;">
                             <span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;">ACTIVE</span>
                             <i class="ti ti-wifi" style="font-size:16px;opacity:.75;transform:rotate(90deg);"></i>
@@ -2147,7 +2148,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                             <tbody>
                                 <tr>
                                     <td><div class="client-cell"><div class="client-avatar">AD</div>Admin Console</div></td>
-                                    <td>admin@novabanque.fr</td>
+                                    <td>admin@fintechia.fr</td>
                                     <td><span class="offre-badge premium">Super Admin</span></td>
                                     <td>Aujourd'hui</td>
                                 </tr>
@@ -2724,7 +2725,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
 
             <div style="margin-bottom:16px;">
                 <label style="font-size:12px; font-weight:600; display:block; margin-bottom:8px;">Mot de passe provisoire</label>
-                <input type="text" id="new-client-password" class="input" style="width:100%;" value="ClientNova2026!">
+                <input type="text" id="new-client-password" class="input" style="width:100%;" value="ClientFintechia2026!">
             </div>
             
             <div style="margin-bottom:24px;">

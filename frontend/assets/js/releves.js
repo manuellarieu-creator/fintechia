@@ -360,7 +360,7 @@ function generateCSV(mKey, action, email) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Releve_NovaBanque_${mKey}.csv`;
+        a.download = `Releve_Fintechia_${mKey}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -423,7 +423,7 @@ function generatePDF(mKey, action, email) {
     
     const opt = {
       margin:       0.5,
-      filename:     `Releve_NovaBanque_${mKey}.pdf`,
+      filename:     `Releve_Fintechia_${mKey}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2 },
       jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }

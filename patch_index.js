@@ -9,7 +9,7 @@ const newHeader = `<div class="nb-header">
     <!-- Logo -->
     <div style="display:flex;align-items:center;gap:10px; cursor: pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
       <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
-      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">Novabanque</span>
+      <span class="nb-serif" style="font-size:18px;font-weight:500;letter-spacing:.2px;">Fintechia</span>
     </div>
     
     <!-- Actions -->
@@ -32,7 +32,7 @@ const newHeader = `<div class="nb-header">
     <div style="padding: 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(233,230,221,0.1);">
       <div style="display:flex;align-items:center;gap:10px;">
         <div style="width:30px;height:30px;border:1px solid #C99A3B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#C99A3B;">N</div>
-        <span class="nb-serif" style="font-size:18px;font-weight:500;color:#E9E6DD;">Novabanque</span>
+        <span class="nb-serif" style="font-size:18px;font-weight:500;color:#E9E6DD;">Fintechia</span>
       </div>
       <i class="ti ti-x" style="font-size:24px; color:#B9B4A6; cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open')"></i>
     </div>

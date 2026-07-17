@@ -19,7 +19,7 @@ const mobileSidebarHtml = `
   <aside class="nb-sidebar mobile-sidebar-menu" style="display:none;">
     <div class="nb-logo" style="padding: 24px;">
       <div class="nb-logo-icon">N</div>
-      <span>NovaBanque</span>
+      <span>Fintechia</span>
     </div>
     <nav class="nb-nav">
       <a href="#" class="active" onclick="updateMobileNav(this); showMobileView('m-view-dashboard'); toggleMobileSidebar()"><span class="nb-icon">🏠</span> Accueil</a>

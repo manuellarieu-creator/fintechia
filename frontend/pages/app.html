@@ -122,13 +122,17 @@
     }
   </style>
 
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 </head>
 <body class="app-body">
 
 <div id="app-wrap">
   <!-- ECRAN CHARGEMENT -->
   <div id="pg-loading" class="page flex-col" style="display:flex; justify-content:center; align-items:center; height:100vh;">
-    <div style="font-family:'Nunito',sans-serif; font-size:28px; font-weight:800; color:#2563EB;">NovaBanque</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img src="../assets/favicon.svg" alt="Fintechia Icon" style="width:36px; height:36px;">
+      <div style="font-family:'Inter',sans-serif; font-size:28px; font-weight:800; color:#2563EB;">Fintechia</div>
+    </div>
     <div style="margin-top:20px; width:40px; height:40px; border:4px solid #EFF6FF; border-top:4px solid #2563EB; border-radius:50%; animation:spin 1s linear infinite;"></div>
     <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
   </div>
@@ -138,8 +142,8 @@
     <div class="login-split-card">
       <div class="login-left">
         <div class="login-left-content">
-          <div class="logo-box">N</div>
-          <h1>Bienvenue sur<br/>NovaBanque</h1>
+          <img src="../assets/favicon.svg" alt="Fintechia Icon" style="width:48px; height:48px; margin-bottom:20px;">
+          <h1>Bienvenue sur<br/>Fintechia</h1>
           <p>Votre banque 100% en ligne,<br/>sécurisée et disponible 24h/24.</p>
         </div>
         <div class="login-left-features">
@@ -151,7 +155,7 @@
       <div class="login-right">
         <div class="login-right-header" style="display:flex; justify-content:space-between; width:100%;">
            <a href="index.html" style="text-decoration:none; color:#DC2626; font-size:13px; font-weight:500; display:flex; align-items:center; gap:4px; transition: color 0.2s;" onmouseover="this.style.color='#B91C1C'" onmouseout="this.style.color='#DC2626'"><i class="ti ti-arrow-left"></i> Retour à l'accueil</a>
-           <span class="url-text">novabanque.fr/login</span>
+           <span class="url-text">fintechia.fr/login</span>
         </div>
         <div class="login-right-body">
           <h2>Connexion</h2>
@@ -190,7 +194,7 @@
     <div class="login-split-card">
       <div class="login-left" style="width: 30%;">
         <div class="login-left-content">
-          <div class="logo-box">N</div>
+          <img src="../assets/favicon.svg" alt="Fintechia Icon" style="width:48px; height:48px; margin-bottom:20px;">
           <h1>Ouvrez votre<br/>compte en 5<br/>minutes</h1>
           <p>100% en ligne, sans frais<br/>de dossier.</p>
         </div>
@@ -444,7 +448,7 @@
   <!-- ECRAN DASHBOARD -->
   <div id="pg-dash" class="page" style="display:none; padding:0; width: 100%;">
     
-    <!-- === LAYOUT MOBILE (Bleu NovaBanque) === -->
+    <!-- === LAYOUT MOBILE (Bleu Fintechia) === -->
     <div class="mobile-layout">
       <div class="topbar">
         <div style="display:flex; align-items:center;">
@@ -1032,7 +1036,7 @@
       </div>
     </div>
 
-    <!-- === LAYOUT DESKTOP (Bleu NovaBanque) === -->
+    <!-- === LAYOUT DESKTOP (Bleu Fintechia) === -->
     <div class="desktop-layout">
       <aside class="nb-sidebar">
         <div class="nb-logo" style="display:flex; align-items:center; gap:10px;">
@@ -1788,7 +1792,7 @@
         </div>
 
         <div class="settings-card">
-          <div class="ch"><div><p class="ch-title">Ma Carte NovaBanque</p><p class="ch-sub">Carte physique **** 1234</p></div></div>
+          <div class="ch"><div><p class="ch-title">Ma Carte Fintechia</p><p class="ch-sub">Carte physique **** 1234</p></div></div>
           
           <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom: 20px;">
             <div style="width:120px; height:80px; background:linear-gradient(135deg, #1E3A8A, #3B82F6); border-radius:10px; position:relative; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
@@ -2320,7 +2324,7 @@ function saveSettingsMock(msg) {
   <div id="pdf-content" style="padding: 20px; background: white; color: black; font-family: 'Inter', sans-serif; width: 700px; margin: 0 auto;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2563EB; padding-bottom: 20px; margin-bottom: 20px;">
       <div>
-        <h1 style="color: #2563EB; margin: 0; font-size: 24px; font-family: 'Playfair Display', serif;">NovaBanque</h1>
+        <h1 style="color: #2563EB; margin: 0; font-size: 24px; font-family: 'Playfair Display', serif;">Fintechia</h1>
         <p style="margin: 4px 0 0; font-size: 12px; color: #666;">La banque qui vous comprend</p>
       </div>
       <div style="text-align: right; font-size: 14px;">
@@ -2376,7 +2380,7 @@ function saveSettingsMock(msg) {
     </table>
     
     <div style="margin-top: 40px; text-align: center; font-size: 10px; color: #94A3B8;">
-      <p>NovaBanque - Document généré électroniquement - Ne peut servir de justificatif officiel sans signature.</p>
+      <p>Fintechia - Document généré électroniquement - Ne peut servir de justificatif officiel sans signature.</p>
     </div>
   </div>
 </div>
@@ -2647,7 +2651,7 @@ function saveSettingsMock(msg) {
 <div class="modal" id="modal-activation-success" style="display:none; z-index: 10001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
   <div class="modal-content" style="max-width: 500px; width: 90%; text-align: center; background: white; border-radius: 12px; padding: 30px;">
     <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-    <h3 style="margin-top: 0; margin-bottom: 32px; color: #10B981;">L'activation de votre compte NovaBanque est finalisée avec succès.</h3>
+    <h3 style="margin-top: 0; margin-bottom: 32px; color: #10B981;">L'activation de votre compte Fintechia est finalisée avec succès.</h3>
     <p class="text-muted" style="margin-bottom: 24px; font-size:15px; line-height:1.5;">
       Vous pouvez à présent profiter des nombreuses fonctionnalités à disposition (Transférer, Recevoir, Emprunter, Trader) 🚀<br><br>
       Nous vous remercions pour votre confiance. 🙏

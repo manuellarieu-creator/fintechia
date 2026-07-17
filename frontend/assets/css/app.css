@@ -310,7 +310,7 @@
 #pg-dash { display: flex; flex-direction: column; width: 100%; }
 
 /* =========================================
-   DESKTOP RESPONSIVE (NovaBanque Style)
+   DESKTOP RESPONSIVE (Fintechia Style)
    ========================================= */
 @media (min-width: 768px) {
   .mobile-layout { display: none !important; }
