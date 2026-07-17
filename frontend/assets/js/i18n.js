@@ -101,7 +101,7 @@ const I18N = {
     ];
 
     const switcherHTML = \`
-      <div id="i18n-switcher" style="position:fixed; bottom:90px; right:20px; z-index:100; font-family:'Inter',sans-serif;">
+      <div id="i18n-switcher" style="position:relative; font-family:'Inter',sans-serif; display:inline-block;">
         <button id="i18n-btn" style="background:white; border:1px solid #E2E8F0; padding:10px 15px; border-radius:30px; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.05); display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px; color:#0F172A;">
           <span id="i18n-current-flag">🇫🇷</span> <span id="i18n-current-code">FR</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -116,7 +116,13 @@ const I18N = {
       </div>
     \`;
 
-    document.body.insertAdjacentHTML('beforeend', switcherHTML);
+    const container = document.getElementById('i18n-container');
+if (container) {
+  container.innerHTML = switcherHTML;
+} else {
+  const floatingSwitcher = switcherHTML.replace('position:relative;', 'position:fixed; bottom:90px; right:20px; z-index:100;');
+  document.body.insertAdjacentHTML('beforeend', floatingSwitcher);
+}
 
     const btn = document.getElementById('i18n-btn');
     const menu = document.getElementById('i18n-menu');
