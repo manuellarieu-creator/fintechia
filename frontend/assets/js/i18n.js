@@ -21,7 +21,7 @@ const I18N = {
       if (n.parentElement && n.parentElement.tagName !== 'SCRIPT' && n.parentElement.tagName !== 'STYLE' && n.parentElement.tagName !== 'NOSCRIPT') {
         const text = n.nodeValue;
         const trimmed = text.replace(/\\s+/g, ' ').trim();
-        if (trimmed.length > 1 && !/^[0-9\\s€$.,;:\\-+*/=()!%_a-zA-Z0-9]$/.test(trimmed) && !trimmed.includes('{')) {
+        if (trimmed.length > 1 && !/^[0-9\\s€$.,;:+\\*/=()!%_a-zA-Z\\-]+$/.test(trimmed) && !trimmed.includes('{')) {
           if (!n._originalText) n._originalText = trimmed;
           this.nodesToTranslate.push(n);
         }
@@ -100,21 +100,21 @@ const I18N = {
       { code: 'hr', flag: '🇭🇷', label: 'Hrvatski' }
     ];
 
-    const switcherHTML = \`
+    const switcherHTML = `
       <div id="i18n-switcher" style="position:relative; font-family:'Inter',sans-serif; display:inline-block;">
         <button id="i18n-btn" style="background:white; border:1px solid #E2E8F0; padding:10px 15px; border-radius:30px; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.05); display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px; color:#0F172A;">
           <span id="i18n-current-flag">🇫🇷</span> <span id="i18n-current-code">FR</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <div id="i18n-menu" style="display:none; position:absolute; bottom:50px; right:0; background:white; border:1px solid #E2E8F0; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:150px; overflow:hidden;">
-          \${langs.map(l => \`
-            <div class="i18n-option" data-lang="\${l.code}" style="padding:10px 15px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px; color:#475569; transition:0.2s;">
-              <span>\${l.flag}</span> <span>\${l.label}</span>
+        <div id="i18n-menu" style="display:none; position:absolute; top:100%; margin-top:10px; right:0; background:white; border:1px solid #E2E8F0; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:150px; overflow:hidden;">
+          ${langs.map(l => `
+            <div class="i18n-option" data-lang="${l.code}" style="padding:10px 15px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px; color:#475569; transition:0.2s;">
+              <span>${l.flag}</span> <span>${l.label}</span>
             </div>
-          \`).join('')}
+          `).join('')}
         </div>
       </div>
-    \`;
+    `;
 
     const container = document.getElementById('i18n-container');
 if (container) {
