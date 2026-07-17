@@ -158,7 +158,13 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     return null;
   }
 
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch(e) {
+    throw new Error('Erreur serveur critique (Base de données probablement arrêtée). Veuillez relancer MySQL.');
+  }
+  
   if (!res.ok) {
     const err = new Error(data.error || 'Erreur API');
     err.isPopupRule = data.isPopupRule;
