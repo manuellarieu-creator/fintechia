@@ -510,10 +510,10 @@
           <div class="mobile-card">
             <div class="card-head">
               <h2>Virements rapides</h2>
-              <a href="#" onclick="openDesktopViewMobile('view-virements')">Gérer →</a>
+              <a href="#" onclick="showMobileView('m-view-virements')">Gérer →</a>
             </div>
             <div class="bene-list" id="beneficiaires-mobile-list">
-              <div class="bene bene-add" onclick="openDesktopViewMobile('view-virements')">
+              <div class="bene bene-add" onclick="showMobileView('m-view-virements')">
                 <div class="bene-av"><i class="ti ti-plus"></i></div>
                 <span class="bene-n">Nouveau</span>
               </div>
@@ -546,15 +546,13 @@
           <div id="budget-page-list-mobile">Chargement...</div>
         </div>
 
-        <div id="m-view-virements" class="m-view" style="display:none; position:absolute; top:0; left:0; width:100%; min-height:100vh; background:var(--bg-body); z-index:50; padding:16px; padding-bottom:100px;">
+        <div id="m-view-virements" class="m-view" style="display:none; padding-top: 16px; padding-bottom:100px; padding-left: 16px; padding-right: 16px;">
           <!-- Mobile Header -->
-          <div class="mobile-header mobile-only" style="display:flex;">
-              <div class="back-btn" onclick="showMobileView('m-view-dashboard')"><i class="ti ti-arrow-left"></i></div>
-              <div class="mobile-title-area">
-                  <div class="mobile-title">Nouveau virement</div>
-                  <div class="mobile-subtitle">Solde : 12 480,32 €</div>
-              </div>
-              <div class="user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">MR</div>
+          <div class="cartes-header" style="margin-bottom: 24px;">
+            <div>
+              <h1 class="cartes-title" style="margin-top: 0;">Virements</h1>
+              <p class="cartes-subtitle" style="margin-bottom: 0;">Nouveau transfert</p>
+            </div>
           </div>
 
           <!-- Progress Steps -->
@@ -1037,9 +1035,19 @@
     <!-- === LAYOUT DESKTOP (Bleu NovaBanque) === -->
     <div class="desktop-layout">
       <aside class="nb-sidebar">
-        <div class="nb-logo">
-          <div class="nb-logo-icon">N</div>
-          <span>NovaBanque</span>
+        <div class="nb-logo" style="display:flex; align-items:center; gap:10px;">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0)">
+              <path d="M 110 0 L 10 50 L 110 100" stroke="#F05A28" stroke-width="14" stroke-linejoin="miter" stroke-miterlimit="10"/>
+              <path d="M 110 22.5 L 55 50 L 110 77.5" stroke="#F05A28" stroke-width="14" stroke-linejoin="miter" stroke-miterlimit="10"/>
+            </g>
+            <defs>
+              <clipPath id="clip0">
+                <rect x="0" y="0" width="85" height="100"/>
+              </clipPath>
+            </defs>
+          </svg>
+          <span style="font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #F05A28; text-transform: uppercase;">Fintechia</span>
         </div>
         <nav class="nb-nav">
           <a href="#" class="active" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-dashboard')"><span class="nb-icon">🏠</span> Accueil</a>
@@ -2838,13 +2846,23 @@ function saveSettingsMock(msg) {
   
   <!-- Mobile Sidebar Menu -->
   <aside class="nb-sidebar mobile-sidebar-menu" style="display:none;">
-    <div class="nb-logo" style="padding: 24px;">
-      <div class="nb-logo-icon">N</div>
-      <span>NovaBanque</span>
+    <div class="nb-logo" style="padding: 24px; display:flex; align-items:center; gap:10px;">
+      <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip1)">
+          <path d="M 110 0 L 10 50 L 110 100" stroke="#F05A28" stroke-width="14" stroke-linejoin="miter" stroke-miterlimit="10"/>
+          <path d="M 110 22.5 L 55 50 L 110 77.5" stroke="#F05A28" stroke-width="14" stroke-linejoin="miter" stroke-miterlimit="10"/>
+        </g>
+        <defs>
+          <clipPath id="clip1">
+            <rect x="0" y="0" width="85" height="100"/>
+          </clipPath>
+        </defs>
+      </svg>
+      <span style="font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #F05A28; text-transform: uppercase;">Fintechia</span>
     </div>
     <div class="nb-nav">
       <a href="#" class="active" onclick="updateMobileNav(this); showMobileView('m-view-dashboard'); toggleMobileSidebar()"><span class="nb-icon">🏠</span> Accueil</a>
-      <a href="#" onclick="updateMobileNav(this); openDesktopViewMobile('view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-virements'); toggleMobileSidebar()"><span class="nb-icon">💸</span> Virements</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-cartes'); toggleMobileSidebar()"><span class="nb-icon">💳</span> Cartes</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-credits'); toggleMobileSidebar()"><span class="nb-icon">🏦</span> Crédits</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-budget'); toggleMobileSidebar()"><span class="nb-icon">📊</span> Budget</a>
