@@ -636,6 +636,24 @@
     }
   });
 </script>
+  <button id="back-to-top" onclick="scrollToTop()" title="Retour en haut" style="display:none; align-items:center; justify-content:center; position:fixed; bottom:20px; right:90px; z-index:99; width:60px; height:60px; border:none; outline:none; background-color:#2563EB; color:white; cursor:pointer; border-radius:50%; box-shadow:0 4px 12px rgba(37,99,235,0.3); transition:all 0.3s;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <script>
+    const backToTopBtn = document.getElementById("back-to-top");
+    window.addEventListener("scroll", () => {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        backToTopBtn.style.display = "flex";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+    function scrollToTop() {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  </script>
+
   <script src="./assets/js/chat-widget.js"></script>
 </body>
 </html>
