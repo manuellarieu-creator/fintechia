@@ -5,7 +5,7 @@ let activeAdminChatConvId = null;
 let adminChatPollInterval = null;
 
 async function loadAdminChats() {
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('fintech_token');
   if (!token) return;
 
   try {
@@ -71,7 +71,7 @@ function openAdminConversation(convId, name, email) {
 
 async function fetchAdminChatMessages() {
   if (!activeAdminChatConvId) return;
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('fintech_token');
   
   try {
     const res = await fetch(`${ADMIN_CHAT_API}/${activeAdminChatConvId}/messages`, {
@@ -135,7 +135,7 @@ async function sendAdminChatMessage() {
   const content = input.value.trim();
   if (!content) return;
 
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('fintech_token');
   input.value = '';
 
   try {
@@ -159,7 +159,7 @@ async function sendAdminChatMessage() {
 
 async function closeAdminChat() {
   if (!activeAdminChatConvId || !confirm("Voulez-vous vraiment clôturer cette demande ?")) return;
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('fintech_token');
   try {
     await fetch(`${ADMIN_CHAT_API}/${activeAdminChatConvId}/close`, {
       method: 'PATCH',

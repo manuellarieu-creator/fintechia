@@ -2387,50 +2387,7 @@ window.submitNewClient = async function() {
 
 
 
-// ============================
-// SINGLE TRANSFER ACTION
-// ============================
-let currentTransferActionAllowed = false;
 
-function openTransferModal(isAllowed) {
-    currentTransferActionAllowed = isAllowed;
-    const modal = document.getElementById('modal-transfer-action');
-    const title = document.getElementById('transfer-action-title');
-    const desc = document.getElementById('transfer-action-desc');
-    const btn = document.getElementById('btn-transfer-action');
-    
-    if (isAllowed) {
-        title.textContent = 'Autoriser virements sortants';
-        desc.textContent = 'Saisissez l\'ID du compte pour le débloquer.';
-        btn.textContent = 'Autoriser';
-        btn.style.background = '#16A34A';
-        btn.style.borderColor = '#16A34A';
-    } else {
-        title.textContent = 'Bloquer virements sortants';
-        desc.textContent = 'Saisissez l\'ID du compte pour empêcher toute émission de virement.';
-        btn.textContent = 'Bloquer';
-        btn.style.background = '#DC2626';
-        btn.style.borderColor = '#DC2626';
-    }
-    
-    document.getElementById('transfer-action-account-id').value = '';
-    modal.style.display = 'flex';
-}
-
-async function submitTransferAction() {
-    const accountId = document.getElementById('transfer-action-account-id').value.trim();
-    if (!accountId) return alert("Veuillez saisir un ID de compte");
-    
-    const res = await fetchAPI(`/comptes/${accountId}/transfer-toggle`, 'PATCH', { allowed: currentTransferActionAllowed });
-    
-    if (res && res.success) {
-        alert(`Virements sortants ${currentTransferActionAllowed ? 'autorisés' : 'bloqués'} pour le compte #${accountId}.`);
-        document.getElementById('modal-transfer-action').style.display = 'none';
-        if (typeof loadClientsTable === 'function') loadClientsTable(); // Refresh table if needed
-    } else {
-        alert(res?.error || "Erreur lors de la modification des virements.");
-    }
-}
 
 // ============================
 // NEW CLIENT ACTION

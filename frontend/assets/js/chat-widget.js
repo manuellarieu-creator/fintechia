@@ -7,7 +7,7 @@ let chatPollInterval = null;
 
 // Initialisation de l'UI du Widget
 function initChatWidgetUI() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('fintech_token');
   if (token) isChatUser = true;
 
   const html = `
@@ -101,7 +101,7 @@ async function initUserChat() {
   try {
     const res = await fetch(`${CHAT_API_BASE}/user/init`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('fintech_token')}` }
     });
     const data = await res.json();
     if (data.conversation_id) {
@@ -126,13 +126,21 @@ async function startVisitorChat() {
       body: JSON.stringify({ name, email, phone })
     });
     const data = await res.json();
+    if (!res.ok) {
+      alert("Erreur serveur lors de la création du chat. " + (data.error || "Veuillez réessayer plus tard."));
+      return;
+    }
+    
     if (data.conversation_id) {
       chatConvId = data.conversation_id;
       localStorage.setItem('chat_conv_id', chatConvId);
       checkChatState();
+    } else {
+      alert("Erreur : impossible de démarrer la conversation.");
     }
   } catch (e) {
     console.error("Erreur start visitor chat", e);
+    alert("Impossible de joindre le serveur. Vérifiez votre connexion.");
   }
 }
 
@@ -148,7 +156,7 @@ async function fetchChatMessages() {
     ? `${CHAT_API_BASE}/user/${chatConvId}/messages`
     : `${CHAT_API_BASE}/visitor/${chatConvId}/messages`;
   
-  const headers = isChatUser ? { 'Authorization': `Bearer ${localStorage.getItem('token')}` } : {};
+  const headers = isChatUser ? { 'Authorization': `Bearer ${localStorage.getItem('fintech_token')}` } : {};
 
   try {
     const res = await fetch(url, { headers });
@@ -215,7 +223,7 @@ async function sendChatMessage() {
     : `${CHAT_API_BASE}/visitor/${chatConvId}/message`;
   
   const headers = { 'Content-Type': 'application/json' };
-  if (isChatUser) headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+  if (isChatUser) headers['Authorization'] = `Bearer ${localStorage.getItem('fintech_token')}`;
 
   input.value = '';
 
