@@ -7,8 +7,7 @@ const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
-const notifications = require('../services/notifications');
-const mailer = require('../services/mailer');
+
 const FraudEngine = require('../services/fraudEngine');
 
 const validateReq = (req, res, next) => {
