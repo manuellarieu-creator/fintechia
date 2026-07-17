@@ -1061,6 +1061,7 @@
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-budget')"><span class="nb-icon">📊</span> Budget</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-beneficiaires')"><span class="nb-icon">👥</span> Bénéficiaires</a>
           <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-releves')"><span class="nb-icon">📄</span> Relevés</a>
+          <a href="#" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); this.classList.add('active'); showView('view-support')"><span class="nb-icon">💬</span> Aide & Support</a>
         </nav>
         <div class="nb-footer">
           <a href="#" class="nb-settings" onclick="document.querySelectorAll('.nb-nav a').forEach(a=>a.classList.remove('active')); showView('view-settings')"><span class="nb-icon">⚙️</span> Paramètres</a>
@@ -1579,6 +1580,45 @@
         </div>
 
         
+
+<!-- VUE SUPPORT DESKTOP -->
+        <div id="view-support" class="nb-view" style="display:none; padding-bottom: 60px;">
+          <div class="nb-card" style="max-width: 800px; margin: 40px auto; padding: 40px;">
+            <h2 style="font-family: 'Fraunces', serif; color: #0F172A; font-size: 28px; margin-bottom: 8px;">Aide & Support</h2>
+            <p style="color: #64748B; margin-bottom: 30px;">Besoin d'aide ? Notre équipe est à votre disposition par e-mail ou via le Chat en direct.</p>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+              <!-- Formulaire Contact -->
+              <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #0F172A;">Nous envoyer un e-mail</h3>
+                <p style="font-size: 14px; color: #64748B; margin-bottom: 20px;">Vous pouvez nous écrire directement à <a href="mailto:info@fintechia.co" style="color: #2563EB; font-weight:600; text-decoration:none;">info@fintechia.co</a> ou utiliser le formulaire ci-dessous.</p>
+                <form onsubmit="event.preventDefault(); alert('Votre message a bien été envoyé !'); this.reset();">
+                  <div style="margin-bottom: 15px;">
+                    <label style="display:block; font-size:12px; font-weight:600; color:#64748B; margin-bottom:6px;">Sujet</label>
+                    <input type="text" required style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid #E2E8F0; background:#F8FAFC; outline:none; font-family:'Inter',sans-serif;">
+                  </div>
+                  <div style="margin-bottom: 20px;">
+                    <label style="display:block; font-size:12px; font-weight:600; color:#64748B; margin-bottom:6px;">Votre message</label>
+                    <textarea rows="5" required style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid #E2E8F0; background:#F8FAFC; outline:none; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                  </div>
+                  <button type="submit" style="background:#2563EB; color:white; border:none; padding:12px 24px; border-radius:8px; font-weight:600; cursor:pointer; width:100%;">Envoyer le message</button>
+                </form>
+              </div>
+
+              <!-- Live Chat -->
+              <div style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <div style="width: 60px; height: 60px; background: #FFF3E0; color: #F05A28; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px;">
+                  💬
+                </div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #0F172A;">Chat en direct</h3>
+                <p style="font-size: 14px; color: #64748B; margin-bottom: 25px; max-width: 250px;">Discutez en temps réel avec un conseiller Fintechia. Notre système reconnaîtra automatiquement votre compte.</p>
+                <button onclick="if(typeof toggleChatWindow === 'function') { toggleChatWindow(); } else { alert('Chat non disponible pour le moment'); }" style="background:#F05A28; color:white; border:none; padding:12px 24px; border-radius:8px; font-weight:600; cursor:pointer;">
+                  Ouvrir le Chat Live
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
 <!-- ECRAN PARAMETRES (view-settings) -->
 
@@ -2831,6 +2871,38 @@ function saveSettingsMock(msg) {
 
         <button id="suivi-action-btn" class="btn-primary" style="width:100%; margin-top:24px; padding:12px;" onclick="closeModal('modal-suivre-demande')">Fermer</button>
       </div>
+    <!-- M-VUE SUPPORT -->
+    <div id="m-view-support" class="m-view" style="display:none; background:var(--bg-body); position:absolute; top:0; left:0; width:100%; min-height:100vh; z-index:50; padding:16px; padding-bottom:100px;">
+      <h2 style="font-family: 'Fraunces', serif; color: #0F172A; font-size: 24px; margin-top:20px; margin-bottom: 8px;">Aide & Support</h2>
+      <p style="color: #64748B; margin-bottom: 20px; font-size:14px;">Contactez-nous par e-mail ou via le Chat en direct.</p>
+
+      <!-- Live Chat -->
+      <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; margin-bottom: 20px;">
+        <div style="width: 50px; height: 50px; background: #FFF3E0; color: #F05A28; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 15px;">
+          💬
+        </div>
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #0F172A;">Chat en direct</h3>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Notre système reconnaîtra automatiquement votre compte.</p>
+        <button onclick="if(typeof toggleChatWindow === 'function') { toggleChatWindow(); } else { alert('Chat non disponible'); }" style="background:#F05A28; color:white; border:none; padding:12px; border-radius:8px; font-weight:600; cursor:pointer; width:100%;">
+          Ouvrir le Chat Live
+        </button>
+      </div>
+
+      <!-- Formulaire Contact -->
+      <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #0F172A;">Nous envoyer un e-mail</h3>
+        <form onsubmit="event.preventDefault(); alert('Votre message a bien été envoyé !'); this.reset();">
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; font-size:12px; font-weight:600; color:#64748B; margin-bottom:6px;">Sujet</label>
+            <input type="text" required style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid #E2E8F0; background:#F8FAFC; outline:none; font-family:'Inter',sans-serif; font-size:14px;">
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="display:block; font-size:12px; font-weight:600; color:#64748B; margin-bottom:6px;">Votre message</label>
+            <textarea rows="4" required style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid #E2E8F0; background:#F8FAFC; outline:none; font-family:'Inter',sans-serif; resize:vertical; font-size:14px;"></textarea>
+          </div>
+          <button type="submit" style="background:#2563EB; color:white; border:none; padding:12px; border-radius:8px; font-weight:600; cursor:pointer; width:100%;">Envoyer</button>
+        </form>
+      </div>
     </div>
 
 
@@ -2878,6 +2950,7 @@ function saveSettingsMock(msg) {
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-budget'); toggleMobileSidebar()"><span class="nb-icon">📊</span> Budget</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-beneficiaires'); toggleMobileSidebar()"><span class="nb-icon">👥</span> Bénéficiaires</a>
       <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-releves'); toggleMobileSidebar()"><span class="nb-icon">📄</span> Relevés</a>
+      <a href="#" onclick="updateMobileNav(this); showMobileView('m-view-support'); toggleMobileSidebar()"><span class="nb-icon">💬</span> Aide & Support</a>
       <a href="#" onclick="updateMobileNav(this); openSettingsMobile(); toggleMobileSidebar()"><span class="nb-icon">⚙️</span> Paramètres</a>
     </div>
   </aside>
