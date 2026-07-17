@@ -72,7 +72,7 @@ async function showAdminView(viewId, navElement) {
     
     const targetView = document.getElementById(viewId);
     if (targetView) {
-        targetView.style.display = 'block';
+        targetView.style.display = (viewId === 'view-chat') ? 'flex' : 'block';
     }
 
     // Appel du loader spécifique à la vue
