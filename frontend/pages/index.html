@@ -70,6 +70,8 @@
       #nbCredit { padding: 60px 20px !important; }
       .nb-sim-row { flex-direction: column; gap: 24px; }
       
+      .landing-topbar { padding: 4px 16px !important; }
+      
       .desktop-only { display: none !important; }
       .mobile-only { display: flex !important; }
       .mobile-only-text { display: inline-block !important; }
@@ -82,6 +84,10 @@
 <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Maquette de la landing page Fintechia avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page.</h2>
 
 <div class="nb">
+
+  <div class="landing-topbar" style="background:#0F1B33; border-bottom:1px solid rgba(233,230,221,0.1); padding:8px 40px; display:flex; justify-content:flex-end; align-items:center;">
+    <div class="i18n-container"></div>
+  </div>
 
   <div class="nb-header">
     <!-- Logo -->
@@ -97,7 +103,6 @@
       <span>Tarifs</span>
       <span>Sécurité</span>
       <div style="display:flex; gap:12px; align-items:center;">
-        <div id="i18n-container"></div>
         <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">Se connecter</button>
         <button id="header-cta-btn" class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
       </div>
