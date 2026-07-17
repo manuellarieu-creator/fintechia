@@ -1052,5 +1052,12 @@
   "Aucune conversation": "Kein Gespräch",
   "' : '": "' : '",
   "Visiteur": "Besucher",
-  "Envoyez un message pour démarrer": "Senden Sie eine Nachricht, um loszulegen"
+  "Envoyez un message pour démarrer": "Senden Sie eine Nachricht, um loszulegen",
+  "Vérification d'identité": "Identitätsprüfung",
+  "Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.": "Um Ihr Konto zu sichern und Überweisungen freizuschalten, übermitteln Sie bitte die folgenden Dokumente.",
+  "Vérification faciale": "Gesichtsüberprüfung",
+  "Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.": "Machen Sie ein gut beleuchtetes Selfie, um zu bestätigen, dass Sie der Dokumenteninhaber sind.",
+  "Soumettre pour vérification": "Zur Überprüfung einreichen",
+  "Télécharger RIB": "RIB herunterladen",
+  "Télécharger Relevé": "Auszug herunterladen"
 }

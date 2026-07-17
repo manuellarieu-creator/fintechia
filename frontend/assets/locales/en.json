@@ -1052,5 +1052,12 @@
   "Aucune conversation": "No conversation",
   "' : '": "' : '",
   "Visiteur": "Visitor",
-  "Envoyez un message pour démarrer": "Send a message to get started"
+  "Envoyez un message pour démarrer": "Send a message to get started",
+  "Vérification d'identité": "Identity Verification",
+  "Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.": "To secure your account and unlock transfers, please provide the following documents.",
+  "Vérification faciale": "Facial verification",
+  "Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.": "Take a well-lit selfie to confirm you are the document holder.",
+  "Soumettre pour vérification": "Submit for verification",
+  "Télécharger RIB": "Download RIB",
+  "Télécharger Relevé": "Download Statement"
 }

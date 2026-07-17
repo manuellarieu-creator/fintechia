@@ -1052,5 +1052,12 @@
   "Aucune conversation": "Aucune conversation",
   "' : '": "' : '",
   "Visiteur": "Visiteur",
-  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer"
+  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer",
+  "Vérification d'identité": "Személyazonosság ellenőrzése",
+  "Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.": "Fiókja biztosítása és az utalások feloldása érdekében kérjük, küldje el a következő dokumentumokat.",
+  "Vérification faciale": "Arcfelismerés",
+  "Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.": "Készítsen egy jól megvilágított szelfit, hogy megerősítse, Ön a dokumentum tulajdonosa.",
+  "Soumettre pour vérification": "Küldés ellenőrzésre",
+  "Télécharger RIB": "RIB letöltése",
+  "Télécharger Relevé": "Kivonat letöltése"
 }

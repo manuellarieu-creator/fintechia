@@ -1052,5 +1052,12 @@
   "Aucune conversation": "Aucune conversation",
   "' : '": "' : '",
   "Visiteur": "Visiteur",
-  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer"
+  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer",
+  "Vérification d'identité": "Provjera identiteta",
+  "Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.": "Kako biste osigurali svoj račun i otključali transfere, pošaljite sljedeće dokumente.",
+  "Vérification faciale": "Verifikacija lica",
+  "Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.": "Snimite dobro osvijetljen selfie kako biste potvrdili da ste vlasnik dokumenta.",
+  "Soumettre pour vérification": "Pošalji na provjeru",
+  "Télécharger RIB": "Preuzmi RIB",
+  "Télécharger Relevé": "Preuzmi izvod"
 }

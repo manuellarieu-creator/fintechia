@@ -1052,5 +1052,12 @@
   "Aucune conversation": "Aucune conversation",
   "' : '": "' : '",
   "Visiteur": "Visiteur",
-  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer"
+  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer",
+  "Vérification d'identité": "Verificación de identidad",
+  "Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.": "Para asegurar su cuenta y desbloquear transferencias, envíe los siguientes documentos.",
+  "Vérification faciale": "Verificación facial",
+  "Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.": "Tómese una selfie bien iluminada para confirmar que es el titular del documento.",
+  "Soumettre pour vérification": "Enviar para verificación",
+  "Télécharger RIB": "Descargar RIB",
+  "Télécharger Relevé": "Descargar Extracto"
 }
