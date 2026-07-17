@@ -74,9 +74,9 @@ const I18N = {
       const orig = n._originalText;
       if (orig) {
         const trans = this.dict[orig] || orig;
-        n.nodeValue = n.nodeValue.replace(orig, trans);
-        // update memory of what it is now, so we can replace it next time
-        n._originalText = trans; // Wait, if we switch fr -> en -> de, we need the original French key!
+        const current = n._currentTrans || orig;
+        n.nodeValue = n.nodeValue.replace(current, trans);
+        n._currentTrans = trans;
       }
     });
 
