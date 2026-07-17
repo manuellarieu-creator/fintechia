@@ -7,9 +7,34 @@ const { authMiddleware } = require('../middleware/auth');
 
 router.get('/test/db', async (req, res) => {
   try {
-    const [tables] = await db.query('SHOW TABLES');
-    const [desc] = await db.query('DESCRIBE chat_conversations').catch(() => [[{error: 'Table not found'}]]);
-    res.json({ tables, desc });
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS chat_conversations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT DEFAULT NULL,
+        visitor_name VARCHAR(100) DEFAULT NULL,
+        visitor_email VARCHAR(100) DEFAULT NULL,
+        visitor_phone VARCHAR(50) DEFAULT NULL,
+        status ENUM('open', 'closed') DEFAULT 'open',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        conversation_id INT NOT NULL,
+        sender_type ENUM('visitor', 'user', 'admin') NOT NULL,
+        sender_id INT DEFAULT NULL,
+        content TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (conversation_id) REFERENCES chat_conversations(id) ON DELETE CASCADE
+      )
+    `);
+
+    res.json({ success: true, message: "Tables de chat créées ou déjà existantes." });
   } catch (err) {
     res.json({ error: err.message });
   }
