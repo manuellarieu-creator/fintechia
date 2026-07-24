@@ -898,7 +898,7 @@ router.post('/users', guard, async (req, res, next) => {
 
     await connection.query(
       'INSERT INTO accounts (user_id, type_compte, statut, created_at) VALUES (?, ?, "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
-      [userId, type_compte || 'Courant', date_creation || null]
+      [userId, type_compte || 'courant', date_creation || null]
     );
 
 
