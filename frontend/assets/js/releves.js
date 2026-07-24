@@ -102,7 +102,7 @@ function renderKPIs() {
         let diffMonths = (newest.getMonth() - oldest.getMonth());
         let totalMonths = diffYears * 12 + diffMonths + 1;
         
-        document.querySelectorAll(`[id=${'kpi-dispo-sub'}]`).forEach(el => el.textContent = `${totalMonths} mois d'historique`);
+        document.querySelectorAll(`[id=${'kpi-dispo-sub'}]`).forEach(el => el.innerHTML = `${totalMonths} <span>mois d'historique</span>`);
     }
     
     // Prochain relevé (1er du mois suivant)
@@ -213,7 +213,7 @@ function selectMonth(mKey) {
     const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     const isCurrent = mKey === sortedMonths[0];
     
-    document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `Relevé — ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`);
+    document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `<span>Relevé — </span>${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`);
     
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
     document.querySelectorAll(`[id=${'center-meta'}]`).forEach(el => el.textContent = `Compte courant • ${currentAccount.iban || ('**** ' + currentAccount.id.toString().slice(-4))} • Du 01 au ${lastDay} ${monthNameFull}`);

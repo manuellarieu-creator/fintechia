@@ -21,8 +21,8 @@ const I18N = {
     while ((n = walk.nextNode())) {
       if (n.parentElement && n.parentElement.tagName !== 'SCRIPT' && n.parentElement.tagName !== 'STYLE' && n.parentElement.tagName !== 'NOSCRIPT') {
         const text = n.nodeValue;
-        const trimmed = text.replace(/\\s+/g, ' ').trim();
-        if (trimmed.length > 1 && !/^[0-9\\s€$.,;:+\\*/=()!%_a-zA-Z\\-]+$/.test(trimmed) && !trimmed.includes('{')) {
+        const trimmed = text.replace(/\s+/g, ' ').trim();
+        if (trimmed.length > 1 && !/^[0-9\s€$.,;:+\*/=()!%_\-]+$/.test(trimmed) && !trimmed.includes('{')) {
           if (!n._originalText) n._originalText = trimmed;
           if (!this.nodesToTranslate.includes(n)) this.nodesToTranslate.push(n);
         }
