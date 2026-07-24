@@ -8,7 +8,10 @@ let notificationPollInterval = null;
 const NOTIF_API_URL = '/api/notifications';
 
 function getAuthToken() {
-  return localStorage.getItem('token') || localStorage.getItem('adminToken');
+  if (window.location.pathname.includes('admin')) {
+    return localStorage.getItem('adminToken');
+  }
+  return localStorage.getItem('token');
 }
 
 // Jouer un son (synthesizer Web Audio API)
