@@ -1,5 +1,83 @@
 // admin.js - Logique SPA de l'espace administration
 
+// ============================
+// OVERRIDE ALERT PAR UNE MODALE CUSTOM
+// ============================
+window.alert = function(message) {
+    const existing = document.getElementById('custom-alert-modal');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'custom-alert-modal';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'rgba(15, 23, 42, 0.6)';
+    overlay.style.backdropFilter = 'blur(4px)';
+    overlay.style.zIndex = '999999';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+
+    const modal = document.createElement('div');
+    modal.style.background = '#fff';
+    modal.style.padding = '24px';
+    modal.style.borderRadius = '12px';
+    modal.style.width = '400px';
+    modal.style.maxWidth = '90%';
+    modal.style.boxShadow = '0 20px 25px -5px rgba(0,0,0,0.1)';
+    modal.style.textAlign = 'center';
+    
+    const isError = message.toLowerCase().includes('erreur') || message.toLowerCase().includes('impossible');
+    
+    const icon = document.createElement('div');
+    icon.style.fontSize = '40px';
+    icon.style.marginBottom = '16px';
+    icon.style.color = isError ? '#DC2626' : '#10B981';
+    icon.innerHTML = isError ? '<i class="ti ti-alert-triangle"></i>' : '<i class="ti ti-circle-check"></i>';
+    
+    const title = document.createElement('h3');
+    title.style.marginBottom = '12px';
+    title.style.color = '#0F172A';
+    title.style.fontSize = '18px';
+    title.innerText = isError ? 'Action impossible' : 'Succès';
+
+    const text = document.createElement('p');
+    text.style.color = '#475569';
+    text.style.fontSize = '14px';
+    text.style.marginBottom = '24px';
+    text.style.lineHeight = '1.6';
+    text.style.whiteSpace = 'pre-wrap';
+    text.innerText = message;
+
+    const btn = document.createElement('button');
+    btn.className = 'btn-primary';
+    btn.innerText = 'OK';
+    btn.style.width = '100%';
+    btn.style.padding = '10px';
+    btn.style.borderRadius = '6px';
+    btn.style.border = 'none';
+    btn.style.cursor = 'pointer';
+    btn.style.fontWeight = '600';
+    if(isError) {
+        btn.style.background = '#DC2626';
+        btn.style.color = '#fff';
+    }
+    
+    btn.onclick = () => overlay.remove();
+
+    modal.appendChild(icon);
+    modal.appendChild(title);
+    modal.appendChild(text);
+    modal.appendChild(btn);
+    overlay.appendChild(modal);
+
+    document.body.appendChild(overlay);
+};
+
+
 const API_BASE = '/api';
 const TOKEN = localStorage.getItem('fintech_token');
 
