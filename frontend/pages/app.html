@@ -1134,7 +1134,7 @@
         
         <div class="kyc-banner" id="kyc-alert-desktop" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:12px; margin-bottom:20px; font-weight:bold; align-items: center; justify-content: space-between;">
           <span>⚠️ Action requise : Veuillez fournir vos documents d'identité.</span>
-          <a href="#" onclick="if(window.innerWidth<=768) { showMobileView('m-view-kyc'); } else { startVideoKyc(); } return false;" style="color:#856404; text-decoration:underline; font-weight:700; margin-left:10px;">Cliquez-ici pour être redirigé vers la page de vérification d'identité</a>
+          <a href="#" onclick="if(window.innerWidth<=768) { showMobileView('m-view-kyc'); } else { showView('view-kyc'); } return false;" style="color:#856404; text-decoration:underline; font-weight:700; margin-left:10px;">Cliquez-ici pour être redirigé vers la page de vérification d'identité</a>
         </div>
 
         <div id="view-dashboard" class="nb-view">
@@ -1661,6 +1661,48 @@
             </div>
           </div>
         </div>
+
+<!-- ECRAN KYC DESKTOP (view-kyc) -->
+<div id="view-kyc" class="nb-view" style="display:none; padding-bottom: 60px;">
+  <div style="background:#fff; border-radius:12px; padding:30px; max-width:600px; margin:0 auto; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">Vérification d'identité</h2>
+    <div id="kyc-main-view">
+      <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 15px;">Afin de sécuriser votre compte et débloquer vos virements, veuillez nous transmettre les documents suivants.</p>
+      
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding: 24px; margin-bottom: 20px;">
+        <h3 style="font-size: 16px; margin-top:0; margin-bottom: 16px;">Documents d'identité</h3>
+        <label style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Type de document</label>
+        <select id="kyc-type" class="input-field" style="width:100%; margin-bottom: 20px; padding:12px; border-radius:8px; border:1px solid #CBD5E1;">
+          <option value="cni">Carte Nationale d'Identité</option>
+          <option value="passeport">Passeport</option>
+          <option value="titre_sejour">Titre de séjour</option>
+        </select>
+
+        <button id="btn-capture-recto" type="button" class="btn" style="width: 100%; margin-bottom: 12px; padding:14px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #2563EB; border: 1px solid #2563EB; border-radius:8px; font-weight:600;" onclick="openCameraView('recto')">
+          <i class="ti ti-camera"></i> Prendre en photo le Recto
+        </button>
+        
+        <button id="btn-capture-verso" type="button" class="btn" style="width: 100%; margin-bottom: 12px; padding:14px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #2563EB; border: 1px solid #2563EB; border-radius:8px; font-weight:600;" onclick="openCameraView('verso')">
+          <i class="ti ti-camera"></i> Prendre en photo le Verso (Optionnel)
+        </button>
+      </div>
+
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding: 24px; margin-bottom: 30px;">
+        <h3 style="font-size: 16px; margin-top:0; margin-bottom: 12px;">Vérification faciale</h3>
+        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">Prenez un selfie bien éclairé pour confirmer que vous êtes bien le titulaire du document.</p>
+        <button id="btn-capture-selfie" type="button" class="btn" style="width: 100%; padding:14px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #2563EB; border: 1px solid #2563EB; border-radius:8px; font-weight:600;" onclick="openCameraView('selfie')">
+          <i class="ti ti-user-scan"></i> Prendre un Selfie
+        </button>
+      </div>
+
+      <form onsubmit="submitKYC(event)">
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 16px; border-radius:8px; font-weight:700;">
+          Soumettre pour vérification
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- ECRAN PARAMETRES (view-settings) -->
 

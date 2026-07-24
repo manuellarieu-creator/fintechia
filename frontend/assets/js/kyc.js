@@ -6,7 +6,10 @@ const capturedFiles = { recto: null, verso: null, selfie: null };
 
 function openCameraView(target) {
   currentCaptureTarget = target;
-  document.getElementById('kyc-main-view').style.display = 'none';
+  const mv = document.getElementById('kyc-main-view');
+  if (mv) mv.style.display = 'none';
+  const mvm = document.getElementById('kyc-main-view-m');
+  if (mvm) mvm.style.display = 'none';
   document.getElementById('kyc-camera-view').style.display = 'flex';
   
   const video = document.getElementById('kyc-video');
@@ -31,7 +34,10 @@ function closeCameraView() {
     currentStream = null;
   }
   document.getElementById('kyc-camera-view').style.display = 'none';
-  document.getElementById('kyc-main-view').style.display = 'block';
+  const mv = document.getElementById('kyc-main-view');
+  if (mv) mv.style.display = 'block';
+  const mvm = document.getElementById('kyc-main-view-m');
+  if (mvm) mvm.style.display = 'block';
 }
 
 function captureImage() {
