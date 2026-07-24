@@ -18,7 +18,7 @@ async function loadTransactions() {
         const badgeClass = isCredit ? 'badge-success' : 'badge-neutral';
         const amountClass = isCredit ? 'pos' : 'neg';
         const sign = isCredit ? '+' : '-';
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day: '2-digit', month: 'short' });
         
         let libelle = tx.libelle || tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
@@ -48,7 +48,7 @@ async function loadTransactions() {
         const iconClass = isCredit ? 'icon-green' : 'icon-grey';
         const amountClass = isCredit ? 'text-green' : 'text-black';
         const sign = isCredit ? '+' : '-';
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day: '2-digit', month: 'short' });
         
         let libelle = tx.libelle || tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
@@ -217,7 +217,7 @@ async function loadVirementHistory(page = 1) {
     } else {
       tbody.innerHTML = txs.map(tx => {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         
         let libelle = tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');

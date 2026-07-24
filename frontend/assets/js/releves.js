@@ -110,7 +110,7 @@ function renderKPIs() {
     nextDate.setMonth(nextDate.getMonth() + 1);
     nextDate.setDate(1);
     document.querySelectorAll(`[id=${'kpi-next-val'}]`).forEach(el => el.textContent = "01");
-    document.querySelectorAll(`[id=${'kpi-next-sub'}]`).forEach(el => el.textContent = nextDate.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }));
+    document.querySelectorAll(`[id=${'kpi-next-sub'}]`).forEach(el => el.textContent = nextDate.toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'short', year: 'numeric' }));
     
     document.querySelectorAll(`[id=${'kpi-email-val'}]`).forEach(el => el.textContent = 'Activé');
     document.querySelectorAll(`[id=${'kpi-email-sub'}]`).forEach(el => el.textContent = currentUser.email);
@@ -175,7 +175,7 @@ function renderHistoryListForYear(year, byYearMap) {
     
     byYearMap[year].forEach((mKey, index) => {
         const group = groupedByMonth[mKey];
-        const monthName = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+        const monthName = new Date(group.year, group.month).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'short', year: 'numeric' });
         
         const isCurrent = (index === 0 && year == Object.keys(byYearMap).sort((a,b)=>b-a)[0]);
         const statusText = isCurrent ? `En cours - ${group.txs.length} tx` : `Clôturé - ${group.txs.length} tx`;
@@ -210,7 +210,7 @@ function selectMonth(mKey) {
     const group = groupedByMonth[mKey];
     if (!group) return;
     
-    const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const monthNameFull = new Date(group.year, group.month).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'long', year: 'numeric' });
     const isCurrent = mKey === sortedMonths[0];
     
     document.querySelectorAll(`[id=${'center-title'}]`).forEach(el => el.innerHTML = `<span>Relevé — </span>${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)} <span id="center-status-badge" style="font-size: 11px; padding: 2px 8px; background: var(--primary-light); color: var(--primary); border-radius: 12px; font-weight: 600; display:${isCurrent ? 'inline-block' : 'none'};">En cours</span>`);
@@ -295,7 +295,7 @@ function renderExportForm() {
         selPeriode.innerHTML = '';
         sortedMonths.forEach(mKey => {
             const group = groupedByMonth[mKey];
-            const name = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            const name = new Date(group.year, group.month).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'long', year: 'numeric' });
             selPeriode.innerHTML += `<option value="${mKey}">${name.charAt(0).toUpperCase() + name.slice(1)}</option>`;
         });
     }
@@ -341,7 +341,7 @@ function generateCSV(mKey, action, email) {
     let csvContent = "Date,Libellé,Catégorie,Montant\n";
     
     group.txs.forEach(tx => {
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
         let libelle = tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');
@@ -374,7 +374,7 @@ function generatePDF(mKey, action, email) {
     if (!group) return;
     
     // 1. Fill the template
-    const monthNameFull = new Date(group.year, group.month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const monthNameFull = new Date(group.year, group.month).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'long', year: 'numeric' });
     const lastDay = new Date(group.year, group.month + 1, 0).getDate();
     
     document.querySelectorAll(`[id=${'pdf-month-title'}]`).forEach(el => el.textContent = `Relevé ${monthNameFull.charAt(0).toUpperCase() + monthNameFull.slice(1)}`);
@@ -393,7 +393,7 @@ function generatePDF(mKey, action, email) {
     tbody.innerHTML = '';
     
     group.txs.forEach((tx, idx) => {
-        const date = new Date(tx.created_at).toLocaleDateString('fr-FR');
+        const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
         let libelle = tx.description || 'Transaction';
         if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');

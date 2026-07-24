@@ -279,7 +279,7 @@ async function loadBudgetsPage() {
   let recentTxsHtml = filteredDépenses.map(tx => {
       let libelle = tx.description || 'Transaction';
       if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
-      const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+      const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day: '2-digit', month: 'short' });
       
           let cat = 'Divers';
           const motif = (tx.motif || tx.libelle || '').toLowerCase().trim();
@@ -311,7 +311,7 @@ async function loadBudgetsPage() {
       recentTxsHtml = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Aucune dépense récente.</div>';
   }
 
-  const monthStr = targetDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+  const monthStr = targetDate.toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { month: 'long', year: 'numeric' });
   const capitalizedMonthStr = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
   
   /* --- UPDATE DESKTOP DOM --- */

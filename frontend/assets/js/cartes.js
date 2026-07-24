@@ -11,7 +11,7 @@ async function loadCartes() {
       const txs = await apiCall('/transactions?limit=5');
       txsHtml = txs.map(tx => {
           const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis';
-          const date = new Date(tx.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+          const date = new Date(tx.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day: '2-digit', month: 'short' });
           let libelle = tx.description || 'Transaction';
           if(tx.type === 'virement_recu') libelle = 'Virement reçu';
           if(tx.type === 'virement_emis') libelle = 'Virement émis';

@@ -1,4 +1,10 @@
 // Système de traduction i18n
+window.getCurrentLocale = function() {
+    const lang = localStorage.getItem('fintech_lang') || 'fr';
+    const map = { 'fr': 'fr-FR', 'en': 'en-US', 'es': 'es-ES', 'de': 'de-DE', 'da': 'da-DK', 'hu': 'hu-HU', 'hr': 'hr-HR' };
+    return map[lang] || 'fr-FR';
+};
+
 const I18N = {
   currentLang: localStorage.getItem('fintech_lang') || 'fr',
   dict: {},

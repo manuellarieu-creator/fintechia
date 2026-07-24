@@ -122,11 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function updateDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const dateStr = new Date().toLocaleDateString('fr-FR', options);
+    const dateStr = new Date().toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), options);
     const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
     
     setInterval(() => {
-        const timeStr = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second:'2-digit' });
+        const timeStr = new Date().toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { hour: '2-digit', minute: '2-digit', second:'2-digit' });
         document.getElementById('admin-date-display').innerText = `${formattedDate} - ${timeStr} UTC+1`;
     }, 1000);
 }
@@ -372,7 +372,7 @@ async function renderFullClientsTable() {
             <td><span class="iban-code">${c.iban || '-'}</span></td>
             <td><span class="offre-badge ${c.offre.toLowerCase()}">${c.offre}</span></td>
             <td>${statutBadge}</td>
-            <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR')}</td>
+            <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
                 <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer <i class="ti ti-chevron-down"></i></button>
@@ -488,7 +488,7 @@ function filterBlockedClients() {
               <div><p style="font-size:12px;font-weight:600;margin:0;color:#0F172A;">${c.prenom} ${c.nom}</p><p style="font-size:10px;color:#94A3B8;margin:2px 0 0;">${c.email}</p></div>
             </div>
             <div><span class="bk ${badgeClass}"><i class="ti ${motifIcon}" style="font-size:10px;"></i>${motif}</span></div>
-            <span style="font-size:11px;color:#475569;">${new Date(c.created_at).toLocaleDateString('fr-FR')}</span>
+            <span style="font-size:11px;color:#475569;">${new Date(c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</span>
             <span style="font-size:11px;font-weight:600;color:#B91C1C;">${formatMontant(c.solde || 0)}</span>
             <div style="display:flex;gap:4px;justify-content:center;">
               <button class="btn" style="background:#EFF6FF;color:#1D4ED8;padding:4px 8px;font-size:10px;border-radius:5px;"><i class="ti ti-eye" style="font-size:11px;"></i></button>
@@ -523,7 +523,7 @@ async function showBlockedDetail(accountId) {
         <div style="display:flex;gap:10px;padding:6px 0;border-bottom:0.5px solid #F8FAFC;">
           <div class="hist-dot" style="background:${dotColor};"></div>
           <div><p style="font-size:11px;font-weight:500;margin:0;color:#0F172A;">${l.cible_detail || l.action}</p>
-          <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">${new Date(l.created_at).toLocaleString('fr-FR')} · ${l.acteur_role}</p>
+          <p style="font-size:10px;color:#94A3B8;margin:1px 0 0;">${new Date(l.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} · ${l.acteur_role}</p>
           ${l.details && l.details.commentaire ? `<p style="font-size:10px;color:#475569;margin:2px 0 0;font-style:italic">"${l.details.commentaire}"</p>` : ''}
           </div>
         </div>`;
@@ -621,7 +621,7 @@ async function renderIbanTable() {
             <td><span class="iban-code">${c.iban}</span></td>
             <td>FINTEFR22XXX</td>
             <td><span class="client-name">${c.prenom} ${c.nom}</span></td>
-            <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString('fr-FR')}</td>
+            <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
         </tr>
     `).join('');
 }
@@ -813,7 +813,7 @@ function showKycDetail(kycId) {
             ${diffDays >= 3 && selectedKyc.statut === 'en_attente' ? `<span style="font-size:9px;color:#B45309;font-weight:600;">⚠ Dossier urgent — J+${diffDays}</span>` : ''}
         </div>
         ${selectedKyc.statut === 'rejete' && selectedKyc.motif_rejet ? `<p style="font-size:10px;color:#B91C1C;margin:2px 0 0;font-weight:600;">Motif : ${selectedKyc.motif_rejet}</p>` : ''}
-        <p style="font-size:10px;color:#94A3B8;margin:0;">${selectedKyc.email} · Inscrit le ${new Date(selectedKyc.user_created_at || Date.now()).toLocaleDateString('fr-FR')} · KYC-${selectedKyc.id}</p>
+        <p style="font-size:10px;color:#94A3B8;margin:0;">${selectedKyc.email} · Inscrit le ${new Date(selectedKyc.user_created_at || Date.now()).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} · KYC-${selectedKyc.id}</p>
         </div>
         <div style="display:flex;gap:5px;">
         <button class="btn-xs" onclick="submitKycAction('contacter')" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;"><i class="ti ti-mail" style="font-size:11px;"></i>Contacter</button>
@@ -821,7 +821,7 @@ function showKycDetail(kycId) {
     `;
 
     document.getElementById('kyc-docs-title').innerText = `Documents soumis`;
-    document.getElementById('kyc-docs-date').innerText = `Soumis le ${new Date(selectedKyc.soumis_le || selectedKyc.created_at).toLocaleString('fr-FR')}`;
+    document.getElementById('kyc-docs-date').innerText = `Soumis le ${new Date(selectedKyc.soumis_le || selectedKyc.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}`;
     
     const isVideo = selectedKyc.selfie_url && (selectedKyc.selfie_url.endsWith('.webm') || selectedKyc.selfie_url.endsWith('.mp4'));
     
@@ -857,7 +857,7 @@ function showKycDetail(kycId) {
     // Simulate AI checks dynamically based on status to make it look real
     let score = selectedKyc.statut === 'valide' ? 95 : (selectedKyc.statut === 'rejete' ? 42 : 75);
     document.getElementById('kyc-ai-checks').innerHTML = `
-        <div class="ch"><h3>Contrôles automatiques IA</h3><span style="font-size:9px;color:#94A3B8;">Analysé le ${new Date().toLocaleDateString('fr-FR')}</span></div>
+        <div class="ch"><h3>Contrôles automatiques IA</h3><span style="font-size:9px;color:#94A3B8;">Analysé le ${new Date().toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
             <div class="check-item"><i class="ti ti-circle-check" style="color:#16A34A;"></i><div><p style="font-size:10px;font-weight:500;margin:0;">Authenticité document</p></div></div>
             <div class="check-item"><i class="ti ${score > 60 ? 'ti-circle-check' : 'ti-circle-x'}" style="color:${score > 60 ? '#16A34A' : '#DC2626'};"></i><div><p style="font-size:10px;font-weight:500;margin:0;">Qualité image</p></div></div>
@@ -881,7 +881,7 @@ function showKycDetail(kycId) {
     document.getElementById('kyc-history-list').innerHTML = `
         <div style="display:flex;gap:8px;padding:5px 0;">
             <div style="width:6px;height:6px;border-radius:50%;background:#94A3B8;margin-top:4px;flex-shrink:0;"></div>
-            <div><p style="font-size:10px;font-weight:500;margin:0;color:#0F172A;">Dossier soumis</p><p style="font-size:9px;color:#94A3B8;margin:0;">${new Date(selectedKyc.soumis_le || selectedKyc.created_at).toLocaleString('fr-FR')} · Client</p></div>
+            <div><p style="font-size:10px;font-weight:500;margin:0;color:#0F172A;">Dossier soumis</p><p style="font-size:9px;color:#94A3B8;margin:0;">${new Date(selectedKyc.soumis_le || selectedKyc.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} · Client</p></div>
         </div>
     `;
 }
@@ -965,7 +965,7 @@ async function loadAdminCredits() {
         else if (c.statut === 'valide_succes') { badgeClass = 'bs'; badgeText = 'Validé (Succès)'; }
         else if (c.statut === 'credite') { badgeClass = 'bs'; badgeText = 'Crédité'; }
         
-        const dateStr = new Date(c.created_at).toLocaleDateString('fr-FR');
+        const dateStr = new Date(c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         
         return `
         <tr style="border-bottom:0.5px solid #F1F5F9;">
@@ -1198,7 +1198,7 @@ function filterVirementsList() {
         listDiv.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8; font-size:12px;">Aucun virement trouvé.</div>';
     } else {
         listDiv.innerHTML = filtered.map(v => {
-            const timeStr = new Date(v.created_at).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+            const timeStr = new Date(v.created_at).toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), {hour: '2-digit', minute:'2-digit'});
             
             let rowClass = v.statut === 'en_attente' ? 'susp' : (v.statut === 'rejete' ? 'bloc' : '');
             let activeClass = selectedVir && selectedVir.id === v.id ? 'act' : '';
@@ -1258,7 +1258,7 @@ function filterVirementsList() {
         let pInit = (v.prenom) ? v.prenom.charAt(0) : '';
         let nInit = (v.nom) ? v.nom.charAt(0) : '';
         let dInit = (v.nom_dest) ? v.nom_dest.substring(0, 8) : 'Inconnu';
-        const timeStr = new Date(v.created_at).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        const timeStr = new Date(v.created_at).toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), {hour: '2-digit', minute:'2-digit', second:'2-digit'});
         return `
         <div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid #F8FAFC;">
           <div class="live-dot" style="background:${dotColor};"></div>
@@ -1316,7 +1316,7 @@ function showVirementDetail(id) {
                 <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;">Virement sélectionné</h3>
                 ${statBadge}
               </div>
-              <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #${selectedVir.reference || 'TX-'+selectedVir.id} · ${created.toLocaleString('fr-FR')}</p>
+              <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #${selectedVir.reference || 'TX-'+selectedVir.id} · ${created.toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</p>
             </div>
           </div>
 
@@ -1345,7 +1345,7 @@ function showVirementDetail(id) {
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Montant</p><p style="font-size:13px;font-weight:700;margin:2px 0 0;">${formatMontant(selectedVir.montant)}</p></div>
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Type</p><p style="font-size:12px;font-weight:600;margin:2px 0 0;">${typeLabel}</p></div>
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Motif</p><p style="font-size:12px;font-weight:500;margin:2px 0 0;">${selectedVir.motif || '-'}</p></div>
-            <div><p style="font-size:9px;color:#94A3B8;margin:0;">Heure exécution</p><p style="font-size:12px;font-weight:500;margin:2px 0 0;">${created.toLocaleTimeString('fr-FR')}</p></div>
+            <div><p style="font-size:9px;color:#94A3B8;margin:0;">Heure exécution</p><p style="font-size:12px;font-weight:500;margin:2px 0 0;">${created.toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</p></div>
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Score risque</p><p style="font-size:12px;font-weight:600;color:${scoreColor};margin:2px 0 0;">${score} / 100 — ${scoreText}</p></div>
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Email client</p><p style="font-size:11px;font-weight:500;margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;">${selectedVir.email || '-'}</p></div>
             <div><p style="font-size:9px;color:#94A3B8;margin:0;">Appareil (Simulé)</p><p style="font-size:12px;font-weight:500;margin:2px 0 0;">${(selectedVir.id % 2 === 0) ? 'Chrome / macOS' : 'Safari / iOS'}</p></div>
@@ -1395,7 +1395,7 @@ function showVirementDetail(id) {
             </div>
             <div style="display:flex;gap:10px;padding:6px 0;">
               <div class="live-dot" style="background:#94A3B8;margin-top:4px;"></div>
-              <div><p style="font-size:11px;font-weight:500;margin:0;">Virement initié</p><p style="font-size:9px;color:#94A3B8;margin:1px 0 0;">${created.toLocaleString('fr-FR')}</p></div>
+              <div><p style="font-size:11px;font-weight:500;margin:0;">Virement initié</p><p style="font-size:9px;color:#94A3B8;margin:1px 0 0;">${created.toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</p></div>
             </div>
           </div>
         </div>
@@ -1431,7 +1431,7 @@ async function loadLogsTable() {
     
     tbody.innerHTML = allLogs.slice(0, 100).map(l => `
         <tr>
-            <td style="font-size:12px;" class="text-muted">${new Date(l.created_at).toLocaleString('fr-FR')}</td>
+            <td style="font-size:12px;" class="text-muted">${new Date(l.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
             <td><span class="offre-badge">${l.categorie.toUpperCase()}</span></td>
             <td style="font-weight:500; font-size:13px;">${l.action}</td>
             <td>${l.acteur_email} <span class="text-muted" style="font-size:11px;">(${l.acteur_role})</span></td>
@@ -1471,7 +1471,7 @@ function renderAlerteItem(a) {
             <div class="alert-content">
                 <div class="alert-title">${a.type}</div>
                 <div class="alert-desc">${a.description || ''} <br><span class="client-name" style="font-size:11px;">${a.prenom} ${a.nom}</span></div>
-                <div class="alert-time">${new Date(a.created_at).toLocaleString('fr-FR')}</div>
+                <div class="alert-time">${new Date(a.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</div>
             </div>
             <div class="alert-actions">
                 <button class="btn-alert-action ${isCrit ? 'bloquer' : 'verifier'}">
@@ -1502,7 +1502,7 @@ function startSupervisionLive() {
         const logs = await fetchAPI('/admin/audit?limit=1');
         if (logs && logs.length > 0) {
             const latest = logs[0];
-            const time = new Date(latest.created_at).toLocaleTimeString('fr-FR');
+            const time = new Date(latest.created_at).toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
             
             const div = document.createElement('div');
             div.style.color = latest.categorie === 'securite' ? '#ef4444' : '#cbd5e1';
@@ -1801,7 +1801,7 @@ async function loadCartesTable() {
             </div>
             <p style="font-size:11px;font-family:monospace;color:#0F172A;">**** **** **** ${c.pan ? c.pan.slice(-4) : (c.last_4 || '0000')}</p>
             <div><span class="bk bn">Standard</span></div>
-            <p style="font-size:11px;color:#475569;text-align:center;">${new Date(c.cree_le || c.created_at).toLocaleDateString('fr-FR', {month:'2-digit', year:'numeric'})}</p>
+            <p style="font-size:11px;color:#475569;text-align:center;">${new Date(c.cree_le || c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), {month:'2-digit', year:'numeric'})}</p>
             <p style="font-size:11px;color:#475569;text-align:center;">${c.exp_date || c.date_expiration}</p>
             <div style="text-align:center;"><span class="bk ${badgeClass}">${badgeText}</span></div>
             <div style="display:flex;gap:3px;justify-content:center;">
@@ -1833,7 +1833,7 @@ window.showCarteDetails = function(id) {
     document.getElementById('fiche-carte-reseau').innerText = 'Visa International';
     document.getElementById('fiche-carte-complet').innerText = (c.pan ? c.pan.replace(/(.{4})/g, '$1 ') : '**** **** **** ****');
     document.getElementById('fiche-carte-compte').innerText = '**** ' + (c.pan ? c.pan.slice(-4) : '0000');
-    document.getElementById('fiche-carte-emission').innerText = new Date(c.cree_le || c.created_at).toLocaleDateString('fr-FR');
+    document.getElementById('fiche-carte-emission').innerText = new Date(c.cree_le || c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
 }
 
 window.toggleCarteStatus = async function(id, isBlocked) {
@@ -2037,7 +2037,7 @@ window.showAlerteDetail = function(aJsonEncoded) {
               <h3 style="font-size:13px;font-weight:700;color:#0F172A;margin:0;text-transform:capitalize;">${a.type.replace('_', ' ')}</h3>
               <span class="bk ${isResolved ? 'bs' : 'ba'}">${isResolved ? 'Résolu' : 'En revue'}</span>
             </div>
-            <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-${a.id} · Déclenché à ${new Date(a.created_at).toLocaleTimeString('fr-FR')}</p>
+            <p style="font-size:10px;color:#94A3B8;margin:0;">Réf. #FRD-${a.id} · Déclenché à ${new Date(a.created_at).toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</p>
             <p style="font-size:10px;color:#B91C1C;font-weight:500;margin:4px 0 0;">${a.prenom} ${a.nom}</p>
           </div>
         </div>
@@ -2278,11 +2278,11 @@ window.toggleAccordion = function(contentId, iconId) {
 }
 
 function formatNumber(num) {
-    return new Intl.NumberFormat('fr-FR').format(num);
+    return new Intl.NumberFormat((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')).format(num);
 }
 
 function formatMontant(montant) {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
+    return new Intl.NumberFormat((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { style: 'currency', currency: 'EUR' }).format(montant);
 }
 
 // ============================
@@ -2315,7 +2315,7 @@ window.startSupervisionLive = async function() {
     
     window.supervisionInterval = setInterval(async () => {
         // Refresh KPIs randomly for effect
-        document.getElementById('sup-req').innerText = (2400 + Math.floor(Math.random() * 200)).toLocaleString('fr-FR');
+        document.getElementById('sup-req').innerText = (2400 + Math.floor(Math.random() * 200)).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         document.getElementById('sup-err').innerText = (Math.random() * 0.05).toFixed(2) + '%';
         document.getElementById('sup-cpu').innerText = (12 + Math.floor(Math.random() * 8)) + '%';
         
@@ -2334,7 +2334,7 @@ window.startSupervisionLive = async function() {
 
 function appendTerminalLine(log) {
     const terminal = document.getElementById('terminal-live');
-    const time = new Date(log.created_at).toLocaleTimeString('fr-FR');
+    const time = new Date(log.created_at).toLocaleTimeString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
     const color = log.statut === 'succes' ? '#10b981' : (log.statut === 'echec' ? '#ef4444' : '#cbd5e1');
     const cat = log.categorie ? `[${log.categorie.toUpperCase()}]` : '[SYS]';
     const action = log.action ? `[${log.action}]` : '';

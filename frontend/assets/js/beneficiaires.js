@@ -16,7 +16,7 @@ async function loadBeneficiaires() {
     if(tbody) {
       tbody.innerHTML = beneficiairesList.map(b => {
         const dateStr = b.created_at || b.cree_le || Date.now();
-        const date = new Date(dateStr).toLocaleDateString('fr-FR');
+        const date = new Date(dateStr).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         return `
           <tr>
             <td><b>${b.nom}</b></td>

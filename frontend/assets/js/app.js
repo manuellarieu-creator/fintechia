@@ -384,7 +384,7 @@ async function initDashboard(user, account, kycStatut = null) {
   const dateEl = document.getElementById('nb-current-date');
   if(dateEl) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const dateStr = new Date().toLocaleDateString('fr-FR', options);
+    const dateStr = new Date().toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), options);
     dateEl.innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   }
 
@@ -458,7 +458,7 @@ async function loadCredits() {
             <td style="font-family:'IBM Plex Mono', monospace;">${c.reference}</td>
             <td>${new Date(c.created_at).toLocaleDateString()}</td>
             <td style="text-transform:capitalize;">${c.type_credit || c.motif}</td>
-            <td>${parseFloat(c.montant).toLocaleString('fr-FR')} €</td>
+            <td>${parseFloat(c.montant).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} €</td>
             <td>${c.duree_mois} mois</td>
             <td>
               <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
@@ -491,7 +491,7 @@ async function loadCredits() {
               </span>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748B;">
-              <span>${parseFloat(c.montant).toLocaleString('fr-FR')} € sur ${c.duree_mois} mois</span>
+              <span>${parseFloat(c.montant).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} € sur ${c.duree_mois} mois</span>
               <span>Réf: ${c.reference}</span>
             </div>
           </div>

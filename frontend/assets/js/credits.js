@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rate = 0.039;
 
   function fmt(n) {
-    return Math.round(n).toLocaleString('fr-FR') + ' €';
+    return Math.round(n).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
   }
 
   function computeMonthly() {
@@ -128,8 +128,8 @@ async function loadCredits() {
     let mobileHtml = '';
 
     credits.forEach(c => {
-      const date = new Date(c.created_at).toLocaleDateString('fr-FR');
-      const montant = parseFloat(c.montant).toLocaleString('fr-FR') + ' €';
+      const date = new Date(c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
+      const montant = parseFloat(c.montant).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
       let statusBadge = '';
       let progressWidth = '33%';
       let progressColor = '#eab308';
@@ -400,9 +400,9 @@ document.addEventListener('DOMContentLoaded', () => {
     var r = rate / 12;
     var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
     
-    mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+    mAmountOut.textContent = Math.round(P).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
     mDurationOut.textContent = Math.round(n) + ' mois';
-    mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
+    mMonthly.textContent = Math.round(monthly).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
     mRateLabel.textContent = "Mensualité estimée (TAEG indicatif: " + (rate*100) + "%)";
   }
   

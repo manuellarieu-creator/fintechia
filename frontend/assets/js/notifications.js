@@ -127,7 +127,7 @@ function updateNotificationUI(notifs) {
     
     div.onclick = (e) => { e.stopPropagation(); markAsRead(n.id); };
     
-    const date = new Date(n.created_at).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+    const date = new Date(n.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     
     div.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
