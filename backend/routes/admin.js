@@ -864,6 +864,11 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 // POST /api/admin/users
 // Création manuelle d'un compte client
 router.post('/users', guard, async (req, res, next) => {
+  try {
+    // Auto-migration silencieuse juste avant la création pour éviter l'erreur sur Vercel
+    await db.query("ALTER TABLE accounts ADD COLUMN custom_type VARCHAR(100) DEFAULT NULL").catch(() => {});
+  } catch(e) {}
+
   const connection = await db.getConnection();
   try {
     const { prenom, nom, email, password, tel, telephone, type_compte, date_creation, numero_client: reqNumClient, pin_code } = req.body;
