@@ -866,7 +866,7 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 router.post('/users', guard, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { prenom, nom, email, password, tel, telephone, date_creation, numero_client: reqNumClient, pin_code } = req.body;
+    const { prenom, nom, email, password, tel, telephone, type_compte, date_creation, numero_client: reqNumClient, pin_code } = req.body;
     const phoneVal = telephone || tel || null;
     
     if (!prenom || !nom || !password) {
@@ -897,8 +897,8 @@ router.post('/users', guard, async (req, res, next) => {
     const userId = userRes.insertId;
 
     await connection.query(
-      'INSERT INTO accounts (user_id, type_compte, statut, created_at) VALUES (?, "courant", "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
-      [userId, date_creation || null]
+      'INSERT INTO accounts (user_id, type_compte, statut, created_at) VALUES (?, ?, "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
+      [userId, type_compte || 'Courant', date_creation || null]
     );
 
 

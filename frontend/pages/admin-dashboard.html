@@ -760,6 +760,11 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     <input type="email" id="iso-email" placeholder="Email" style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
                                 </div>
 
+                                <div style="margin-bottom:12px;">
+                                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:4px;">Type de compte</label>
+                                    <input type="text" id="iso-type-compte" placeholder="Ex: Courant, Escrow, Epargne..." style="padding:10px; border-radius:6px; border:1px solid #e2e8f0; width:100%;">
+                                </div>
+
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:12px;">
                                     <div>
                                         <label style="font-size:12px; font-weight:600; display:block; margin-bottom:4px;">Mot de passe temporaire</label>
@@ -880,6 +885,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                     const prenom = document.getElementById('iso-prenom').value.trim();
                                     const nom = document.getElementById('iso-nom').value.trim();
                                     const email = document.getElementById('iso-email').value.trim();
+                                    const type_compte = document.getElementById('iso-type-compte').value.trim();
                                     const password = document.getElementById('iso-password').value;
                                     const telephone = document.getElementById('iso-tel') ? document.getElementById('iso-tel').value : '';
                                     const date_creation = document.getElementById('iso-date') ? document.getElementById('iso-date').value : null;
@@ -907,7 +913,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                                 'Authorization': 'Bearer ' + token
                                             },
                                             body: JSON.stringify({ 
-                                                prenom, nom, email, password, telephone, date_creation,
+                                                prenom, nom, email, type_compte, password, telephone, date_creation,
                                                 numero_client, pin_code
                                             })
                                         });
