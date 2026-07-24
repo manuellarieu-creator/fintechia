@@ -980,4 +980,19 @@ router.post('/users/:userId/transfers/:action', guard, async (req, res, next) =>
   }
 });
 
+// GET /api/admin/force-migration
+router.get('/force-migration', guard, async (req, res, next) => {
+  try {
+    const db = require('../config/db');
+    try {
+      await db.query("ALTER TABLE accounts MODIFY COLUMN type_compte VARCHAR(50) DEFAULT 'Courant'");
+    } catch (e1) {
+      await db.query("ALTER TABLE accounts CHANGE type_compte type_compte VARCHAR(50) DEFAULT 'Courant'");
+    }
+    res.json({ success: true, message: "Migration type_compte effectuée avec succès" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message, sqlMessage: error.sqlMessage || '' });
+  }
+});
+
 module.exports = router;
