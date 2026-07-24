@@ -158,6 +158,7 @@ if (!process.env.VERCEL) {
       await db.query("ALTER TABLE accounts ADD COLUMN numero_compte VARCHAR(50) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE accounts ADD UNIQUE (numero_compte)").catch(() => {});
       await db.query("ALTER TABLE accounts ADD COLUMN depot_initial_requis DECIMAL(15,2) DEFAULT 0").catch(() => {});
+      await db.query("ALTER TABLE accounts ADD COLUMN custom_type VARCHAR(100) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE accounts MODIFY COLUMN type_compte VARCHAR(50) DEFAULT 'Courant'").catch((e) => console.log('Notice: type_compte already updated or error', e.message));
 
       await db.query(`

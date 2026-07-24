@@ -191,7 +191,7 @@ router.post('/login', [
 
     let accounts = [];
     try {
-      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, custom_type, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     } catch(e) {
       console.error('[login] Erreur chargement comptes:', e.message);
     }
@@ -318,7 +318,7 @@ router.post('/login/2fa', [
 
     let accounts = [];
     try {
-      [accounts] = await db.query('SELECT id, solde, statut, type_compte, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
+      [accounts] = await db.query('SELECT id, solde, statut, type_compte, custom_type, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     } catch(e) { console.error('[2fa] accounts select:', e.message); }
     const account = accounts.length > 0 ? accounts[0] : null;
 
@@ -372,7 +372,7 @@ router.post('/reset-pin', [
     const deviceToken = crypto.randomBytes(32).toString('hex');
     await db.query('INSERT INTO user_devices (user_id, device_token) VALUES (?, ?)', [user.id, deviceToken]);
 
-    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, depot_initial_requis, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
+    const [accounts] = await db.query('SELECT id, solde, statut, type_compte, custom_type, depot_initial_requis, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });

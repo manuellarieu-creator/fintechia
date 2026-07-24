@@ -896,9 +896,12 @@ router.post('/users', guard, async (req, res, next) => {
     );
     const userId = userRes.insertId;
 
+    const finalTypeCompte = type_compte ? type_compte.toLowerCase() : 'courant';
+    const isStandardType = ['courant', 'epargne'].includes(finalTypeCompte);
+
     await connection.query(
-      'INSERT INTO accounts (user_id, type_compte, statut, created_at) VALUES (?, ?, "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
-      [userId, type_compte || 'courant', date_creation || null]
+      'INSERT INTO accounts (user_id, type_compte, custom_type, statut, created_at) VALUES (?, ?, ?, "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
+      [userId, isStandardType ? finalTypeCompte : 'courant', isStandardType ? null : type_compte, date_creation || null]
     );
 
 
@@ -992,6 +995,16 @@ router.get('/force-migration', guard, async (req, res, next) => {
     res.json({ success: true, message: "Migration type_compte effectuée avec succès" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message, sqlMessage: error.sqlMessage || '' });
+  }
+});
+
+router.get('/debug-db', guard, async (req, res) => {
+  try {
+    const db = require('../config/db');
+    const [schema] = await db.query("DESCRIBE accounts");
+    res.json({ success: true, schema });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

@@ -303,7 +303,11 @@ async function initDashboard(user, account, kycStatut = null) {
     
     ['type-compte-display-mobile', 'type-compte-display-desktop'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) el.innerText = `Compte ${account.type_compte || 'Courant'}`;
+      if(el) {
+        const typeRaw = account.custom_type || account.type_compte || 'Courant';
+        const typeFormat = typeRaw.charAt(0).toUpperCase() + typeRaw.slice(1);
+        el.innerText = `Compte ${typeFormat}`;
+      }
     });
     
     if(document.getElementById('kyc-alert-mobile')) {
