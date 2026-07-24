@@ -7,15 +7,16 @@ const I18N = {
 
   init: async function() {
     this.setupLanguageSwitcher();
-    this.scanDOM();
+    this.scanDOM(document.body);
     if (this.currentLang !== 'fr') {
       await this.setLanguage(this.currentLang);
     }
+    this.setupObserver();
   },
 
-  scanDOM: function() {
+  scanDOM: function(rootNode = document.body) {
     // Collect text nodes
-    const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    const walk = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, null, false);
     let n;
     while ((n = walk.nextNode())) {
       if (n.parentElement && n.parentElement.tagName !== 'SCRIPT' && n.parentElement.tagName !== 'STYLE' && n.parentElement.tagName !== 'NOSCRIPT') {
@@ -23,22 +24,49 @@ const I18N = {
         const trimmed = text.replace(/\\s+/g, ' ').trim();
         if (trimmed.length > 1 && !/^[0-9\\s€$.,;:+\\*/=()!%_a-zA-Z\\-]+$/.test(trimmed) && !trimmed.includes('{')) {
           if (!n._originalText) n._originalText = trimmed;
-          this.nodesToTranslate.push(n);
+          if (!this.nodesToTranslate.includes(n)) this.nodesToTranslate.push(n);
         }
       }
     }
 
     // Collect placeholders
-    document.querySelectorAll('[placeholder]').forEach(el => {
-      if (!el._originalPlaceholder) el._originalPlaceholder = el.placeholder.replace(/\\s+/g, ' ').trim();
-      this.attributesToTranslate.push({ el, attr: 'placeholder' });
+    const rootEl = rootNode.nodeType === Node.ELEMENT_NODE ? rootNode : document.body;
+    
+    rootEl.querySelectorAll?.('[placeholder]').forEach(el => {
+      if (!el._originalPlaceholder) el._originalPlaceholder = el.placeholder.replace(/\s+/g, ' ').trim();
+      if (!this.attributesToTranslate.find(a => a.el === el && a.attr === 'placeholder')) {
+        this.attributesToTranslate.push({ el, attr: 'placeholder' });
+      }
     });
 
     // Collect buttons with value
-    document.querySelectorAll('input[type="submit"], input[type="button"]').forEach(el => {
-      if (!el._originalValue) el._originalValue = el.value.replace(/\\s+/g, ' ').trim();
-      this.attributesToTranslate.push({ el, attr: 'value' });
+    rootEl.querySelectorAll?.('input[type="submit"], input[type="button"]').forEach(el => {
+      if (!el._originalValue) el._originalValue = el.value.replace(/\s+/g, ' ').trim();
+      if (!this.attributesToTranslate.find(a => a.el === el && a.attr === 'value')) {
+        this.attributesToTranslate.push({ el, attr: 'value' });
+      }
     });
+  },
+
+  setupObserver: function() {
+    this.observer = new MutationObserver((mutations) => {
+      let shouldTranslate = false;
+      mutations.forEach(m => {
+        if (m.addedNodes.length > 0) {
+          m.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
+              if (node.id === 'i18n-switcher' || (node.classList && node.classList.contains('i18n-option'))) return; // Skip translation UI
+              this.scanDOM(node);
+              shouldTranslate = true;
+            }
+          });
+        }
+      });
+      if (shouldTranslate && this.currentLang !== 'fr') {
+        this.applyTranslations();
+      }
+    });
+    this.observer.observe(document.body, { childList: true, subtree: true });
   },
 
   setLanguage: async function(lang) {
