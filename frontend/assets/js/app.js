@@ -91,6 +91,10 @@ function showPage(pageId) {
 }
 
 function showView(viewId) {
+  if (viewId === 'view-kyc' && window.kycStatut === 'valide') {
+    viewId = 'view-dashboard';
+  }
+  
   localStorage.setItem('activeClientView', viewId);
   document.querySelectorAll('.nb-view').forEach(v => v.style.display = 'none');
   const target = document.getElementById(viewId);
@@ -115,6 +119,10 @@ function showView(viewId) {
 }
 
 function showMobileView(viewId) {
+  if (viewId === 'm-view-kyc' && window.kycStatut === 'valide') {
+    viewId = 'm-view-dashboard';
+  }
+  
   localStorage.setItem('activeClientMobileView', viewId);
   document.querySelectorAll('.m-view').forEach(v => v.style.display = 'none');
   const target = document.getElementById(viewId);
@@ -963,7 +971,7 @@ function startKycPolling() {
 
 window.goToEspaceBancaire = function() {
   document.getElementById('modal-kyc-approved').style.display = 'none';
-  window.location.reload(); // Will reload and re-initialize dashboard, hitting the Alimentation check
+  window.location.href = window.location.pathname; // Clear hash and reload to dashboard
 }
 
 window.verifyInitialDeposit = async function() {
