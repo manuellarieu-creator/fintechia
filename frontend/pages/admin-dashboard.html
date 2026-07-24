@@ -863,7 +863,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                                         return pass;
                                     };
                                     
-                                    const generatePin = () => Math.floor(1000 + Math.random() * 9000).toString();
+                                    const generatePin = () => Math.floor(100000 + Math.random() * 900000).toString();
 
                                     document.getElementById('iso-client-id').value = numeroClient;
                                     document.getElementById('iso-password').value = generatePassword();
