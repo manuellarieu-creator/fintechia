@@ -311,7 +311,7 @@ router.post('/comptes/:accountId/crediter', [
 ], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { montant, libelle, transfer_allowed, max_transfer_amount } = req.body;
+    const { montant, libelle, transfer_allowed, max_transfer_amount, date_transaction } = req.body;
     const { accountId } = req.params;
     await connection.beginTransaction();
 
@@ -343,9 +343,9 @@ router.post('/comptes/:accountId/crediter', [
     await connection.query(updateQuery, queryParams);
     
     await connection.query(
-      `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
-       VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide')`,
-      [accountId, montant, soldeAvant, soldeApres, libelle || 'Crédit Admin', libelle || 'Crédit Admin']
+      `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut, created_at) 
+       VALUES (?, 'credit', ?, ?, ?, ?, ?, 'valide', IFNULL(?, CURRENT_TIMESTAMP))`,
+      [accountId, montant, soldeAvant, soldeApres, libelle || 'Crédit Admin', libelle || 'Crédit Admin', date_transaction || null]
     );
 
     await connection.commit();
@@ -372,7 +372,7 @@ router.post('/comptes/:accountId/crediter', [
 router.post('/comptes/:accountId/debiter', [guard, body('montant').isFloat({ gt: 0 })], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { montant, libelle } = req.body;
+    const { montant, libelle, date_transaction } = req.body;
     const { accountId } = req.params;
     await connection.beginTransaction();
 
@@ -392,9 +392,9 @@ router.post('/comptes/:accountId/debiter', [guard, body('montant').isFloat({ gt:
 
     await connection.query('UPDATE accounts SET solde = ? WHERE id = ?', [soldeApres, accountId]);
     await connection.query(
-      `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut) 
-       VALUES (?, 'debit', ?, ?, ?, ?, ?, 'valide')`,
-      [accountId, montant, soldeAvant, soldeApres, libelle || 'Débit Admin', libelle || 'Débit Admin']
+      `INSERT INTO transactions (account_id, type, montant, solde_avant, solde_apres, libelle, motif, statut, created_at) 
+       VALUES (?, 'debit', ?, ?, ?, ?, ?, 'valide', IFNULL(?, CURRENT_TIMESTAMP))`,
+      [accountId, montant, soldeAvant, soldeApres, libelle || 'Débit Admin', libelle || 'Débit Admin', date_transaction || null]
     );
 
     await connection.commit();
@@ -866,7 +866,7 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 router.post('/users', guard, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { prenom, nom, email, password, tel, telephone } = req.body;
+    const { prenom, nom, email, password, tel, telephone, date_creation } = req.body;
     const phoneVal = telephone || tel || null;
     
     if (!prenom || !nom || !email || !password) {
@@ -888,14 +888,14 @@ router.post('/users', guard, async (req, res, next) => {
     const numero_client = `${timestamp}${random}`;
     
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client) VALUES (?, ?, ?, ?, "client", ?, ?)',
-      [prenom, nom, email, hashedPassword, phoneVal, numero_client]
+      'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client, created_at) VALUES (?, ?, ?, ?, "client", ?, ?, IFNULL(?, CURRENT_TIMESTAMP))',
+      [prenom, nom, email, hashedPassword, phoneVal, numero_client, date_creation || null]
     );
     const userId = userRes.insertId;
 
     await connection.query(
-      'INSERT INTO accounts (user_id, type_compte, statut) VALUES (?, "courant", "en_attente")',
-      [userId]
+      'INSERT INTO accounts (user_id, type_compte, statut, created_at) VALUES (?, "courant", "en_attente", IFNULL(?, CURRENT_TIMESTAMP))',
+      [userId, date_creation || null]
     );
 
     await connection.query(

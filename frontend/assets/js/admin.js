@@ -1523,8 +1523,9 @@ window.confirmMontantAction = async function() {
     const id = document.getElementById('manage-client-id').value;
     const val = parseFloat(document.getElementById('montant-valeur').value);
     const libelle = document.getElementById('montant-libelle').value || (type==='crediter' ? 'Crédit Admin' : 'Débit Admin');
+    const dateTransaction = document.getElementById('montant-date') ? document.getElementById('montant-date').value : null;
     
-    const payload = { montant: val, libelle: libelle };
+    const payload = { montant: val, libelle: libelle, date_transaction: dateTransaction };
     
     if (type === 'crediter') {
         payload.transfer_allowed = document.getElementById('montant-transfer-allowed').checked;
@@ -2367,13 +2368,14 @@ window.submitNewClient = async function() {
     const email = document.getElementById('new-client-email').value;
     const password = document.getElementById('new-client-password').value;
     const tel = document.getElementById('new-client-tel').value;
+    const dateCreation = document.getElementById('new-client-date') ? document.getElementById('new-client-date').value : null;
 
     if (!prenom || !nom || !email || !password) {
         return alert('Veuillez remplir tous les champs obligatoires.');
     }
 
     try {
-        const data = await fetchAPI('/admin/users', 'POST', { prenom, nom, email, password, telephone: tel });
+        const data = await fetchAPI('/admin/users', 'POST', { prenom, nom, email, password, telephone: tel, date_creation: dateCreation });
 
         if (data && data.success !== false && !data.error) {
             alert('Client créé avec succès !\n\nLien KYC à envoyer au client :\n' + (data.kycLink || ''));
@@ -2401,12 +2403,13 @@ async function submitNewClient() {
     const email = document.getElementById('new-client-email').value.trim();
     const mot_de_passe = document.getElementById('new-client-password').value.trim();
     const telephone = document.getElementById('new-client-tel').value.trim();
+    const dateCreation = document.getElementById('new-client-date') ? document.getElementById('new-client-date').value : null;
     
     if (!prenom || !nom || !email || !mot_de_passe) {
         return alert("Veuillez remplir les champs obligatoires (Prénom, Nom, Email, Mot de passe).");
     }
     
-    const res = await fetchAPI('/users', 'POST', { prenom, nom, email, mot_de_passe, telephone });
+    const res = await fetchAPI('/users', 'POST', { prenom, nom, email, mot_de_passe, telephone, date_creation: dateCreation });
     
     if (res && res.success) {
         alert(`Client créé avec succès ! (User ID: ${res.userId}, Account ID: ${res.accountId})`);
