@@ -901,10 +901,7 @@ router.post('/users', guard, async (req, res, next) => {
       [userId, date_creation || null]
     );
 
-    await connection.query(
-      'INSERT INTO kyc (user_id, statut) VALUES (?, "en_attente")',
-      [userId]
-    );
+
 
     await audit.log({
       acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: 'admin',
