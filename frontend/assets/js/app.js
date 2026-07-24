@@ -306,12 +306,26 @@ async function initDashboard(user, account, kycStatut = null) {
       if(el) el.innerText = `Compte ${account.type_compte || 'Courant'}`;
     });
     
-    if (account.statut === 'kyc_requis' || kycStatut === 'en_attente') {
-      if(document.getElementById('kyc-alert-mobile')) document.getElementById('kyc-alert-mobile').style.display = 'block';
-      if(document.getElementById('kyc-alert-desktop')) document.getElementById('kyc-alert-desktop').style.display = 'block';
-    } else {
-      if(document.getElementById('kyc-alert-mobile')) document.getElementById('kyc-alert-mobile').style.display = 'none';
-      if(document.getElementById('kyc-alert-desktop')) document.getElementById('kyc-alert-desktop').style.display = 'none';
+    if(document.getElementById('kyc-alert-mobile')) {
+      document.getElementById('kyc-alert-mobile').style.display = (account.statut === 'kyc_requis' || kycStatut === 'en_attente') ? 'block' : 'none';
+    }
+
+    const kycDesktop = document.getElementById('kyc-alert-desktop');
+    if (kycDesktop) {
+      if (kycStatut === 'en_attente') {
+        kycDesktop.style.display = 'flex';
+        kycDesktop.style.backgroundColor = '#e0f2fe';
+        kycDesktop.style.color = '#0369a1';
+        kycDesktop.innerHTML = `<span>⏳ Vérification d'identité en cours de validation.</span>`;
+      } else if (account.statut === 'kyc_requis' || kycStatut === 'a_refaire' || kycStatut === 'rejete' || kycStatut === null) {
+        kycDesktop.style.display = 'flex';
+        kycDesktop.style.backgroundColor = '#fff3cd';
+        kycDesktop.style.color = '#856404';
+        kycDesktop.innerHTML = `<span>⚠️ Action requise : Veuillez fournir vos documents d'identité.</span>
+          <a href="#" onclick="showView('view-kyc'); if(window.innerWidth<=768) showMobileView('m-view-kyc'); return false;" style="color:#856404; text-decoration:underline; font-weight:700; margin-left:10px;">Cliquez-ici pour être redirigé vers la page de vérification d'identité</a>`;
+      } else {
+        kycDesktop.style.display = 'none';
+      }
     }
   }
 
