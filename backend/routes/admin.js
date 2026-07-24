@@ -552,7 +552,7 @@ router.patch('/kyc/:kycId/selfie', guard, async (req, res, next) => {
       const userId = kycs[0].user_id;
       if (decision === 'valide') {
         await db.query('UPDATE kyc SET statut = "valide", traite_le = NOW(), traite_par = ? WHERE id = ?', [req.user.id, kycId]);
-        await db.query('UPDATE accounts SET statut = "actif" WHERE user_id = ? AND statut = "en_attente"', [userId]);
+        await db.query('UPDATE accounts SET statut = "actif" WHERE user_id = ? AND statut IN ("en_attente", "kyc_requis")', [userId]);
         await notifications.envoyer(userId, 'KYC Validé', `Votre identité a été validée.`, 'succes');
       } else {
         await db.query('UPDATE kyc SET statut = "rejete", motif_rejet = ?, traite_le = NOW(), traite_par = ? WHERE id = ?', [commentaire, req.user.id, kycId]);

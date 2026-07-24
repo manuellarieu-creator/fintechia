@@ -91,7 +91,7 @@ function showPage(pageId) {
 }
 
 function showView(viewId) {
-  if (viewId === 'view-kyc' && window.kycStatut === 'valide') {
+  if (viewId === 'view-kyc' && typeof kycStatut !== 'undefined' && kycStatut === 'valide') {
     viewId = 'view-dashboard';
   }
   
@@ -119,7 +119,7 @@ function showView(viewId) {
 }
 
 function showMobileView(viewId) {
-  if (viewId === 'm-view-kyc' && window.kycStatut === 'valide') {
+  if (viewId === 'm-view-kyc' && typeof kycStatut !== 'undefined' && kycStatut === 'valide') {
     viewId = 'm-view-dashboard';
   }
   
@@ -324,7 +324,9 @@ async function initDashboard(user, account, kycStatut = null) {
 
     const kycDesktop = document.getElementById('kyc-alert-desktop');
     if (kycDesktop) {
-      if (kycStatut === 'en_attente') {
+      if (kycStatut === 'valide') {
+        kycDesktop.style.display = 'none';
+      } else if (kycStatut === 'en_attente') {
         kycDesktop.style.display = 'flex';
         kycDesktop.style.backgroundColor = '#e0f2fe';
         kycDesktop.style.color = '#0369a1';
