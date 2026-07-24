@@ -866,16 +866,20 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
 router.post('/users', guard, async (req, res, next) => {
   const connection = await db.getConnection();
   try {
-    const { prenom, nom, email, password, tel, telephone, date_creation } = req.body;
+    const { prenom, nom, email, password, tel, telephone, date_creation, numero_client: reqNumClient, pin_code } = req.body;
     const phoneVal = telephone || tel || null;
     
-    if (!prenom || !nom || !email || !password) {
-      return res.status(400).json({ error: 'Champs obligatoires manquants' });
+    if (!prenom || !nom || !password) {
+      return res.status(400).json({ error: 'Champs obligatoires manquants (Prénom, Nom, Mot de passe)' });
     }
 
-    const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [email]);
-    if (existing.length > 0) {
-      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    const finalEmail = email ? email.trim() : null;
+
+    if (finalEmail) {
+      const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [finalEmail]);
+      if (existing.length > 0) {
+        return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+      }
     }
 
     await connection.beginTransaction();
@@ -885,11 +889,11 @@ router.post('/users', guard, async (req, res, next) => {
     
     const timestamp = Date.now().toString().slice(-7);
     const random = Math.floor(10000 + Math.random() * 90000).toString();
-    const numero_client = `${timestamp}${random}`;
+    const numero_client = reqNumClient || `${timestamp}${random}`;
     
     const [userRes] = await connection.query(
-      'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client, created_at) VALUES (?, ?, ?, ?, "client", ?, ?, IFNULL(?, CURRENT_TIMESTAMP))',
-      [prenom, nom, email, hashedPassword, phoneVal, numero_client, date_creation || null]
+      'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client, created_at, pin_code) VALUES (?, ?, ?, ?, "client", ?, ?, IFNULL(?, CURRENT_TIMESTAMP), ?)',
+      [prenom, nom, finalEmail, hashedPassword, phoneVal, numero_client, date_creation || null, pin_code || null]
     );
     const userId = userRes.insertId;
 

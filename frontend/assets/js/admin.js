@@ -2359,27 +2359,65 @@ window.openNewClientModal = function() {
         console.error("modal-new-client not found!");
         return;
     }
+    
+    // Génération automatique des identifiants
+    const timestamp = Date.now().toString().slice(-7);
+    const random = Math.floor(10000 + Math.random() * 90000).toString();
+    const numeroClient = `${timestamp}${random}`;
+    
+    const generatePassword = () => {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+        let pass = '';
+        for (let i = 0; i < 12; i++) pass += chars[Math.floor(Math.random() * chars.length)];
+        return pass;
+    };
+    
+    const generatePin = () => {
+        return Math.floor(1000 + Math.random() * 9000).toString();
+    };
+
+    document.getElementById('new-client-id').value = numeroClient;
+    document.getElementById('new-client-password').value = generatePassword();
+    document.getElementById('new-client-pin').value = generatePin();
+    
+    // Par défaut la date est vide (le backend s'occupe de mettre la date du jour si non spécifiée)
+    if(document.getElementById('new-client-date')) {
+        document.getElementById('new-client-date').value = '';
+    }
+
     modal.style.display = 'flex';
 };
 
 window.submitNewClient = async function() {
-    const prenom = document.getElementById('new-client-prenom').value;
-    const nom = document.getElementById('new-client-nom').value;
-    const email = document.getElementById('new-client-email').value;
+    const prenom = document.getElementById('new-client-prenom').value.trim();
+    const nom = document.getElementById('new-client-nom').value.trim();
+    const email = document.getElementById('new-client-email').value.trim();
     const password = document.getElementById('new-client-password').value;
-    const tel = document.getElementById('new-client-tel').value;
+    const tel = document.getElementById('new-client-tel') ? document.getElementById('new-client-tel').value : '';
     const dateCreation = document.getElementById('new-client-date') ? document.getElementById('new-client-date').value : null;
+    const numero_client = document.getElementById('new-client-id').value;
+    const pin_code = document.getElementById('new-client-pin').value;
 
-    if (!prenom || !nom || !email || !password) {
-        return alert('Veuillez remplir tous les champs obligatoires.');
+    if (!prenom || !nom || !password || !pin_code) {
+        return alert('Veuillez remplir le Nom et le Prénom.');
     }
 
     try {
-        const data = await fetchAPI('/admin/users', 'POST', { prenom, nom, email, password, telephone: tel, date_creation: dateCreation });
+        const data = await fetchAPI('/users', 'POST', { 
+            prenom, nom, email, password, telephone: tel, date_creation: dateCreation,
+            numero_client, pin_code
+        });
 
         if (data && data.success !== false && !data.error) {
-            alert('Client créé avec succès !\n\nLien KYC à envoyer au client :\n' + (data.kycLink || ''));
+            alert(`Client créé avec succès !\n\nID: ${numero_client}\nMot de passe: ${password}\nPIN: ${pin_code}\n\nLien KYC :\n${data.kycLink || ''}`);
             document.getElementById('modal-new-client').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('new-client-prenom').value = '';
+            document.getElementById('new-client-nom').value = '';
+            document.getElementById('new-client-email').value = '';
+            if (document.getElementById('new-client-tel')) document.getElementById('new-client-tel').value = '';
+
             if (typeof loadClientsTable === 'function') loadClientsTable();
         } else {
             alert('Erreur: ' + (data?.error || 'Création impossible.'));
@@ -2388,42 +2426,9 @@ window.submitNewClient = async function() {
         console.error(err);
         alert('Erreur réseau.');
     }
-}
+};
 
 
 
 
-
-// ============================
-// NEW CLIENT ACTION
-// ============================
-async function submitNewClient() {
-    const prenom = document.getElementById('new-client-prenom').value.trim();
-    const nom = document.getElementById('new-client-nom').value.trim();
-    const email = document.getElementById('new-client-email').value.trim();
-    const mot_de_passe = document.getElementById('new-client-password').value.trim();
-    const telephone = document.getElementById('new-client-tel').value.trim();
-    const dateCreation = document.getElementById('new-client-date') ? document.getElementById('new-client-date').value : null;
-    
-    if (!prenom || !nom || !email || !mot_de_passe) {
-        return alert("Veuillez remplir les champs obligatoires (Prénom, Nom, Email, Mot de passe).");
-    }
-    
-    const res = await fetchAPI('/users', 'POST', { prenom, nom, email, mot_de_passe, telephone, date_creation: dateCreation });
-    
-    if (res && res.success) {
-        alert(`Client créé avec succès ! (User ID: ${res.userId}, Account ID: ${res.accountId})`);
-        document.getElementById('modal-new-client').style.display = 'none';
-        
-        // Reset form
-        document.getElementById('new-client-prenom').value = '';
-        document.getElementById('new-client-nom').value = '';
-        document.getElementById('new-client-email').value = '';
-        document.getElementById('new-client-tel').value = '';
-        
-        if (typeof loadClientsTable === 'function') loadClientsTable();
-        loadDashboardStats();
-    } else {
-        alert(res?.error || "Erreur lors de la création du client.");
-    }
-}
+// submitNewClient removed as it's handled above

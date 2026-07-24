@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
   id            INT AUTO_INCREMENT PRIMARY KEY,
   prenom        VARCHAR(80)  NOT NULL,
   nom           VARCHAR(80)  NOT NULL,
-  email         VARCHAR(160) NOT NULL UNIQUE,
+  email         VARCHAR(160) UNIQUE,
   telephone     VARCHAR(30),
   telephone_code VARCHAR(10),
   password_hash VARCHAR(255) NOT NULL,
