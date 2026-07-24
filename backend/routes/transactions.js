@@ -287,7 +287,7 @@ router.delete('/beneficiaires/:id', authMiddleware, async (req, res, next) => {
         const [exists] = await db.query('SELECT id FROM fraud_detection_rules WHERE rule_name = ?', [rule.name]);
         if (exists.length === 0) {
             await db.query(
-                'INSERT INTO fraud_detection_rules (rule_name, event_type, condition_field, condition_operator, condition_value, action_type, is_active) VALUES (?, ?, ?, ?, ?, ?, 0)',
+                'INSERT INTO fraud_detection_rules (rule_name, event_type, condition_field, condition_operator, condition_value, action_type, is_active, description) VALUES (?, ?, ?, ?, ?, ?, 0, "")',
                 [rule.name, rule.event, rule.field, rule.op, rule.val, rule.action]
             );
         }
