@@ -51,6 +51,8 @@ document.getElementById('form-virement-mobile')?.addEventListener('submit', (e) 
 
 // DESKTOP TUNNEL LOGIC
 function openTunnelModal() {
+  if (typeof loadBeneficiairesForSelect === 'function') loadBeneficiairesForSelect();
+  
   // Show the modal and the first step (Form)
   document.getElementById('modal-virement-tunnel').style.display = 'flex';
   document.getElementById('tunnel-step-form').style.display = 'block';
