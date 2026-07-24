@@ -217,6 +217,15 @@ async function checkAuth() {
 }
 
 async function initDashboard(user, account, kycStatut = null) {
+  if (kycStatut === 'valide') {
+    if (localStorage.getItem('activeClientView') === 'view-kyc') {
+      showView('view-dashboard');
+    }
+    if (localStorage.getItem('activeClientMobileView') === 'm-view-kyc') {
+      showMobileView('m-view-dashboard');
+    }
+  }
+
   const alert = document.getElementById('kyc-alert');
   if (alert) {
     if ((kycStatut === null || kycStatut === 'rejete' || kycStatut === 'a_refaire') && user.role !== 'admin') {
@@ -973,6 +982,8 @@ function startKycPolling() {
 
 window.goToEspaceBancaire = function() {
   document.getElementById('modal-kyc-approved').style.display = 'none';
+  localStorage.setItem('activeClientView', 'view-dashboard');
+  localStorage.setItem('activeClientMobileView', 'm-view-dashboard');
   window.location.href = window.location.pathname; // Clear hash and reload to dashboard
 }
 
