@@ -988,11 +988,11 @@ router.get('/force-migration', guard, async (req, res, next) => {
   try {
     const db = require('../config/db');
     try {
-      await db.query("ALTER TABLE accounts MODIFY COLUMN type_compte VARCHAR(50) DEFAULT 'Courant'");
-    } catch (e1) {
-      await db.query("ALTER TABLE accounts CHANGE type_compte type_compte VARCHAR(50) DEFAULT 'Courant'");
+      await db.query("ALTER TABLE accounts ADD COLUMN custom_type VARCHAR(100) DEFAULT NULL");
+    } catch(e) {
+      console.log('Notice: custom_type already exists', e.message);
     }
-    res.json({ success: true, message: "Migration type_compte effectuée avec succès" });
+    res.json({ success: true, message: "Migration type_compte (custom_type) effectuée avec succès" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message, sqlMessage: error.sqlMessage || '' });
   }
