@@ -873,23 +873,22 @@ router.post('/users', guard, async (req, res, next) => {
       return res.status(400).json({ error: 'Champs obligatoires manquants (Prénom, Nom, Mot de passe)' });
     }
 
-    const finalEmail = email ? email.trim() : null;
+    const timestamp = Date.now().toString().slice(-7);
+    const random = Math.floor(10000 + Math.random() * 90000).toString();
+    const numero_client = reqNumClient || `${timestamp}${random}`;
+    
+    // Fallback email to satisfy NOT NULL unique constraint in DB
+    const finalEmail = email ? email.trim() : `user_${numero_client}@fintechia.local`;
 
-    if (finalEmail) {
-      const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [finalEmail]);
-      if (existing.length > 0) {
-        return res.status(400).json({ error: 'Cet email est déjà utilisé' });
-      }
+    const [existing] = await connection.query('SELECT id FROM users WHERE email = ?', [finalEmail]);
+    if (existing.length > 0) {
+      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
     }
 
     await connection.beginTransaction();
 
     const bcrypt = require('bcrypt');
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const timestamp = Date.now().toString().slice(-7);
-    const random = Math.floor(10000 + Math.random() * 90000).toString();
-    const numero_client = reqNumClient || `${timestamp}${random}`;
     
     const [userRes] = await connection.query(
       'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client, created_at, pin_code) VALUES (?, ?, ?, ?, "client", ?, ?, IFNULL(?, CURRENT_TIMESTAMP), ?)',
