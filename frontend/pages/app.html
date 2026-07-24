@@ -1134,7 +1134,7 @@
         
         <div class="kyc-banner" id="kyc-alert-desktop" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:12px; margin-bottom:20px; font-weight:bold; align-items: center; justify-content: space-between;">
           <span>⚠️ Action requise : Veuillez fournir vos documents d'identité.</span>
-          <a href="#" onclick="showView('view-kyc'); if(window.innerWidth<=768) showMobileView('m-view-kyc'); return false;" style="color:#856404; text-decoration:underline; font-weight:700; margin-left:10px;">Cliquez-ici pour être redirigé vers la page de vérification d'identité</a>
+          <a href="#" onclick="if(window.innerWidth<=768) { showMobileView('m-view-kyc'); } else { startVideoKyc(); } return false;" style="color:#856404; text-decoration:underline; font-weight:700; margin-left:10px;">Cliquez-ici pour être redirigé vers la page de vérification d'identité</a>
         </div>
 
         <div id="view-dashboard" class="nb-view">

@@ -218,7 +218,7 @@ async function initDashboard(user, account, kycStatut = null) {
       alert.innerHTML = `
         <strong style="color:var(--danger-text);">Action requise : Vérification d'identité</strong>
         <p style="margin-top: 4px; font-size: 14px; color: var(--text-secondary);">Pour débloquer vos virements, la loi exige une vérification KYC.</p>
-        <button class="btn" style="margin-top:12px; background:var(--danger); color:white;" onclick="showView('view-kyc'); if(window.innerWidth<=768) showMobileView('m-view-kyc');">
+        <button class="btn" style="margin-top:12px; background:var(--danger); color:white;" onclick="if(window.innerWidth<=768) { showMobileView('m-view-kyc'); } else { startVideoKyc(); }">
           <i class="ti ti-camera" style="margin-right:8px;"></i> Vérifier mon identité
         </button>
       `;
