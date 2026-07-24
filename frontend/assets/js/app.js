@@ -327,6 +327,10 @@ async function initDashboard(user, account, kycStatut = null) {
         kycDesktop.style.display = 'none';
       }
     }
+
+    if (kycStatut === 'en_attente') {
+      if (typeof startKycPolling === 'function') startKycPolling();
+    }
   }
 
   const dateEl = document.getElementById('nb-current-date');
@@ -939,9 +943,11 @@ function startKycPolling() {
         if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
       if (data && data.kyc_statut === 'valide' && data.account && data.account.iban) {
         clearInterval(kycPollInterval);
+        initDashboard(data.user, data.account, data.kyc_statut);
         document.getElementById('modal-kyc-approved').style.display = 'flex';
       } else if (data && data.kyc_statut === 'rejete') {
         clearInterval(kycPollInterval);
+        initDashboard(data.user, data.account, data.kyc_statut);
         alert('Votre vérification KYC précédente a été rejetée. Veuillez resoumettre vos documents.', () => window.location.reload());
       }
     } catch (err) {
