@@ -405,7 +405,7 @@ router.post('/reset-pin', [
 // GET /api/auth/me
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at, transfer_types FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) return res.status(404).json({ error: 'User not found', code: 'NOT_FOUND', status: 404 });
     const user = users[0];
     

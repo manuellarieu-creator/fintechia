@@ -217,6 +217,31 @@ async function checkAuth() {
 }
 
 async function initDashboard(user, account, kycStatut = null) {
+  window.userTransferTypes = user.transfer_types ? user.transfer_types.split(',') : ['standard', 'immediat', 'swift', 'programme'];
+
+  // Filter transfer types in dropdowns
+  ['vir-type-desktop', 'vir-type-mobile'].forEach(id => {
+      const select = document.getElementById(id);
+      if (select) {
+          Array.from(select.options).forEach(opt => {
+              const allowed = window.userTransferTypes.includes(opt.value);
+              opt.style.display = allowed ? '' : 'none';
+              opt.hidden = !allowed;
+              opt.disabled = !allowed;
+          });
+          // Also set the selected index to the first visible option if the current one is hidden
+          if (select.options.length > 0 && select.options[select.selectedIndex] && select.options[select.selectedIndex].disabled) {
+             for (let i=0; i<select.options.length; i++) {
+                 if (!select.options[i].disabled) {
+                     select.selectedIndex = i;
+                     if(typeof toggleDateProgrammee === 'function') toggleDateProgrammee(select.value, id.replace('vir-type-', ''));
+                     break;
+                 }
+             }
+          }
+      }
+  });
+
   if (kycStatut === 'valide') {
     if (localStorage.getItem('activeClientView') === 'view-kyc') {
       showView('view-dashboard');
