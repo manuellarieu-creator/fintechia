@@ -945,7 +945,7 @@ function startKycPolling() {
     try {
       const data = await apiCall('/auth/me');
         if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
-      if (data && data.kyc_statut === 'valide' && data.account && data.account.iban) {
+      if (data && data.kyc_statut === 'valide' && data.account) {
         clearInterval(kycPollInterval);
         initDashboard(data.user, data.account, data.kyc_statut);
         document.getElementById('modal-kyc-approved').style.display = 'flex';
