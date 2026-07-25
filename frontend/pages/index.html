@@ -100,8 +100,8 @@
     <div class="nb-nav-links desktop-only" style="display:flex;">
       <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Comptes</span>
       <span onclick="document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Crédits</span>
-      <span>Tarifs</span>
-      <span>Sécurité</span>
+      <span onclick="document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Tarifs</span>
+      <span onclick="document.getElementById('nbFooter').scrollIntoView({behavior:'smooth'})">Sécurité</span>
       <div style="display:flex; gap:12px; align-items:center;">
         <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html'">Se connecter</button>
         <button id="header-cta-btn" class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:9px 18px;border-radius:6px;font-size:13px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
@@ -137,8 +137,8 @@
     <div style="display:flex; flex-direction:column; padding: 24px; gap: 24px; font-size:16px; color:#E9E6DD;">
       <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Comptes</span>
       <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbCredit').scrollIntoView({behavior:'smooth'})">Crédits</span>
-      <span style="cursor:pointer;">Tarifs</span>
-      <span style="cursor:pointer;">Sécurité</span>
+      <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbOffres').scrollIntoView({behavior:'smooth'})">Tarifs</span>
+      <span style="cursor:pointer;" onclick="document.querySelector('.nb-landing-sidebar').classList.remove('open'); document.getElementById('nbFooter').scrollIntoView({behavior:'smooth'})">Sécurité</span>
       <div style="height:1px; background:rgba(233,230,221,0.1); margin: 8px 0;"></div>
       <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;font-weight:600;padding:12px;border-radius:6px;width:100%;" onclick="window.location.href='app.html'">Se connecter</button>
       <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:12px;border-radius:6px;width:100%;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
@@ -205,16 +205,16 @@
       </p>
       <div style="display:flex;gap:14px;align-items:center;">
         <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Ouvrir un compte</button>
-        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">Simuler un crédit</button>
+        <button class="nb-btn" style="background:transparent;border:1px solid rgba(233,230,221,0.25);color:#E9E6DD;padding:13px 26px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="openCreditModal()">Demander un crédit</button>
       </div>
     </div>
 
     <div class="nb-hero-visual">
       <div id="hero-block-1" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; transition: opacity 0.5s;">
         <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Temps moyen d'ouverture</p>
-        <p class="nb-mono nb-tick" id="nbTimer" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">05:00</p>
+        <p class="nb-mono" style="font-size:44px;color:#C99A3B;margin:0;font-weight:500;">02:48</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
-        <p style="font-size:13px;color:#B9B4A6;margin:0;">Carte Visa incluse<br>dès la validation KYC</p>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Carte Visa incluse<br>Validation du compte en 5 min.</p>
       </div>
       <div id="hero-block-2" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; display: none; opacity: 0; transition: opacity 0.5s;">
         <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Simulation crédit</p>
@@ -222,6 +222,13 @@
         <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Mensualité : 625 €</p>
         <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
         <p style="font-size:13px;color:#B9B4A6;margin:0;">Accord de principe immédiat</p>
+      </div>
+      <div id="hero-block-3" style="border:1px solid #C99A3B;border-radius:8px;padding:28px 34px;text-align:center;background:rgba(201,154,59,0.05); width: 100%; max-width: 300px; display: none; opacity: 0; transition: opacity 0.5s;">
+        <p class="nb-mono" style="font-size:11px;letter-spacing:.12em;color:#B9B4A6;margin:0 0 14px;">Crédit immobilier reçu</p>
+        <p class="nb-mono" style="font-size:24px;color:#C99A3B;margin:0;font-weight:500;">362 000 €</p>
+        <p class="nb-mono" style="font-size:14px;color:#E9E6DD;margin:10px 0;">Durée de remboursement : 25 ans</p>
+        <div style="height:1px;background:rgba(233,230,221,0.15);margin:18px 0;"></div>
+        <p style="font-size:13px;color:#B9B4A6;margin:0;">Crédit accordé sous 72 h</p>
       </div>
     </div>
   </div>
@@ -320,7 +327,7 @@
     <button class="nb-btn" style="background:#C99A3B;color:#0F1B33;font-weight:600;padding:14px 30px;border-radius:6px;font-size:14px;font-family:inherit;" onclick="window.location.href='app.html?action=register'">Commencer maintenant</button>
   </div>
 
-  <div style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
+  <div id="nbFooter" style="border-top:1px solid rgba(233,230,221,0.12);padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;color:#8A8676;">
     <span>Fintechia © 2026 · Établissement de paiement agréé</span>
     <span style="display:flex;gap:18px;"><span>CGU</span><span>Confidentialité</span><span>Contact</span></span>
   </div>
@@ -439,36 +446,32 @@
 <script>
   // Hero Alternance
   (function(){
-    var block1 = document.getElementById('hero-block-1');
-    var block2 = document.getElementById('hero-block-2');
-    var isBlock1 = true;
+    var blocks = [
+      document.getElementById('hero-block-1'),
+      document.getElementById('hero-block-2'),
+      document.getElementById('hero-block-3')
+    ];
+    var currentIndex = 0;
     
     setInterval(function(){
-      if(isBlock1) {
-        block1.style.opacity = 0;
-        setTimeout(() => { block1.style.display = 'none'; block2.style.display = 'block'; setTimeout(()=>block2.style.opacity = 1, 50); }, 500);
-      } else {
-        block2.style.opacity = 0;
-        setTimeout(() => { block2.style.display = 'none'; block1.style.display = 'block'; setTimeout(()=>block1.style.opacity = 1, 50); }, 500);
-      }
-      isBlock1 = !isBlock1;
-    }, 40000);
+      var currentBlock = blocks[currentIndex];
+      var nextIndex = (currentIndex + 1) % blocks.length;
+      var nextBlock = blocks[nextIndex];
+
+      currentBlock.style.opacity = 0;
+      setTimeout(() => { 
+        currentBlock.style.display = 'none'; 
+        nextBlock.style.display = 'block'; 
+        setTimeout(()=>nextBlock.style.opacity = 1, 50); 
+      }, 500);
+      
+      currentIndex = nextIndex;
+    }, 30000);
   })();
 
   // Timer hero 1
   (function(){
-    var total = 300;
-    var el = document.getElementById('nbTimer');
-    function renderTimer(s){
-      var m = Math.floor(s/60);
-      var sec = s%60;
-      el.textContent = (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
-    }
-    renderTimer(total);
-    setInterval(function(){
-      total = total > 0 ? total - 1 : 300;
-      renderTimer(total);
-    }, 1000);
+    // Timer was removed for the fixed text "02:48" but left structure if needed elsewhere
   })();
 
   // Calcul page principale
