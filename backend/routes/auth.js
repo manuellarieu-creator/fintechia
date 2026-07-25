@@ -293,7 +293,7 @@ router.post('/login/2fa', [
           return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives.', code: 'SECURITY_BLOCK', status: 403 });
       }
 
-      return res.status(401).json({ error: 'Code incorrect', code: 'INVALID_2FA', status: 401 });
+      return res.status(401).json({ error: 'Le code PIN entré est invalid.', code: 'INVALID_2FA', status: 401 });
     }
 
     // Reset OTP fails on success

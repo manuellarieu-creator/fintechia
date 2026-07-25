@@ -358,7 +358,7 @@ router.post('/comptes/:accountId/crediter', [
       detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres, transfer_allowed, max_transfer_amount }, req
     });
 
-    await notifications.envoyer(accounts[0].user_id, 'Crédit reçu', `Vous avez reçu un crédit de ${montant}€.`, 'succes');
+    await notifications.envoyer(accounts[0].user_id, 'Crédit reçu', `Vous avez reçu un virement de ${montant}€.`, 'succes');
     res.json({ success: true, nouveau_solde: soldeApres });
   } catch (err) {
     await connection.rollback();
@@ -407,7 +407,20 @@ router.post('/comptes/:accountId/debiter', [guard, body('montant').isFloat({ gt:
       detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres }, req
     });
 
-    await notifications.envoyer(accounts[0].user_id, 'Débit effectué', `Un débit de ${montant}€ a été effectué sur votre compte.`, 'alerte');
+    let debitMsg = `Un débit de ${montant}€ a été effectué sur votre compte.`;
+    if (libelle) {
+        let lowerLib = libelle.toLowerCase();
+        if (lowerLib.includes('frais mensuel')) {
+            debitMsg = 'Le prélèvement mensuel a été fait avec succès.';
+        } else if (lowerLib.startsWith('paiement') || lowerLib.startsWith('virement')) {
+            let firstWord = libelle.split(' ')[0];
+            debitMsg = `Un ${firstWord} de ${montant}€ a été effectué.`;
+        } else {
+            debitMsg = `Un ${libelle} de ${montant}€ a été effectué.`;
+        }
+    }
+
+    await notifications.envoyer(accounts[0].user_id, 'Débit effectué', debitMsg, 'alerte');
     res.json({ success: true, nouveau_solde: soldeApres });
   } catch (err) {
     await connection.rollback();
