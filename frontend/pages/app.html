@@ -2644,7 +2644,7 @@ function saveSettingsMock(msg) {
     let code = '';
     inputs.forEach(i => code += i.value);
     
-    if (code.length < 6) return;
+    if (code.length < 4) return;
 
     try {
       const res = await apiCall('/auth/login/2fa', 'POST', { tempToken: tempToken2FA, code });
