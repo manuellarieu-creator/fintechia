@@ -190,6 +190,9 @@ function updateNotificationUI(notifs) {
     }
   });
 
+  // Filter out read notifications
+  notifs = notifs.filter(n => !n.lu);
+
   // Update List in dropdown
   const listContainer = document.getElementById('notification-list');
   if (!listContainer) return;
@@ -209,7 +212,10 @@ function updateNotificationUI(notifs) {
     div.style.backgroundColor = !n.lu ? '#eff6ff' : '#ffffff';
     div.style.transition = 'background 0.2s';
     
-    div.onclick = (e) => { e.stopPropagation(); markAsRead(n.id); };
+    div.onclick = (e) => { 
+      e.stopPropagation(); 
+      showNotificationModal(n.id, n.titre, n.message); 
+    };
     
     const date = new Date(n.created_at).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     
@@ -224,6 +230,36 @@ function updateNotificationUI(notifs) {
     listContainer.appendChild(div);
   });
 }
+
+function showNotificationModal(id, titre, message) {
+  let modal = document.getElementById('notif-read-modal');
+  if (!modal) {
+    const modalHtml = `
+      <div id="notif-read-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div style="background:var(--bg-body, #fff); border-radius:16px; padding:32px; max-width:450px; width:90%; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+          <h3 id="notif-read-title" style="margin:0 0 16px; font-size:20px; font-weight:700; color:#0F172A;"></h3>
+          <p id="notif-read-message" style="margin:0 0 24px; font-size:15px; color:#475569; line-height:1.5; white-space:pre-wrap;"></p>
+          <button onclick="closeNotificationModal()" style="background:#3b82f6; color:#fff; border:none; padding:12px 24px; border-radius:10px; font-weight:600; width:100%; cursor:pointer;">Fermer</button>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    modal = document.getElementById('notif-read-modal');
+  }
+  document.getElementById('notif-read-title').innerText = titre;
+  document.getElementById('notif-read-message').innerText = message;
+  modal.style.display = 'flex';
+  
+  // Mark as read behind the scenes, and hide dropdown
+  const dropdown = document.getElementById('notification-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  markAsRead(id);
+}
+
+window.closeNotificationModal = function() {
+  const modal = document.getElementById('notif-read-modal');
+  if (modal) modal.style.display = 'none';
+};
 
 async function markAsRead(id) {
   const token = getAuthToken();
