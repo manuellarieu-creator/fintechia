@@ -5,8 +5,12 @@ window.getCurrentLocale = function() {
     return map[lang] || 'fr-FR';
 };
 
+const supportedLangs = ['fr', 'en', 'es', 'de', 'da', 'hu', 'hr'];
+let defaultLang = (navigator.language || navigator.userLanguage || 'fr').split('-')[0];
+if (!supportedLangs.includes(defaultLang)) defaultLang = 'fr';
+
 const I18N = {
-  currentLang: localStorage.getItem('fintech_lang') || 'fr',
+  currentLang: localStorage.getItem('fintech_lang') || defaultLang,
   dict: {},
   nodesToTranslate: [],
   attributesToTranslate: [],

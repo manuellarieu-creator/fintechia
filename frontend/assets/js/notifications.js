@@ -3,6 +3,7 @@
 let unreadCount = 0;
 let isPolling = false;
 let notificationPollInterval = null;
+let latestNotifIds = new Set();
 
 // The base endpoint
 const NOTIF_API_URL = '/api/notifications';
@@ -12,6 +13,67 @@ function getAuthToken() {
     return localStorage.getItem('adminToken');
   }
   return localStorage.getItem('token');
+}
+
+// Biscuits de notifications (Toast)
+function showToast(title, message, type = 'info') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.position = 'fixed';
+    container.style.bottom = '20px';
+    container.style.right = '20px';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '10px';
+    container.style.zIndex = '99999';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  const bgColor = type === 'succes' ? '#10B981' : type === 'erreur' ? '#EF4444' : type === 'alerte' ? '#F59E0B' : '#3B82F6';
+  
+  toast.style.background = bgColor;
+  toast.style.color = '#fff';
+  toast.style.padding = '16px 20px';
+  toast.style.borderRadius = '8px';
+  toast.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+  toast.style.fontFamily = 'Inter, sans-serif';
+  toast.style.fontSize = '14px';
+  toast.style.minWidth = '250px';
+  toast.style.maxWidth = '350px';
+  toast.style.opacity = '0';
+  toast.style.transform = 'translateY(20px)';
+  toast.style.transition = 'opacity 0.3s, transform 0.3s';
+  toast.style.cursor = 'pointer';
+
+  toast.innerHTML = `
+    <div style="font-weight:600; margin-bottom:4px;">${title}</div>
+    <div style="font-size:13px; opacity:0.9;">${message}</div>
+  `;
+
+  // Click to dismiss
+  toast.onclick = () => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  };
+
+  container.appendChild(toast);
+
+  // Trigger animation
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+  }, 10);
+
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (toast.parentElement) {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }
+  }, 5000);
 }
 
 // Jouer un son (synthesizer Web Audio API)
@@ -82,12 +144,27 @@ async function fetchNotifications() {
     
     let currentUnread = notifs.filter(n => !n.lu).length;
     
-    // Si on a plus de notifications non lues qu'avant, on joue le son
+    // Check for NEW notifications
+    let newNotifs = false;
+    notifs.forEach(n => {
+      if (!n.lu && !latestNotifIds.has(n.id)) {
+        newNotifs = true;
+        // Don't show toast on very first load (when latestNotifIds is empty, unless we want to bombard them)
+        if (latestNotifIds.size > 0) {
+          showToast(n.titre, n.message, n.type || 'info');
+        }
+      }
+      latestNotifIds.add(n.id);
+    });
+
+    if (newNotifs && latestNotifIds.size > notifs.length) { // Wait, latestNotifIds size doesn't necessarily mean it's first load.
+       // actually the check above `latestNotifIds.size > 0` before adding the new ones handles the first load bombard issue.
+    }
+
     if (currentUnread > unreadCount && unreadCount !== 0) {
       playNotificationSound();
-    } else if (currentUnread > 0 && unreadCount === 0) {
-      // First load, let's not play sound to avoid annoying the user on refresh.
-      // Sound will play only for NEW incoming notifications.
+    } else if (newNotifs && unreadCount !== 0) {
+      playNotificationSound();
     }
     
     unreadCount = currentUnread;

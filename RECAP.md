@@ -12,9 +12,14 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
 - **Stockage Fichiers (KYC) :** Intégration de Cloudinary pour la gestion des images/vidéos (pièces d'identité, selfies) avec support des variables d'environnement.
 - **Single Page Application (SPA) :** Mise en place d'une interface frontend réactive (`app.html`) gérée par Javascript (`app.js`, `budget.js`, `virement.js`, etc.) avec un système de vues dynamiques.
 
-### 2. Interface Utilisateur (App)
+### 2. Interface Utilisateur (App & Landing Page)
 - **Tableau de Bord :** Affichage du solde, des transactions récentes, et du profil utilisateur.
 - **Système de Traductions (i18n) :** Application intégralement multilingue (Français, Anglais, Espagnol, Allemand, Danois, Hongrois, Croate) fonctionnant via un `MutationObserver` qui traduit l'interface en temps réel.
+- **Détection Automatique de Langue :** Le site détecte la langue du navigateur (`navigator.language`) pour afficher automatiquement le bon dialecte au premier chargement, avec un fallback en français.
+- **Landing Page Dynamique :** 
+  - Section Héro avec 3 blocs animés s'interchangeant toutes les 9 secondes.
+  - Fix des liens d'ancrage du Header (Tarifs, Sécurité).
+  - Traductions validées et complétées dans l'ensemble des 6 langues additionnelles (incluant la révision complète du vocabulaire financier en allemand).
 - **Formatage dynamique :** Les dates, les nombres et les devises s'adaptent dynamiquement au standard du pays sélectionné (locale locale).
 - **Gestion des Budgets :** Chargement dynamique depuis la base de données. Affichage de la répartition, des enveloppes budgétaires, et de l'évolution des dépenses.
 - **Virements (Tunnel) :** Tunnel de virement étape par étape avec gestion des bénéficiaires et saisie des montants. L'UI a été harmonisée (modale).
