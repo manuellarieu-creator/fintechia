@@ -9,10 +9,7 @@ let latestNotifIds = new Set();
 const NOTIF_API_URL = '/api/notifications';
 
 function getAuthToken() {
-  if (window.location.pathname.includes('admin')) {
-    return localStorage.getItem('adminToken');
-  }
-  return localStorage.getItem('token');
+  return localStorage.getItem('fintech_token');
 }
 
 // Biscuits de notifications (Toast)
@@ -157,8 +154,15 @@ async function fetchNotifications() {
       latestNotifIds.add(n.id);
     });
 
-    if (newNotifs && latestNotifIds.size > notifs.length) { // Wait, latestNotifIds size doesn't necessarily mean it's first load.
+    if (newNotifs && latestNotifIds.size > notifs.length) { 
        // actually the check above `latestNotifIds.size > 0` before adding the new ones handles the first load bombard issue.
+    }
+
+    // Si on a de nouvelles notifications, on actualise la page dynamiquement
+    if (newNotifs && latestNotifIds.size > 1) { // >1 to avoid reloading immediately on first boot if there are existing unread
+        if (typeof window.checkAuth === 'function') {
+            window.checkAuth();
+        }
     }
 
     if (currentUnread > unreadCount && unreadCount !== 0) {
