@@ -50,12 +50,12 @@
   "Premium": "Premium",
   "/mois": "/Monat",
   "Visa Platinum + assurances + 0 € frais intl.": "Visa Platinum + Versicherung + 0 € intl.",
-  "Business": "Geschäft",
+  "Business": "Geschäftlich",
   "Multi-comptes + API + comptabilité": "Multi-Konten + API + Buchhaltung",
   "Ouvrez votre compte pendant qu'il en est encore temps.": "Eröffnen Sie Ihr Konto, solange Sie noch können.",
   "Commencer maintenant": "Beginnen Sie jetzt",
   "Fintechia © 2026 · Établissement de paiement agréé": "Fintechia © 2026 · Autorisiertes Zahlungsinstitut",
-  "CGU": "CGU",
+  "CGU": "AGB",
   "Confidentialité": "Datenschutz",
   "Contact": "Kontakt",
   "&times;": "×",
@@ -1145,5 +1145,7 @@
   "Incomplet": "Incomplete",
   "Dossier soumis": "File submitted",
   "Fort • Min. 8 caractères, 1 maj, 1 chiffre": "Stark • Min. 8 Zeichen, 1 Großbuchstabe, 1 Zahl",
-  "Crédit": "Kredit"
+  "Crédit": "Kredit",
+  "TAEG indicatif:": "Indikativer effektiver Jahreszins:",
+  "Veuillez remplir les informations de contact.": "Bitte füllen Sie die Kontaktinformationen aus."
 }

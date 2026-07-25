@@ -1,0 +1,1110 @@
+{
+  "en": [
+    {
+      "type": "untranslated",
+      "key": "Standard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Premium"
+    },
+    {
+      "type": "untranslated",
+      "key": "Business"
+    },
+    {
+      "type": "untranslated",
+      "key": "CGU"
+    },
+    {
+      "type": "untranslated",
+      "key": "Contact"
+    },
+    {
+      "type": "untranslated",
+      "key": "Profession"
+    },
+    {
+      "type": "untranslated",
+      "key": "Email"
+    },
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ],
+  "es": [
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ],
+  "de": [
+    {
+      "type": "untranslated",
+      "key": "Standard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Premium"
+    },
+    {
+      "type": "untranslated",
+      "key": "CGU"
+    },
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ],
+  "da": [
+    {
+      "type": "untranslated",
+      "key": "Fintechia — Votre argent mérite mieux"
+    },
+    {
+      "type": "untranslated",
+      "key": "Maquette de la landing page Fintechia avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page."
+    },
+    {
+      "type": "untranslated",
+      "key": "Comptes"
+    },
+    {
+      "type": "untranslated",
+      "key": "Tarifs"
+    },
+    {
+      "type": "untranslated",
+      "key": "Se connecter"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrir un compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Banque en ligne · Régulée ACPR"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre argent mérite"
+    },
+    {
+      "type": "untranslated",
+      "key": "mieux qu'une file d'attente."
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. Sans agence, sans papier, sans frais cachés."
+    },
+    {
+      "type": "untranslated",
+      "key": "Simuler un crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Temps moyen d'ouverture"
+    },
+    {
+      "type": "untranslated",
+      "key": "Carte Visa incluse"
+    },
+    {
+      "type": "untranslated",
+      "key": "dès la validation KYC"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulation crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité : 625 €"
+    },
+    {
+      "type": "untranslated",
+      "key": "Accord de principe immédiat"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les crédits"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un projet à financer ? On a le crédit qu'il faut."
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier, personnel, consommation ou financement de grands projets — Demande en ligne, réponse de principe sous 48h."
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Achat, construction ou renégociation."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 3,2 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Sans justificatif, libre d'usage."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 4,9 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit consommation"
+    },
+    {
+      "type": "untranslated",
+      "key": "Travaux, véhicule, équipement."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 5,4 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement structuré, montant élevé."
+    },
+    {
+      "type": "untranslated",
+      "key": "Sur dossier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulateur de mensualité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Montant emprunté"
+    },
+    {
+      "type": "untranslated",
+      "key": "Durée"
+    },
+    {
+      "type": "untranslated",
+      "key": "120 mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(taux indicatif 3,9 %)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Faire une demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les offres de compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte qui grandit avec vous."
+    },
+    {
+      "type": "untranslated",
+      "key": "Standard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Gratuit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Compte courant + carte Visa Classic"
+    },
+    {
+      "type": "untranslated",
+      "key": "Le plus choisi"
+    },
+    {
+      "type": "untranslated",
+      "key": "Premium"
+    },
+    {
+      "type": "untranslated",
+      "key": "/mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Visa Platinum + assurances + 0 € frais intl."
+    },
+    {
+      "type": "untranslated",
+      "key": "Business"
+    },
+    {
+      "type": "untranslated",
+      "key": "Multi-comptes + API + comptabilité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrez votre compte pendant qu'il en est encore temps."
+    },
+    {
+      "type": "untranslated",
+      "key": "Commencer maintenant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Fintechia © 2026 · Établissement de paiement agréé"
+    },
+    {
+      "type": "untranslated",
+      "key": "CGU"
+    },
+    {
+      "type": "untranslated",
+      "key": "&times;"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Utilisez le simulateur pour estimer votre mensualité puis validez votre demande."
+    },
+    {
+      "type": "untranslated",
+      "key": "Motif du crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: 2.5%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demander ce montant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Profession"
+    },
+    {
+      "type": "untranslated",
+      "key": "Salarié(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Indépendant(e) / Freelance"
+    },
+    {
+      "type": "untranslated",
+      "key": "Étudiant(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Retraité(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Au chômage"
+    },
+    {
+      "type": "untranslated",
+      "key": "Autre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Continuer"
+    },
+    {
+      "type": "untranslated",
+      "key": "Documents requis"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Envoyer plus tard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Soumettre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande envoyée !"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client."
+    },
+    {
+      "type": "untranslated",
+      "key": "Aller à mon espace"
+    },
+    {
+      "type": "untranslated",
+      "key": "500000) rate = 0.02; var r = rate / 12; var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1); mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €'; mDurationOut.textContent = Math.round(n) + ' mois'; mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €'; mRateLabel.innerHTML = \"Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: \" + (rate*100) + \"%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Uploader"
+    },
+    {
+      "type": "untranslated",
+      "key": "Email"
+    },
+    {
+      "type": "untranslated",
+      "key": "Revenu mensuel net (€)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Description du projet (optionnel)"
+    },
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ],
+  "hu": [
+    {
+      "type": "untranslated",
+      "key": "Fintechia — Votre argent mérite mieux"
+    },
+    {
+      "type": "untranslated",
+      "key": "Maquette de la landing page Fintechia avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page."
+    },
+    {
+      "type": "untranslated",
+      "key": "Comptes"
+    },
+    {
+      "type": "untranslated",
+      "key": "Tarifs"
+    },
+    {
+      "type": "untranslated",
+      "key": "Se connecter"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrir un compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Banque en ligne · Régulée ACPR"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre argent mérite"
+    },
+    {
+      "type": "untranslated",
+      "key": "mieux qu'une file d'attente."
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. Sans agence, sans papier, sans frais cachés."
+    },
+    {
+      "type": "untranslated",
+      "key": "Simuler un crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Temps moyen d'ouverture"
+    },
+    {
+      "type": "untranslated",
+      "key": "Carte Visa incluse"
+    },
+    {
+      "type": "untranslated",
+      "key": "dès la validation KYC"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulation crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité : 625 €"
+    },
+    {
+      "type": "untranslated",
+      "key": "Accord de principe immédiat"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les crédits"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un projet à financer ? On a le crédit qu'il faut."
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier, personnel, consommation ou financement de grands projets — Demande en ligne, réponse de principe sous 48h."
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Achat, construction ou renégociation."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 3,2 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Sans justificatif, libre d'usage."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 4,9 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit consommation"
+    },
+    {
+      "type": "untranslated",
+      "key": "Travaux, véhicule, équipement."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 5,4 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement structuré, montant élevé."
+    },
+    {
+      "type": "untranslated",
+      "key": "Sur dossier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulateur de mensualité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Montant emprunté"
+    },
+    {
+      "type": "untranslated",
+      "key": "Durée"
+    },
+    {
+      "type": "untranslated",
+      "key": "120 mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(taux indicatif 3,9 %)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Faire une demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les offres de compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte qui grandit avec vous."
+    },
+    {
+      "type": "untranslated",
+      "key": "Standard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Gratuit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Compte courant + carte Visa Classic"
+    },
+    {
+      "type": "untranslated",
+      "key": "Le plus choisi"
+    },
+    {
+      "type": "untranslated",
+      "key": "Premium"
+    },
+    {
+      "type": "untranslated",
+      "key": "/mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Visa Platinum + assurances + 0 € frais intl."
+    },
+    {
+      "type": "untranslated",
+      "key": "Business"
+    },
+    {
+      "type": "untranslated",
+      "key": "Multi-comptes + API + comptabilité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrez votre compte pendant qu'il en est encore temps."
+    },
+    {
+      "type": "untranslated",
+      "key": "Commencer maintenant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Fintechia © 2026 · Établissement de paiement agréé"
+    },
+    {
+      "type": "untranslated",
+      "key": "CGU"
+    },
+    {
+      "type": "untranslated",
+      "key": "&times;"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Utilisez le simulateur pour estimer votre mensualité puis validez votre demande."
+    },
+    {
+      "type": "untranslated",
+      "key": "Motif du crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: 2.5%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demander ce montant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Profession"
+    },
+    {
+      "type": "untranslated",
+      "key": "Salarié(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Indépendant(e) / Freelance"
+    },
+    {
+      "type": "untranslated",
+      "key": "Étudiant(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Retraité(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Au chômage"
+    },
+    {
+      "type": "untranslated",
+      "key": "Autre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Continuer"
+    },
+    {
+      "type": "untranslated",
+      "key": "Documents requis"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Envoyer plus tard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Soumettre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande envoyée !"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client."
+    },
+    {
+      "type": "untranslated",
+      "key": "Aller à mon espace"
+    },
+    {
+      "type": "untranslated",
+      "key": "500000) rate = 0.02; var r = rate / 12; var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1); mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €'; mDurationOut.textContent = Math.round(n) + ' mois'; mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €'; mRateLabel.innerHTML = \"Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: \" + (rate*100) + \"%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Uploader"
+    },
+    {
+      "type": "untranslated",
+      "key": "Email"
+    },
+    {
+      "type": "untranslated",
+      "key": "Revenu mensuel net (€)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Description du projet (optionnel)"
+    },
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ],
+  "hr": [
+    {
+      "type": "untranslated",
+      "key": "Fintechia — Votre argent mérite mieux"
+    },
+    {
+      "type": "untranslated",
+      "key": "Maquette de la landing page Fintechia avec héro d'ouverture de compte, section crédits (immobilier, personnel, consommation, grands projets) incluant un simulateur de mensualité, offres et pied de page."
+    },
+    {
+      "type": "untranslated",
+      "key": "Comptes"
+    },
+    {
+      "type": "untranslated",
+      "key": "Tarifs"
+    },
+    {
+      "type": "untranslated",
+      "key": "Se connecter"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrir un compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Banque en ligne · Régulée ACPR"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre argent mérite"
+    },
+    {
+      "type": "untranslated",
+      "key": "mieux qu'une file d'attente."
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte courant, une carte et une pièce d'identité vérifiée pendant que votre café infuse. Sans agence, sans papier, sans frais cachés."
+    },
+    {
+      "type": "untranslated",
+      "key": "Simuler un crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Temps moyen d'ouverture"
+    },
+    {
+      "type": "untranslated",
+      "key": "Carte Visa incluse"
+    },
+    {
+      "type": "untranslated",
+      "key": "dès la validation KYC"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulation crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité : 625 €"
+    },
+    {
+      "type": "untranslated",
+      "key": "Accord de principe immédiat"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les crédits"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un projet à financer ? On a le crédit qu'il faut."
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier, personnel, consommation ou financement de grands projets — Demande en ligne, réponse de principe sous 48h."
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Achat, construction ou renégociation."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 3,2 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Sans justificatif, libre d'usage."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 4,9 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Crédit consommation"
+    },
+    {
+      "type": "untranslated",
+      "key": "Travaux, véhicule, équipement."
+    },
+    {
+      "type": "untranslated",
+      "key": "Taux dès 5,4 %"
+    },
+    {
+      "type": "untranslated",
+      "key": "Grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement structuré, montant élevé."
+    },
+    {
+      "type": "untranslated",
+      "key": "Sur dossier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Simulateur de mensualité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Montant emprunté"
+    },
+    {
+      "type": "untranslated",
+      "key": "Durée"
+    },
+    {
+      "type": "untranslated",
+      "key": "120 mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(taux indicatif 3,9 %)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Faire une demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Les offres de compte"
+    },
+    {
+      "type": "untranslated",
+      "key": "Un compte qui grandit avec vous."
+    },
+    {
+      "type": "untranslated",
+      "key": "Standard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Gratuit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Compte courant + carte Visa Classic"
+    },
+    {
+      "type": "untranslated",
+      "key": "Le plus choisi"
+    },
+    {
+      "type": "untranslated",
+      "key": "Premium"
+    },
+    {
+      "type": "untranslated",
+      "key": "/mois"
+    },
+    {
+      "type": "untranslated",
+      "key": "Visa Platinum + assurances + 0 € frais intl."
+    },
+    {
+      "type": "untranslated",
+      "key": "Business"
+    },
+    {
+      "type": "untranslated",
+      "key": "Multi-comptes + API + comptabilité"
+    },
+    {
+      "type": "untranslated",
+      "key": "Ouvrez votre compte pendant qu'il en est encore temps."
+    },
+    {
+      "type": "untranslated",
+      "key": "Commencer maintenant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Fintechia © 2026 · Établissement de paiement agréé"
+    },
+    {
+      "type": "untranslated",
+      "key": "CGU"
+    },
+    {
+      "type": "untranslated",
+      "key": "&times;"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande de crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Utilisez le simulateur pour estimer votre mensualité puis validez votre demande."
+    },
+    {
+      "type": "untranslated",
+      "key": "Motif du crédit"
+    },
+    {
+      "type": "untranslated",
+      "key": "Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt personnel"
+    },
+    {
+      "type": "untranslated",
+      "key": "Financement grands projets"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: 2.5%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demander ce montant"
+    },
+    {
+      "type": "untranslated",
+      "key": "Profession"
+    },
+    {
+      "type": "untranslated",
+      "key": "Salarié(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Indépendant(e) / Freelance"
+    },
+    {
+      "type": "untranslated",
+      "key": "Étudiant(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Retraité(e)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Au chômage"
+    },
+    {
+      "type": "untranslated",
+      "key": "Autre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Continuer"
+    },
+    {
+      "type": "untranslated",
+      "key": "Documents requis"
+    },
+    {
+      "type": "untranslated",
+      "key": "Prêt Immobilier"
+    },
+    {
+      "type": "untranslated",
+      "key": "Envoyer plus tard"
+    },
+    {
+      "type": "untranslated",
+      "key": "Soumettre"
+    },
+    {
+      "type": "untranslated",
+      "key": "Demande envoyée !"
+    },
+    {
+      "type": "untranslated",
+      "key": "Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client."
+    },
+    {
+      "type": "untranslated",
+      "key": "Aller à mon espace"
+    },
+    {
+      "type": "untranslated",
+      "key": "500000) rate = 0.02; var r = rate / 12; var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1); mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €'; mDurationOut.textContent = Math.round(n) + ' mois'; mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €'; mRateLabel.innerHTML = \"Mensualité estimée"
+    },
+    {
+      "type": "untranslated",
+      "key": "(TAEG indicatif: \" + (rate*100) + \"%)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Uploader"
+    },
+    {
+      "type": "untranslated",
+      "key": "Email"
+    },
+    {
+      "type": "untranslated",
+      "key": "Revenu mensuel net (€)"
+    },
+    {
+      "type": "untranslated",
+      "key": "Description du projet (optionnel)"
+    },
+    {
+      "type": "missing",
+      "key": "TAEG indicatif:"
+    },
+    {
+      "type": "missing",
+      "key": "Veuillez remplir les informations de contact."
+    }
+  ]
+}

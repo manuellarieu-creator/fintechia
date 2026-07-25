@@ -47,7 +47,7 @@
   "Gratuit": "Gratis",
   "Compte courant + carte Visa Classic": "Cuenta corriente + tarjeta Visa Classic",
   "Le plus choisi": "los mas elegidos",
-  "Premium": "prima",
+  "Premium": "Premium",
   "/mois": "/mes",
   "Visa Platinum + assurances + 0 € frais intl.": "Visa Platinum + seguro + 0€ intl.",
   "Business": "Negocios",
@@ -55,7 +55,7 @@
   "Ouvrez votre compte pendant qu'il en est encore temps.": "Abre tu cuenta mientras puedas.",
   "Commencer maintenant": "Empezar ahora",
   "Fintechia © 2026 · Établissement de paiement agréé": "Fintechia © 2026 · Institución de pago autorizada",
-  "CGU": "UGE",
+  "CGU": "Condiciones",
   "Confidentialité": "Privacidad",
   "Contact": "Contacto",
   "&times;": "×",
@@ -1145,5 +1145,7 @@
   "Incomplet": "Incomplete",
   "Dossier soumis": "File submitted",
   "Fort • Min. 8 caractères, 1 maj, 1 chiffre": "Fuerte • Mín. 8 caract., 1 mayúsc., 1 número",
-  "Crédit": "Crédito"
+  "Crédit": "Crédito",
+  "TAEG indicatif:": "TAE indicativo:",
+  "Veuillez remplir les informations de contact.": "Por favor complete la información de contacto."
 }

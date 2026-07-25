@@ -55,7 +55,7 @@
   "Ouvrez votre compte pendant qu'il en est encore temps.": "Open your account while you still can.",
   "Commencer maintenant": "Start now",
   "Fintechia © 2026 · Établissement de paiement agréé": "Fintechia © 2026 · Authorized payment institution",
-  "CGU": "CGU",
+  "CGU": "TOS",
   "Confidentialité": "Privacy",
   "Contact": "Contact",
   "&times;": "×",
@@ -1145,5 +1145,7 @@
   "Incomplet": "Incomplete",
   "Dossier soumis": "File submitted",
   "Fort • Min. 8 caractères, 1 maj, 1 chiffre": "Strong • Min. 8 chars, 1 uppercase, 1 number",
-  "Crédit": "Credit"
+  "Crédit": "Credit",
+  "TAEG indicatif:": "Indicative APR:",
+  "Veuillez remplir les informations de contact.": "Please fill in the contact information."
 }
