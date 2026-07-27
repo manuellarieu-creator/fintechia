@@ -93,7 +93,7 @@ async function envoyerBienvenue(email, prenom) {
           <p>Votre compte Fintechia a été créé avec succès.</p>
           <p>Nous sommes ravis de vous compter parmi nos membres. Vous pouvez dès à présent vous connecter à votre espace client pour consulter votre solde, effectuer des virements et gérer vos cartes.</p>
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://fintechia.vercel.app/login" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Accéder à mon espace</a>
+            <a href="${process.env.FRONTEND_URL || 'https://fintechia.vercel.app'}/login" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Accéder à mon espace</a>
           </div>
         </div>
       </div>

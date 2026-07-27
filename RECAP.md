@@ -24,7 +24,12 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
 - **Gestion des Budgets :** Chargement dynamique depuis la base de données. Affichage de la répartition, des enveloppes budgétaires, et de l'évolution des dépenses.
 - **Virements (Tunnel) :** Tunnel de virement étape par étape avec gestion des bénéficiaires et saisie des montants. L'UI a été harmonisée (modale).
 - **Export & Relevés :** Génération dynamique des historiques sur plusieurs mois et exportation.
-- **Notifications & Alertes :** Mise en place d'une cloche de notifications en temps réel côté User et Admin. L'interface affiche le compteur exact, génère un son, et permet de marquer tout comme lu.
+- **Notifications & Alertes :** 
+  - Mise en place d'une cloche de notifications en temps réel côté User et Admin. L'interface affiche le compteur exact, génère un son, et permet de marquer tout comme lu.
+  - Au clic, les notifications s'ouvrent dans une modale de lecture détaillée et disparaissent automatiquement de la liste, ne conservant que le contenu non-lu.
+  - Parsing dynamique des libellés lors des débits/crédits réalisés par l'Admin pour alerter le client (ex: détection de "Paiement", "Virement", ou "Frais mensuel").
+- **Sécurité et 2FA :** 
+  - Le tunnel de Double Authentification (Code PIN) gère de manière flexible les codes à 4 ou 6 chiffres et propose des messages d'erreur ciblés en cas d'échec.
 
 ### 3. Panel d'Administration et Modération
 - **Validation des Comptes & KYC :** L'administrateur peut valider les documents. Le système débloque automatiquement l'accès au tableau de bord pour le client une fois le statut "valide" obtenu. L'Admin assigne les informations bancaires (IBAN, BIC) pour chaque utilisateur.
