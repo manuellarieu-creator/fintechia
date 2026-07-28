@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Kontovalidering på 5 min.",
   "Crédit immobilier reçu": "Boliglån modtaget",
   "Durée de remboursement : 25 ans": "Tilbagebetalingsperiode: 25 år",
-  "Crédit accordé sous 72 h": "Lån ydet inden for 72 timer"
+  "Crédit accordé sous 72 h": "Lån ydet inden for 72 timer",
+  "ERREUR 404": "FEJL 404",
+  "Cette page s'est perdue": "Denne side er faret vild",
+  "en chemin.": "på vejen.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "Den side du leder efter findes ikke eller er blevet flyttet. Vend tilbage til startsiden for at komme tilbage på sporet.",
+  "Retourner à l'accueil": "Tilbage til forsiden"
 }

@@ -1052,5 +1052,10 @@
   "Aucune conversation": "Aucune conversation",
   "' : '": "' : '",
   "Visiteur": "Visiteur",
-  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer"
+  "Envoyez un message pour démarrer": "Envoyez un message pour démarrer",
+  "ERREUR 404": "ERREUR 404",
+  "Cette page s'est perdue": "Cette page s'est perdue",
+  "en chemin.": "en chemin.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.",
+  "Retourner à l'accueil": "Retourner à l'accueil"
 }

@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Account validation in 5 min.",
   "Crédit immobilier reçu": "Mortgage received",
   "Durée de remboursement : 25 ans": "Repayment period: 25 years",
-  "Crédit accordé sous 72 h": "Loan granted within 72 h"
+  "Crédit accordé sous 72 h": "Loan granted within 72 h",
+  "ERREUR 404": "ERROR 404",
+  "Cette page s'est perdue": "This page got lost",
+  "en chemin.": "along the way.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "The page you are looking for does not exist or has been moved. Return to the home page to get back on track.",
+  "Retourner à l'accueil": "Return to home"
 }

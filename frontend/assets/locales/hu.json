@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Fiók érvényesítése 5 perc alatt.",
   "Crédit immobilier reçu": "Lakáshitel megérkezett",
   "Durée de remboursement : 25 ans": "Törlesztési idő: 25 év",
-  "Crédit accordé sous 72 h": "Hitel jóváhagyva 72 órán belül"
+  "Crédit accordé sous 72 h": "Hitel jóváhagyva 72 órán belül",
+  "ERREUR 404": "404-ES HIBA",
+  "Cette page s'est perdue": "Ez az oldal elveszett",
+  "en chemin.": "útközben.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "A keresett oldal nem található vagy áthelyezték. Térjen vissza a kezdőlapra a folytatáshoz.",
+  "Retourner à l'accueil": "Vissza a kezdőlapra"
 }

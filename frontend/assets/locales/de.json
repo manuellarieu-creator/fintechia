@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Kontovalidierung in 5 Min.",
   "Crédit immobilier reçu": "Immobilienkredit erhalten",
   "Durée de remboursement : 25 ans": "Rückzahlungsdauer: 25 Jahre",
-  "Crédit accordé sous 72 h": "Kreditvergabe innerhalb von 72 Std."
+  "Crédit accordé sous 72 h": "Kreditvergabe innerhalb von 72 Std.",
+  "ERREUR 404": "FEHLER 404",
+  "Cette page s'est perdue": "Diese Seite ist verloren gegangen",
+  "en chemin.": "auf dem Weg.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "Die gesuchte Seite existiert nicht oder wurde verschoben. Kehren Sie zur Startseite zurück, um wieder auf den richtigen Weg zu kommen.",
+  "Retourner à l'accueil": "Zurück zur Startseite"
 }

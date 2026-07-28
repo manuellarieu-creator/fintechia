@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Validación de cuenta en 5 min.",
   "Crédit immobilier reçu": "Préstamo hipotecario recibido",
   "Durée de remboursement : 25 ans": "Plazo de amortización: 25 años",
-  "Crédit accordé sous 72 h": "Crédito concedido en 72 h"
+  "Crédit accordé sous 72 h": "Crédito concedido en 72 h",
+  "ERREUR 404": "ERROR 404",
+  "Cette page s'est perdue": "Esta página se ha perdido",
+  "en chemin.": "en el camino.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "La página que buscas no existe o ha sido movida. Regresa al inicio para retomar el rumbo.",
+  "Retourner à l'accueil": "Volver al inicio"
 }

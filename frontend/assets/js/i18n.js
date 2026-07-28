@@ -92,7 +92,9 @@ const I18N = {
 
     try {
       // Determine base path depending on current page location
-      const basePath = window.location.pathname.includes('/pages/') ? '../assets/locales/' : './frontend/assets/locales/';
+      const basePath = (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
+        ? (window.location.pathname.includes('/pages/') ? '../assets/locales/' : './frontend/assets/locales/') 
+        : '/assets/locales/';
       const res = await fetch(basePath + lang + '.json');
       if (res.ok) {
         this.dict = await res.json();

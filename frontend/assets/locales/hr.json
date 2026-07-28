@@ -1152,5 +1152,10 @@
   "Validation du compte en 5 min.": "Validacija računa u 5 min.",
   "Crédit immobilier reçu": "Stambeni kredit primljen",
   "Durée de remboursement : 25 ans": "Rok otplate: 25 godina",
-  "Crédit accordé sous 72 h": "Kredit odobren u roku od 72 sata"
+  "Crédit accordé sous 72 h": "Kredit odobren u roku od 72 sata",
+  "ERREUR 404": "GREŠKA 404",
+  "Cette page s'est perdue": "Ova stranica se izgubila",
+  "en chemin.": "na putu.",
+  "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour reprendre le fil.": "Stranica koju tražite ne postoji ili je premještena. Vratite se na početnu stranicu kako biste nastavili.",
+  "Retourner à l'accueil": "Povratak na početnu"
 }
