@@ -327,10 +327,27 @@ async function initDashboard(user, account, kycStatut = null) {
     if(el) el.innerText = user.nom;
   });
 
-  ['user-avatar-mobile', 'user-avatar-desktop'].forEach(id => {
+  ['user-avatar-mobile', 'user-avatar-desktop', 'settings-avatar-initials'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
   });
+  
+  // Update Profile Settings page inputs
+  const settingsPrenom = document.getElementById('settings-prenom');
+  if(settingsPrenom) settingsPrenom.value = user.prenom;
+  
+  const settingsNom = document.getElementById('settings-nom');
+  if(settingsNom) settingsNom.value = user.nom;
+  
+  const settingsEmail = document.getElementById('settings-email');
+  if(settingsEmail) settingsEmail.value = user.email;
+  
+  const settingsAdresse = document.getElementById('settings-adresse');
+  if(settingsAdresse) settingsAdresse.value = user.adresse || '';
+  
+  const settingsPhone = document.getElementById('settings-phone');
+  if(settingsPhone) settingsPhone.value = user.telephone || '';
+
   
   if (account) {
     ['solde-display-mobile', 'solde-display-desktop', 'virement-solde-display'].forEach(id => {
