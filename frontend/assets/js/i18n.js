@@ -56,6 +56,14 @@ const I18N = {
         this.attributesToTranslate.push({ el, attr: 'value' });
       }
     });
+
+    // Collect optgroup labels
+    rootEl.querySelectorAll?.('optgroup[label]').forEach(el => {
+      if (!el._originalLabel) el._originalLabel = el.label.replace(/\s+/g, ' ').trim();
+      if (!this.attributesToTranslate.find(a => a.el === el && a.attr === 'label')) {
+        this.attributesToTranslate.push({ el, attr: 'label' });
+      }
+    });
   },
 
   setupObserver: function() {
