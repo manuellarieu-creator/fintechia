@@ -503,11 +503,12 @@ router.patch('/profile', [
   body('prenom').optional().trim().notEmpty(),
   body('nom').optional().trim().notEmpty(),
   body('telephone').optional().trim(),
+  body('telephone_code').optional().trim(),
   body('adresse').optional().trim(),
   body('date_naissance').optional().trim(),
   body('nationalite').optional().trim()
 ], validateReq, async (req, res, next) => {
-  const { prenom, nom, telephone, adresse, date_naissance, nationalite } = req.body;
+  const { prenom, nom, telephone, telephone_code, adresse, date_naissance, nationalite } = req.body;
   try {
     let query = 'UPDATE users SET ';
     const params = [];
@@ -515,6 +516,7 @@ router.patch('/profile', [
     if (prenom !== undefined) { query += 'prenom = ?, '; params.push(prenom); }
     if (nom !== undefined) { query += 'nom = ?, '; params.push(nom); }
     if (telephone !== undefined) { query += 'telephone = ?, '; params.push(telephone); }
+    if (telephone_code !== undefined) { query += 'telephone_code = ?, '; params.push(telephone_code); }
     if (adresse !== undefined) { query += 'adresse = ?, '; params.push(adresse); }
     if (date_naissance !== undefined) { query += 'date_naissance = ?, '; params.push(date_naissance); }
     if (nationalite !== undefined) { query += 'nationalite = ?, '; params.push(nationalite); }

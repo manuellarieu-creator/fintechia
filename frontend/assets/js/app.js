@@ -345,6 +345,9 @@ async function initDashboard(user, account, kycStatut = null) {
   const settingsAdresse = document.getElementById('settings-adresse');
   if(settingsAdresse) settingsAdresse.value = user.adresse || '';
   
+  const settingsPhoneCode = document.getElementById('settings-phone-code');
+  if(settingsPhoneCode) settingsPhoneCode.value = user.telephone_code || '';
+  
   const settingsPhone = document.getElementById('settings-phone');
   if(settingsPhone) settingsPhone.value = user.telephone || '';
   
@@ -1103,16 +1106,17 @@ async function saveProfileSettings() {
       date_naissance: document.getElementById('settings-dob').value,
       nationalite: document.getElementById('settings-nationalite').value,
       adresse: document.getElementById('settings-adresse').value,
+      telephone_code: document.getElementById('settings-phone-code').value,
       telephone: document.getElementById('settings-phone').value
     };
 
     const res = await apiCall('/auth/profile', 'PATCH', payload);
     if (res && res.success) {
-      alert('Profil mis à jour avec succès !');
-      checkAuth(); // Recharger les données
+      alert('Profil mis ï¿½ jour avec succï¿½s !');
+      checkAuth(); // Recharger les donnï¿½es
     }
   } catch (err) {
-    alert(err.message || 'Erreur lors de la mise à jour du profil');
+    alert(err.message || 'Erreur lors de la mise ï¿½ jour du profil');
   } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
