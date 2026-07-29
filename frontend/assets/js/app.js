@@ -352,7 +352,9 @@ async function initDashboard(user, account, kycStatut = null) {
   if(settingsPhone) settingsPhone.value = user.telephone || '';
   
   const settingsDob = document.getElementById('settings-dob');
-  if(settingsDob) settingsDob.value = user.date_naissance || '';
+  if(settingsDob && user.date_naissance) {
+    settingsDob.value = user.date_naissance.substring(0, 10);
+  }
   
   const settingsNationalite = document.getElementById('settings-nationalite');
   if(settingsNationalite) settingsNationalite.value = user.nationalite || '';
