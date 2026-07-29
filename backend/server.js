@@ -151,6 +151,8 @@ if (!process.env.VERCEL) {
       await db.query("ALTER TABLE users ADD COLUMN adresse VARCHAR(255) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN profession VARCHAR(100) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN revenus VARCHAR(100) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN date_naissance VARCHAR(20) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN nationalite VARCHAR(100) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_code VARCHAR(10) DEFAULT NULL").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN telephone_verifie BOOLEAN DEFAULT FALSE").catch(() => {});
       await db.query("ALTER TABLE users ADD COLUMN transfer_types VARCHAR(255) DEFAULT 'standard,immediat,swift,programme'").catch(() => {});

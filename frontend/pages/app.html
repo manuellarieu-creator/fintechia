@@ -1747,7 +1747,7 @@
           </div>
           <div style="display:flex;gap:8px;">
             <button class="btn-p" style="background:#F1F5F9;color:#475569;border:0.5px solid #E2E8F0;" onclick="switchSettingsTab(document.querySelector('.tab-side'), 'settings-tab-profil')">Annuler</button>
-            <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveSettingsMock('Profil mis à jour avec succès')"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
+            <button class="btn-p" style="background:#2563EB;color:#fff;" onclick="saveProfileSettings()"><i class="ti ti-device-floppy" style="font-size:14px;"></i>Enregistrer</button>
           </div>
         </div>
 
@@ -1776,11 +1776,35 @@
               </div>
               <div class="field" style="margin:0;">
                 <label>Date de naissance</label>
-                <input value="" type="text" id="settings-dob" disabled style="background:#F8FAFC; color:#64748B;">
+                <input value="" type="date" id="settings-dob">
               </div>
               <div class="field" style="margin:0;">
                 <label>Nationalité</label>
-                <select><option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option></select>
+                <select id="settings-nationalite">
+                  <option value="">Sélectionnez...</option>
+                  <optgroup label="Europe">
+                    <option value="Française">🇫🇷 Française</option>
+                    <option value="Belge">🇧🇪 Belge</option>
+                    <option value="Suisse">🇨🇭 Suisse</option>
+                    <option value="Espagnole">🇪🇸 Espagnole</option>
+                    <option value="Italienne">🇮🇹 Italienne</option>
+                    <option value="Allemande">🇩🇪 Allemande</option>
+                    <option value="Portugaise">🇵🇹 Portugaise</option>
+                    <option value="Britannique">🇬🇧 Britannique</option>
+                  </optgroup>
+                  <optgroup label="Amérique du Sud">
+                    <option value="Brésilienne">🇧🇷 Brésilienne</option>
+                    <option value="Argentine">🇦🇷 Argentine</option>
+                    <option value="Colombienne">🇨🇴 Colombienne</option>
+                    <option value="Chilienne">🇨🇱 Chilienne</option>
+                    <option value="Péruvienne">🇵🇪 Péruvienne</option>
+                    <option value="Vénézuélienne">🇻🇪 Vénézuélienne</option>
+                    <option value="Équatorienne">🇪🇨 Équatorienne</option>
+                    <option value="Bolivienne">🇧🇴 Bolivienne</option>
+                    <option value="Paraguayenne">🇵🇾 Paraguayenne</option>
+                    <option value="Uruguayenne">🇺🇾 Uruguayenne</option>
+                  </optgroup>
+                </select>
               </div>
               <div class="field" style="margin:0;grid-column:1/-1;">
                 <label>Adresse</label>

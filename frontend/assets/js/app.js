@@ -347,6 +347,12 @@ async function initDashboard(user, account, kycStatut = null) {
   
   const settingsPhone = document.getElementById('settings-phone');
   if(settingsPhone) settingsPhone.value = user.telephone || '';
+  
+  const settingsDob = document.getElementById('settings-dob');
+  if(settingsDob) settingsDob.value = user.date_naissance || '';
+  
+  const settingsNationalite = document.getElementById('settings-nationalite');
+  if(settingsNationalite) settingsNationalite.value = user.nationalite || '';
 
   
   if (account) {
@@ -1082,4 +1088,34 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(savedTheme);
     }
 });
+
+
+async function saveProfileSettings() {
+  const btn = document.querySelector('#settings-tab-profil button.btn-p:nth-child(2)');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class=\"ti ti-loader\" style=\"animation: spin 1s linear infinite; font-size:14px;\"></i> Enregistrement...';
+  btn.disabled = true;
+
+  try {
+    const payload = {
+      prenom: document.getElementById('settings-prenom').value,
+      nom: document.getElementById('settings-nom').value,
+      date_naissance: document.getElementById('settings-dob').value,
+      nationalite: document.getElementById('settings-nationalite').value,
+      adresse: document.getElementById('settings-adresse').value,
+      telephone: document.getElementById('settings-phone').value
+    };
+
+    const res = await apiCall('/auth/profile', 'PATCH', payload);
+    if (res && res.success) {
+      alert('Profil mis à jour avec succès !');
+      checkAuth(); // Recharger les données
+    }
+  } catch (err) {
+    alert(err.message || 'Erreur lors de la mise à jour du profil');
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+}
 

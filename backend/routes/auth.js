@@ -405,7 +405,7 @@ router.post('/reset-pin', [
 // GET /api/auth/me
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at, transfer_types, adresse, profession, revenus, telephone_code, telephone_verifie FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at, transfer_types, adresse, profession, revenus, telephone_code, telephone_verifie, date_naissance, nationalite FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) return res.status(404).json({ error: 'User not found', code: 'NOT_FOUND', status: 404 });
     const user = users[0];
     
@@ -502,16 +502,22 @@ router.patch('/profile', [
   authMiddleware,
   body('prenom').optional().trim().notEmpty(),
   body('nom').optional().trim().notEmpty(),
-  body('telephone').optional().trim()
+  body('telephone').optional().trim(),
+  body('adresse').optional().trim(),
+  body('date_naissance').optional().trim(),
+  body('nationalite').optional().trim()
 ], validateReq, async (req, res, next) => {
-  const { prenom, nom, telephone } = req.body;
+  const { prenom, nom, telephone, adresse, date_naissance, nationalite } = req.body;
   try {
     let query = 'UPDATE users SET ';
     const params = [];
     
-    if (prenom) { query += 'prenom = ?, '; params.push(prenom); }
-    if (nom) { query += 'nom = ?, '; params.push(nom); }
+    if (prenom !== undefined) { query += 'prenom = ?, '; params.push(prenom); }
+    if (nom !== undefined) { query += 'nom = ?, '; params.push(nom); }
     if (telephone !== undefined) { query += 'telephone = ?, '; params.push(telephone); }
+    if (adresse !== undefined) { query += 'adresse = ?, '; params.push(adresse); }
+    if (date_naissance !== undefined) { query += 'date_naissance = ?, '; params.push(date_naissance); }
+    if (nationalite !== undefined) { query += 'nationalite = ?, '; params.push(nationalite); }
     
     // Enlever la dernière virgule
     if (params.length === 0) return res.json({ success: true });
