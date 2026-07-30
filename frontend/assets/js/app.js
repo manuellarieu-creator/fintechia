@@ -484,7 +484,7 @@ async function loadCredits() {
         tbodyDesktop.innerHTML = credits.map(c => `
           <tr>
             <td style="font-family:'IBM Plex Mono', monospace;">${c.reference}</td>
-            <td>${new Date(c.created_at).toLocaleDateString()}</td>
+            <td>${new Date(c.created_at).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
             <td style="text-transform:capitalize;">${c.type_credit || c.motif}</td>
             <td>${parseFloat(c.montant).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))} €</td>
             <td>${c.duree_mois} mois</td>

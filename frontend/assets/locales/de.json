@@ -1132,8 +1132,8 @@
   "Obj.": "Ziel",
   "Budget envelopes": "Budgetumschläge",
   "Aucun virement trouvé.": "No transfers found.",
-  "Aucun bénéficiaire enregistré.": "No saved beneficiaries.",
-  "Aucune dépense.": "No expenses.",
+  "Aucun bénéficiaire enregistré.": "Kein registrierter Begünstigter.",
+  "Aucune dépense.": "Keine Ausgaben.",
   "Aucune transaction récente.": "No recent transactions.",
   "Tout marquer lu": "Mark all as read",
   "Aucune notification": "No notifications",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ecuadorianisch",
   "Bolivienne": "Bolivianisch",
   "Paraguayenne": "Paraguayisch",
-  "Uruguayenne": "Uruguayisch"
+  "Uruguayenne": "Uruguayisch",
+  "Dépôt": "Einzahlung",
+  "Aucune alerte ce mois-ci.": "Keine Warnungen diesen Monat.",
+  "Aucune enveloppe définie.": "Keine Umschläge definiert.",
+  "Total": "Gesamt",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "Kein Budget definiert. Klicken Sie auf Verwalten, um zu beginnen.",
+  "Virement entrant": "Eingehende Überweisung",
+  "Virement sortant": "Ausgehende Überweisung"
 }

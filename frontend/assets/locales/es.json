@@ -1132,8 +1132,8 @@
   "Obj.": "Obj.",
   "Budget envelopes": "Sobres de presupuesto",
   "Aucun virement trouvé.": "No transfers found.",
-  "Aucun bénéficiaire enregistré.": "No saved beneficiaries.",
-  "Aucune dépense.": "No expenses.",
+  "Aucun bénéficiaire enregistré.": "Ningún beneficiario registrado.",
+  "Aucune dépense.": "Sin gastos.",
   "Aucune transaction récente.": "No recent transactions.",
   "Tout marquer lu": "Mark all as read",
   "Aucune notification": "No notifications",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ecuatoriana",
   "Bolivienne": "Boliviana",
   "Paraguayenne": "Paraguaya",
-  "Uruguayenne": "Uruguaya"
+  "Uruguayenne": "Uruguaya",
+  "Dépôt": "Depósito",
+  "Aucune alerte ce mois-ci.": "No hay alertas este mes.",
+  "Aucune enveloppe définie.": "No hay sobres definidos.",
+  "Total": "Total",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "Ningún presupuesto definido. Haga clic en Gestionar para empezar.",
+  "Virement entrant": "Transferencia entrante",
+  "Virement sortant": "Transferencia saliente"
 }

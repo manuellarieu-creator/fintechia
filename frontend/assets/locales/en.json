@@ -1132,7 +1132,7 @@
   "Obj.": "Goal",
   "Budget envelopes": "Budget envelopes",
   "Aucun virement trouvé.": "No transfers found.",
-  "Aucun bénéficiaire enregistré.": "No saved beneficiaries.",
+  "Aucun bénéficiaire enregistré.": "No registered beneficiary.",
   "Aucune dépense.": "No expenses.",
   "Aucune transaction récente.": "No recent transactions.",
   "Tout marquer lu": "Mark all as read",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ecuadorian",
   "Bolivienne": "Bolivian",
   "Paraguayenne": "Paraguayan",
-  "Uruguayenne": "Uruguayan"
+  "Uruguayenne": "Uruguayan",
+  "Dépôt": "Deposit",
+  "Aucune alerte ce mois-ci.": "No alerts this month.",
+  "Aucune enveloppe définie.": "No envelopes defined.",
+  "Total": "Total",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "No budget defined. Click on Manage to start.",
+  "Virement entrant": "Incoming transfer",
+  "Virement sortant": "Outgoing transfer"
 }

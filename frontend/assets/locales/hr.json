@@ -1132,7 +1132,7 @@
   "Obj.": "Cilj",
   "Budget envelopes": "Proračunske omotnice",
   "Aucun virement trouvé.": "Nisu pronađeni prijenosi.",
-  "Aucun bénéficiaire enregistré.": "Nema spremljenih korisnika.",
+  "Aucun bénéficiaire enregistré.": "Nema registriranih korisnika.",
   "Aucune dépense.": "Nema troškova.",
   "Aucune transaction récente.": "Nema nedavnih transakcija.",
   "Tout marquer lu": "Označi sve kao pročitano",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ekvadorsko",
   "Bolivienne": "Bolivijsko",
   "Paraguayenne": "Paragvajsko",
-  "Uruguayenne": "Urugvajsko"
+  "Uruguayenne": "Urugvajsko",
+  "Dépôt": "Polog",
+  "Aucune alerte ce mois-ci.": "Nema upozorenja ovog mjeseca.",
+  "Aucune enveloppe définie.": "Nema definiranih omotnica.",
+  "Total": "Ukupno",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "Nema definiranog proračuna. Kliknite Upravljanje za početak.",
+  "Virement entrant": "Dolazni prijenos",
+  "Virement sortant": "Odlazni prijenos"
 }

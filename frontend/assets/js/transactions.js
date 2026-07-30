@@ -14,7 +14,7 @@ async function loadTransactions() {
       // Lignes Mobile (Nouveau design)
       const mobileRows = txs.map(tx => {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
-        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const typeLabel = isCredit ? 'Virement entrant' : 'Virement sortant';
         const badgeClass = isCredit ? 'badge-success' : 'badge-neutral';
         const amountClass = isCredit ? 'pos' : 'neg';
         const sign = isCredit ? '+' : '-';
@@ -42,7 +42,7 @@ async function loadTransactions() {
       // Lignes Desktop (Format Fintechia)
       const desktopRows = txs.map(tx => {
         const isCredit = parseFloat(tx.montant) > 0 && tx.type !== 'virement_emis' && tx.type !== 'debit';
-        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const typeLabel = isCredit ? 'Virement entrant' : 'Virement sortant';
         const catClass = isCredit ? 'badge-green' : 'badge-grey';
         const icon = isCredit ? '<i class="ti ti-arrow-down-left"></i>' : '<i class="ti ti-arrow-up-right"></i>';
         const iconClass = isCredit ? 'icon-green' : 'icon-grey';
@@ -91,7 +91,7 @@ async function loadTransactions() {
         totalDepenses += m;
         let cat = 'Paiement / Retrait';
         if (tx.type === 'virement_emis') cat = 'Virement émis';
-        if (tx.type === 'debit') cat = 'Débit';
+        if (tx.type === 'debit') cat = 'Virement sortant';
         depensesGroup[cat] = (depensesGroup[cat] || 0) + m;
       }
     });
@@ -235,7 +235,7 @@ async function loadVirementHistory(page = 1) {
               <span style="font-weight:600; color:var(--text-main);">${libelle}</span>
             </div></td>
             <td style="color:var(--text-muted);">${date}</td>
-            <td><span class="badge ${isCredit ? 'badge-success' : 'badge-neutral'}">${tx.categorie || 'Divers'}</span></td>
+            <td><span class="badge ${isCredit ? 'badge-success' : 'badge-neutral'}">${tx.categorie || (isCredit ? 'Virement entrant' : 'Virement sortant')}</span></td>
             <td style="text-align:right; font-weight:700; color:${color};">${sign}${parseFloat(tx.montant).toFixed(2)} €</td>
           </tr>
         `;

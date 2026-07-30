@@ -1132,7 +1132,7 @@
   "Obj.": "Mål",
   "Budget envelopes": "Budgetkuverter",
   "Aucun virement trouvé.": "Ingen overførsler fundet.",
-  "Aucun bénéficiaire enregistré.": "Ingen gemte modtagere.",
+  "Aucun bénéficiaire enregistré.": "Ingen registreret modtager.",
   "Aucune dépense.": "Ingen udgifter.",
   "Aucune transaction récente.": "Ingen nylige transaktioner.",
   "Tout marquer lu": "Marker alt som læst",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ecuadoriansk",
   "Bolivienne": "Boliviansk",
   "Paraguayenne": "Paraguayansk",
-  "Uruguayenne": "Uruguayansk"
+  "Uruguayenne": "Uruguayansk",
+  "Dépôt": "Indbetaling",
+  "Aucune alerte ce mois-ci.": "Ingen advarsler i denne måned.",
+  "Aucune enveloppe définie.": "Ingen konvolutter defineret.",
+  "Total": "Total",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "Intet budget defineret. Klik på Administrer for at starte.",
+  "Virement entrant": "Indgående overførsel",
+  "Virement sortant": "Udgående overførsel"
 }

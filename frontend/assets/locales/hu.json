@@ -1132,7 +1132,7 @@
   "Obj.": "Cél",
   "Budget envelopes": "Költségvetési borítékok",
   "Aucun virement trouvé.": "Nincs található átutalás.",
-  "Aucun bénéficiaire enregistré.": "Nincs mentett kedvezményezett.",
+  "Aucun bénéficiaire enregistré.": "Nincs regisztrált kedvezményezett.",
   "Aucune dépense.": "Nincsenek kiadások.",
   "Aucune transaction récente.": "Nincsenek legutóbbi tranzakciók.",
   "Tout marquer lu": "Összes olvasottnak jelölése",
@@ -1179,5 +1179,12 @@
   "Équatorienne": "Ecuadori",
   "Bolivienne": "Bolíviai",
   "Paraguayenne": "Paraguayi",
-  "Uruguayenne": "Uruguayi"
+  "Uruguayenne": "Uruguayi",
+  "Dépôt": "Befizetés",
+  "Aucune alerte ce mois-ci.": "Nincsenek riasztások ebben a hónapban.",
+  "Aucune enveloppe définie.": "Nincsenek borítékok meghatározva.",
+  "Total": "Összesen",
+  "Aucun budget défini. Cliquez sur Gérer pour commencer.": "Nincs költségvetés meghatározva. Kattintson a Kezelés gombra a kezdéshez.",
+  "Virement entrant": "Bejövő átutalás",
+  "Virement sortant": "Kimenő átutalás"
 }

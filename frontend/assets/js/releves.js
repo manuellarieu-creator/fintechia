@@ -253,7 +253,7 @@ function selectMonth(mKey) {
             if(tx.type === 'virement_recu') libelle = 'Virement reçu — ' + (tx.emetteur || '');
             if(tx.type === 'virement_emis') libelle = 'Virement émis — ' + (tx.destinataire || '');
 
-            const typeLabel = isCredit ? 'Crédit' : 'Débit';
+            const typeLabel = isCredit ? 'Virement entrant' : 'Virement sortant';
             const icon = isCredit ? 'ti-arrow-down' : 'ti-shopping-cart'; 
             const amountClass = isCredit ? 'credit' : 'debit';
             const sign = isCredit ? '+' : '';
@@ -347,7 +347,7 @@ function generateCSV(mKey, action, email) {
         if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');
         if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
         
-        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const typeLabel = isCredit ? 'Virement entrant' : 'Virement sortant';
         const sign = isCredit ? '+' : '';
         const montant = `${sign}${Math.abs(tx.montant).toFixed(2).replace('.', ',')}`;
         
@@ -399,7 +399,7 @@ function generatePDF(mKey, action, email) {
         if(tx.type === 'virement_recu') libelle = 'Virement reçu - ' + (tx.emetteur || '');
         if(tx.type === 'virement_emis') libelle = 'Virement émis - ' + (tx.destinataire || '');
         
-        const typeLabel = isCredit ? 'Crédit' : 'Débit';
+        const typeLabel = isCredit ? 'Virement entrant' : 'Virement sortant';
         const sign = isCredit ? '+' : '';
         const color = isCredit ? '#16a34a' : '#dc2626';
         
