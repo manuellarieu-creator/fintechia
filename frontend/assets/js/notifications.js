@@ -4,6 +4,7 @@ let unreadCount = 0;
 let isPolling = false;
 let notificationPollInterval = null;
 let latestNotifIds = new Set();
+let isFirstFetch = true;
 
 // The base endpoint
 const NOTIF_API_URL = '/api/notifications';
@@ -146,24 +147,22 @@ async function fetchNotifications() {
     notifs.forEach(n => {
       if (!n.lu && !latestNotifIds.has(n.id)) {
         newNotifs = true;
-        // Don't show toast on very first load (when latestNotifIds is empty, unless we want to bombard them)
-        if (latestNotifIds.size > 0) {
+        // Don't show toast on very first load to avoid bombarding users with old unread notifs
+        if (!isFirstFetch) {
           showToast(n.titre, n.message, n.type || 'info');
         }
       }
       latestNotifIds.add(n.id);
     });
 
-    if (newNotifs && latestNotifIds.size > notifs.length) { 
-       // actually the check above `latestNotifIds.size > 0` before adding the new ones handles the first load bombard issue.
-    }
-
     // Si on a de nouvelles notifications, on actualise la page dynamiquement
-    if (newNotifs && latestNotifIds.size > 1) { // >1 to avoid reloading immediately on first boot if there are existing unread
+    if (newNotifs && !isFirstFetch) {
         if (typeof window.checkAuth === 'function') {
             window.checkAuth();
         }
     }
+    
+    isFirstFetch = false;
 
     if (currentUnread > unreadCount && unreadCount !== 0) {
       playNotificationSound();
