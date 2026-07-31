@@ -218,7 +218,9 @@ window.selectBeneficiary = function(iban, nom, isMobile) {
   if(allContainer) allContainer.style.display = 'none';
 
   if (isMobile) {
+      const stepBen = document.getElementById('m-step-beneficiary');
       const stepDet = document.getElementById('m-step-details');
+      if (stepBen) stepBen.style.display = 'none';
       if (stepDet) stepDet.style.display = 'block';
   }
 }
@@ -245,8 +247,10 @@ window.unselectBeneficiary = function(isMobile) {
   }
   if(allContainer) allContainer.style.display = 'block';
   if (isMobile) {
+    const stepBen = document.getElementById('m-step-beneficiary');
     const stepDet = document.getElementById('m-step-details');
     const stepRecap = document.getElementById('m-step-recap');
+    if (stepBen) stepBen.style.display = 'block';
     if (stepDet) stepDet.style.display = 'none';
     if (stepRecap) stepRecap.style.display = 'none';
   }
