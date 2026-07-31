@@ -680,7 +680,7 @@
                       <div class="form-group">
                           <label class="form-label">Montant</label>
                           <div class="input-with-icon">
-                              <input type="number" class="form-control" id="vir-montant-mobile" value="250" required style="background-color: white;" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                              <input type="number" class="form-control" id="vir-montant-mobile" value="" required style="background-color: white;" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                               <span class="input-icon">€</span>
                           </div>
                           <div class="help-text">Plafond : 5 000 €/j</div>
@@ -693,7 +693,7 @@
 
                   <div class="form-group">
                       <label class="form-label">Motif</label>
-                      <input type="text" class="form-control" id="vir-motif-mobile" value="Remboursement weekend" required style="background-color: white;">
+                      <input type="text" class="form-control" id="vir-motif-mobile" value="" required style="background-color: white;">
                       <div class="help-text">Visible par le bénéficiaire - 140 car. max</div>
                   </div>
 
@@ -738,31 +738,9 @@
                       </div>
                   </div>
 
-                  <div class="auth-card" style="margin-bottom: 16px;">
-                      <div class="auth-header">
-                          <i class="ti ti-shield-check auth-icon"></i> Authentification
-                      </div>
-                      <p class="auth-desc">Code envoyé au +33 6 ** ** ** 42</p>
-                      
-                      <div class="otp-inputs">
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input filled"><div class="otp-dot"></div></div>
-                          <div class="otp-input empty"></div>
-                          <div class="otp-input empty"></div>
-                      </div>
-                      <div class="auth-phone" style="margin-top: -8px; color: var(--primary); font-weight: 500; cursor: pointer;">Renvoyer le code</div>
-
-                      <div class="footer-note" style="margin-top: 16px; margin-bottom: 24px;">
-                          <i class="ti ti-info-circle"></i>
-                          <div>Virement immédiat exécuté sous <strong>10 secondes</strong>, 24h/24 et 7j/7.</div>
-                      </div>
-
-                      <div class="auth-actions">
-                          <button type="button" class="btn-cancel" onclick="showMobileView('m-view-dashboard')">Annuler</button>
-                          <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
-                      </div>
+                  <div class="auth-actions" style="margin-bottom: 16px;">
+                      <button type="button" class="btn-cancel" onclick="showMobileView('m-view-dashboard')">Annuler</button>
+                      <button type="submit" class="btn-submit" style="color:white;">Valider <i class="ti ti-arrow-right"></i></button>
                   </div>
               </div>
                             <input type="hidden" id="vir-iban-mobile" value="">
