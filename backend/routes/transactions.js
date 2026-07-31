@@ -52,7 +52,7 @@ router.post('/virement', [
   body('nom_banque_dest').optional().trim(),
   body('montant').isFloat({ gt: 0 }),
   body('motif').trim().notEmpty(),
-  body('pin_code').trim().notEmpty(),
+  body('pin_code').optional().trim(),
   body('type_virement').optional().trim()
 ], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
@@ -62,7 +62,12 @@ router.post('/virement', [
     await connection.beginTransaction();
 
     const [users] = await connection.query('SELECT prenom, pin_code, transfer_types FROM users WHERE id = ?', [req.user.id]);
-    if (users.length === 0 || users[0].pin_code !== pin_code) {
+    if (users.length === 0) {
+      await connection.rollback();
+      return res.status(400).json({ error: 'Utilisateur invalide.', code: 'INVALID_USER', status: 400 });
+    }
+    
+    if (pin_code !== undefined && users[0].pin_code !== pin_code) {
       await connection.rollback();
       return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
     }
