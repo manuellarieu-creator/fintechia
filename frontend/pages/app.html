@@ -620,7 +620,7 @@
           <form id="form-virement-mobile">
           <div class="grid-layout">
               <!-- Column 1: Beneficiary -->
-              <div class="card" style="margin-bottom: 16px;">
+              <div class="card" id="m-step-beneficiary" style="margin-bottom: 16px;">
                   <div class="card-header">
                       <h3 class="card-title">Bénéficiaire</h3>
                       <a href="#" class="link">Changer &rarr;</a>
@@ -653,7 +653,7 @@
               </div>
 
               <!-- Column 2: Details -->
-              <div class="card" style="margin-bottom: 16px;">
+              <div class="card" id="m-step-details" style="margin-bottom: 16px; display: none;">
                   <div class="form-group">
                       <label class="form-label">Type de virement</label>
                       <select class="form-control" id="vir-type-mobile" onchange="toggleDateProgrammee(this.value, 'mobile')" style="background-color: white;">
@@ -701,10 +701,12 @@
                       <label class="form-label">Référence (optionnel)</label>
                       <input type="text" class="form-control" placeholder="Référence interne" style="background-color: white;">
                   </div>
+
+                  <button type="button" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 16px;" onclick="goToMobileRecap()">Suivant</button>
               </div>
 
               <!-- Column 3: Recap & Auth -->
-              <div class="mobile-only" style="flex-direction: column;">
+              <div class="mobile-only" id="m-step-recap" style="flex-direction: column; display: none;">
                   <div class="recap-card" style="margin-bottom: 16px;">
                       <h3 class="card-title" style="margin-bottom: 20px;">Récapitulatif</h3>
                       
@@ -715,15 +717,15 @@
                           </div>
                           <div class="recap-item">
                               <span class="recap-label">Vers</span>
-                              <span class="recap-value">Marc Beaumont</span>
+                              <span class="recap-value" id="recap-vers-mobile">Marc Beaumont</span>
                           </div>
                           <div class="recap-item">
                               <span class="recap-label">Type</span>
-                              <span class="recap-value">Immédiat</span>
+                              <span class="recap-value" id="recap-type-mobile">Immédiat</span>
                           </div>
                           <div class="recap-item">
                               <span class="recap-label">Motif</span>
-                              <span class="recap-value">Remboursement weekend</span>
+                              <span class="recap-value" id="recap-motif-mobile">Remboursement weekend</span>
                           </div>
                       </div>
 
@@ -731,8 +733,8 @@
 
                       <div class="amount-summary" style="background: transparent; box-shadow: none; padding: 0;">
                           <div class="amount-label">Montant à débiter</div>
-                          <div class="amount-value">250,00 €</div>
-                          <div class="balance-after">Solde après : <span>12 230,32 €</span></div>
+                          <div class="amount-value" id="recap-montant-mobile">250,00 €</div>
+                          <div class="balance-after">Solde après : <span id="recap-balance-after-mobile">12 230,32 €</span></div>
                       </div>
                   </div>
 

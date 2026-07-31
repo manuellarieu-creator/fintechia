@@ -216,6 +216,11 @@ window.selectBeneficiary = function(iban, nom, isMobile) {
   const allContainer = document.getElementById(prefix + '-all-container');
   if(recentsContainer) recentsContainer.style.display = 'none';
   if(allContainer) allContainer.style.display = 'none';
+
+  if (isMobile) {
+      const stepDet = document.getElementById('m-step-details');
+      if (stepDet) stepDet.style.display = 'block';
+  }
 }
 
 window.unselectBeneficiary = function(isMobile) {
@@ -239,6 +244,12 @@ window.unselectBeneficiary = function(isMobile) {
       recentsContainer.style.display = 'block';
   }
   if(allContainer) allContainer.style.display = 'block';
+  if (isMobile) {
+    const stepDet = document.getElementById('m-step-details');
+    const stepRecap = document.getElementById('m-step-recap');
+    if (stepDet) stepDet.style.display = 'none';
+    if (stepRecap) stepRecap.style.display = 'none';
+  }
 }
 
 let bicTimeout = null;

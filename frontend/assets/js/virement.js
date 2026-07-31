@@ -89,6 +89,48 @@ function goToOtpStep() {
   document.getElementById('tunnel-step-otp').style.display = 'block';
 }
 
+window.goToMobileRecap = function() {
+  const montantStr = document.getElementById('vir-montant-mobile').value;
+  const iban = document.getElementById('vir-iban-mobile').value;
+  
+  if (!montantStr || !iban) {
+    alert('Veuillez sélectionner un bénéficiaire et saisir un montant.');
+    return;
+  }
+
+  const soldeText = document.getElementById('virement-solde-display')?.innerText || "0";
+  const currentSolde = parseFloat(soldeText.replace(/[^0-9,.-]+/g, "").replace(',', '.'));
+  const montantVal = parseFloat(montantStr.replace(',', '.'));
+  const newSolde = currentSolde - montantVal;
+
+  const type = document.getElementById('vir-type-mobile').value;
+  const motif = document.getElementById('vir-motif-mobile').value;
+  const nom = document.getElementById('vir-nom-mobile').value || iban;
+  
+  const recapMontantEl = document.getElementById('recap-montant-mobile');
+  if(recapMontantEl) recapMontantEl.innerText = montantVal.toFixed(2).replace('.', ',') + ' €';
+  
+  const recapBalanceAfterEl = document.getElementById('recap-balance-after-mobile');
+  if(recapBalanceAfterEl) recapBalanceAfterEl.innerText = newSolde.toFixed(2).replace('.', ',') + ' €';
+  
+  const recapVersEl = document.getElementById('recap-vers-mobile');
+  if(recapVersEl) recapVersEl.innerText = nom;
+
+  const recapTypeEl = document.getElementById('recap-type-mobile');
+  if(recapTypeEl) recapTypeEl.innerText = type === 'immediat' ? 'Immédiat' : (type === 'swift' ? 'SWIFT' : (type === 'programme' ? 'Programmé' : 'Standard'));
+
+  const recapMotifEl = document.getElementById('recap-motif-mobile');
+  if(recapMotifEl) recapMotifEl.innerText = motif;
+
+  const stepBen = document.getElementById('m-step-beneficiary');
+  const stepDet = document.getElementById('m-step-details');
+  const stepRecap = document.getElementById('m-step-recap');
+  
+  if(stepBen) stepBen.style.display = 'none';
+  if(stepDet) stepDet.style.display = 'none';
+  if(stepRecap) stepRecap.style.display = 'flex';
+}
+
 async function submitTunnelOtp() {
   const inputs = document.querySelectorAll('#tunnel-step-otp .otp-input-real');
   let pin_code = '';
