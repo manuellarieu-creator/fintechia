@@ -518,7 +518,7 @@ router.patch('/profile', [
     if (telephone !== undefined) { query += 'telephone = ?, '; params.push(telephone); }
     if (telephone_code !== undefined) { query += 'telephone_code = ?, '; params.push(telephone_code); }
     if (adresse !== undefined) { query += 'adresse = ?, '; params.push(adresse); }
-    if (date_naissance !== undefined) { query += 'date_naissance = ?, '; params.push(date_naissance); }
+    if (date_naissance !== undefined) { query += 'date_naissance = ?, '; params.push(date_naissance || null); }
     if (nationalite !== undefined) { query += 'nationalite = ?, '; params.push(nationalite); }
     
     // Enlever la dernière virgule
