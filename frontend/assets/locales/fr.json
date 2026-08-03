@@ -1127,5 +1127,6 @@
   "Succès !": "Succès !",
   "Oups !": "Oups !",
   "Attention": "Attention",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN.",
+  "Identifiants invalides": "Identifiants invalides"
 }

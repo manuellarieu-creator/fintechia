@@ -17,7 +17,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Privatlivspræferencer gemt",
     "Notification": "Notification",
     "Succès !": "Succes!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode.",
+    "Identifiants invalides": "Ugyldige legitimationsoplysninger"
   },
   "de": {
     "Profil mis à jour avec succès !": "Profil erfolgreich aktualisiert!",
@@ -32,7 +33,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Datenschutzeinstellungen gespeichert",
     "Notification": "Benachrichtigung",
     "Succès !": "Erfolg!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein.",
+    "Identifiants invalides": "Ungültige Anmeldedaten"
   },
   "en": {
     "Profil mis à jour avec succès !": "Profile successfully updated!",
@@ -47,7 +49,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Privacy preferences saved",
     "Notification": "Notification",
     "Succès !": "Success!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code.",
+    "Identifiants invalides": "Invalid credentials"
   },
   "es": {
     "Profil mis à jour avec succès !": "¡Perfil actualizado con éxito!",
@@ -62,7 +65,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Preferencias de privacidad guardadas",
     "Notification": "Notificación",
     "Succès !": "¡Éxito!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Código PIN incorrecto. Por favor, introduzca el código PIN correcto."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Código PIN incorrecto. Por favor, introduzca el código PIN correcto.",
+    "Identifiants invalides": "Credenciales inválidas"
   },
   "fr": {
     "Profil mis à jour avec succès !": "Profil mis à jour avec succès !",
@@ -77,7 +81,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Préférences de confidentialité enregistrées",
     "Notification": "Notification",
     "Succès !": "Succès !",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN.",
+    "Identifiants invalides": "Identifiants invalides"
   },
   "hr": {
     "Profil mis à jour avec succès !": "Profil uspješno ažuriran!",
@@ -92,7 +97,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Postavke privatnosti spremljene",
     "Notification": "Obavijest",
     "Succès !": "Uspjeh!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod.",
+    "Identifiants invalides": "Nevažeće vjerodajnice"
   },
   "hu": {
     "Profil mis à jour avec succès !": "A profil sikeresen frissítve!",
@@ -107,7 +113,8 @@ const translations = {
     "Préférences de confidentialité enregistrées": "Adatvédelmi beállítások mentve",
     "Notification": "Értesítés",
     "Succès !": "Siker!",
-    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot."
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot.",
+    "Identifiants invalides": "Érvénytelen hitelesítő adatok"
   }
 };
 

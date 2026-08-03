@@ -1243,5 +1243,6 @@
   "Succès !": "Success!",
   "Oups !": "Oops!",
   "Attention": "Warning",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code.",
+  "Identifiants invalides": "Invalid credentials"
 }

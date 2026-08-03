@@ -1243,5 +1243,6 @@
   "Succès !": "Siker!",
   "Oups !": "Hoppá!",
   "Attention": "Figyelem",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot.",
+  "Identifiants invalides": "Érvénytelen hitelesítő adatok"
 }

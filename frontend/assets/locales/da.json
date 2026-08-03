@@ -1243,5 +1243,6 @@
   "Succès !": "Succes!",
   "Oups !": "Hov!",
   "Attention": "Opmærksomhed",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode.",
+  "Identifiants invalides": "Ugyldige legitimationsoplysninger"
 }

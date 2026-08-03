@@ -1243,5 +1243,6 @@
   "Succès !": "Erfolg!",
   "Oups !": "Hoppla!",
   "Attention": "Achtung",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein.",
+  "Identifiants invalides": "Ungültige Anmeldedaten"
 }

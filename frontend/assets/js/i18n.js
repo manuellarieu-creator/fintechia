@@ -26,9 +26,7 @@ const I18N = {
 
   scanDOM: function(rootNode = document.body) {
     // Collect text nodes
-    const walk = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, null, false);
-    let n;
-    while ((n = walk.nextNode())) {
+    const processNode = (n) => {
       if (n.parentElement && n.parentElement.tagName !== 'SCRIPT' && n.parentElement.tagName !== 'STYLE' && n.parentElement.tagName !== 'NOSCRIPT') {
         const text = n.nodeValue;
         const trimmed = text.replace(/\s+/g, ' ').trim();
@@ -36,6 +34,16 @@ const I18N = {
           if (!n._originalText) n._originalText = trimmed;
           if (!this.nodesToTranslate.includes(n)) this.nodesToTranslate.push(n);
         }
+      }
+    };
+
+    if (rootNode.nodeType === Node.TEXT_NODE) {
+      processNode(rootNode);
+    } else {
+      const walk = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, null, false);
+      let n;
+      while ((n = walk.nextNode())) {
+        processNode(n);
       }
     }
 

@@ -1243,5 +1243,6 @@
   "Succès !": "Uspjeh!",
   "Oups !": "Ups!",
   "Attention": "Upozorenje",
-  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod."
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod.",
+  "Identifiants invalides": "Nevažeće vjerodajnice"
 }
