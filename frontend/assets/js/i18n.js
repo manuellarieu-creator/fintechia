@@ -129,8 +129,21 @@ const I18N = {
     this.nodesToTranslate.forEach(n => {
       const orig = n._originalText;
       if (orig) {
-        let trans = this.dict[orig] || orig;
-        if (typeof trans === 'string' && trans.length > 0) {
+        let trans = this.dict[orig];
+        if (!trans) {
+          const m1 = orig.match(/^Votre virement de (.*) a été envoyé\.$/i);
+          if (m1 && this.dict['Votre virement de {amount} a été envoyé.']) {
+            trans = this.dict['Votre virement de {amount} a été envoyé.'].replace('{amount}', m1[1]);
+          } else {
+            const m2 = orig.match(/^Vous avez reçu un virement de (.*)\.$/i);
+            if (m2 && this.dict['Vous avez reçu un virement de {amount}.']) {
+              trans = this.dict['Vous avez reçu un virement de {amount}.'].replace('{amount}', m2[1]);
+            }
+          }
+        }
+        if (!trans) trans = orig;
+        
+        if (typeof trans === 'string' && trans.length > 0 && trans !== orig) {
           trans = trans.charAt(0).toUpperCase() + trans.slice(1);
         }
         const current = n._currentTrans || orig;

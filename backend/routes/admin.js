@@ -358,8 +358,8 @@ router.post('/comptes/:accountId/crediter', [
       detail: { montant, libelle, solde_avant: soldeAvant, solde_apres: soldeApres, transfer_allowed, max_transfer_amount }, req
     });
 
-    await notifications.envoyer(accounts[0].user_id, 'Crédit reçu', `Vous avez reçu un virement de ${montant}€.`, 'succes');
-    res.json({ success: true, nouveau_solde: soldeApres });
+    await notifications.envoyer(accounts[0].user_id, 'Virement reçu', `Vous avez reçu un virement de ${montant}€.`, 'succes');
+    res.json({ success: true, message: 'Virement effectué avec succès' });
   } catch (err) {
     await connection.rollback();
     next(err);

@@ -18,7 +18,17 @@ const translations = {
     "Notification": "Notification",
     "Succès !": "Succes!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode.",
-    "Identifiants invalides": "Ugyldige legitimationsoplysninger"
+    "Identifiants invalides": "Ugyldige legitimationsoplysninger",
+    "Votre code PIN a été modifié.": "Din PIN-kode er blevet ændret.",
+    "Votre mot de passe a été modifié.": "Din adgangskode er blevet ændret.",
+    "Virement initié": "Overførsel startet",
+    "Débit effectué": "Debitering gennemført",
+    "Votre virement est en cours de validation.": "Din overførsel er under validering.",
+    "Virement reçu": "Overførsel modtaget",
+    "Virement validé": "Overførsel valideret",
+    "Votre virement immédiat a été exécuté avec succès.": "Din straksoverførsel er blevet udført.",
+    "Votre virement de {amount} a été envoyé.": "Din overførsel på {amount} er blevet sendt.",
+    "Vous avez reçu un virement de {amount}.": "Du har modtaget en overførsel på {amount}."
   },
   "de": {
     "Profil mis à jour avec succès !": "Profil erfolgreich aktualisiert!",
@@ -34,7 +44,17 @@ const translations = {
     "Notification": "Benachrichtigung",
     "Succès !": "Erfolg!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein.",
-    "Identifiants invalides": "Ungültige Anmeldedaten"
+    "Identifiants invalides": "Ungültige Anmeldedaten",
+    "Votre code PIN a été modifié.": "Ihre PIN wurde geändert.",
+    "Votre mot de passe a été modifié.": "Ihr Passwort wurde geändert.",
+    "Virement initié": "Überweisung initiiert",
+    "Débit effectué": "Belastung durchgeführt",
+    "Votre virement est en cours de validation.": "Ihre Überweisung wird gerade geprüft.",
+    "Virement reçu": "Überweisung erhalten",
+    "Virement validé": "Überweisung bestätigt",
+    "Votre virement immédiat a été exécuté avec succès.": "Ihre Echtzeitüberweisung wurde erfolgreich ausgeführt.",
+    "Votre virement de {amount} a été envoyé.": "Ihre Überweisung von {amount} wurde gesendet.",
+    "Vous avez reçu un virement de {amount}.": "Sie haben eine Überweisung von {amount} erhalten."
   },
   "en": {
     "Profil mis à jour avec succès !": "Profile successfully updated!",
@@ -50,7 +70,17 @@ const translations = {
     "Notification": "Notification",
     "Succès !": "Success!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code.",
-    "Identifiants invalides": "Invalid credentials"
+    "Identifiants invalides": "Invalid credentials",
+    "Votre code PIN a été modifié.": "Your PIN code has been modified.",
+    "Votre mot de passe a été modifié.": "Your password has been modified.",
+    "Virement initié": "Transfer initiated",
+    "Débit effectué": "Debit successful",
+    "Votre virement est en cours de validation.": "Your transfer is being validated.",
+    "Virement reçu": "Transfer received",
+    "Virement validé": "Transfer validated",
+    "Votre virement immédiat a été exécuté avec succès.": "Your immediate transfer has been successfully executed.",
+    "Votre virement de {amount} a été envoyé.": "Your transfer of {amount} has been sent.",
+    "Vous avez reçu un virement de {amount}.": "You have received a transfer of {amount}."
   },
   "es": {
     "Profil mis à jour avec succès !": "¡Perfil actualizado con éxito!",
@@ -66,7 +96,17 @@ const translations = {
     "Notification": "Notificación",
     "Succès !": "¡Éxito!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Código PIN incorrecto. Por favor, introduzca el código PIN correcto.",
-    "Identifiants invalides": "Credenciales inválidas"
+    "Identifiants invalides": "Credenciales inválidas",
+    "Votre code PIN a été modifié.": "Su código PIN ha sido modificado.",
+    "Votre mot de passe a été modifié.": "Su contraseña ha sido modificada.",
+    "Virement initié": "Transferencia iniciada",
+    "Débit effectué": "Débito realizado",
+    "Votre virement est en cours de validation.": "Su transferencia está siendo validada.",
+    "Virement reçu": "Transferencia recibida",
+    "Virement validé": "Transferencia validada",
+    "Votre virement immédiat a été exécuté avec succès.": "Su transferencia inmediata se ha ejecutado con éxito.",
+    "Votre virement de {amount} a été envoyé.": "Su transferencia de {amount} ha sido enviada.",
+    "Vous avez reçu un virement de {amount}.": "Ha recibido una transferencia de {amount}."
   },
   "fr": {
     "Profil mis à jour avec succès !": "Profil mis à jour avec succès !",
@@ -82,7 +122,17 @@ const translations = {
     "Notification": "Notification",
     "Succès !": "Succès !",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN.",
-    "Identifiants invalides": "Identifiants invalides"
+    "Identifiants invalides": "Identifiants invalides",
+    "Votre code PIN a été modifié.": "Votre code PIN a été modifié.",
+    "Votre mot de passe a été modifié.": "Votre mot de passe a été modifié.",
+    "Virement initié": "Virement initié",
+    "Débit effectué": "Débit effectué",
+    "Votre virement est en cours de validation.": "Votre virement est en cours de validation.",
+    "Virement reçu": "Virement reçu",
+    "Virement validé": "Virement validé",
+    "Votre virement immédiat a été exécuté avec succès.": "Votre virement immédiat a été exécuté avec succès.",
+    "Votre virement de {amount} a été envoyé.": "Votre virement de {amount} a été envoyé.",
+    "Vous avez reçu un virement de {amount}.": "Vous avez reçu un virement de {amount}."
   },
   "hr": {
     "Profil mis à jour avec succès !": "Profil uspješno ažuriran!",
@@ -98,7 +148,17 @@ const translations = {
     "Notification": "Obavijest",
     "Succès !": "Uspjeh!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod.",
-    "Identifiants invalides": "Nevažeće vjerodajnice"
+    "Identifiants invalides": "Nevažeće vjerodajnice",
+    "Votre code PIN a été modifié.": "Vaš PIN kod je promijenjen.",
+    "Votre mot de passe a été modifié.": "Vaša lozinka je promijenjena.",
+    "Virement initié": "Prijenos iniciran",
+    "Débit effectué": "Zaduženje izvršeno",
+    "Votre virement est en cours de validation.": "Vaš prijenos je u postupku provjere.",
+    "Virement reçu": "Prijenos primljen",
+    "Virement validé": "Prijenos potvrđen",
+    "Votre virement immédiat a été exécuté avec succès.": "Vaš trenutni prijenos uspješno je izvršen.",
+    "Votre virement de {amount} a été envoyé.": "Vaš prijenos od {amount} je poslan.",
+    "Vous avez reçu un virement de {amount}.": "Dobili ste prijenos od {amount}."
   },
   "hu": {
     "Profil mis à jour avec succès !": "A profil sikeresen frissítve!",
@@ -114,7 +174,17 @@ const translations = {
     "Notification": "Értesítés",
     "Succès !": "Siker!",
     "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot.",
-    "Identifiants invalides": "Érvénytelen hitelesítő adatok"
+    "Identifiants invalides": "Érvénytelen hitelesítő adatok",
+    "Votre code PIN a été modifié.": "A PIN kódja megváltozott.",
+    "Votre mot de passe a été modifié.": "A jelszava megváltozott.",
+    "Virement initié": "Átutalás elindítva",
+    "Débit effectué": "Terhelés sikeres",
+    "Votre virement est en cours de validation.": "Az átutalása ellenőrzés alatt áll.",
+    "Virement reçu": "Átutalás érkezett",
+    "Virement validé": "Átutalás jóváhagyva",
+    "Votre virement immédiat a été exécuté avec succès.": "Az azonnali átutalás sikeresen végrehajtva.",
+    "Votre virement de {amount} a été envoyé.": "A(z) {amount} összegű átutalása elküldve.",
+    "Vous avez reçu un virement de {amount}.": "Ön egy {amount} összegű átutalást kapott."
   }
 };
 

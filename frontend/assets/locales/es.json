@@ -1079,7 +1079,7 @@
   "100 € restants · Réinit. lundi": "€100 remaining · Reset Monday",
   "NFC activé": "NFC enabled",
   "Alertes temps réel": "Real-time alerts",
-  "Virement reçu": "Transfer received",
+  "Virement reçu": "Transferencia recibida",
   "Conditions Générales d'Utilisation - Fintechia": "Terms of Service - Fintechia",
   "Conditions Générales d'Utilisation": "Terms of Service",
   "← Retour à l'accueil": "← Back to home",
@@ -1244,5 +1244,14 @@
   "Oups !": "¡Ups!",
   "Attention": "Atención",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Código PIN incorrecto. Por favor, introduzca el código PIN correcto.",
-  "Identifiants invalides": "Credenciales inválidas"
+  "Identifiants invalides": "Credenciales inválidas",
+  "Votre code PIN a été modifié.": "Su código PIN ha sido modificado.",
+  "Votre mot de passe a été modifié.": "Su contraseña ha sido modificada.",
+  "Virement initié": "Transferencia iniciada",
+  "Débit effectué": "Débito realizado",
+  "Votre virement est en cours de validation.": "Su transferencia está siendo validada.",
+  "Virement validé": "Transferencia validada",
+  "Votre virement immédiat a été exécuté avec succès.": "Su transferencia inmediata se ha ejecutado con éxito.",
+  "Votre virement de {amount} a été envoyé.": "Su transferencia de {amount} ha sido enviada.",
+  "Vous avez reçu un virement de {amount}.": "Ha recibido una transferencia de {amount}."
 }

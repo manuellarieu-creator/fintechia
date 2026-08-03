@@ -1079,7 +1079,7 @@
   "100 € restants · Réinit. lundi": "€100 remaining · Reset Monday",
   "NFC activé": "NFC enabled",
   "Alertes temps réel": "Real-time alerts",
-  "Virement reçu": "Transfer received",
+  "Virement reçu": "Overførsel modtaget",
   "Conditions Générales d'Utilisation - Fintechia": "Terms of Service - Fintechia",
   "Conditions Générales d'Utilisation": "Terms of Service",
   "← Retour à l'accueil": "← Back to home",
@@ -1244,5 +1244,14 @@
   "Oups !": "Hov!",
   "Attention": "Opmærksomhed",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode.",
-  "Identifiants invalides": "Ugyldige legitimationsoplysninger"
+  "Identifiants invalides": "Ugyldige legitimationsoplysninger",
+  "Votre code PIN a été modifié.": "Din PIN-kode er blevet ændret.",
+  "Votre mot de passe a été modifié.": "Din adgangskode er blevet ændret.",
+  "Virement initié": "Overførsel startet",
+  "Débit effectué": "Debitering gennemført",
+  "Votre virement est en cours de validation.": "Din overførsel er under validering.",
+  "Virement validé": "Overførsel valideret",
+  "Votre virement immédiat a été exécuté avec succès.": "Din straksoverførsel er blevet udført.",
+  "Votre virement de {amount} a été envoyé.": "Din overførsel på {amount} er blevet sendt.",
+  "Vous avez reçu un virement de {amount}.": "Du har modtaget en overførsel på {amount}."
 }

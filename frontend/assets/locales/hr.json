@@ -1079,7 +1079,7 @@
   "100 € restants · Réinit. lundi": "€100 remaining · Reset Monday",
   "NFC activé": "NFC enabled",
   "Alertes temps réel": "Real-time alerts",
-  "Virement reçu": "Transfer received",
+  "Virement reçu": "Prijenos primljen",
   "Conditions Générales d'Utilisation - Fintechia": "Terms of Service - Fintechia",
   "Conditions Générales d'Utilisation": "Terms of Service",
   "← Retour à l'accueil": "← Back to home",
@@ -1244,5 +1244,14 @@
   "Oups !": "Ups!",
   "Attention": "Upozorenje",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod.",
-  "Identifiants invalides": "Nevažeće vjerodajnice"
+  "Identifiants invalides": "Nevažeće vjerodajnice",
+  "Votre code PIN a été modifié.": "Vaš PIN kod je promijenjen.",
+  "Votre mot de passe a été modifié.": "Vaša lozinka je promijenjena.",
+  "Virement initié": "Prijenos iniciran",
+  "Débit effectué": "Zaduženje izvršeno",
+  "Votre virement est en cours de validation.": "Vaš prijenos je u postupku provjere.",
+  "Virement validé": "Prijenos potvrđen",
+  "Votre virement immédiat a été exécuté avec succès.": "Vaš trenutni prijenos uspješno je izvršen.",
+  "Votre virement de {amount} a été envoyé.": "Vaš prijenos od {amount} je poslan.",
+  "Vous avez reçu un virement de {amount}.": "Dobili ste prijenos od {amount}."
 }

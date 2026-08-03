@@ -1128,5 +1128,15 @@
   "Oups !": "Oups !",
   "Attention": "Attention",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN.",
-  "Identifiants invalides": "Identifiants invalides"
+  "Identifiants invalides": "Identifiants invalides",
+  "Votre code PIN a été modifié.": "Votre code PIN a été modifié.",
+  "Votre mot de passe a été modifié.": "Votre mot de passe a été modifié.",
+  "Virement initié": "Virement initié",
+  "Débit effectué": "Débit effectué",
+  "Votre virement est en cours de validation.": "Votre virement est en cours de validation.",
+  "Virement reçu": "Virement reçu",
+  "Virement validé": "Virement validé",
+  "Votre virement immédiat a été exécuté avec succès.": "Votre virement immédiat a été exécuté avec succès.",
+  "Votre virement de {amount} a été envoyé.": "Votre virement de {amount} a été envoyé.",
+  "Vous avez reçu un virement de {amount}.": "Vous avez reçu un virement de {amount}."
 }

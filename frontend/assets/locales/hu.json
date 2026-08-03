@@ -1079,7 +1079,7 @@
   "100 € restants · Réinit. lundi": "€100 remaining · Reset Monday",
   "NFC activé": "NFC enabled",
   "Alertes temps réel": "Real-time alerts",
-  "Virement reçu": "Transfer received",
+  "Virement reçu": "Átutalás érkezett",
   "Conditions Générales d'Utilisation - Fintechia": "Terms of Service - Fintechia",
   "Conditions Générales d'Utilisation": "Terms of Service",
   "← Retour à l'accueil": "← Back to home",
@@ -1244,5 +1244,14 @@
   "Oups !": "Hoppá!",
   "Attention": "Figyelem",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot.",
-  "Identifiants invalides": "Érvénytelen hitelesítő adatok"
+  "Identifiants invalides": "Érvénytelen hitelesítő adatok",
+  "Votre code PIN a été modifié.": "A PIN kódja megváltozott.",
+  "Votre mot de passe a été modifié.": "A jelszava megváltozott.",
+  "Virement initié": "Átutalás elindítva",
+  "Débit effectué": "Terhelés sikeres",
+  "Votre virement est en cours de validation.": "Az átutalása ellenőrzés alatt áll.",
+  "Virement validé": "Átutalás jóváhagyva",
+  "Votre virement immédiat a été exécuté avec succès.": "Az azonnali átutalás sikeresen végrehajtva.",
+  "Votre virement de {amount} a été envoyé.": "A(z) {amount} összegű átutalása elküldve.",
+  "Vous avez reçu un virement de {amount}.": "Ön egy {amount} összegű átutalást kapott."
 }

@@ -1244,5 +1244,14 @@
   "Oups !": "Oops!",
   "Attention": "Warning",
   "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code.",
-  "Identifiants invalides": "Invalid credentials"
+  "Identifiants invalides": "Invalid credentials",
+  "Votre code PIN a été modifié.": "Your PIN code has been modified.",
+  "Votre mot de passe a été modifié.": "Your password has been modified.",
+  "Virement initié": "Transfer initiated",
+  "Débit effectué": "Debit successful",
+  "Votre virement est en cours de validation.": "Your transfer is being validated.",
+  "Virement validé": "Transfer validated",
+  "Votre virement immédiat a été exécuté avec succès.": "Your immediate transfer has been successfully executed.",
+  "Votre virement de {amount} a été envoyé.": "Your transfer of {amount} has been sent.",
+  "Vous avez reçu un virement de {amount}.": "You have received a transfer of {amount}."
 }
