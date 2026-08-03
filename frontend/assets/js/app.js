@@ -332,6 +332,16 @@ async function initDashboard(user, account, kycStatut = null) {
     if(el) el.innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
   });
   
+  const planDesktop = document.getElementById('user-plan-desktop');
+  if (planDesktop && account) {
+    let t = account.custom_type || account.type_compte || 'Courant';
+    if(t.toLowerCase() === 'courant') t = 'Compte courant';
+    if(t.toLowerCase() === 'epargne') t = 'Compte épargne';
+    if(t.toLowerCase() === 'credit') t = 'Compte crédit';
+    t = t.charAt(0).toUpperCase() + t.slice(1);
+    planDesktop.innerText = t;
+  }
+
   // Update Profile Settings page inputs
   const settingsPrenom = document.getElementById('settings-prenom');
   if(settingsPrenom) settingsPrenom.value = user.prenom;
