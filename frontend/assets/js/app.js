@@ -369,6 +369,12 @@ async function initDashboard(user, account, kycStatut = null) {
   const settingsNationalite = document.getElementById('settings-nationalite');
   if(settingsNationalite) settingsNationalite.value = user.nationalite || '';
 
+  const smsVal = document.getElementById('settings-2fa-sms-val');
+  if(smsVal && user.telephone) smsVal.innerText = (user.telephone_code || '') + ' ' + user.telephone;
+
+  const emailVal = document.getElementById('settings-2fa-email-val');
+  if(emailVal && user.email) emailVal.innerText = user.email;
+
   
   if (account) {
     ['solde-display-mobile', 'solde-display-desktop', 'virement-solde-display'].forEach(id => {

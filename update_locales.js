@@ -63,7 +63,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguayansk",
     "Notification": "Notification",
     "Session expirée pour inactivité.": "Session udløbet på grund af inaktivitet.",
-    "Compris": "Forstået"},
+    "Compris": "Forstået",
+    "Code envoyé au": "Kode sendt til",
+    "Code envoyé à": "Kode sendt til"},
   "de": {
     "Dépôt": "Einzahlung",
     "Aucune alerte ce mois-ci.": "Keine Warnungen diesen Monat.",
@@ -99,7 +101,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguayisch",
     "Notification": "Benachrichtigung",
     "Session expirée pour inactivité.": "Sitzung wegen Inaktivität abgelaufen.",
-    "Compris": "Verstanden"},
+    "Compris": "Verstanden",
+    "Code envoyé au": "Code gesendet an",
+    "Code envoyé à": "Code gesendet an"},
   "en": {
     "Dépôt": "Deposit",
     "Aucune alerte ce mois-ci.": "No alerts this month.",
@@ -135,7 +139,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguayan",
     "Notification": "Notification",
     "Session expirée pour inactivité.": "Session expired due to inactivity.",
-    "Compris": "Got it"},
+    "Compris": "Got it",
+    "Code envoyé au": "Code sent to",
+    "Code envoyé à": "Code sent to"},
   "es": {
     "Dépôt": "Depósito",
     "Aucune alerte ce mois-ci.": "No hay alertas este mes.",
@@ -171,7 +177,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguaya",
     "Notification": "Notificación",
     "Session expirée pour inactivité.": "Sesión caducada por inactividad.",
-    "Compris": "Entendido"},
+    "Compris": "Entendido",
+    "Code envoyé au": "Código enviado al",
+    "Code envoyé à": "Código enviado a"},
   "fr": {
     "Dépôt": "Dépôt",
     "Aucune alerte ce mois-ci.": "Aucune alerte ce mois-ci.",
@@ -207,7 +215,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguayenne",
     "Notification": "Notification",
     "Session expirée pour inactivité.": "Session expirée pour inactivité.",
-    "Compris": "Compris"},
+    "Compris": "Compris",
+    "Code envoyé au": "Code envoyé au",
+    "Code envoyé à": "Code envoyé à"},
   "hr": {
     "Dépôt": "Polog",
     "Aucune alerte ce mois-ci.": "Nema upozorenja ovog mjeseca.",
@@ -243,7 +253,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Urugvajsko",
     "Notification": "Obavijest",
     "Session expirée pour inactivité.": "Sesija je istekla zbog neaktivnosti.",
-    "Compris": "Razumijem"},
+    "Compris": "Razumijem",
+    "Code envoyé au": "Kod poslan na",
+    "Code envoyé à": "Kod poslan na"},
   "hu": {
     "Dépôt": "Befizetés",
     "Aucune alerte ce mois-ci.": "Nincsenek riasztások ebben a hónapban.",
@@ -279,7 +291,9 @@ const translations = {
     "🇺🇾 Uruguayenne": "🇺🇾 Uruguayi",
     "Notification": "Értesítés",
     "Session expirée pour inactivité.": "A munkamenet inaktivitás miatt lejárt.",
-    "Compris": "Értem"}
+    "Compris": "Értem",
+    "Code envoyé au": "Kód elküldve:",
+    "Code envoyé à": "Kód elküldve:"}
 };
 
 const localesDir = 'frontend/assets/locales';

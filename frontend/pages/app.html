@@ -1875,7 +1875,26 @@
                 <label>Confirmer le nouveau mot de passe</label>
                 <input type="password" placeholder="Confirmer">
               </div>
-              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;" onclick="saveSettingsMock('Mot de passe mis à jour')">Mettre à jour le mot de passe</button>
+              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;margin-bottom:24px;" onclick="saveSettingsMock('Mot de passe mis à jour')">Mettre à jour le mot de passe</button>
+
+              <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:24px;">
+
+              <div class="ch"><div><p class="ch-title">Code PIN</p><p class="ch-sub">Modifiez votre code PIN de connexion (6 chiffres)</p></div></div>
+              <div class="settings-grid-fields" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:14px; margin-bottom:14px;">
+                <div class="field" style="margin:0;">
+                  <label>Code PIN actuel</label>
+                  <input type="password" placeholder="••••••" maxlength="6">
+                </div>
+                <div class="field" style="margin:0;">
+                  <label>Nouveau code PIN</label>
+                  <input type="password" placeholder="••••••" maxlength="6">
+                </div>
+                <div class="field" style="margin:0;">
+                  <label>Confirmer nouveau PIN</label>
+                  <input type="password" placeholder="••••••" maxlength="6">
+                </div>
+              </div>
+              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;" onclick="saveSettingsMock('Code PIN mis à jour avec succès')">Mettre à jour le code PIN</button>
             </div>
 
             <div class="settings-card">
@@ -1884,7 +1903,12 @@
               <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:12px;">
                 <div style="display:flex;gap:12px;align-items:center;">
                   <i class="ti ti-device-mobile-message" style="font-size:20px;color:#2563EB;"></i>
-                  <div><p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">SMS OTP</p><p style="font-size:11px;color:#64748B;margin:0;">Code envoyé au +33 6 ** ** ** 78</p></div>
+                  <div>
+                    <p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">SMS OTP</p>
+                    <p style="font-size:11px;color:#64748B;margin:0;">
+                      <span id="settings-2fa-sms-txt">Code envoyé au</span> <span id="settings-2fa-sms-val">+33 6 ** ** ** 78</span>
+                    </p>
+                  </div>
                 </div>
                 <div class="tg on" onclick="this.classList.toggle('on')"><span></span></div>
               </div>
@@ -1892,7 +1916,12 @@
               <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:12px;">
                 <div style="display:flex;gap:12px;align-items:center;">
                   <i class="ti ti-mail" style="font-size:20px;color:#2563EB;"></i>
-                  <div><p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">Email OTP</p><p style="font-size:11px;color:#64748B;margin:0;">Code envoyé à manuela@...</p></div>
+                  <div>
+                    <p style="font-size:13px;font-weight:600;color:#0F172A;margin:0;">Email OTP</p>
+                    <p style="font-size:11px;color:#64748B;margin:0;">
+                      <span id="settings-2fa-email-txt">Code envoyé à</span> <span id="settings-2fa-email-val">manuela@...</span>
+                    </p>
+                  </div>
                 </div>
                 <div class="tg" onclick="this.classList.toggle('on')"><span></span></div>
               </div>
