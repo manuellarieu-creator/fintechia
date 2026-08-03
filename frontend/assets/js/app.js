@@ -369,12 +369,27 @@ async function initDashboard(user, account, kycStatut = null) {
   const settingsNationalite = document.getElementById('settings-nationalite');
   if(settingsNationalite) settingsNationalite.value = user.nationalite || '';
 
+  const smsContainer = document.getElementById('settings-2fa-sms-container');
   const smsVal = document.getElementById('settings-2fa-sms-val');
-  if(smsVal && user.telephone) smsVal.innerText = (user.telephone_code || '') + ' ' + user.telephone;
+  if (smsContainer && smsVal) {
+    if (user.telephone) {
+      smsVal.innerText = (user.telephone_code || '') + ' ' + user.telephone;
+      smsContainer.style.display = 'block';
+    } else {
+      smsContainer.style.display = 'none';
+    }
+  }
 
+  const emailContainer = document.getElementById('settings-2fa-email-container');
   const emailVal = document.getElementById('settings-2fa-email-val');
-  if(emailVal && user.email) emailVal.innerText = user.email;
-
+  if (emailContainer && emailVal) {
+    if (user.email) {
+      emailVal.innerText = user.email;
+      emailContainer.style.display = 'block';
+    } else {
+      emailContainer.style.display = 'none';
+    }
+  }
   
   if (account) {
     ['solde-display-mobile', 'solde-display-desktop', 'virement-solde-display'].forEach(id => {
@@ -1130,14 +1145,13 @@ async function saveProfileSettings() {
 
     const res = await apiCall('/auth/profile', 'PATCH', payload);
     if (res && res.success) {
-      alert('Profil mis � jour avec succ�s !');
-      checkAuth(); // Recharger les donn�es
+      alert('Profil mis à jour avec succès !');
+      checkAuth(); // Recharger les données
     }
   } catch (err) {
-    alert(err.message || 'Erreur lors de la mise � jour du profil');
+    alert(err.message || 'Erreur lors de la mise à jour du profil');
   } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
 }
-
