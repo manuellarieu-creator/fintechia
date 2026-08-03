@@ -28,7 +28,7 @@ window.alert = function(message, callback) {
     } else if (lowerMsg.includes('attention') || lowerMsg.includes('bientôt') || lowerMsg.includes('limite')) {
         type = 'warning';
     }
-    let emoji = '💡', title = 'Notification', btnColor = 'var(--primary, #3b82f6)';
+    let emoji = '🔔', title = 'Notification', btnColor = 'var(--primary, #3b82f6)';
     if (type === 'error') { emoji = '🚨'; title = 'Oups !'; btnColor = 'var(--danger, #ef4444)'; }
     else if (type === 'success') { emoji = '✅'; title = 'Succès !'; btnColor = 'var(--success, #22c55e)'; }
     else if (type === 'warning') { emoji = '⚠️'; title = 'Attention'; btnColor = 'var(--warning, #f59e0b)'; }
