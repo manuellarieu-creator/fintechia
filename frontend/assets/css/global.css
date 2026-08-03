@@ -21,14 +21,13 @@
   --shadow-lg: 0 16px 48px rgba(0,0,0,.1), 0 4px 16px rgba(0,0,0,.06);
 }
 
-html { scroll-behavior: smooth; zoom: 75%; }
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--fi);
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
-  min-height: 133.333vh;
 }
 
 /* ═══ LANGUE ═══ */
