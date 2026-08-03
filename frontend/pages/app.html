@@ -1857,12 +1857,12 @@
               <div class="field">
                 <label>Mot de passe actuel</label>
                 <div style="position:relative;">
-                  <input type="password" value="••••••••••" placeholder="Mot de passe actuel">
+                  <input type="password" id="settings-current-password" placeholder="Mot de passe actuel">
                 </div>
               </div>
               <div class="field">
                 <label>Nouveau mot de passe</label>
-                <input type="password" placeholder="Nouveau mot de passe">
+                <input type="password" id="settings-new-password" placeholder="Nouveau mot de passe">
                 <div style="display:flex;gap:4px;margin-top:4px;">
                   <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
                   <div style="flex:1;height:3px;border-radius:2px;background:#16A34A;"></div>
@@ -1873,9 +1873,9 @@
               </div>
               <div class="field" style="margin-bottom:14px;">
                 <label>Confirmer le nouveau mot de passe</label>
-                <input type="password" placeholder="Confirmer">
+                <input type="password" id="settings-confirm-password" placeholder="Confirmer">
               </div>
-              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;margin-bottom:24px;" onclick="saveSettingsMock('Mot de passe mis à jour')">Mettre à jour le mot de passe</button>
+              <button id="btn-update-password" class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;margin-bottom:24px;">Mettre à jour le mot de passe</button>
 
               <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:24px;">
 
@@ -1883,18 +1883,18 @@
               <div class="settings-grid-fields" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:14px; margin-bottom:14px;">
                 <div class="field" style="margin:0;">
                   <label>Code PIN actuel</label>
-                  <input type="password" placeholder="••••••" maxlength="6">
+                  <input type="password" id="settings-current-pin" placeholder="••••••" maxlength="6">
                 </div>
                 <div class="field" style="margin:0;">
                   <label>Nouveau code PIN</label>
-                  <input type="password" placeholder="••••••" maxlength="6">
+                  <input type="password" id="settings-new-pin" placeholder="••••••" maxlength="6">
                 </div>
                 <div class="field" style="margin:0;">
                   <label>Confirmer nouveau PIN</label>
-                  <input type="password" placeholder="••••••" maxlength="6">
+                  <input type="password" id="settings-confirm-pin" placeholder="••••••" maxlength="6">
                 </div>
               </div>
-              <button class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;" onclick="saveSettingsMock('Code PIN mis à jour avec succès')">Mettre à jour le code PIN</button>
+              <button id="btn-update-pin" class="btn-p" style="width:100%;background:#F1F5F9;color:#0F172A;border:0.5px solid #E2E8F0;">Mettre à jour le code PIN</button>
             </div>
 
             <div class="settings-card">
@@ -2727,7 +2727,7 @@ function saveSettingsMock(msg) {
       document.getElementById('modal-2fa-login').style.display = 'none';
       if (typeof initDashboard === 'function') initDashboard(res.user, res.account, res.kyc_statut);
     } catch(err) {
-      alert('Erreur: ' + err.message);
+      alert(err.message);
       inputs.forEach(i => { i.value = ''; i.classList.add('empty'); });
       inputs[0].focus();
     }

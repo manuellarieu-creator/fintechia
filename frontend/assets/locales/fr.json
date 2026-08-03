@@ -1126,5 +1126,6 @@
   "Mettre à jour le code PIN": "Mettre à jour le code PIN",
   "Succès !": "Succès !",
   "Oups !": "Oups !",
-  "Attention": "Attention"
+  "Attention": "Attention",
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN."
 }

@@ -1242,5 +1242,6 @@
   "Mettre à jour le code PIN": "Opdater PIN-kode",
   "Succès !": "Succes!",
   "Oups !": "Hov!",
-  "Attention": "Opmærksomhed"
+  "Attention": "Opmærksomhed",
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode."
 }

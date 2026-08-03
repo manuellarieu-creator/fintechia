@@ -1242,5 +1242,6 @@
   "Mettre à jour le code PIN": "Ažuriraj PIN kod",
   "Succès !": "Uspjeh!",
   "Oups !": "Ups!",
-  "Attention": "Upozorenje"
+  "Attention": "Upozorenje",
+  "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod."
 }

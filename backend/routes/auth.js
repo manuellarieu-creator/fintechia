@@ -293,7 +293,7 @@ router.post('/login/2fa', [
           return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives.', code: 'SECURITY_BLOCK', status: 403 });
       }
 
-      return res.status(401).json({ error: 'Le code PIN entré est invalid.', code: 'INVALID_2FA', status: 401 });
+      return res.status(401).json({ error: 'Code PIN erroné. Veuillez entrer le bon code PIN.', code: 'INVALID_2FA', status: 401 });
     }
 
     // Reset OTP fails on success
@@ -535,6 +535,37 @@ router.patch('/profile', [
     });
 
     res.json({ success: true, message: 'Profil mis à jour' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/auth/pin
+router.patch('/pin', [
+  authMiddleware,
+  body('current_pin').notEmpty(),
+  body('new_pin').isLength({ min: 6, max: 6 }).isNumeric()
+], validateReq, async (req, res, next) => {
+  const { current_pin, new_pin } = req.body;
+  try {
+    const [users] = await db.query('SELECT pin_code, prenom, email FROM users WHERE id = ?', [req.user.id]);
+    if (users.length === 0) return res.status(404).json({ error: 'User non trouvé', code: 'NOT_FOUND', status: 404 });
+    
+    if (users[0].pin_code !== current_pin) {
+      return res.status(400).json({ error: 'Code PIN actuel incorrect', code: 'INVALID_PIN', status: 400 });
+    }
+
+    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0 WHERE id = ?', [new_pin, req.user.id]);
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: req.user.email,
+      action: 'code_pin_mis_a_jour', categorie: audit.CATEGORIES.securite,
+      cible_type: 'user', cible_id: req.user.id, req
+    });
+
+    await notifications.envoyer(req.user.id, 'Sécurité', 'Votre code PIN a été modifié.', 'info');
+
+    res.json({ success: true, message: 'Code PIN mis à jour avec succès' });
   } catch (err) {
     next(err);
   }

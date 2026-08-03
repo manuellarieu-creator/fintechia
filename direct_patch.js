@@ -16,7 +16,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Udseendepræferencer anvendt",
     "Préférences de confidentialité enregistrées": "Privatlivspræferencer gemt",
     "Notification": "Notification",
-    "Succès !": "Succes!"
+    "Succès !": "Succes!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Forkert PIN-kode. Indtast venligst den korrekte PIN-kode."
   },
   "de": {
     "Profil mis à jour avec succès !": "Profil erfolgreich aktualisiert!",
@@ -30,7 +31,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Erscheinungsbildeinstellungen angewendet",
     "Préférences de confidentialité enregistrées": "Datenschutzeinstellungen gespeichert",
     "Notification": "Benachrichtigung",
-    "Succès !": "Erfolg!"
+    "Succès !": "Erfolg!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Falscher PIN-Code. Bitte geben Sie den korrekten PIN-Code ein."
   },
   "en": {
     "Profil mis à jour avec succès !": "Profile successfully updated!",
@@ -44,7 +46,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Appearance preferences applied",
     "Préférences de confidentialité enregistrées": "Privacy preferences saved",
     "Notification": "Notification",
-    "Succès !": "Success!"
+    "Succès !": "Success!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Incorrect PIN code. Please enter the correct PIN code."
   },
   "es": {
     "Profil mis à jour avec succès !": "¡Perfil actualizado con éxito!",
@@ -58,7 +61,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Preferencias de apariencia aplicadas",
     "Préférences de confidentialité enregistrées": "Preferencias de privacidad guardadas",
     "Notification": "Notificación",
-    "Succès !": "¡Éxito!"
+    "Succès !": "¡Éxito!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Código PIN incorrecto. Por favor, introduzca el código PIN correcto."
   },
   "fr": {
     "Profil mis à jour avec succès !": "Profil mis à jour avec succès !",
@@ -72,7 +76,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Préférences d'apparence appliquées",
     "Préférences de confidentialité enregistrées": "Préférences de confidentialité enregistrées",
     "Notification": "Notification",
-    "Succès !": "Succès !"
+    "Succès !": "Succès !",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Code PIN erroné. Veuillez entrer le bon code PIN."
   },
   "hr": {
     "Profil mis à jour avec succès !": "Profil uspješno ažuriran!",
@@ -86,7 +91,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Postavke izgleda primijenjene",
     "Préférences de confidentialité enregistrées": "Postavke privatnosti spremljene",
     "Notification": "Obavijest",
-    "Succès !": "Uspjeh!"
+    "Succès !": "Uspjeh!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Netočan PIN kod. Molimo unesite ispravan PIN kod."
   },
   "hu": {
     "Profil mis à jour avec succès !": "A profil sikeresen frissítve!",
@@ -100,7 +106,8 @@ const translations = {
     "Préférences d'apparence appliquées": "Megjelenési beállítások alkalmazva",
     "Préférences de confidentialité enregistrées": "Adatvédelmi beállítások mentve",
     "Notification": "Értesítés",
-    "Succès !": "Siker!"
+    "Succès !": "Siker!",
+    "Code PIN erroné. Veuillez entrer le bon code PIN.": "Helytelen PIN-kód. Kérjük, adja meg a helyes PIN-kódot."
   }
 };
 

@@ -156,7 +156,7 @@ async function apiCall(endpoint, method = 'GET', body = null) {
 
   const res = await fetch(`/api${endpoint}`, options);
   
-  if (res.status === 401 && endpoint !== '/auth/login') {
+  if (res.status === 401 && !endpoint.startsWith('/auth/login')) {
     localStorage.removeItem('fintech_token');
     showPage('pg-login');
     const urlAction = new URLSearchParams(window.location.search).get('action');
@@ -862,6 +862,80 @@ document.getElementById('form-profile')?.addEventListener('submit', async (e) =>
     checkAuth(); // Refresh UI with new data
   } catch(err) {
     alert(err.message);
+  }
+});
+
+// Password update
+document.getElementById('btn-update-password')?.addEventListener('click', async () => {
+  const currentPassword = document.getElementById('settings-current-password').value;
+  const newPassword = document.getElementById('settings-new-password').value;
+  const confirmPassword = document.getElementById('settings-confirm-password').value;
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return alert('Veuillez remplir tous les champs', 'error');
+  }
+  if (newPassword !== confirmPassword) {
+    return alert('Les mots de passe ne correspondent pas', 'error');
+  }
+  if (newPassword.length < 6) {
+    return alert('Le mot de passe doit contenir au moins 6 caractères', 'error');
+  }
+
+  const btn = document.getElementById('btn-update-password');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation: spin 1s linear infinite;"></i> Patientez...';
+  btn.disabled = true;
+
+  try {
+    const res = await apiCall('/auth/password', 'PATCH', { current_password: currentPassword, new_password: newPassword });
+    if (res && res.success) {
+      alert('Mot de passe mis à jour', 'success');
+      document.getElementById('settings-current-password').value = '';
+      document.getElementById('settings-new-password').value = '';
+      document.getElementById('settings-confirm-password').value = '';
+    }
+  } catch (err) {
+    alert(err.message || 'Erreur lors de la mise à jour du mot de passe', 'error');
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+});
+
+// PIN update
+document.getElementById('btn-update-pin')?.addEventListener('click', async () => {
+  const currentPin = document.getElementById('settings-current-pin').value;
+  const newPin = document.getElementById('settings-new-pin').value;
+  const confirmPin = document.getElementById('settings-confirm-pin').value;
+
+  if (!currentPin || !newPin || !confirmPin) {
+    return alert('Veuillez remplir tous les champs', 'error');
+  }
+  if (newPin !== confirmPin) {
+    return alert('Les codes PIN ne correspondent pas', 'error');
+  }
+  if (newPin.length !== 6 || isNaN(newPin)) {
+    return alert('Le code PIN doit contenir 6 chiffres', 'error');
+  }
+
+  const btn = document.getElementById('btn-update-pin');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation: spin 1s linear infinite;"></i> Patientez...';
+  btn.disabled = true;
+
+  try {
+    const res = await apiCall('/auth/pin', 'PATCH', { current_pin: currentPin, new_pin: newPin });
+    if (res && res.success) {
+      alert('Code PIN mis à jour avec succès', 'success');
+      document.getElementById('settings-current-pin').value = '';
+      document.getElementById('settings-new-pin').value = '';
+      document.getElementById('settings-confirm-pin').value = '';
+    }
+  } catch (err) {
+    alert(err.message || 'Erreur lors de la mise à jour du code PIN', 'error');
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
   }
 });
 
