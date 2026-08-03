@@ -6,7 +6,7 @@
 #app-wrap {
   width: 100%;
   max-width: 420px;
-  min-height: 100vh;
+  min-height: 133.333vh;
   background: var(--bg);
   box-shadow: var(--shadow-lg);
   position: relative;
@@ -319,7 +319,7 @@
   #app-wrap { max-width: 100%; background: #F8FAFC; align-items: stretch; }
 
   /* SIDEBAR */
-  .nb-sidebar { width: 260px; min-width: 260px; background: white; border-right: 1px solid #E2E8F0; padding: 24px 20px; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+  .nb-sidebar { width: 260px; min-width: 260px; background: white; border-right: 1px solid #E2E8F0; padding: 24px 20px; display: flex; flex-direction: column; position: sticky; top: 0; height: 133.333vh; flex-shrink: 0; }
   .nb-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; font-weight: 800; font-size: 20px; color: #0F172A; }
   .nb-logo-icon { width: 32px; height: 32px; background: #2563EB; color: white; display: flex; justify-content: center; align-items: center; border-radius: 8px; font-size: 16px; font-weight: bold; }
   

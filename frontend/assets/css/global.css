@@ -28,6 +28,7 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
+  min-height: 133.333vh;
 }
 
 /* ═══ LANGUE ═══ */
