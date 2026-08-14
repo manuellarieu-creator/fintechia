@@ -352,6 +352,8 @@
   function generateStep4Form(type) {
     const now = new Date();
     const dateStr = now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+    const mode = contratFormData.modeSignature || 'electronique';
+    const isElec = mode === 'electronique';
 
     return `
       <div class="contrat-step-content">
@@ -392,18 +394,18 @@
 
         <div class="contrat-field-group">
           <label>Lieu de signature</label>
-          <input type="text" class="contrat-input" id="contrat-lieu-signature" placeholder="Ville" oninput="updateContratField('lieuSignature', this.value)">
+          <input type="text" class="contrat-input" id="contrat-lieu-signature" value="${contratFormData.lieuSignature || ''}" placeholder="Ville" oninput="updateContratField('lieuSignature', this.value)">
         </div>
 
         <div class="contrat-field-group">
           <label>Mode de signature</label>
           <select class="contrat-select" id="contrat-mode-signature" onchange="updateContratField('modeSignature', this.value); document.getElementById('signature-electronique-ui').style.display = this.value === 'electronique' ? 'block' : 'none'; document.getElementById('signature-impression-ui').style.display = this.value === 'imprimer' ? 'block' : 'none'; const signBtn = document.getElementById('contrat-btn-sign'); if(signBtn) { signBtn.innerHTML = this.value === 'imprimer' ? '<i class=\'ti ti-printer\'></i> Imprimer le contrat' : '<i class=\'ti ti-writing\'></i> Signer le contrat'; }">
-            <option value="electronique" selected>Signature électronique (Recommandé)</option>
-            <option value="imprimer">Imprimer le contrat pour le signer</option>
+            <option value="electronique" ${isElec ? 'selected' : ''}>Signature électronique (Recommandé)</option>
+            <option value="imprimer" ${!isElec ? 'selected' : ''}>Imprimer le contrat pour le signer</option>
           </select>
         </div>
 
-        <div id="signature-electronique-ui">
+        <div id="signature-electronique-ui" style="display: ${isElec ? 'block' : 'none'};">
           <div class="contrat-info-box" style="background:#EFF6FF; border-color:#BFDBFE; color:#1E3A8A;">
             <i class="ti ti-shield-lock"></i>
             <span>Pour signer électroniquement ce contrat valant signature physique, veuillez vous authentifier.</span>
@@ -423,12 +425,12 @@
           </div>
 
           <label class="contrat-checkbox-wrapper" style="margin-top:16px;">
-            <input type="checkbox" id="contrat-signature-finale" onchange="updateContratField('signatureFinale', this.checked)">
+            <input type="checkbox" id="contrat-signature-finale" onchange="updateContratField('signatureFinale', this.checked)" ${contratFormData.signatureFinale ? 'checked' : ''}>
             <span style="font-weight:600;">Je confirme ma signature électronique de ce contrat et m'engage aux conditions décrites.</span>
           </label>
         </div>
 
-        <div id="signature-impression-ui" style="display:none; margin-top:16px;">
+        <div id="signature-impression-ui" style="display: ${!isElec ? 'block' : 'none'}; margin-top:16px;">
           <div class="contrat-info-box" style="background:#F8FAFC; border-color:#E2E8F0; color:#475569;">
             <i class="ti ti-printer"></i>
             <span>Veuillez imprimer le contrat généré, le signer manuellement et nous le retourner par la messagerie sécurisée.</span>
