@@ -540,7 +540,7 @@
   };
 
   // ===== Mise à jour de l'aperçu du contrat =====
-  function updateContratPreview() {
+  window.updateContratPreview = function() {
     const previewBody = document.getElementById('contrat-preview-content');
     if (!previewBody) return;
 

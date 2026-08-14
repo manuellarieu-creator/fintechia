@@ -1075,13 +1075,7 @@ window.viewAdminContract = function() {
         // Initialiser les variables globales requises par contrats.js
         window.contratFormData = c.formData || {};
         window.currentCreditData = adminCredits.find(cred => cred.id === parseInt(document.getElementById('manage-credit-id').value)) || { montant: 0, duree: 12 };
-        
-        let previewHtml = '';
-        if (typeof window.generatePreviewHTML === 'function') {
-            previewHtml = window.generatePreviewHTML(c.type || 'personnel');
-        } else {
-            previewHtml = '<p style="color:red;">Erreur: Impossible de charger le générateur de contrat.</p>';
-        }
+        window.currentType = c.type || 'personnel';
 
         details.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #E2E8F0; padding-bottom:10px;">
@@ -1091,11 +1085,18 @@ window.viewAdminContract = function() {
               </div>
               <p style="color:#10B981; font-weight:600; margin:0; font-size:11px;"><i class="ti ti-shield-check"></i> Authentification forte (PIN + OTP) vérifiée.</p>
             </div>
-            <div style="background:#fff; padding:15px; border-radius:8px; border:1px solid #E2E8F0; max-height:450px; overflow-y:auto; color:#1C2436; font-size:13px; line-height:1.6;">
-              ${previewHtml}
+            <div id="contrat-preview-content" style="background:#fff; padding:15px; border-radius:8px; border:1px solid #E2E8F0; max-height:450px; overflow-y:auto; color:#1C2436; font-size:13px; line-height:1.6; text-align:left;">
             </div>
         `;
         document.getElementById('modal-admin-contract').style.display = 'flex';
+
+        setTimeout(() => {
+            if (typeof window.updateContratPreview === 'function') {
+                window.updateContratPreview();
+            } else {
+                document.getElementById('contrat-preview-content').innerHTML = '<p style="color:red;">Erreur: Impossible de charger le générateur de contrat.</p>';
+            }
+        }, 50);
     }
 }
 
