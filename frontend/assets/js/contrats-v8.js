@@ -225,10 +225,32 @@
         </div>
 
         <div class="contrat-field-group">
-          <label>Objet du financement</label>
+          <label>Objet détaillé du financement</label>
           <textarea class="contrat-input" id="contrat-objet" rows="3" placeholder="${getObjetPlaceholder(type)}" oninput="updateContratField('objet', this.value)" style="resize:vertical;"></textarea>
           <div class="field-hint">Décrivez brièvement l'objet de votre demande de financement</div>
         </div>
+
+        ${type === 'consommation' ? `
+        <h3 class="contrat-section-title" style="margin-top:24px;">Détails de l'achat</h3>
+        <div class="contrat-row">
+          <div class="contrat-field-group">
+            <label>Catégorie d'achat</label>
+            <select class="contrat-select" id="contrat-type-achat" onchange="updateContratField('typeAchat', this.value)">
+              <option value="">Sélectionner</option>
+              <option value="Véhicule (Auto/Moto)">Véhicule (Auto/Moto)</option>
+              <option value="Équipement / Mobilier">Équipement / Mobilier</option>
+              <option value="Travaux / Rénovation">Travaux / Rénovation</option>
+              <option value="Voyage / Loisirs">Voyage / Loisirs</option>
+              <option value="Événement (Mariage, etc.)">Événement (Mariage, etc.)</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+          <div class="contrat-field-group">
+            <label>Vendeur / Prestataire (Optionnel)</label>
+            <input type="text" class="contrat-input" id="contrat-fournisseur" placeholder="Ex: Concessionnaire, Magasin..." oninput="updateContratField('fournisseur', this.value)">
+          </div>
+        </div>
+        ` : ''}
 
         ${type === 'immobilier' ? `
         <h3 class="contrat-section-title" style="margin-top:24px;">Bien immobilier</h3>
@@ -718,6 +740,13 @@
           <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
             ${contratFormData.objet ? `<strong>${contratFormData.objet}</strong>` : '<span class="contrat-doc-placeholder">À compléter dans le formulaire (étape 2)</span>'}
           </div>
+          ${type === 'consommation' ? `
+          <p>Détails de l'achat :</p>
+          <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
+            <p style="margin:0 0 4px 0;"><strong>Catégorie d'achat :</strong> ${field('typeAchat', 'À préciser')}</p>
+            <p style="margin:0;"><strong>Vendeur / Prestataire :</strong> ${field('fournisseur', 'Non spécifié')}</p>
+          </div>
+          ` : ''}
           ${type === 'immobilier' ? `
           <p>Détails du bien immobilier concerné :</p>
           <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
@@ -1251,6 +1280,8 @@
       'contrat-accept-assurance': 'acceptAssurance',
       'contrat-accept-garantie': 'acceptGarantie',
       'contrat-lieu-signature': 'lieuSignature',
+      'contrat-type-achat': 'typeAchat',
+      'contrat-fournisseur': 'fournisseur',
       'contrat-mode-signature': 'modeSignature',
       'contrat-mention-manuscrite': 'mentionManuscrite',
       'contrat-signature-finale': 'signatureFinale'
