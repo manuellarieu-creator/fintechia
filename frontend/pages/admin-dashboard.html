@@ -203,6 +203,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
       <div class="section-tab" onclick="showSettingsTab('cartes', this)"><i class="ti ti-credit-card" style="font-size:12px;margin-right:5px;"></i>Cartes</div>
       <div class="section-tab" onclick="showSettingsTab('api', this)"><i class="ti ti-plug" style="font-size:12px;margin-right:5px;"></i>API & intégrations</div>
       <div class="section-tab" onclick="showSettingsTab('conformite', this)"><i class="ti ti-file-analytics" style="font-size:12px;margin-right:5px;"></i>Conformité</div>
+      <div class="section-tab" onclick="showSettingsTab('contrats', this)"><i class="ti ti-file-signature" style="font-size:12px;margin-right:5px;"></i>Contrats & Frais</div>
     </div>
 
     <!-- Corps : grille 3 colonnes -->
@@ -573,6 +574,32 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
         </div>
       </div>
 
+      <!-- CONTRATS & FRAIS -->
+      <div id="tab-contrats" style="display:none;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="card">
+          <div class="ch"><div><h3>Frais de dossier par défaut</h3><p>Applicables à la création du crédit</p></div></div>
+          <div class="field"><label>Prêt personnel</label>
+            <div style="position:relative;"><input id="set-frais_dossier_personnel" value="0.00"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Crédit consommation</label>
+            <div style="position:relative;"><input id="set-frais_dossier_consommation" value="0.00"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Crédit Immobilier</label>
+            <div style="position:relative;"><input id="set-frais_dossier_immobilier" value="0.00"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+          <div class="field"><label>Financement Grands Projets</label>
+            <div style="position:relative;"><input id="set-frais_dossier_grands_projets" value="0.00"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#94A3B8;">€</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch"><div><h3>Mentions Légales (Contrats)</h3><p>Pour la génération dynamique</p></div></div>
+          <div class="field"><label>Service Réclamations (Adresse)</label><input id="set-adresse_reclamations" value=""></div>
+          <div class="field"><label>Service Réclamations (Email)</label><input id="set-email_reclamations" value=""></div>
+          <div class="field"><label>Service Réclamations (Téléphone)</label><input id="set-telephone_reclamations" value=""></div>
+          <div class="field"><label>Juridiction compétente</label><input id="set-juridiction_competente" value=""></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2595,7 +2622,7 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
                     <option value="en_attente">En attente (Nouvelle demande)</option>
                     <option value="etude">En étude (Analyse en cours)</option>
                     <option value="incomplet">Incomplet (Dossier à compléter)</option>
-                    <option value="rejete">Rejeté (Refus)</option>
+                    <option value="contrat_a_signer">Contrat à signer (À remplir par le client)</option>
                     <option value="valide_succes">Validé (Accepté, en attente de versement)</option>
                     <option value="credite">Crédité (Fonds débloqués)</option>
                 </select>

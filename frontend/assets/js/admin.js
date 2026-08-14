@@ -962,6 +962,7 @@ async function loadAdminCredits() {
         let badgeText = 'En attente';
         if (c.statut === 'etude') { badgeClass = 'bw'; badgeText = 'En étude'; }
         else if (c.statut === 'incomplet') { badgeClass = 'bd'; badgeText = 'Incomplet'; }
+        else if (c.statut === 'contrat_a_signer') { badgeClass = 'bw'; badgeText = 'Contrat à signer'; }
         else if (c.statut === 'valide_succes') { badgeClass = 'bs'; badgeText = 'Validé (Succès)'; }
         else if (c.statut === 'credite') { badgeClass = 'bs'; badgeText = 'Crédité'; }
         
@@ -990,6 +991,7 @@ async function loadAdminCredits() {
                     <option value="en_attente" ${c.statut === 'en_attente' ? 'selected' : ''}>En attente</option>
                     <option value="etude" ${c.statut === 'etude' ? 'selected' : ''}>En étude</option>
                     <option value="incomplet" ${c.statut === 'incomplet' ? 'selected' : ''}>Incomplet</option>
+                    <option value="contrat_a_signer" ${c.statut === 'contrat_a_signer' ? 'selected' : ''}>Contrat à signer</option>
                     <option value="valide_succes" ${c.statut === 'valide_succes' || c.statut === 'valide' ? 'selected' : ''}>Validé</option>
                     <option value="credite" ${c.statut === 'credite' ? 'selected' : ''}>Crédité</option>
                     <option value="rejete" ${c.statut === 'rejete' ? 'selected' : ''}>Rejeté</option>

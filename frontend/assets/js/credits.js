@@ -1,21 +1,85 @@
-// Credits Logic
+// Credits Logic — Configuration centralisée des 4 types de crédit
+
+window.CREDIT_CONFIG = {
+  personnel: {
+    label: 'Prêt personnel',
+    minAmount: 5000, maxAmount: 120000, stepAmount: 500,
+    minDuration: 3, maxDuration: 60, stepDuration: 1,
+    rates: [
+      { max: 50000, rate: 0.03 },
+      { max: 120000, rate: 0.025 }
+    ],
+    defaultAmount: 15000,
+    defaultDuration: 24
+  },
+  consommation: {
+    label: 'Crédit de consommation',
+    minAmount: 5000, maxAmount: 30000, stepAmount: 500,
+    minDuration: 3, maxDuration: 60, stepDuration: 1,
+    rates: [{ max: 30000, rate: 0.03 }],
+    defaultAmount: 10000,
+    defaultDuration: 24
+  },
+  immobilier: {
+    label: 'Crédit immobilier',
+    minAmount: 70000, maxAmount: 1000000, stepAmount: 5000,
+    minDuration: 24, maxDuration: 300, stepDuration: 6,
+    rates: [
+      { max: 500000, rate: 0.025 },
+      { max: 1000000, rate: 0.02 }
+    ],
+    defaultAmount: 200000,
+    defaultDuration: 240
+  },
+  grands_projets: {
+    label: 'Financement grands projets',
+    minAmount: 1000000, maxAmount: 5000000, stepAmount: 50000,
+    minDuration: 24, maxDuration: 360, stepDuration: 6,
+    rates: [
+      { max: 2000000, rate: 0.02 },
+      { max: 5000000, rate: 0.015 }
+    ],
+    defaultAmount: 1500000,
+    defaultDuration: 120
+  }
+};
+
+// Utilitaire: récupérer le taux pour un montant et un type donnés
+window.getCreditRate = function(type, amount) {
+  const config = window.CREDIT_CONFIG[type];
+  if (!config) return 0.03;
+  for (const bracket of config.rates) {
+    if (amount <= bracket.max) return bracket.rate;
+  }
+  return config.rates[config.rates.length - 1].rate;
+};
+
+// Utilitaire: formater un nombre en euros
+function fmt(n) {
+  return Math.round(n).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
+}
+
+// Utilitaire: calculer la mensualité
+window.computeMonthlyPayment = function(principal, annualRate, months) {
+  if (months <= 0 || principal <= 0) return 0;
+  const r = annualRate / 12;
+  if (r === 0) return principal / months;
+  return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+};
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ===== Anciens éléments (landing page éventuelle) =====
   const amountEl = document.getElementById('credit-amount-range');
   const durationEl = document.getElementById('credit-duration-range');
   const amountOut = document.getElementById('credit-amount-display');
   const durationOut = document.getElementById('credit-duration-display');
   const monthlyOut = document.getElementById('credit-mensualite-display');
-  const rate = 0.039;
 
-  function fmt(n) {
-    return Math.round(n).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
-  }
-
-  function computeMonthly() {
+  function computeMonthlyOld() {
     if (!amountEl || !durationEl) return;
     const P = parseFloat(amountEl.value);
     const n = parseFloat(durationEl.value);
+    const rate = 0.039;
     const r = rate / 12;
     const monthly = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
     
@@ -24,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
     monthlyOut.textContent = fmt(monthly);
   }
 
-  if (amountEl) amountEl.addEventListener('input', computeMonthly);
-  if (durationEl) durationEl.addEventListener('input', computeMonthly);
-  computeMonthly();
+  if (amountEl) amountEl.addEventListener('input', computeMonthlyOld);
+  if (durationEl) durationEl.addEventListener('input', computeMonthlyOld);
+  if (amountEl) computeMonthlyOld();
   
   // Load credits on view show
   const originalShowView = window.showView;
@@ -78,7 +142,8 @@ async function submitCreditRequest() {
         nom, 
         email, 
         telephone, 
-        message 
+        message,
+        type_credit: motif
     });
     if (res.success) {
       document.getElementById('modalStep3').style.display = 'none';
@@ -87,6 +152,14 @@ async function submitCreditRequest() {
       if(titleEl) titleEl.style.display = 'none';
       const subEl = document.getElementById('modalSubtitle');
       if(subEl) subEl.style.display = 'none';
+      
+      // Stocker la référence et les infos pour le contrat
+      window._lastCreditRef = res.reference;
+      window._lastCreditId = res.id;
+      window._lastCreditType = motif;
+      window._lastCreditAmount = parseFloat(montant);
+      window._lastCreditDuration = parseInt(duree_mois);
+      
       loadCredits();
       
       // Update sidebar active class if applicable
@@ -141,6 +214,11 @@ async function loadCredits() {
          progressWidth = '66%';
          progressColor = '#3b82f6';
          progressText = 'Analyse';
+      } else if (c.statut === 'contrat_a_signer') {
+         statusBadge = '<span class="badge badge-warning" style="background:#f59e0b; color:#fff;">Contrat à signer</span>';
+         progressWidth = '80%';
+         progressColor = '#f59e0b';
+         progressText = 'Signature';
       } else if (c.statut === 'valide') {
          statusBadge = '<span class="badge badge-success">Validé</span>';
          progressWidth = '100%';
@@ -153,9 +231,21 @@ async function loadCredits() {
          progressText = 'Rejeté';
       }
 
+      // Déterminer le label du type de crédit
+      const typeConfig = window.CREDIT_CONFIG[c.type_credit || c.motif];
+      const typeLabel = typeConfig ? typeConfig.label : (c.motif || c.type_credit || '-');
+
+      let contratBtn = '';
+      if (c.statut === 'contrat_a_signer') {
+        contratBtn = `<button class="btn-primary" style="font-size:12px; padding:6px 12px; border-radius:6px; background:#059669; border:none; color:white; cursor:pointer; margin-left:8px; font-weight:600;" onclick="openContratModal('${c.type_credit || c.motif}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-writing"></i> Signer le contrat</button>`;
+      } else if (c.statut !== 'rejete') {
+        contratBtn = `<button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer; margin-left:8px; color:#059669; border-color:#059669;" onclick="openContratModal('${c.type_credit || c.motif}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-file-text"></i> Contrat</button>`;
+      }
+
       const actions = `
-        <div style="margin-top: 12px;">
+        <div style="margin-top: 12px; display:flex; flex-wrap:wrap; gap:6px;">
             <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}')">Suivre ma demande</button>
+            ${contratBtn}
         </div>
       `;
 
@@ -163,7 +253,7 @@ async function loadCredits() {
         <tr>
           <td style="font-family:monospace; font-weight:600;">${c.reference}</td>
           <td>${date}</td>
-          <td>${c.motif}</td>
+          <td>${typeLabel}</td>
           <td style="font-weight:600;">${montant}</td>
           <td>${c.duree_mois} mois</td>
           <td>
@@ -175,7 +265,7 @@ async function loadCredits() {
       mobileHtml += `
         <div style="border-bottom:1px solid #E2E8F0; padding:12px 0;">
           <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span style="font-weight:600;">${c.motif}</span>
+            <span style="font-weight:600;">${typeLabel}</span>
             <span style="font-weight:600;">${montant}</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748b;">
@@ -227,6 +317,11 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
         step3Label = "Incomplet";
         document.getElementById('suivi-message').innerText = "Votre dossier est incomplet. Veuillez vérifier vos documents ou nous contacter.";
         document.getElementById('suivi-message-container').style.display = 'block';
+    } else if (statut === 'contrat_a_signer') {
+        progressLevel = 3;
+        step3Label = "Contrat";
+        document.getElementById('suivi-message').innerText = "Votre demande est acceptée sous réserve de la signature de votre contrat. Veuillez le remplir et le signer.";
+        document.getElementById('suivi-message-container').style.display = 'block';
     } else if (statut === 'rejete') {
         progressLevel = 3;
         step3Label = "Rejeté";
@@ -248,10 +343,12 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
         let color = '#2563EB';
         if (i === 3 && (statut === 'rejete' || statut === 'incomplet')) {
             color = '#DC2626';
+        } else if (i === 3 && statut === 'contrat_a_signer') {
+            color = '#F59E0B'; // Orange
         } else if (i === 4 || (i === 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite'))) {
             color = '#16A34A';
         }
-        if (i < progressLevel && progressLevel === 3 && (statut === 'rejete' || statut === 'incomplet')) color = '#2563EB'; // Keep previous steps blue
+        if (i < progressLevel && progressLevel === 3 && (statut === 'rejete' || statut === 'incomplet' || statut === 'contrat_a_signer')) color = '#2563EB'; // Keep previous steps blue
         if (i < progressLevel && progressLevel >= 3 && (statut === 'valide_succes' || statut === 'valide' || statut === 'credite')) color = '#2563EB';
         
         node.style.background = color;
@@ -299,6 +396,13 @@ function openCreditModal() {
     document.getElementById('modalStep3').style.display = 'none';
     document.getElementById('modalSuccess').style.display = 'none';
     document.getElementById('credit-error-msg').style.display = 'none';
+    const titleEl = document.getElementById('modalCreditTitle');
+    if(titleEl) titleEl.style.display = 'block';
+    const subEl = document.getElementById('modalSubtitle');
+    if(subEl) subEl.style.display = 'block';
+    
+    // Initialiser les sliders selon le type sélectionné
+    updateSlidersForType();
   }
 }
 
@@ -380,36 +484,97 @@ function toggleRevenu() {
   }
 }
 
-// Initialiser le calcul et les documents
-document.addEventListener('DOMContentLoaded', () => {
+// ===== Logique dynamique des sliders selon le type de crédit =====
+
+function updateSlidersForType() {
+  const typeSelect = document.getElementById('modalCreditType');
+  const mAmount = document.getElementById('modalAmount');
+  const mDuration = document.getElementById('modalDuration');
+  if (!typeSelect || !mAmount || !mDuration) return;
+
+  const type = typeSelect.value;
+  const config = window.CREDIT_CONFIG[type];
+  if (!config) return;
+
+  // Mettre à jour les attributs des sliders
+  mAmount.min = config.minAmount;
+  mAmount.max = config.maxAmount;
+  mAmount.step = config.stepAmount;
+  
+  mDuration.min = config.minDuration;
+  mDuration.max = config.maxDuration;
+  mDuration.step = config.stepDuration;
+
+  // Réinitialiser les valeurs par défaut
+  mAmount.value = config.defaultAmount;
+  mDuration.value = config.defaultDuration;
+
+  // Mettre à jour les indicateurs de limites
+  const limitsEl = document.getElementById('modalLimitsInfo');
+  if (limitsEl) {
+    limitsEl.innerHTML = `
+      <span style="font-size:12px; color:#64748b;">
+        <i class="ti ti-info-circle"></i> 
+        ${fmt(config.minAmount)} — ${fmt(config.maxAmount)} · ${config.minDuration} à ${config.maxDuration} mois
+      </span>
+    `;
+  }
+
+  // Recalculer
+  computeModalMonthly();
+}
+
+function computeModalMonthly() {
   const mAmount = document.getElementById('modalAmount');
   const mDuration = document.getElementById('modalDuration');
   const mAmountOut = document.getElementById('modalAmountOut');
   const mDurationOut = document.getElementById('modalDurationOut');
   const mMonthly = document.getElementById('modalMonthly');
   const mRateLabel = document.getElementById('modalRateLabel');
+  const typeSelect = document.getElementById('modalCreditType');
 
-  function computeModalMonthly() {
-    if (!mAmount || !mDuration) return;
-    var P = parseFloat(mAmount.value);
-    var n = parseFloat(mDuration.value);
-    var rate = 0.03;
-    if(P > 50000 && P <= 500000) rate = 0.025;
-    if(P > 500000) rate = 0.02;
+  if (!mAmount || !mDuration) return;
 
-    var r = rate / 12;
-    var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
-    
-    mAmountOut.textContent = Math.round(P).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
-    mDurationOut.textContent = Math.round(n) + ' mois';
-    mMonthly.textContent = Math.round(monthly).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR')) + ' €';
-    mRateLabel.textContent = "Mensualité estimée (TAEG indicatif: " + (rate*100) + "%)";
-  }
+  const P = parseFloat(mAmount.value);
+  const n = parseFloat(mDuration.value);
+  const type = typeSelect ? typeSelect.value : 'personnel';
   
+  // Calculer le taux selon le type et le montant
+  const rate = window.getCreditRate(type, P);
+  const monthly = window.computeMonthlyPayment(P, rate, n);
+  
+  // Calculer le coût total du crédit
+  const totalCost = (monthly * n) - P;
+  
+  if (mAmountOut) mAmountOut.textContent = fmt(P);
+  if (mDurationOut) mDurationOut.textContent = Math.round(n) + ' mois';
+  if (mMonthly) mMonthly.textContent = fmt(monthly);
+  if (mRateLabel) mRateLabel.textContent = "Mensualité estimée (TAEG indicatif: " + (rate*100) + "%)";
+  
+  // Coût total
+  const totalCostEl = document.getElementById('modalTotalCost');
+  if (totalCostEl) {
+    totalCostEl.textContent = 'Coût total du crédit : ' + fmt(totalCost);
+  }
+}
+
+// Initialiser le calcul et les documents
+document.addEventListener('DOMContentLoaded', () => {
+  const mAmount = document.getElementById('modalAmount');
+  const mDuration = document.getElementById('modalDuration');
+  const typeSelect = document.getElementById('modalCreditType');
+
   if(mAmount) {
     mAmount.addEventListener('input', computeModalMonthly);
     mDuration.addEventListener('input', computeModalMonthly);
-    computeModalMonthly();
+    
+    // Écouter le changement de type de crédit
+    if (typeSelect) {
+      typeSelect.addEventListener('change', updateSlidersForType);
+    }
+    
+    // Initialiser avec le type par défaut
+    updateSlidersForType();
   }
   
   // Remplir les docs initiaux

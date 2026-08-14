@@ -3,7 +3,7 @@
 // 1. Navigation entre les onglets
 function showSettingsTab(tabId, el) {
     // Cacher tous les onglets
-    const tabs = ['etablissement', 'securite', 'equipe', 'notifications', 'virements', 'cartes', 'api', 'conformite'];
+    const tabs = ['etablissement', 'securite', 'equipe', 'notifications', 'virements', 'cartes', 'api', 'conformite', 'contrats'];
     tabs.forEach(t => {
         const div = document.getElementById('tab-' + t);
         if(div) div.style.display = 'none';
@@ -37,11 +37,12 @@ async function loadSystemSettings() {
     if (!res) return;
 
     // Remplir les inputs et selects
-    for (const [key, value] of Object.entries(res)) {
+    for (const [key, item] of Object.entries(res)) {
+        const value = typeof item === 'object' ? item.value : item;
         // Toggles
         const toggleEl = document.getElementById('tg-' + key);
         if (toggleEl) {
-            if (value === 'true') {
+            if (value === 'true' || value === true) {
                 toggleEl.classList.remove('off');
                 toggleEl.classList.add('on');
             } else {
@@ -84,7 +85,7 @@ async function saveSystemSettings() {
     const oldText = btn.innerHTML;
     btn.innerHTML = '<i class="ti ti-loader" style="font-size:13px; animation: spin 1s linear infinite;"></i> Enregistrement...';
 
-    const res = await fetchAPI('/settings', 'PATCH', { settings });
+    const res = await fetchAPI('/settings', 'PATCH', settings);
     if (res && res.success) {
         alert('Paramètres enregistrés avec succès.');
     } else {

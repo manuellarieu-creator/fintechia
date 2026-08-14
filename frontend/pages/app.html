@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../assets/css/budget.css">
   <link rel="stylesheet" href="../assets/css/releves.css">
   <link rel="stylesheet" href="../assets/css/settings.css">
+  <link rel="stylesheet" href="../assets/css/contrats.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
@@ -2862,34 +2863,38 @@ function saveSettingsMock(msg) {
     <!-- Etape 1 : Simulation -->
     <div id="modalStep1">
       <div class="form-group" style="margin-bottom:20px;">
-        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du crédit</label>
-        <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit;">
-          <option value="immobilier">Immobilier</option>
+        <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Type de crédit</label>
+        <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit; font-size:14px;">
           <option value="personnel">Prêt personnel</option>
-          <option value="consommation">Crédit consommation</option>
+          <option value="consommation">Crédit de consommation</option>
+          <option value="immobilier">Crédit immobilier</option>
           <option value="grands_projets">Financement grands projets</option>
         </select>
+        <div id="modalLimitsInfo" style="margin-top:8px;"></div>
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
           <span style="color:#5B5546;">Montant emprunté</span>
-          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">62 000 €</span>
+          <span class="nb-mono" id="modalAmountOut" style="font-weight:500;">15 000 €</span>
         </div>
-        <input class="nb-range" type="range" min="5000" max="2000000" step="1000" value="62000" id="modalAmount" style="width:100%;">
+        <input class="nb-range" type="range" min="5000" max="120000" step="500" value="15000" id="modalAmount" style="width:100%;">
       </div>
 
       <div style="margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
           <span style="color:#5B5546;">Durée</span>
-          <span class="nb-mono" id="modalDurationOut" style="font-weight:500;">120 mois</span>
+          <span class="nb-mono" id="modalDurationOut" style="font-weight:500;">24 mois</span>
         </div>
-        <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
+        <input class="nb-range" type="range" min="3" max="60" step="1" value="24" id="modalDuration" style="width:100%;">
       </div>
 
-      <div style="display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
-        <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualité estimée (TAEG indicatif: 2.5%)</span>
-        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">625 €</span>
+      <div style="padding-top:20px;border-top:1px solid #EFEBDE;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;">
+          <span style="font-size:13px; color:#5B5546;" id="modalRateLabel">Mensualité estimée (TAEG indicatif: 3%)</span>
+          <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;">640 €</span>
+        </div>
+        <div id="modalTotalCost" style="font-size:12px; color:#64748b; margin-top:4px;"></div>
       </div>
 
       <button id="btnRequestAmount" class="btn-primary" style="width:100%; margin-top:24px; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep2()">Demander ce montant</button>
@@ -2954,10 +2959,15 @@ function saveSettingsMock(msg) {
           <i class="ti ti-check"></i>
        </div>
        <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">🎉 Demande envoyée !</h3>
-       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez suivre son avancement depuis votre espace client. 🚀</p>
-       <div style="display:flex; justify-content:center; gap:16px;">
-         <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#2563EB;" onclick="closeModal('modal-demande-credit');">Suivre ma demande</button>
-         <button class="btn-outline" style="padding:12px 24px; border-radius:6px; font-weight:600;" onclick="closeModal('modal-demande-credit'); loadCredits();">Fermer</button>
+       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez maintenant remplir votre contrat ou suivre l'avancement depuis votre espace client. 🚀</p>
+       <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+         <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#059669; width:100%; max-width:320px;" onclick="closeModal('modal-demande-credit'); if(window._lastCreditType) openContratModal(window._lastCreditType, {reference:window._lastCreditRef, montant:window._lastCreditAmount, duree:window._lastCreditDuration, id:window._lastCreditId});">
+           <i class="ti ti-file-text"></i> Remplir le contrat
+         </button>
+         <div style="display:flex; justify-content:center; gap:12px; width:100%;">
+           <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#2563EB;" onclick="closeModal('modal-demande-credit');">Suivre ma demande</button>
+           <button class="btn-outline" style="padding:12px 24px; border-radius:6px; font-weight:600;" onclick="closeModal('modal-demande-credit'); loadCredits();">Fermer</button>
+         </div>
        </div>
     </div>
 
@@ -3057,6 +3067,7 @@ function saveSettingsMock(msg) {
 
 
 <script src="../assets/js/credits.js"></script>
+<script src="../assets/js/contrats.js"></script>
   <!-- Mobile Bottom Nav -->
   <nav class="mobile-bottom-nav">
     <a href="#" class="mobile-nav-item active" onclick="showMobileView('m-view-dashboard'); updateMobileNav(this)">

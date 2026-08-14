@@ -1028,4 +1028,43 @@ router.get('/debug-db', guard, async (req, res) => {
   }
 });
 
+// GET /api/admin/settings
+router.get('/settings', guard, async (req, res, next) => {
+  try {
+    const [rows] = await db.query("SELECT setting_key, setting_value, description FROM settings");
+    const settingsObj = {};
+    rows.forEach(r => {
+      settingsObj[r.setting_key] = { value: r.setting_value, description: r.description };
+    });
+    res.json(settingsObj);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/settings
+router.patch('/settings', guard, async (req, res, next) => {
+  try {
+    const settings = req.body;
+    for (const [key, value] of Object.entries(settings)) {
+      if (typeof value !== 'object') {
+        await db.query(
+          "UPDATE settings SET setting_value = ? WHERE setting_key = ?",
+          [value, key]
+        );
+      } else {
+        await db.query(
+          "UPDATE settings SET setting_value = ? WHERE setting_key = ?",
+          [value.value, key]
+        );
+      }
+    }
+    
+    await audit.log(req.user.id, 'modification_parametres', 'Succès', 'Paramètres généraux mis à jour');
+    res.json({ success: true, message: "Paramètres mis à jour avec succès" });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
