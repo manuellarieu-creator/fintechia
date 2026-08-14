@@ -292,7 +292,7 @@
 
         <div id="virement-container" class="contrat-field-group" style="display:none;">
           <label>IBAN Fintechia pour vos virements</label>
-          <div class="contrat-input" style="font-family:monospace; letter-spacing:1px; background:#F8FAFC; color:#64748B; cursor:default; user-select:all; display:flex; align-items:center;">FR76 1234 5678 9012 3456 7890 123</div>
+          <div class="contrat-input" style="font-family:monospace; letter-spacing:1px; background:#F8FAFC; color:#64748B; cursor:default; user-select:all; display:flex; align-items:center;">${window.currentUserAccount ? window.currentUserAccount.iban : 'IBAN non disponible'}</div>
           <div class="field-hint">Veuillez mettre en place un virement permanent vers ce compte avant chaque échéance</div>
         </div>
       </div>
@@ -1133,6 +1133,32 @@
 
   // ===== Navigation entre les étapes =====
   window.contratNextStep = function() {
+    if (currentStep === 1 && window.currentUserData) {
+      const errors = [];
+      const user = window.currentUserData;
+      
+      if (contratFormData.nom && user.nom && contratFormData.nom.trim().toLowerCase() !== user.nom.toLowerCase()) {
+        errors.push("le Nom");
+      }
+      if (contratFormData.email && user.email && contratFormData.email.trim().toLowerCase() !== user.email.toLowerCase()) {
+        errors.push("l'Email");
+      }
+      if (contratFormData.telephone && user.telephone && contratFormData.telephone.trim().replace(/\s/g, '') !== user.telephone.replace(/\s/g, '')) {
+        errors.push("le Téléphone");
+      }
+      if (contratFormData.dateNaissance && user.date_naissance) {
+        const dbDate = user.date_naissance.substring(0, 10);
+        if (contratFormData.dateNaissance !== dbDate) {
+          errors.push("la Date de naissance");
+        }
+      }
+
+      if (errors.length > 0) {
+        alert("Les informations suivantes ne correspondent pas à celles fournies lors de la création de votre compte :\n- " + errors.join('\n- ') + "\n\nVeuillez corriger ces champs pour continuer.");
+        return;
+      }
+    }
+
     if (currentStep < TOTAL_STEPS) {
       currentStep++;
       renderCurrentStep();

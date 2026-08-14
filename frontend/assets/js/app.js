@@ -217,6 +217,8 @@ async function checkAuth() {
 }
 
 async function initDashboard(user, account, kycStatut = null) {
+  window.currentUserData = user;
+  window.currentUserAccount = account;
   window.userTransferTypes = user.transfer_types ? user.transfer_types.split(',') : ['standard', 'immediat', 'swift', 'programme'];
 
   // Filter transfer types in dropdowns
