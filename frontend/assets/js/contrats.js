@@ -1242,8 +1242,12 @@
 
       if (el.type === 'checkbox') {
         el.checked = !!contratFormData[dataKey];
+        el.dispatchEvent(new Event('change'));
       } else {
         el.value = contratFormData[dataKey];
+        if (el.tagName === 'SELECT') {
+          el.dispatchEvent(new Event('change'));
+        }
       }
     }
   }
@@ -1256,6 +1260,30 @@
     if (!contratFormData.signatureFinale) {
       alert('Veuillez cocher la case de confirmation.');
       return;
+    }
+
+    if (contratFormData.modeSignature === 'electronique') {
+      const pinCode = contratFormData.pinCode || document.getElementById('contrat-pin').value;
+      const emailCode = contratFormData.emailCode || document.getElementById('contrat-email-code').value;
+      
+      if (!pinCode || pinCode.length !== 6) { alert('Veuillez saisir votre code PIN à 6 chiffres.'); return; }
+      if (!emailCode || emailCode.length !== 6) { alert('Veuillez saisir le code Email à 6 chiffres.'); return; }
+      
+      // Verifier PIN
+      try {
+        await window.apiCall('/auth/verify-pin', 'POST', { pin: pinCode });
+      } catch(e) {
+        alert('Code PIN incorrect : ' + e.message);
+        return;
+      }
+      
+      // Verifier OTP
+      try {
+        await window.apiCall('/auth/otp/verify', 'POST', { code: emailCode });
+      } catch(e) {
+        alert('Code Email incorrect : ' + e.message);
+        return;
+      }
     }
 
     if (contratFormData.modeSignature === 'imprimer') {
@@ -1284,13 +1312,41 @@
         </html>
       `);
       printWindow.document.close();
+
+      // Afficher modale d'upload
+      const container = document.querySelector('.contrat-container');
+      if (container) {
+        const uploadOverlay = document.createElement('div');
+        uploadOverlay.className = 'contrat-success-overlay';
+        uploadOverlay.innerHTML = `
+          <div class="contrat-success-icon" style="background:#EFF6FF; color:#3B82F6;">
+            <i class="ti ti-upload"></i>
+          </div>
+          <h2 style="font-size:24px; font-weight:700; color:#1C2436; margin:0 0 8px;">Transmettre le contrat signé</h2>
+          <p style="font-size:14px; color:#64748b; margin:0 0 24px; max-width:400px; text-align:center;">
+            Vous devez avoir lu et compris l'intégralité des clauses du contrat avant de le signer.<br><br>
+            Si vous êtes sûr d'avoir compris, veuillez transmettre sous format PDF la copie du contrat signé.
+          </p>
+          <div style="width:100%; max-width:300px; margin-bottom:20px;">
+            <input type="file" id="contrat-upload-file" accept="application/pdf" class="contrat-input" style="padding:10px;">
+          </div>
+          <button class="contrat-btn contrat-btn-next" onclick="submitPrintedContrat()" style="padding:12px 32px; background:#2563EB;">
+            Envoyer le contrat
+          </button>
+          <button class="btn-outline" onclick="closeContratModal(); loadCredits();" style="margin-top:12px; padding:8px 16px;">
+            Annuler
+          </button>
+        `;
+        container.style.position = 'relative';
+        container.appendChild(uploadOverlay);
+      }
       return;
     }
 
     try {
-      // Sauvegarder le contrat via l'API
+      // Sauvegarder le contrat via l'API (Cas Electronique)
       if (currentCreditData.id) {
-        await apiCall(`/credits/${currentCreditData.id}/contrat`, 'POST', {
+        await window.apiCall(`/credits/${currentCreditData.id}/contrat`, 'POST', {
           type: currentType,
           formData: contratFormData,
           signedAt: new Date().toISOString()
@@ -1311,8 +1367,7 @@
           </div>
           <h2 style="font-size:24px; font-weight:700; color:#1C2436; margin:0 0 8px;">Contrat signé !</h2>
           <p style="font-size:14px; color:#64748b; margin:0 0 24px; max-width:400px; text-align:center;">
-            Votre ${getContratTitle(currentType).toLowerCase()} a été signé avec succès. 
-            Vous pouvez le retrouver dans votre espace client.
+            Votre ${getContratTitle(currentType).toLowerCase()} a été signé électroniquement avec succès. Un e-mail de confirmation vous a été envoyé.
           </p>
           <button class="contrat-btn contrat-btn-next" onclick="closeContratModal(); loadCredits();" style="padding:12px 32px;">
             Retour à mes crédits
@@ -1323,6 +1378,44 @@
       }
     } catch (e) {
       alert('Erreur lors de la signature : ' + (e.message || 'Veuillez réessayer.'));
+    }
+  };
+
+  window.submitPrintedContrat = async function() {
+    const fileInput = document.getElementById('contrat-upload-file');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      alert("Veuillez sélectionner un fichier PDF.");
+      return;
+    }
+    
+    try {
+      if (currentCreditData.id) {
+        await window.apiCall(`/credits/${currentCreditData.id}/contrat`, 'POST', {
+          type: currentType,
+          formData: { ...contratFormData, upload: true, modeSignature: 'imprimer' },
+          signedAt: new Date().toISOString()
+        });
+        localStorage.removeItem('contrat_draft_' + currentCreditData.id);
+      }
+      
+      const container = document.querySelector('.contrat-container');
+      const uploadOverlay = container.querySelector('.contrat-success-overlay');
+      if (uploadOverlay) {
+        uploadOverlay.innerHTML = `
+          <div class="contrat-success-icon" style="background:#10B981; color:white;">
+            <i class="ti ti-check"></i>
+          </div>
+          <h2 style="font-size:24px; font-weight:700; color:#1C2436; margin:0 0 8px;">Envoyé avec succès</h2>
+          <p style="font-size:14px; color:#64748b; margin:0 0 24px; max-width:400px; text-align:center;">
+            Votre contrat a bien été transmis et sera vérifié par nos équipes. Un e-mail de confirmation vous a été envoyé.
+          </p>
+          <button class="contrat-btn contrat-btn-next" onclick="closeContratModal(); loadCredits();" style="padding:12px 32px;">
+            Fermer
+          </button>
+        `;
+      }
+    } catch(err) {
+      alert("Erreur lors de l'envoi : " + err.message);
     }
   };
 

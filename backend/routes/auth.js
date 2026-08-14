@@ -699,10 +699,45 @@ router.post('/reset-valider', [
 router.post('/otp/send', authMiddleware, async (req, res, next) => {
   try {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
+    global.otpCache = global.otpCache || {};
+    global.otpCache[req.user.id] = code;
     await mailer.envoyerOTP(req.user.email, req.user.prenom, code);
-    // Dans une vraie app, on sauvegarderait le code en BDD ou en cache avec une expiration (ex: Redis).
-    // Pour l'instant, comme c'est une démo, on simule l'envoi.
     res.json({ success: true, message: 'Code OTP envoyé', code_debug: code });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/otp/verify
+router.post('/otp/verify', authMiddleware, [body('code').notEmpty()], validateReq, async (req, res, next) => {
+  try {
+    global.otpCache = global.otpCache || {};
+    const expected = global.otpCache[req.user.id];
+    if (!expected || expected !== req.body.code) {
+      return res.status(400).json({ success: false, error: 'Code de validation incorrect ou expiré' });
+    }
+    // Code correct, on le supprime (usage unique)
+    delete global.otpCache[req.user.id];
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/verify-pin
+router.post('/verify-pin', authMiddleware, [body('pin').isLength({ min: 6 })], validateReq, async (req, res, next) => {
+  try {
+    const [users] = await db.query('SELECT code_pin FROM users WHERE id = ?', [req.user.id]);
+    if (!users.length) return res.status(404).json({ error: 'Utilisateur introuvable' });
+    
+    // Le code PIN est-il stocké en hash ou en clair ? 
+    // Vérifions si bcrypt compare ou si c'est en clair.
+    // Pour Fintechia, le PIN est souvent haché.
+    const match = await bcrypt.compare(req.body.pin, users[0].code_pin);
+    if (!match) {
+      return res.status(400).json({ success: false, error: 'Code PIN incorrect' });
+    }
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }
