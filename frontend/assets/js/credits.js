@@ -413,13 +413,20 @@ window.openSuivreDemande = function(reference, statut, montant, date, creditId, 
 }
 
 window.openContratModalFromSuivi = function() {
-    if (currentSuiviCreditId && currentSuiviCreditType && currentSuiviCreditData) {
-        closeModal('modal-suivre-demande');
-        if (typeof openContratModal === 'function') {
-            openContratModal(currentSuiviCreditType, currentSuiviCreditData);
-        } else {
-            console.error("openContratModal n'est pas défini");
+    if (!currentSuiviCreditType || !currentSuiviCreditData) {
+        alert("Erreur: Les données du crédit n'ont pas pu être chargées pour la modale.");
+        return;
+    }
+    
+    closeModal('modal-suivre-demande');
+    if (typeof window.openContratModal === 'function') {
+        try {
+            window.openContratModal(currentSuiviCreditType, currentSuiviCreditData);
+        } catch(err) {
+            alert("Erreur JS interne lors de l'ouverture du contrat: " + err.message + "\n" + err.stack);
         }
+    } else {
+        alert("Erreur: Le module des contrats (contrats.js) n'a pas été chargé correctement.");
     }
 };
 
