@@ -695,4 +695,17 @@ router.post('/reset-valider', [
   }
 });
 
+// POST /api/auth/otp/send
+router.post('/otp/send', authMiddleware, async (req, res, next) => {
+  try {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    await mailer.envoyerOTP(req.user.email, req.user.prenom, code);
+    // Dans une vraie app, on sauvegarderait le code en BDD ou en cache avec une expiration (ex: Redis).
+    // Pour l'instant, comme c'est une démo, on simule l'envoi.
+    res.json({ success: true, message: 'Code OTP envoyé', code_debug: code });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

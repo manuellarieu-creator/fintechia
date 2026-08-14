@@ -32,6 +32,26 @@
     return titles[type] || 'Contrat de Crédit';
   }
 
+  // ===== Génération OTP =====
+  window.sendContratOtp = async function(btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader rotate"></i> Envoi...';
+    btn.disabled = true;
+    try {
+      const res = await window.apiCall('/auth/otp/send', 'POST', {});
+      if (res && res.success) {
+        alert('Le code de sécurité a été envoyé à votre adresse email.');
+      } else {
+        alert('Erreur lors de l\'envoi du code OTP.');
+      }
+    } catch(err) {
+      alert('Erreur réseau lors de l\'envoi du code OTP.');
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  };
+
   // ===== Génération du formulaire par étape =====
   function generateStepForm(step, type) {
     switch(step) {
@@ -258,16 +278,22 @@
 
         <div class="contrat-field-group" style="margin-top:16px;">
           <label>Mode de remboursement</label>
-          <select class="contrat-select" id="contrat-mode-remboursement" onchange="updateContratField('modeRemboursement', this.value)">
-            <option value="prelevement">Prélèvement automatique (recommandé)</option>
+          <select class="contrat-select" id="contrat-mode-remboursement" onchange="updateContratField('modeRemboursement', this.value); document.getElementById('iban-container').style.display = this.value === 'prelevement' ? 'block' : 'none'; document.getElementById('virement-container').style.display = this.value === 'virement' ? 'block' : 'none';">
+            <option value="prelevement" selected>Prélèvement automatique (recommandé)</option>
             <option value="virement">Virement mensuel</option>
           </select>
         </div>
 
-        <div class="contrat-field-group">
+        <div id="iban-container" class="contrat-field-group">
           <label>IBAN de prélèvement</label>
           <input type="text" class="contrat-input" id="contrat-iban" placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" oninput="updateContratField('iban', this.value)" style="font-family:monospace; letter-spacing:1px;">
           <div class="field-hint">Compte sur lequel les mensualités seront prélevées</div>
+        </div>
+
+        <div id="virement-container" class="contrat-field-group" style="display:none;">
+          <label>IBAN Fintechia pour vos virements</label>
+          <div class="contrat-input" style="font-family:monospace; letter-spacing:1px; background:#F8FAFC; color:#64748B; cursor:default; user-select:all; display:flex; align-items:center;">FR76 1234 5678 9012 3456 7890 123</div>
+          <div class="field-hint">Veuillez mettre en place un virement permanent vers ce compte avant chaque échéance</div>
         </div>
       </div>
     `;
@@ -371,7 +397,7 @@
 
         <div class="contrat-field-group">
           <label>Mode de signature</label>
-          <select class="contrat-select" id="contrat-mode-signature" onchange="updateContratField('modeSignature', this.value); document.getElementById('signature-electronique-ui').style.display = this.value === 'electronique' ? 'block' : 'none'; document.getElementById('signature-impression-ui').style.display = this.value === 'imprimer' ? 'block' : 'none';">
+          <select class="contrat-select" id="contrat-mode-signature" onchange="updateContratField('modeSignature', this.value); document.getElementById('signature-electronique-ui').style.display = this.value === 'electronique' ? 'block' : 'none'; document.getElementById('signature-impression-ui').style.display = this.value === 'imprimer' ? 'block' : 'none'; const signBtn = document.getElementById('contrat-btn-sign'); if(signBtn) { signBtn.innerHTML = this.value === 'imprimer' ? '<i class=\'ti ti-printer\'></i> Imprimer le contrat' : '<i class=\'ti ti-writing\'></i> Signer le contrat'; }">
             <option value="electronique" selected>Signature électronique (Recommandé)</option>
             <option value="imprimer">Imprimer le contrat pour le signer</option>
           </select>
@@ -384,15 +410,15 @@
           </div>
           
           <div class="contrat-field-group">
-            <label>Code PIN (4 chiffres)</label>
-            <input type="password" class="contrat-input" id="contrat-pin" placeholder="Votre code secret" maxlength="4" oninput="updateContratField('pinCode', this.value)" style="letter-spacing:4px; font-weight:700;">
+            <label>Code PIN (6 chiffres)</label>
+            <input type="password" class="contrat-input" id="contrat-pin" placeholder="Votre code secret" maxlength="6" oninput="updateContratField('pinCode', this.value)" style="letter-spacing:4px; font-weight:700;">
           </div>
           
           <div class="contrat-field-group">
             <label>Code de validation Email</label>
             <div style="display:flex; gap:8px;">
               <input type="text" class="contrat-input" id="contrat-email-code" placeholder="Code à 6 chiffres" maxlength="6" oninput="updateContratField('emailCode', this.value)" style="letter-spacing:2px; font-weight:700;">
-              <button class="btn-outline" style="padding:0 12px; font-size:12px; border-radius:6px; cursor:pointer; background:white;" onclick="event.preventDefault(); alert('Le code de sécurité a été envoyé à votre adresse email.');">Recevoir le code</button>
+              <button class="btn-outline" style="padding:0 12px; font-size:12px; border-radius:6px; cursor:pointer; background:white; min-width:140px;" onclick="event.preventDefault(); window.sendContratOtp(this);">Recevoir le code</button>
             </div>
           </div>
 
@@ -407,6 +433,10 @@
             <i class="ti ti-printer"></i>
             <span>Veuillez imprimer le contrat généré, le signer manuellement et nous le retourner par la messagerie sécurisée.</span>
           </div>
+          <label class="contrat-checkbox-wrapper" style="margin-top:16px;">
+            <input type="checkbox" id="contrat-signature-finale-imprimer" onchange="updateContratField('signatureFinale', this.checked); document.getElementById('contrat-signature-finale').checked = this.checked;">
+            <span style="font-weight:600;">Je confirme mon intention d'imprimer et de signer manuellement ce contrat.</span>
+          </label>
         </div>
       </div>
     `;
@@ -625,7 +655,8 @@
             <p><strong>${field('civilite', '')} ${field('prenom', 'Prénom')} ${field('nom', 'Nom')}</strong></p>
             <p>Date de naissance : ${field('dateNaissance', 'JJ/MM/AAAA')}</p>
             <p>Adresse : ${field('adresse', 'Adresse complète')}</p>
-            <p>Pays de résidence : ${field('nationalite', 'Pays')}</p>
+            <p>Nationalité : ${field('nationalite', 'Pays')}</p>
+            <p>Téléphone : ${field('telephone', 'Numéro de téléphone')}</p>
             <p>Document d'identité : ${field('idType', 'Type')} – ${field('idNumero', 'Numéro')}</p>
             <p style="margin-top:8px;"><em>Ci-après dénommé « l'Emprunteur ».</em></p>
           </div>

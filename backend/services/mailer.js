@@ -123,9 +123,33 @@ async function envoyerConfirmationVirement(email, prenom, montant, destinataire,
   try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
 }
 
+async function envoyerOTP(email, prenom, code) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Votre code de sécurité Fintechia',
+    text: `Bonjour ${prenom},\n\nVotre code de sécurité à 6 chiffres est : ${code}. Ce code est valable pour la signature de votre contrat ou toute autre opération sécurisée.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #0F1B33; padding: 20px; text-align: center; color: white;">
+          <h1 style="margin: 0; color: #4F46E5;">Fintechia</h1>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+          <h2>Bonjour ${prenom},</h2>
+          <p>Voici votre code de sécurité :</p>
+          <div style="font-size: 32px; font-weight: bold; letter-spacing: 4px; padding: 20px; background: #F3F4F6; border-radius: 8px; margin: 20px 0;">${code}</div>
+          <p>Ne partagez ce code avec personne.</p>
+        </div>
+      </div>
+    `
+  };
+  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+}
+
 module.exports = {
   envoyerResetMdp,
   envoyerConfirmationMdp,
   envoyerBienvenue,
-  envoyerConfirmationVirement
+  envoyerConfirmationVirement,
+  envoyerOTP
 };
