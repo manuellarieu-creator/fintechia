@@ -231,20 +231,22 @@ async function loadCredits() {
          progressText = 'Rejeté';
       }
 
-      // Déterminer le label du type de crédit
       const typeConfig = window.CREDIT_CONFIG[c.type_credit || c.motif];
       const typeLabel = typeConfig ? typeConfig.label : (c.motif || c.type_credit || '-');
+      const creditType = c.type_credit || c.motif;
+      const creditDataObj = {reference:c.reference, montant:c.montant, duree:c.duree_mois, taux:c.taux, mensualite:c.mensualite, id:c.id};
+      const payloadStr = encodeURIComponent(JSON.stringify(creditDataObj));
 
       let contratBtn = '';
       if (c.statut === 'contrat_a_signer') {
-        contratBtn = `<button class="btn-primary" style="font-size:12px; padding:6px 12px; border-radius:6px; background:#059669; border:none; color:white; cursor:pointer; margin-left:8px; font-weight:600;" onclick="openContratModal('${c.type_credit || c.motif}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-writing"></i> Signer le contrat</button>`;
+        contratBtn = `<button class="btn-primary" style="font-size:12px; padding:6px 12px; border-radius:6px; background:#059669; border:none; color:white; cursor:pointer; margin-left:8px; font-weight:600;" onclick="openContratModal('${creditType}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-writing"></i> Signer le contrat</button>`;
       } else if (c.statut !== 'rejete') {
-        contratBtn = `<button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer; margin-left:8px; color:#059669; border-color:#059669;" onclick="openContratModal('${c.type_credit || c.motif}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-file-text"></i> Contrat</button>`;
+        contratBtn = `<button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer; margin-left:8px; color:#059669; border-color:#059669;" onclick="openContratModal('${creditType}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-file-text"></i> Contrat</button>`;
       }
 
       const actions = `
         <div style="margin-top: 12px; display:flex; flex-wrap:wrap; gap:6px;">
-            <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}', '${c.id}')">Suivre ma demande</button>
+            <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}', '${c.id}', '${creditType}', '${payloadStr}')">Suivre ma demande</button>
             ${contratBtn}
         </div>
       `;
@@ -288,9 +290,20 @@ async function loadCredits() {
 
 // Modal Suivi Demande
 let currentSuiviCreditId = null;
+let currentSuiviCreditType = null;
+let currentSuiviCreditData = null;
 
-window.openSuivreDemande = function(reference, statut, montant, date, creditId) {
+window.openSuivreDemande = function(reference, statut, montant, date, creditId, typeStr, creditDataStr) {
     currentSuiviCreditId = creditId;
+    if (typeStr && creditDataStr) {
+        currentSuiviCreditType = typeStr;
+        try {
+            currentSuiviCreditData = JSON.parse(decodeURIComponent(creditDataStr));
+        } catch(e) {
+            console.error("Erreur de décodage des données du crédit", e);
+        }
+    }
+    
     document.getElementById('suivi-ref').innerText = reference;
     document.getElementById('suivi-montant').innerText = montant;
     document.getElementById('suivi-date').innerText = date;
@@ -400,9 +413,13 @@ window.openSuivreDemande = function(reference, statut, montant, date, creditId) 
 }
 
 window.openContratModalFromSuivi = function() {
-    if (currentSuiviCreditId) {
+    if (currentSuiviCreditId && currentSuiviCreditType && currentSuiviCreditData) {
         closeModal('modal-suivre-demande');
-        openContratModal(currentSuiviCreditId);
+        if (typeof openContratModal === 'function') {
+            openContratModal(currentSuiviCreditType, currentSuiviCreditData);
+        } else {
+            console.error("openContratModal n'est pas défini");
+        }
     }
 };
 
