@@ -50,6 +50,7 @@ router.post('/register', [
   } catch(e) {}
   try { await db.query("CREATE TABLE IF NOT EXISTS user_devices (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, device_token VARCHAR(255) NOT NULL UNIQUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN nationalite VARCHAR(100) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
 
   const connection = await db.getConnection();
@@ -245,7 +246,7 @@ router.post('/login', [
 
     res.json({
       token,
-      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, telephone_code: user.telephone_code, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
       account,
       kyc_statut
     });
