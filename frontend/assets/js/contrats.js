@@ -566,25 +566,25 @@
         
         let dateStrLoop = currentEcheanceDate.toLocaleDateString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' });
         
-        echeancierRows += \`<tr>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:center;">\${i}</td>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:center;">\${dateStrLoop}</td>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">\${formatMoney(capitalEcheance)}</td>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">\${formatMoney(interetsEcheance)}</td>
+        echeancierRows += `<tr>
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:center;">${i}</td>
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:center;">${dateStrLoop}</td>
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">${formatMoney(capitalEcheance)}</td>
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">${formatMoney(interetsEcheance)}</td>
             <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">0,00 €</td>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right; font-weight:600;">\${formatMoney(mensualiteCourante)}</td>
-            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">\${formatMoney(capitalRestant)}</td>
-        </tr>\`;
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right; font-weight:600;">${formatMoney(mensualiteCourante)}</td>
+            <td style="padding:6px; border:1px solid #E2E8F0; text-align:right;">${formatMoney(capitalRestant)}</td>
+        </tr>`;
         
         currentEcheanceDate.setMonth(currentEcheanceDate.getMonth() + 1);
     }
     
     if (duree > 12) {
-        echeancierRows += \`<tr>
+        echeancierRows += `<tr>
             <td colspan="7" style="padding:8px; border:1px solid #E2E8F0; text-align:center; background:#F8FAFC; color:#64748B; font-style:italic;">
-                ... (\${duree - 12} échéances masquées dans l'aperçu) ...
+                ... (${duree - 12} échéances masquées dans l'aperçu) ...
             </td>
-        </tr>\`;
+        </tr>`;
     }
 
     let contratHtml = '';
