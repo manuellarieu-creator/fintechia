@@ -1305,7 +1305,7 @@
 
   // ===== Envoyer le code OTP =====
   window.sendContratOtp = async function(btn) {
-    if (!currentUserAccount || !currentUserAccount.email) {
+    if (!window.currentUserData || !window.currentUserData.email) {
       alert("Votre adresse email n'est pas configurée.");
       return;
     }
@@ -1313,7 +1313,7 @@
     btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Envoi...';
     btn.disabled = true;
     try {
-      await window.apiCall('/auth/otp/send', 'POST', { email: currentUserAccount.email });
+      await window.apiCall('/auth/otp/send', 'POST', { email: window.currentUserData.email });
       btn.innerHTML = '<i class="ti ti-check" style="color:#059669;"></i> Envoyé';
       setTimeout(() => {
         btn.innerHTML = originalText;
