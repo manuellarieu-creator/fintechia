@@ -1234,6 +1234,7 @@
       'contrat-accept-assurance': 'acceptAssurance',
       'contrat-accept-garantie': 'acceptGarantie',
       'contrat-lieu-signature': 'lieuSignature',
+      'contrat-mode-signature': 'modeSignature',
       'contrat-mention-manuscrite': 'mentionManuscrite',
       'contrat-signature-finale': 'signatureFinale'
     };
