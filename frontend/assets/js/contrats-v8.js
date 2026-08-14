@@ -1303,6 +1303,30 @@
     }
   }
 
+  // ===== Envoyer le code OTP =====
+  window.sendContratOtp = async function(btn) {
+    if (!currentUserAccount || !currentUserAccount.email) {
+      alert("Votre adresse email n'est pas configurée.");
+      return;
+    }
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Envoi...';
+    btn.disabled = true;
+    try {
+      await window.apiCall('/auth/otp/send', 'POST', { email: currentUserAccount.email });
+      btn.innerHTML = '<i class="ti ti-check" style="color:#059669;"></i> Envoyé';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }, 5000);
+      alert('Un code de validation a été envoyé à votre adresse email.');
+    } catch(e) {
+      alert('Erreur lors de l\'envoi du code : ' + e.message);
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  };
+
   // ===== Signer le contrat =====
   window.signContrat = async function() {
     const signBtn = document.getElementById('contrat-btn-sign');
