@@ -1071,17 +1071,29 @@ window.viewAdminContract = function() {
         // Électronique
         const c = data.contrat;
         const details = document.getElementById('admin-contract-details');
-        const form = c.formData || {};
+        
+        // Initialiser les variables globales requises par contrats.js
+        window.contratFormData = c.formData || {};
+        window.currentCreditData = adminCredits.find(cred => cred.id === parseInt(document.getElementById('manage-credit-id').value)) || { montant: 0, duree: 12 };
+        
+        let previewHtml = '';
+        if (typeof window.generatePreviewHTML === 'function') {
+            previewHtml = window.generatePreviewHTML(c.type || 'personnel');
+        } else {
+            previewHtml = '<p style="color:red;">Erreur: Impossible de charger le générateur de contrat.</p>';
+        }
+
         details.innerHTML = `
-            <p><strong>Type :</strong> Crédit ${c.type || 'Non spécifié'}</p>
-            <p><strong>Signé le :</strong> ${new Date(c.signedAt).toLocaleString()}</p>
-            <p><strong>Signataire ID :</strong> ${c.signedBy}</p>
-            <hr style="margin:10px 0; border:0; border-top:1px solid #E2E8F0;">
-            <p><strong>Nom :</strong> ${form.nom || ''} ${form.prenom || ''}</p>
-            <p><strong>Email :</strong> ${form.email || ''}</p>
-            <p><strong>Téléphone :</strong> ${form.telephone || ''}</p>
-            <hr style="margin:10px 0; border:0; border-top:1px solid #E2E8F0;">
-            <p style="color:#10B981; font-weight:600;"><i class="ti ti-shield-check"></i> Authentification forte (PIN + OTP) vérifiée.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #E2E8F0; padding-bottom:10px;">
+              <div>
+                <p style="margin:0; font-size:12px;"><strong>Signé le :</strong> ${new Date(c.signedAt).toLocaleString()}</p>
+                <p style="margin:0; font-size:10px; color:#64748B;"><strong>Signataire ID :</strong> ${c.signedBy}</p>
+              </div>
+              <p style="color:#10B981; font-weight:600; margin:0; font-size:11px;"><i class="ti ti-shield-check"></i> Authentification forte (PIN + OTP) vérifiée.</p>
+            </div>
+            <div style="background:#fff; padding:15px; border-radius:8px; border:1px solid #E2E8F0; max-height:450px; overflow-y:auto; color:#1C2436; font-size:13px; line-height:1.6;">
+              ${previewHtml}
+            </div>
         `;
         document.getElementById('modal-admin-contract').style.display = 'flex';
     }
