@@ -532,6 +532,9 @@
   // ===== Mise à jour d'un champ =====
   window.updateContratField = function(field, value) {
     contratFormData[field] = value;
+    if (currentCreditData && currentCreditData.id) {
+      localStorage.setItem('contrat_draft_' + currentCreditData.id, JSON.stringify(contratFormData));
+    }
     updateContratPreview();
     updateSignButtonState();
   };
@@ -1247,6 +1250,9 @@
       }
 
       // Afficher le succès
+      if (currentCreditData.id) {
+        localStorage.removeItem('contrat_draft_' + currentCreditData.id);
+      }
       const container = document.querySelector('.contrat-container');
       if (container) {
         const successOverlay = document.createElement('div');
@@ -1278,6 +1284,12 @@
     currentCreditData = creditData || {};
     currentStep = 1;
     contratFormData = {};
+    if (currentCreditData.id) {
+      const saved = localStorage.getItem('contrat_draft_' + currentCreditData.id);
+      if (saved) {
+        try { contratFormData = JSON.parse(saved); } catch(e){}
+      }
+    }
 
     // Créer la modale si elle n'existe pas
     let modal = document.getElementById('modal-contrat-credit');
@@ -1349,6 +1361,7 @@
     // Initialiser l'aperçu
     updateContratPreview();
     updateStepper();
+    restoreFormValues();
   };
 
   // ===== Fermer la modale contrat =====
