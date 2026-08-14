@@ -124,7 +124,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
       folder: 'fintechia_credits',
       allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
       resource_type: 'auto',
-      public_id: (req, file) => `credit_${req.params.id || Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9]/g, '_')}`
+      public_id: (req, file) => `credit_${req.params.id || Date.now()}_${path.parse(file.originalname).name.replace(/[^a-zA-Z0-9]/g, '_')}`
     }
   });
 } else {
