@@ -421,7 +421,7 @@
 
         <div class="contrat-field-group">
           <label>Mode de signature</label>
-          <select class="contrat-select" id="contrat-mode-signature" onchange="updateContratField('modeSignature', this.value); document.getElementById('signature-electronique-ui').style.display = this.value === 'electronique' ? 'block' : 'none'; document.getElementById('signature-impression-ui').style.display = this.value === 'imprimer' ? 'block' : 'none'; const signBtn = document.getElementById('contrat-btn-sign'); if(signBtn) { signBtn.innerHTML = this.value === 'imprimer' ? '<i class=\'ti ti-printer\'></i> Imprimer le contrat' : '<i class=\'ti ti-writing\'></i> Signer le contrat'; }">
+          <select class="contrat-select" id="contrat-mode-signature" onchange="window.onChangeModeSignature(this.value)">
             <option value="electronique" ${isElec ? 'selected' : ''}>Signature électronique (Recommandé)</option>
             <option value="imprimer" ${!isElec ? 'selected' : ''}>Imprimer le contrat pour le signer</option>
           </select>
@@ -561,6 +561,23 @@
     }
     updateContratPreview();
     updateSignButtonState();
+  };
+
+  // ===== Changement du mode de signature =====
+  window.onChangeModeSignature = function(value) {
+    try {
+      window.updateContratField('modeSignature', value);
+      
+      const elecUi = document.getElementById('signature-electronique-ui');
+      const imprUi = document.getElementById('signature-impression-ui');
+      
+      if (elecUi) elecUi.style.display = value === 'electronique' ? 'block' : 'none';
+      if (imprUi) imprUi.style.display = value === 'imprimer' ? 'block' : 'none';
+      
+      updateSignButtonState();
+    } catch(e) {
+      console.error('Erreur onChangeModeSignature:', e);
+    }
   };
 
   // ===== Mise à jour de l'aperçu du contrat =====
