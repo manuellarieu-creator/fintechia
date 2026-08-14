@@ -849,7 +849,7 @@
           <p>Sous réserve de la satisfaction des conditions préalables prévues au présent Contrat, le Prêteur procède ou fait procéder au décaissement du montant du crédit.</p>
           <p>Le décaissement est effectué sur le compte bancaire FINTECHIA de l'emprunteur :</p>
           <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px;">
-            <p style="margin:0 0 4px 0;"><strong>Compte bénéficiaire :</strong> ${contratFormData.iban ? contratFormData.iban : '<span class="contrat-doc-placeholder">Compte FINTECHIA (défini par l\'admin)</span>'}</p>
+            <p style="margin:0 0 4px 0;"><strong>Compte bénéficiaire :</strong> ${contratFormData.iban ? contratFormData.iban : '<span style="font-weight:600; color:#059669;">Compte FINTECHIA de l\'emprunteur</span>'}</p>
             <p style="margin:0;"><strong>Titulaire du compte :</strong> ${field('civilite', '')} ${field('prenom', 'Prénom')} ${field('nom', 'Nom')}</p>
           </div>
           <p>Le compte bénéficiaire de l'emprunteur étant domicilié chez nous, aucune autre vérification ne sera requise après mise à disposition du montant du crédit sur le compte de l'emprunteur.</p>
@@ -896,7 +896,7 @@
           <p style="text-align:center; font-weight:700; font-size:14px; margin:12px 0;">${contratFormData.modeRemboursement === 'virement' ? 'Virement mensuel' : 'Prélèvement automatique'}</p>
           <p>Compte ou moyen de paiement utilisé :</p>
           <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px; text-align:center; font-family:monospace; font-size:14px;">
-            ${contratFormData.iban ? contratFormData.iban : '<span class="contrat-doc-placeholder">Compte défini par l\'admin</span>'}
+            ${contratFormData.iban ? contratFormData.iban : '<span style="font-weight:600; color:#059669; font-family:sans-serif;">Compte FINTECHIA de l\'emprunteur</span>'}
           </div>
           <p>Les modalités techniques de réception et d'imputation des paiements sont déterminées conformément aux procédures du Prêteur.</p>
         </div>
@@ -1038,8 +1038,8 @@
           <h4>ARTICLE 27 – COMMUNICATIONS ÉLECTRONIQUES</h4>
           <p>L'Emprunteur accepte, lorsque cela est légalement admissible, de recevoir les communications relatives au crédit par voie électronique.</p>
           <p>Adresse électronique :</p>
-          <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px; font-weight:600; text-align:center;">
-            ${currentCreditData.user_email || '<span class="contrat-doc-placeholder">Adresse email associée au compte</span>'}
+          <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px; font-weight:600; text-align:center; color:#2563EB;">
+            ${contratFormData.email || currentCreditData.user_email || '<span style="font-style:italic; color:#64748B;">Non renseignée</span>'}
           </div>
           <p>Les communications peuvent également être mises à disposition dans l'espace personnel sécurisé du client.</p>
           <p>L'Emprunteur est responsable de la conservation et de la sécurité de ses moyens d'accès à son compte.</p>
