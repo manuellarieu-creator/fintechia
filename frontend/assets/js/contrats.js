@@ -1121,11 +1121,10 @@
     if (!signBtn) return;
 
     if (currentStep === TOTAL_STEPS) {
-      const mentionOk = contratFormData.mentionManuscrite && contratFormData.mentionManuscrite.trim().toLowerCase() === 'lu et approuvé';
       const signatureOk = contratFormData.signatureFinale === true;
       const lieuOk = contratFormData.lieuSignature && contratFormData.lieuSignature.trim() !== '';
       
-      signBtn.disabled = !(mentionOk && signatureOk && lieuOk);
+      signBtn.disabled = !(signatureOk && lieuOk);
       signBtn.style.opacity = signBtn.disabled ? '0.5' : '1';
       signBtn.style.cursor = signBtn.disabled ? 'not-allowed' : 'pointer';
     }
@@ -1254,14 +1253,37 @@
     const signBtn = document.getElementById('contrat-btn-sign');
     if (signBtn && signBtn.disabled) return;
 
-    // Vérification finale
-    if (!contratFormData.mentionManuscrite || contratFormData.mentionManuscrite.trim().toLowerCase() !== 'lu et approuvé') {
-      alert('Veuillez saisir la mention « Lu et approuvé » exactement.');
+    if (!contratFormData.signatureFinale) {
+      alert('Veuillez cocher la case de confirmation.');
       return;
     }
 
-    if (!contratFormData.signatureFinale) {
-      alert('Veuillez cocher la case de confirmation de signature.');
+    if (contratFormData.modeSignature === 'imprimer') {
+      const printContent = document.getElementById('contrat-preview-content').innerHTML;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Impression du Contrat</title>
+            <style>
+              body { font-family: sans-serif; padding: 40px; color: #000; }
+              .contrat-doc-section { margin-bottom: 20px; }
+              h4 { margin: 0 0 10px; font-size: 14px; }
+              p { margin: 0 0 8px; font-size: 12px; line-height: 1.5; }
+              ul { margin: 0 0 10px 20px; font-size: 12px; line-height: 1.5; }
+              .contrat-signature-area { margin-top: 40px; page-break-inside: avoid; border-top: 1px solid #ccc; padding-top: 20px; }
+              .contrat-signature-box { border: 1px dashed #ccc; padding: 20px; text-align: center; margin-top: 10px; height: 100px; display: flex; align-items: center; justify-content: center; }
+            </style>
+          </head>
+          <body>
+            ${printContent}
+            <script>
+              window.onload = function() { window.print(); window.close(); }
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
       return;
     }
 
