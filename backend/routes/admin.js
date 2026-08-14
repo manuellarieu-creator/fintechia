@@ -874,6 +874,24 @@ router.patch('/credits/:id/statut', [guard, body('statut').notEmpty()], validate
     connection.release();
   }
 });
+// GET /api/admin/credits/:id/contrat
+router.get('/credits/:id/contrat', guard, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await db.query('SELECT contrat_data FROM credit_requests WHERE id = ?', [id]);
+    const [docs] = await db.query('SELECT file_path FROM credit_documents WHERE credit_request_id = ? AND type_document = "contrat_signe" ORDER BY created_at DESC LIMIT 1', [id]);
+    
+    if (rows.length === 0) return res.status(404).json({ error: 'Crédit non trouvé' });
+    
+    const contrat_data = rows[0].contrat_data ? (typeof rows[0].contrat_data === 'string' ? JSON.parse(rows[0].contrat_data) : rows[0].contrat_data) : null;
+    const file_path = docs.length > 0 ? docs[0].file_path : null;
+    
+    res.json({ success: true, contrat: contrat_data, file: file_path });
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 
 // POST /api/admin/users

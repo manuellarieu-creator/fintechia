@@ -1042,8 +1042,49 @@ window.manageCredit = async function(id) {
         console.error("Erreur lors du chargement des comptes", e);
     }
     
+    // Check if contract exists
+    document.getElementById('manage-credit-contract-container').style.display = 'none';
+    try {
+        const resContrat = await fetchAPI(`/admin/credits/${id}/contrat`);
+        if (resContrat && resContrat.success && (resContrat.contrat || resContrat.file)) {
+            document.getElementById('manage-credit-contract-container').style.display = 'block';
+            window.currentAdminContract = resContrat;
+            const typeText = resContrat.contrat && resContrat.contrat.formData && resContrat.contrat.formData.modeSignature === 'imprimer' 
+                ? 'Signature manuscrite (PDF Scanné)' 
+                : 'Signature électronique certifiée';
+            document.getElementById('manage-credit-contract-type').innerText = typeText;
+        }
+    } catch(e) {}
+
     toggleCreditAccountSelection();
     document.getElementById('modal-manage-credit').style.display = 'flex';
+}
+
+window.viewAdminContract = function() {
+    const data = window.currentAdminContract;
+    if (!data) return;
+    
+    if (data.file) {
+        // C'est un PDF
+        window.open(data.file, '_blank');
+    } else if (data.contrat) {
+        // Électronique
+        const c = data.contrat;
+        const details = document.getElementById('admin-contract-details');
+        const form = c.formData || {};
+        details.innerHTML = `
+            <p><strong>Type :</strong> Crédit ${c.type || 'Non spécifié'}</p>
+            <p><strong>Signé le :</strong> ${new Date(c.signedAt).toLocaleString()}</p>
+            <p><strong>Signataire ID :</strong> ${c.signedBy}</p>
+            <hr style="margin:10px 0; border:0; border-top:1px solid #E2E8F0;">
+            <p><strong>Nom :</strong> ${form.nom || ''} ${form.prenom || ''}</p>
+            <p><strong>Email :</strong> ${form.email || ''}</p>
+            <p><strong>Téléphone :</strong> ${form.telephone || ''}</p>
+            <hr style="margin:10px 0; border:0; border-top:1px solid #E2E8F0;">
+            <p style="color:#10B981; font-weight:600;"><i class="ti ti-shield-check"></i> Authentification forte (PIN + OTP) vérifiée.</p>
+        `;
+        document.getElementById('modal-admin-contract').style.display = 'flex';
+    }
 }
 
 window.toggleCreditAccountSelection = function() {

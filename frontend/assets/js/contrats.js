@@ -1390,6 +1390,22 @@
     
     try {
       if (currentCreditData.id) {
+        // Upload physique du fichier
+        const formData = new FormData();
+        formData.append('document', fileInput.files[0]);
+        formData.append('type_document', 'contrat_signe');
+        
+        const token = localStorage.getItem('fintech_token');
+        const uploadRes = await fetch(`/api/credits/${currentCreditData.id}/documents`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Erreur lors de l\'upload du document');
+
+        // Validation du contrat
         await window.apiCall(`/credits/${currentCreditData.id}/contrat`, 'POST', {
           type: currentType,
           formData: { ...contratFormData, upload: true, modeSignature: 'imprimer' },
