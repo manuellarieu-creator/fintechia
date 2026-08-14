@@ -713,11 +713,28 @@
 
         <div class="contrat-doc-section">
           <h4>ARTICLE 4 – DESTINATION DU PRÊT</h4>
-          <p>Le prêt est accordé pour un usage personnel déclaré par l'Emprunteur.</p>
+          <p>Le prêt est accordé pour un usage déclaré par l'Emprunteur.</p>
           <p>Objet déclaré du financement :</p>
           <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
             ${contratFormData.objet ? `<strong>${contratFormData.objet}</strong>` : '<span class="contrat-doc-placeholder">À compléter dans le formulaire (étape 2)</span>'}
           </div>
+          ${type === 'immobilier' ? `
+          <p>Détails du bien immobilier concerné :</p>
+          <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
+            <p style="margin:0 0 4px 0;"><strong>Adresse :</strong> ${field('adresseBien', 'À compléter')}</p>
+            <p style="margin:0 0 4px 0;"><strong>Type de bien :</strong> ${field('typeBien', 'À compléter')}</p>
+            <p style="margin:0;"><strong>Surface :</strong> ${field('surface', '0')} m²</p>
+          </div>
+          ` : ''}
+          ${type === 'grands_projets' ? `
+          <p>Détails du projet concerné :</p>
+          <div style="padding:12px; background:#F8FAFC; border-left:3px solid #2563EB; margin:12px 0;">
+            <p style="margin:0 0 4px 0;"><strong>Nom du projet :</strong> ${field('nomProjet', 'À compléter')}</p>
+            <p style="margin:0 0 4px 0;"><strong>Secteur d'activité :</strong> ${field('secteur', 'À compléter')}</p>
+            <p style="margin:0 0 4px 0;"><strong>Date de début prévue :</strong> ${field('dateDebut', 'À compléter')}</p>
+            <p style="margin:0;"><strong>Description :</strong> ${field('descProjet', 'À compléter')}</p>
+          </div>
+          ` : ''}
           <p>L'Emprunteur déclare que les informations relatives à la destination du financement sont exactes.</p>
           <p>Lorsque le Prêteur a conditionné l'octroi du crédit à une destination déterminée, l'Emprunteur s'engage à respecter cette destination.</p>
         </div>
