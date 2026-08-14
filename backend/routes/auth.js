@@ -727,14 +727,10 @@ router.post('/otp/verify', authMiddleware, [body('code').notEmpty()], validateRe
 // POST /api/auth/verify-pin
 router.post('/verify-pin', authMiddleware, [body('pin').isLength({ min: 6 })], validateReq, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT code_pin FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT pin_code FROM users WHERE id = ?', [req.user.id]);
     if (!users.length) return res.status(404).json({ error: 'Utilisateur introuvable' });
     
-    // Le code PIN est-il stocké en hash ou en clair ? 
-    // Vérifions si bcrypt compare ou si c'est en clair.
-    // Pour Fintechia, le PIN est souvent haché.
-    const match = await bcrypt.compare(req.body.pin, users[0].code_pin);
-    if (!match) {
+    if (users[0].pin_code !== req.body.pin) {
       return res.status(400).json({ success: false, error: 'Code PIN incorrect' });
     }
     res.json({ success: true });

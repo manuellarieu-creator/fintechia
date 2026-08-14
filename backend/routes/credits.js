@@ -200,6 +200,19 @@ router.post('/:id/documents', authMiddleware, upload.single('document'), async (
       [id, type_document, filePath]
     );
 
+    if (type_document === 'contrat_signe') {
+        const contratData = JSON.stringify({
+            type: 'inconnu',
+            formData: { modeSignature: 'imprimer' }
+        });
+        await db.query(
+          "UPDATE credit_requests SET contrat_data = ?, contrat_signe_at = NOW(), statut = 'etude' WHERE id = ?", 
+          [contratData, id]
+        );
+        // Notification Admin
+        await notifications.envoyer(1, 'Contrat Scanné Reçu', `L'utilisateur a uploadé son contrat scanné pour la demande #${id}.`, 'info');
+    }
+
     res.json({ success: true, message: 'Document uploadé avec succès.', filePath });
   } catch (err) {
     next(err);
@@ -226,8 +239,8 @@ router.post('/:id/contrat', authMiddleware, async (req, res, next) => {
     });
 
     await db.query(
-      'UPDATE credit_requests SET contrat_data = ?, contrat_signe_at = ? WHERE id = ?',
-      [contratData, signedAt || new Date().toISOString(), id]
+      'UPDATE credit_requests SET contrat_data = ?, contrat_signe_at = ?, statut = ? WHERE id = ?',
+      [contratData, signedAt || new Date().toISOString(), 'valide_succes', id]
     );
 
     // Notification
