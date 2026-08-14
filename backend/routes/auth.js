@@ -245,7 +245,7 @@ router.post('/login', [
 
     res.json({
       token,
-      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
       account,
       kyc_statut
     });
@@ -337,7 +337,7 @@ router.post('/login/2fa', [
     res.json({
       token,
       deviceToken, // The frontend will store this and send it on next login
-      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
       account,
       kyc_statut
     });
@@ -390,7 +390,7 @@ router.post('/reset-pin', [
     res.json({
       token,
       deviceToken,
-      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role },
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
       account,
       kyc_statut
     });
