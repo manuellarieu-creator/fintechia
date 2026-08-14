@@ -2959,11 +2959,8 @@ function saveSettingsMock(msg) {
           <i class="ti ti-check"></i>
        </div>
        <h3 style="color:#1C2436; font-size:20px; margin-bottom:10px;">🎉 Demande envoyée !</h3>
-       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pouvez maintenant remplir votre contrat ou suivre l'avancement depuis votre espace client. 🚀</p>
+       <p style="color:#5B5546; font-size:14px; margin-bottom:20px;">Votre demande a été soumise avec succès. Vous pourrez remplir votre contrat une fois que votre dossier aura été étudié et validé. Vous pouvez suivre l'avancement depuis votre espace client. 🚀</p>
        <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-         <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#059669; width:100%; max-width:320px;" onclick="closeModal('modal-demande-credit'); if(window._lastCreditType) openContratModal(window._lastCreditType, {reference:window._lastCreditRef, montant:window._lastCreditAmount, duree:window._lastCreditDuration, id:window._lastCreditId});">
-           <i class="ti ti-file-text"></i> Remplir le contrat
-         </button>
          <div style="display:flex; justify-content:center; gap:12px; width:100%;">
            <button class="btn-primary" style="padding:12px 24px; border-radius:6px; font-weight:600; background:#2563EB;" onclick="closeModal('modal-demande-credit');">Suivre ma demande</button>
            <button class="btn-outline" style="padding:12px 24px; border-radius:6px; font-weight:600;" onclick="closeModal('modal-demande-credit'); loadCredits();">Fermer</button>
