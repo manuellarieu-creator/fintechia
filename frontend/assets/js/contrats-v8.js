@@ -453,13 +453,13 @@
         </div>
 
         <div id="signature-impression-ui" style="display: ${!isElec ? 'block' : 'none'}; margin-top:16px;">
-          <div class="contrat-info-box" style="background:#F8FAFC; border-color:#E2E8F0; color:#475569;">
+          <div class="contrat-info-box" style="background:#FEF2F2; border-color:#EF4444; color:#B91C1C;">
             <i class="ti ti-printer"></i>
             <span>Veuillez imprimer le contrat généré, le signer manuellement et nous le retourner par la messagerie sécurisée.</span>
           </div>
-          <label class="contrat-checkbox-wrapper" style="margin-top:16px;">
+          <label class="contrat-checkbox-wrapper" style="margin-top:16px; border: 1px solid #EF4444; padding: 12px; border-radius: 8px; background: #FEF2F2;">
             <input type="checkbox" id="contrat-signature-finale-imprimer" onchange="updateContratField('signatureFinale', this.checked); document.getElementById('contrat-signature-finale').checked = this.checked;">
-            <span style="font-weight:600;">Je confirme mon intention d'imprimer et de signer manuellement ce contrat.</span>
+            <span style="font-weight:600; color: #B91C1C;">Je confirme mon intention d'imprimer et de signer manuellement ce contrat.</span>
           </label>
         </div>
       </div>
