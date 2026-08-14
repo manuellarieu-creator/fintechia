@@ -244,7 +244,7 @@ async function loadCredits() {
 
       const actions = `
         <div style="margin-top: 12px; display:flex; flex-wrap:wrap; gap:6px;">
-            <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}')">Suivre ma demande</button>
+            <button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer;" onclick="openSuivreDemande('${c.reference}', '${c.statut}', '${montant}', '${date}', '${c.id}')">Suivre ma demande</button>
             ${contratBtn}
         </div>
       `;
@@ -287,7 +287,10 @@ async function loadCredits() {
 }
 
 // Modal Suivi Demande
-window.openSuivreDemande = function(reference, statut, montant, date) {
+let currentSuiviCreditId = null;
+
+window.openSuivreDemande = function(reference, statut, montant, date, creditId) {
+    currentSuiviCreditId = creditId;
     document.getElementById('suivi-ref').innerText = reference;
     document.getElementById('suivi-montant').innerText = montant;
     document.getElementById('suivi-date').innerText = date;
@@ -366,6 +369,8 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
     document.getElementById('suivi-progress-line').style.background = lineColor;
     
     const actionBtn = document.getElementById('suivi-action-btn');
+    const contratBtn = document.getElementById('suivi-contrat-btn');
+    
     if (actionBtn) {
         if (statut === 'credite') {
             actionBtn.innerText = 'Voir mon solde';
@@ -383,8 +388,23 @@ window.openSuivreDemande = function(reference, statut, montant, date) {
         }
     }
     
+    if (contratBtn) {
+        if (statut === 'contrat_a_signer') {
+            contratBtn.style.display = 'block';
+        } else {
+            contratBtn.style.display = 'none';
+        }
+    }
+    
     document.getElementById('modal-suivre-demande').style.display = 'flex';
 }
+
+window.openContratModalFromSuivi = function() {
+    if (currentSuiviCreditId) {
+        closeModal('modal-suivre-demande');
+        openContratModal(currentSuiviCreditId);
+    }
+};
 
 // Modal Logic
 function openCreditModal() {
