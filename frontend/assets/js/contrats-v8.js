@@ -1175,6 +1175,13 @@
       signBtn.disabled = !(signatureOk && lieuOk);
       signBtn.style.opacity = signBtn.disabled ? '0.5' : '1';
       signBtn.style.cursor = signBtn.disabled ? 'not-allowed' : 'pointer';
+      
+      const mode = contratFormData.modeSignature || 'electronique';
+      if (mode === 'imprimer') {
+        signBtn.innerHTML = '<i class="ti ti-printer"></i> Imprimer le contrat';
+      } else {
+        signBtn.innerHTML = '<i class="ti ti-writing"></i> Signer le contrat';
+      }
     }
   }
 
