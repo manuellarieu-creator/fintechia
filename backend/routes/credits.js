@@ -103,15 +103,41 @@ function getCreditRate(type, amount) {
   } catch (e) { console.error('[credits] Migration error:', e.message); }
 })();
 
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const os = require('os');
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, os.tmpdir());
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + file.originalname);
-  }
-});
+const fs = require('fs');
+
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME.trim(),
+    api_key: process.env.CLOUDINARY_API_KEY.trim(),
+    api_secret: process.env.CLOUDINARY_API_SECRET.trim()
+  });
+}
+
+let storage;
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'fintechia_credits',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+      resource_type: 'auto',
+      public_id: (req, file) => `credit_${req.params.id || Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9]/g, '_')}`
+    }
+  });
+} else {
+  storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, os.tmpdir());
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + file.originalname);
+    }
+  });
+}
+
 const upload = multer({ storage: storage });
 
 // POST /api/credits/demande
@@ -194,7 +220,12 @@ router.post('/:id/documents', authMiddleware, upload.single('document'), async (
       return res.status(403).json({ error: 'Non autorisé.', code: 'FORBIDDEN', status: 403 });
     }
 
-    const filePath = '/uploads/' + req.file.filename;
+    let filePath;
+    if (req.file.path && req.file.path.startsWith('http')) {
+      filePath = req.file.path; // Cloudinary URL
+    } else {
+      filePath = '/uploads/' + req.file.filename; // Local fallback
+    }
 
     await db.query(
       'INSERT INTO credit_documents (credit_request_id, type_document, file_path) VALUES (?, ?, ?)',
