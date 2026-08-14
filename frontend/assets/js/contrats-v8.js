@@ -1337,7 +1337,9 @@
       return;
     }
 
-    if (contratFormData.modeSignature === 'electronique') {
+    const mode = contratFormData.modeSignature || 'electronique';
+
+    if (mode === 'electronique') {
       const pinCode = contratFormData.pinCode || document.getElementById('contrat-pin').value;
       const emailCode = contratFormData.emailCode || document.getElementById('contrat-email-code').value;
       
@@ -1361,7 +1363,7 @@
       }
     }
 
-    if (contratFormData.modeSignature === 'imprimer') {
+    if (mode === 'imprimer') {
       const printContent = document.getElementById('contrat-preview-content').innerHTML;
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
