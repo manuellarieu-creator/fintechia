@@ -41,12 +41,19 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
 - **Moteur de Règles et Popups :** L'Admin peut créer des règles spécifiques de blocage avec des popups informatives formatées.
 - **Système de notifications Admin :** Les actions des clients (nouvelle inscription, KYC soumis, demande de crédit) remontent automatiquement en notification à l'Admin.
 
+- **Système de Contrats (Crédits) :**
+  - Génération dynamique de 4 types de contrats (Prêt Personnel, Auto, Immobilier, Grands Projets) avec 36 articles de loi par contrat.
+  - Tunnel interactif en 4 étapes : Identité, Conditions, Clauses, Signature.
+  - Option de signature électronique (validation OTP) ou d'impression pour signature manuelle avec upload.
+  - Enregistrement des documents signés sur Cloudinary pour un accès pérenne (contournement du file system read-only).
+- **Traductions (i18n) avancées :** Extraction et auto-traduction de plus de 400 chaînes de caractères complexes liées aux clauses de contrat dans les 6 langues gérées, traitées dynamiquement via le `MutationObserver`.
+- **Numéro Client Unique :** Attribuer et générer automatiquement un "Numéro Client" unique à 12 chiffres pour chaque utilisateur lors de la création de son compte (affiché côté User et Admin).
+
 ---
 
 ## ⏳ Ce qu'il reste à faire (To-Do)
 
 ### 1. Fonctionnalités Attendues
-- **Numéro Client Unique :** Attribuer et générer automatiquement un "Numéro Client" unique pour chaque utilisateur lors de la création de son compte (à afficher côté User et côté Admin).
 - **Finaliser les flux des Bénéficiaires :** S'assurer que le workflow d'ajout des bénéficiaires en attente est pleinement fonctionnel pour la validation Admin.
 
 ### 2. Améliorations & Corrections Potentielles
