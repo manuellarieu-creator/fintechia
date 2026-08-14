@@ -1,5 +1,36 @@
 const nodemailer = require('nodemailer');
 
+// Fonction pour envoyer un email via l'API REST de Resend (contourne le blocage SMTP de Vercel)
+async function sendViaResendAPI(mailOptions) {
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.SMTP_PASSWORD}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: mailOptions.from || process.env.EMAIL_FROM,
+        to: mailOptions.to,
+        subject: mailOptions.subject,
+        text: mailOptions.text,
+        html: mailOptions.html
+      })
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[MAILER] Erreur API Resend:', response.status, errorText);
+      throw new Error(`Resend API Error: ${errorText}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.error('[MAILER] Exception lors de l\'appel à Resend API:', err.message);
+    throw err;
+  }
+}
+
+// Fallback: SMTP classique si on n'est pas sur Resend
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -10,8 +41,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Vérification de la configuration SMTP au démarrage
-// Vérification supprimée pour éviter les lenteurs au démarrage sur Vercel
+async function sendMailWrapper(mailOptions) {
+  // Si c'est resend, on utilise l'API REST pour éviter les timeouts (blocage port 465 sur Vercel)
+  if (process.env.SMTP_HOST && process.env.SMTP_HOST.includes('resend')) {
+    return await sendViaResendAPI(mailOptions);
+  }
+  return await transporter.sendMail(mailOptions);
+}
 
 async function envoyerResetMdp(email, prenom, lien) {
   const mailOptions = {
@@ -41,7 +77,7 @@ async function envoyerResetMdp(email, prenom, lien) {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await sendMailWrapper(mailOptions);
   } catch (err) {
     console.error('[MAILER] Erreur lors de l\'envoi de l\'email de reset:', err);
   }
@@ -71,7 +107,7 @@ async function envoyerConfirmationMdp(email, prenom, ip) {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await sendMailWrapper(mailOptions);
   } catch (err) {
     console.error('[MAILER] Erreur lors de l\'envoi de l\'email de confirmation:', err);
   }
@@ -99,7 +135,7 @@ async function envoyerBienvenue(email, prenom) {
       </div>
     `
   };
-  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+  try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
 }
 
 async function envoyerConfirmationVirement(email, prenom, montant, destinataire, reference) {
@@ -120,7 +156,7 @@ async function envoyerConfirmationVirement(email, prenom, montant, destinataire,
       </div>
     `
   };
-  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+  try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
 }
 
 async function envoyerOTP(email, prenom, code) {
@@ -143,7 +179,7 @@ async function envoyerOTP(email, prenom, code) {
       </div>
     `
   };
-  try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
+  try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
 }
 
 module.exports = {
