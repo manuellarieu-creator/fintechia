@@ -22,6 +22,39 @@ const authMiddleware = require('../middleware/auth');
   }
 })();
 
+// GET /api/settings (Accessible by authenticated users)
+router.get('/', authMiddleware.authMiddleware, async (req, res, next) => {
+  try {
+    const [rows] = await db.query('SELECT setting_key, setting_value FROM settings');
+    const settings = {};
+    rows.forEach(r => {
+      settings[r.setting_key] = r.setting_value;
+    });
+    res.json(settings);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/settings (Admin only)
+router.patch('/', [authMiddleware.authMiddleware, authMiddleware.adminMiddleware], async (req, res, next) => {
+  try {
+    const settings = req.body;
+    if (!settings || typeof settings !== 'object') return res.status(400).json({ error: 'Invalid payload' });
+    
+    for (const [key, value] of Object.entries(settings)) {
+      await db.query(
+        'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?', 
+        [key, String(value), String(value)]
+      );
+    }
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 // GET /api/settings/:key (Accessible by authenticated users)
 router.get('/:key', authMiddleware.authMiddleware, async (req, res, next) => {
   try {
