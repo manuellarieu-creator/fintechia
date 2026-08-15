@@ -599,13 +599,104 @@ body,html{font-family:'Inter',system-ui,sans-serif;}
           <div class="field"><label>Service Réclamations (Email)</label><input id="set-email_reclamations" value=""></div>
           <div class="field"><label>Service Réclamations (Téléphone)</label><input id="set-telephone_reclamations" value=""></div>
           <div class="field"><label>Juridiction compétente</label><input id="set-juridiction_competente" value=""></div>
-          <div class="field" style="margin-top:10px;">
-            <label>Préambule du contrat</label>
-            <textarea id="set-contrat_preambule" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
-          </div>
-          <div class="field" style="margin-top:10px;">
-            <label>Article 34 - Droit applicable</label>
-            <textarea id="set-contrat_art34" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+          
+          <div style="margin-top:20px; padding-top:16px; border-top:1px solid #E2E8F0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h4 style="margin:0; font-size:14px; color:#0F172A;">Textes des contrats</h4>
+              <select id="contrat-lang-selector" onchange="document.querySelectorAll('.contrat-lang-group').forEach(el => el.style.display = 'none'); document.getElementById('lang-group-' + this.value).style.display = 'block';" style="padding:6px 10px; border-radius:6px; border:1px solid #E2E8F0; font-size:13px;">
+                <option value="fr">Français (FR)</option>
+                <option value="en">English (EN)</option>
+                <option value="es">Español (ES)</option>
+                <option value="de">Deutsch (DE)</option>
+                <option value="da">Dansk (DA)</option>
+                <option value="hu">Magyar (HU)</option>
+                <option value="hr">Hrvatski (HR)</option>
+              </select>
+            </div>
+
+            <!-- FR -->
+            <div id="lang-group-fr" class="contrat-lang-group">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (FR)</label>
+                <textarea id="set-contrat_preambule_fr" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (FR)</label>
+                <textarea id="set-contrat_art34_fr" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- EN -->
+            <div id="lang-group-en" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (EN)</label>
+                <textarea id="set-contrat_preambule_en" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (EN)</label>
+                <textarea id="set-contrat_art34_en" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- ES -->
+            <div id="lang-group-es" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (ES)</label>
+                <textarea id="set-contrat_preambule_es" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (ES)</label>
+                <textarea id="set-contrat_art34_es" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- DE -->
+            <div id="lang-group-de" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (DE)</label>
+                <textarea id="set-contrat_preambule_de" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (DE)</label>
+                <textarea id="set-contrat_art34_de" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- DA -->
+            <div id="lang-group-da" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (DA)</label>
+                <textarea id="set-contrat_preambule_da" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (DA)</label>
+                <textarea id="set-contrat_art34_da" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- HU -->
+            <div id="lang-group-hu" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (HU)</label>
+                <textarea id="set-contrat_preambule_hu" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (HU)</label>
+                <textarea id="set-contrat_art34_hu" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
+
+            <!-- HR -->
+            <div id="lang-group-hr" class="contrat-lang-group" style="display:none;">
+              <div class="field" style="margin-top:10px;">
+                <label>Préambule du contrat (HR)</label>
+                <textarea id="set-contrat_preambule_hr" rows="6" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px;">
+                <label>Article 34 - Droit applicable (HR)</label>
+                <textarea id="set-contrat_art34_hr" rows="4" style="width:100%; border:1px solid #E2E8F0; border-radius:8px; padding:10px; font-size:13px;"></textarea>
+              </div>
+            </div>
           </div>
         </div>
       </div>

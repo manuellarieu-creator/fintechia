@@ -681,7 +681,7 @@
 
         <div class="contrat-doc-section">
           <h4>PRÉAMBULE</h4>
-          ${systemSettings.contrat_preambule ? `<div style="white-space: pre-wrap;">${systemSettings.contrat_preambule}</div>` : `
+          ${(systemSettings['contrat_preambule_' + (window.I18N?.currentLang || 'fr')] || systemSettings.contrat_preambule_fr) ? `<div style="white-space: pre-wrap;">${systemSettings['contrat_preambule_' + (window.I18N?.currentLang || 'fr')] || systemSettings.contrat_preambule_fr}</div>` : `
           <p>Le présent contrat de ${type === 'personnel' ? 'prêt personnel' : type.replace('_', ' ')} (« le Contrat ») est conclu entre :</p>
           
           <div style="margin-top:16px; margin-bottom:16px; padding-left:16px; border-left:3px solid #E2E8F0;">
@@ -1081,7 +1081,7 @@
 
         <div class="contrat-doc-section">
           <h4>ARTICLE 34 - DROIT APPLICABLE</h4>
-          ${systemSettings.contrat_art34 ? `<div style="white-space: pre-wrap;">${systemSettings.contrat_art34}</div>` : `
+          ${(systemSettings['contrat_art34_' + (window.I18N?.currentLang || 'fr')] || systemSettings.contrat_art34_fr) ? `<div style="white-space: pre-wrap;">${systemSettings['contrat_art34_' + (window.I18N?.currentLang || 'fr')] || systemSettings.contrat_art34_fr}</div>` : `
           <p>Sous réserve des dispositions impératives éventuellement applicables, le présent Contrat est régi par le <strong>droit suisse</strong>.</p>
           <p>La présente clause devra être validée par le conseil juridique du Prêteur en tenant compte notamment du statut de l'Emprunteur, de son lieu de résidence et du lieu d'exécution du contrat.</p>
           `}
