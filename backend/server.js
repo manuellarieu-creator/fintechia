@@ -101,6 +101,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Servir les assets et pages frontend depuis le backend (nécessaire en dev et Codespaces)
 app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
+
+// Middleware pour gérer les URLs multilingues (ex: /en/, /es/app.html)
+const supportedLangs = ['fr', 'en', 'es', 'de', 'da', 'hu', 'hr'];
+app.use((req, res, next) => {
+  const parts = req.path.split('/');
+  if (parts.length > 1 && supportedLangs.includes(parts[1])) {
+    // Réécrire l'URL pour les routes en dessous
+    req.url = req.url.replace('/' + parts[1], '') || '/';
+  }
+  next();
+});
+
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/admin.html'));
 });

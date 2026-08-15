@@ -1,25 +1,46 @@
 // Système de traduction i18n
-window.getCurrentLocale = function() {
-    const lang = localStorage.getItem('fintech_lang') || 'fr';
-    const map = { 'fr': 'fr-FR', 'en': 'en-US', 'es': 'es-ES', 'de': 'de-DE', 'da': 'da-DK', 'hu': 'hu-HU', 'hr': 'hr-HR' };
-    return map[lang] || 'fr-FR';
-};
-
 const supportedLangs = ['fr', 'en', 'es', 'de', 'da', 'hu', 'hr'];
 let defaultLang = (navigator.language || navigator.userLanguage || 'fr').split('-')[0];
 if (!supportedLangs.includes(defaultLang)) defaultLang = 'fr';
 
+function getLangFromUrl() {
+  const parts = window.location.pathname.split('/');
+  if (parts.length > 1 && supportedLangs.includes(parts[1])) {
+    return parts[1];
+  }
+  return null;
+}
+
+window.getCurrentLocale = function() {
+    const lang = getLangFromUrl() || localStorage.getItem('fintech_lang') || 'fr';
+    const map = { 'fr': 'fr-FR', 'en': 'en-US', 'es': 'es-ES', 'de': 'de-DE', 'da': 'da-DK', 'hu': 'hu-HU', 'hr': 'hr-HR' };
+    return map[lang] || 'fr-FR';
+};
+
 const I18N = {
-  currentLang: localStorage.getItem('fintech_lang') || defaultLang,
+  currentLang: getLangFromUrl() || localStorage.getItem('fintech_lang') || defaultLang,
   dict: {},
   nodesToTranslate: [],
   attributesToTranslate: [],
 
   init: async function() {
+    this._originalTitle = document.title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) this._originalDesc = metaDesc.content;
+    
+    // Si la langue est dans l'URL, on force sa mémorisation
+    const urlLang = getLangFromUrl();
+    if (urlLang) {
+       this.currentLang = urlLang;
+       localStorage.setItem('fintech_lang', urlLang);
+    }
+    
     this.setupLanguageSwitcher();
     this.scanDOM(document.body);
     if (this.currentLang !== 'fr') {
       await this.setLanguage(this.currentLang);
+    } else {
+      this.updateSEOTags(); // Mettre à jour au cas où on est en FR
     }
     this.setupObserver();
   },
@@ -99,6 +120,19 @@ const I18N = {
     this.currentLang = lang;
     localStorage.setItem('fintech_lang', lang);
     
+    // Update URL pour le SEO
+    let parts = window.location.pathname.split('/');
+    if (parts.length > 1 && supportedLangs.includes(parts[1])) {
+      if (lang === 'fr') parts.splice(1, 1);
+      else parts[1] = lang;
+    } else {
+      if (lang !== 'fr') parts.splice(1, 0, lang);
+    }
+    const newUrl = parts.join('/') + window.location.search + window.location.hash || '/';
+    if (newUrl !== window.location.pathname + window.location.search + window.location.hash) {
+      window.history.pushState({}, '', newUrl);
+    }
+    
     if (lang === 'fr') {
       this.dict = {};
       this.applyTranslations();
@@ -126,6 +160,8 @@ const I18N = {
   },
 
   applyTranslations: function() {
+    this.updateSEOTags();
+    
     this.nodesToTranslate.forEach(n => {
       const orig = n._originalText;
       if (orig) {
@@ -162,6 +198,26 @@ const I18N = {
         item.el[item.attr] = trans;
       }
     });
+  },
+
+  updateSEOTags: function() {
+    document.documentElement.lang = this.currentLang;
+    
+    if (this._originalTitle) {
+      let transTitle = this.dict[this._originalTitle];
+      if (!transTitle && this.dict["Fintechia — Votre argent mérite mieux"]) {
+        transTitle = this.dict["Fintechia — Votre argent mérite mieux"];
+      }
+      document.title = transTitle || this._originalTitle;
+    }
+    
+    if (this._originalDesc) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        let transDesc = this.dict[this._originalDesc];
+        metaDesc.content = transDesc || this._originalDesc;
+      }
+    }
   },
 
   setupLanguageSwitcher: function() {

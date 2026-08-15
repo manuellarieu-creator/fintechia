@@ -8,6 +8,7 @@
   let currentType = 'personnel';
   let currentCreditData = {};
   let contratFormData = {};
+  let systemSettings = {};
   const TOTAL_STEPS = 4;
 
   // ===== Configuration des étapes par type de contrat =====
@@ -680,6 +681,7 @@
 
         <div class="contrat-doc-section">
           <h4>PRÉAMBULE</h4>
+          ${systemSettings.contrat_preambule ? `<div style="white-space: pre-wrap;">${systemSettings.contrat_preambule}</div>` : `
           <p>Le présent contrat de ${type === 'personnel' ? 'prêt personnel' : type.replace('_', ' ')} (« le Contrat ») est conclu entre :</p>
           
           <div style="margin-top:16px; margin-bottom:16px; padding-left:16px; border-left:3px solid #E2E8F0;">
@@ -693,6 +695,7 @@
           </div>
 
           <p style="text-align:center; font-weight:700; margin:16px 0;">et</p>
+          `}
 
           <div style="margin-top:16px; margin-bottom:16px; padding-left:16px; border-left:3px solid #2563EB;">
             <p style="font-weight:700; margin-bottom:8px; color:#1C2436;">L'Emprunteur</p>
@@ -1077,9 +1080,11 @@
         </div>
 
         <div class="contrat-doc-section">
-          <h4>ARTICLE 34 – DROIT APPLICABLE</h4>
+          <h4>ARTICLE 34 - DROIT APPLICABLE</h4>
+          ${systemSettings.contrat_art34 ? `<div style="white-space: pre-wrap;">${systemSettings.contrat_art34}</div>` : `
           <p>Sous réserve des dispositions impératives éventuellement applicables, le présent Contrat est régi par le <strong>droit suisse</strong>.</p>
           <p>La présente clause devra être validée par le conseil juridique du Prêteur en tenant compte notamment du statut de l'Emprunteur, de son lieu de résidence et du lieu d'exécution du contrat.</p>
+          `}
         </div>
 
         <div class="contrat-doc-section">
@@ -1542,9 +1547,17 @@
     }
   };
 
-  // ===== Ouvrir la modale contrat =====
-  window.openContratModal = function(type, creditData) {
-    currentType = type;
+  // ===== Modal de contrat =====
+  window.openContratModal = async function(type, creditData) {
+    try {
+      const res = await window.apiCall('/settings', 'GET');
+      if (res) {
+        systemSettings = res;
+      }
+    } catch(e) {
+      console.warn('Could not fetch settings', e);
+    }
+    currentType = type || 'personnel';
     currentCreditData = creditData || {};
     currentStep = 1;
     contratFormData = {};

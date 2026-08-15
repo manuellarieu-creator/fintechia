@@ -9,9 +9,14 @@ const authMiddleware = require('../middleware/auth');
     await db.query(`
       CREATE TABLE IF NOT EXISTS settings (
         setting_key VARCHAR(50) PRIMARY KEY,
-        setting_value VARCHAR(255) NOT NULL
+        setting_value TEXT NOT NULL
       )
     `);
+    try {
+      await db.query(`ALTER TABLE settings MODIFY setting_value TEXT`);
+    } catch(err) {
+      // Ignore if already text or column doesn't exist yet
+    }
     // Insert default activation_fee if it doesn't exist
     await db.query(`
       INSERT IGNORE INTO settings (setting_key, setting_value) 
