@@ -318,7 +318,7 @@
   "Évolution des": "Évolution des",
   "dépenses": "dépenses",
   "6 derniers": "6 derniers",
-  "mois": "mois",
+  "mois": "hónap",
   "Répartition": "Répartition",
   "Alertes budget": "Alertes budget",
   "Configurer": "Configurer",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Hitelfelvevő a következőkkel összefüggésben: keresletkezelés; a",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "Az érvényesítő kódot elküldtük az e-mail címére.",
-  "Erreur lors de l": "Hiba közben"
+  "Erreur lors de l": "Hiba közben",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Jelen szerződés célja azon feltételek meghatározása, amelyek mellett a Kölcsönadó a Kölcsönvevő rendelkezésére bocsát egy pénzösszeget személyi kölcsönként, azzal a feltétellel, hogy utóbbi a tőkét, a kamatokat és adott esetben a szerződés szerint fizetendő díjakat a jelen Szerződésben és annak törlesztési tervében meghatározott feltételek szerint visszafizeti.",
+  "échéances masquées dans l'aperçu": "az előnézetben elrejtett törlesztőrészletek",
+  "Compte FINTECHIA de l'emprunteur": "A kölcsönvevő FINTECHIA számlája",
+  "Sans garantie": "Garancia nélkül",
+  "Durée du remboursement": "Visszafizetési időtartam",
+  "10 ans (Durée légale)": "10 év (Törvényes időtartam)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Jelen szerződés célja azon feltételek meghatározása, amelyek mellett a Kölcsönadó a Kölcsönvevő rendelkezésére bocsát egy pénzösszeget fogyasztási hitelként, azzal a feltétellel, hogy utóbbi a tőkét, a kamatokat és adott esetben a szerződés szerint fizetendő díjakat a jelen Szerződésben és annak törlesztési tervében meghatározott feltételek szerint visszafizeti.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Jelen szerződés célja azon feltételek meghatározása, amelyek mellett a Kölcsönadó a Kölcsönvevő rendelkezésére bocsát egy pénzösszeget jelzáloghitelként, azzal a feltétellel, hogy utóbbi a tőkét, a kamatokat és adott esetben a szerződés szerint fizetendő díjakat a jelen Szerződésben és annak törlesztési tervében meghatározott feltételek szerint visszafizeti.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Jelen szerződés célja azon feltételek meghatározása, amelyek mellett a Kölcsönadó a Kölcsönvevő rendelkezésére bocsát egy pénzösszeget nagyprojektek finanszírozásaként, azzal a feltétellel, hogy utóbbi a tőkét, a kamatokat és adott esetben a szerződés szerint fizetendő díjakat a jelen Szerződésben és annak törlesztési tervében meghatározott feltételek szerint visszafizeti."
 }

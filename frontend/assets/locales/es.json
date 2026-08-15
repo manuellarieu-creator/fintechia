@@ -318,7 +318,7 @@
   "Évolution des": "Évolution des",
   "dépenses": "dépenses",
   "6 derniers": "6 derniers",
-  "mois": "mois",
+  "mois": "meses",
   "Répartition": "Répartition",
   "Alertes budget": "Alertes budget",
   "Configurer": "Configurer",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Prestatario en el contexto de: gestión de la demanda; del",
   "REF": "ÁRBITRO",
   "Un code de validation a été envoyé à votre adresse email.": "Se ha enviado un código de validación a su dirección de correo electrónico.",
-  "Erreur lors de l": "Error durante"
+  "Erreur lors de l": "Error durante",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "El objetivo de este Contrato es definir las condiciones bajo las cuales el Prestamista pone a disposición del Prestatario una suma de dinero como préstamo personal, con la obligación de este último de reembolsar el capital, los intereses y, en su caso, los gastos aplicables contractualmente según las modalidades previstas en este Contrato y su calendario de pagos.",
+  "échéances masquées dans l'aperçu": "cuotas ocultas en la vista previa",
+  "Compte FINTECHIA de l'emprunteur": "Cuenta FINTECHIA del prestatario",
+  "Sans garantie": "Sin garantía",
+  "Durée du remboursement": "Plazo de reembolso",
+  "10 ans (Durée légale)": "10 años (Duración legal)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "El objetivo de este Contrato es definir las condiciones bajo las cuales el Prestamista pone a disposición del Prestatario una suma de dinero como préstamo de consumo, con la obligación de este último de reembolsar el capital, los intereses y, en su caso, los gastos aplicables contractualmente según las modalidades previstas en este Contrato y su calendario de pagos.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "El objetivo de este Contrato es definir las condiciones bajo las cuales el Prestamista pone a disposición del Prestatario una suma de dinero como préstamo inmobiliario, con la obligación de este último de reembolsar el capital, los intereses y, en su caso, los gastos aplicables contractualmente según las modalidades previstas en este Contrato y su calendario de pagos.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "El objetivo de este Contrato es definir las condiciones bajo las cuales el Prestamista pone a disposición del Prestatario una suma de dinero como financiación de grandes proyectos, con la obligación de este último de reembolsar el capital, los intereses y, en su caso, los gastos aplicables contractualmente según las modalidades previstas en este Contrato y su calendario de pagos."
 }

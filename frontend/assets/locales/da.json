@@ -318,7 +318,7 @@
   "Évolution des": "Évolution des",
   "dépenses": "dépenses",
   "6 derniers": "6 derniers",
-  "mois": "mois",
+  "mois": "måneder",
   "Répartition": "Répartition",
   "Alertes budget": "Alertes budget",
   "Configurer": "Configurer",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Låntager i forbindelse med: efterspørgselsstyring; af",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "En valideringskode er blevet sendt til din e-mailadresse.",
-  "Erreur lors de l": "Fejl under"
+  "Erreur lors de l": "Fejl under",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Formålet med denne kontrakt er at fastsætte betingelserne for, at långiver stiller et pengebeløb til rådighed for låntager som et personligt lån, med forbehold af sidstnævntes tilbagebetaling af hovedstolen, renterne og i givet fald de kontraktmæssigt gældende gebyrer i overensstemmelse med de vilkår, der er fastsat i denne kontrakt og dens tilbagebetalingsplan.",
+  "échéances masquées dans l'aperçu": "afdrag skjult i forhåndsvisningen",
+  "Compte FINTECHIA de l'emprunteur": "Låntagers FINTECHIA-konto",
+  "Sans garantie": "Uden garanti",
+  "Durée du remboursement": "Tilbagebetalingsperiode",
+  "10 ans (Durée légale)": "10 år (Lovmæssig varighed)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Formålet med denne kontrakt er at fastsætte betingelserne for, at långiver stiller et pengebeløb til rådighed for låntager som et forbrugslån, med forbehold af sidstnævntes tilbagebetaling af hovedstolen, renterne og i givet fald de kontraktmæssigt gældende gebyrer i overensstemmelse med de vilkår, der er fastsat i denne kontrakt og dens tilbagebetalingsplan.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Formålet med denne kontrakt er at fastsætte betingelserne for, at långiver stiller et pengebeløb til rådighed for låntager som et boliglån, med forbehold af sidstnævntes tilbagebetaling af hovedstolen, renterne og i givet fald de kontraktmæssigt gældende gebyrer i overensstemmelse med de vilkår, der er fastsat i denne kontrakt og dens tilbagebetalingsplan.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Formålet med denne kontrakt er at fastsætte betingelserne for, at långiver stiller et pengebeløb til rådighed for låntager som et finansiering af store projekter, med forbehold af sidstnævntes tilbagebetaling af hovedstolen, renterne og i givet fald de kontraktmæssigt gældende gebyrer i overensstemmelse med de vilkår, der er fastsat i denne kontrakt og dens tilbagebetalingsplan."
 }

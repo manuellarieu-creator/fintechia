@@ -4,6 +4,7 @@ const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const crypto = require('crypto');
 const notifications = require('../services/notifications');
+const mailer = require('../services/mailer');
 const multer = require('multer');
 const path = require('path');
 
@@ -197,7 +198,8 @@ router.post('/demande', authMiddleware, async (req, res, next) => {
     const creditId = result.insertId;
 
     await notifications.envoyer(req.user.id, 'Demande de crédit', `Votre demande de crédit de ${m}€ (Réf: ${reference}) est en cours d'analyse.`, 'info');
-    await notifications.envoyer(1, 'Nouvelle Demande de Crédit', `L\'utilisateur ${req.user.id} a demandé un crédit de ${m}€ (Réf: ${reference}).`, 'info');
+    await notifications.envoyer(1, 'Nouvelle Demande de Crédit', `L'utilisateur ${req.user.id} a demandé un crédit de ${m}€ (Réf: ${reference}).`, 'info');
+    try { await mailer.envoyerAlerteAdmin('Nouvelle Demande de Crédit', `L'utilisateur ${req.user.id} a demandé un crédit de ${m}€ (Réf: ${reference}, Type: ${creditType}).`); } catch(e){}
 
     res.json({ success: true, reference, id: creditId, message: 'Votre demande a bien été enregistrée.' });
   } catch (err) {
@@ -243,6 +245,7 @@ router.post('/:id/documents', authMiddleware, upload.single('document'), async (
         );
         // Notification Admin
         await notifications.envoyer(1, 'Contrat Scanné Reçu', `L'utilisateur a uploadé son contrat scanné pour la demande #${id}.`, 'info');
+        try { await mailer.envoyerAlerteAdmin('Contrat Scanné Reçu', `L'utilisateur a uploadé son contrat scanné pour la demande de crédit #${id}.`); } catch(e){}
     }
 
     res.json({ success: true, message: 'Document uploadé avec succès.', filePath });
@@ -278,6 +281,7 @@ router.post('/:id/contrat', authMiddleware, async (req, res, next) => {
     // Notification
     await notifications.envoyer(req.user.id, 'Contrat signé', `Votre contrat (Réf: ${rows[0].reference}) a été signé avec succès.`, 'info');
     await notifications.envoyer(1, 'Contrat Signé', `L'utilisateur ${req.user.id} a signé son contrat (Réf: ${rows[0].reference}).`, 'info');
+    try { await mailer.envoyerAlerteAdmin('Contrat Signé', `L'utilisateur ${req.user.id} a signé son contrat de crédit (Réf: ${rows[0].reference}).`); } catch(e){}
 
     res.json({ success: true, message: 'Contrat signé et enregistré avec succès.' });
   } catch (err) {

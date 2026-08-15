@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const notifications = require('../services/notifications');
+const mailer = require('../services/mailer');
 
 // === VISITOR ROUTES ===
 
@@ -102,7 +103,10 @@ router.post('/visitor/:conv_id/message', async (req, res) => {
       'INSERT INTO chat_messages (conversation_id, sender_type, content) VALUES (?, "visitor", ?)',
       [conv_id, content]
     );
-    try { await notifications.envoyer(1, 'Nouveau message Chat', 'Un visiteur a envoyé un message sur le chat.', 'info'); } catch(e) {}
+    try { 
+      await notifications.envoyer(1, 'Nouveau message Chat', 'Un visiteur a envoyé un message sur le chat.', 'info'); 
+      await mailer.envoyerAlerteAdmin('Nouveau message Chat', `Un visiteur a envoyé un message sur le chat : "${content}"`);
+    } catch(e) {}
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });
@@ -159,7 +163,10 @@ router.post('/user/:conv_id/message', authMiddleware, async (req, res) => {
       'INSERT INTO chat_messages (conversation_id, sender_type, sender_id, content) VALUES (?, "user", ?, ?)',
       [conv_id, req.user.id, content]
     );
-    try { await notifications.envoyer(1, 'Nouveau message Chat', `L'utilisateur ${req.user.id} a envoyé un message.`, 'info'); } catch(e) {}
+    try { 
+      await notifications.envoyer(1, 'Nouveau message Chat', `L'utilisateur ${req.user.id} a envoyé un message.`, 'info'); 
+      await mailer.envoyerAlerteAdmin('Nouveau message Chat Client', `L'utilisateur ${req.user.id} a envoyé : "${content}"`);
+    } catch(e) {}
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });

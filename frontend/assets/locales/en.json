@@ -318,7 +318,7 @@
   "Évolution des": "Evolution of",
   "dépenses": "expenses",
   "6 derniers": "last 6",
-  "mois": "month",
+  "mois": "months",
   "Répartition": "Distribution",
   "Alertes budget": "Budget alerts",
   "Configurer": "Configure",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Borrower in the context of: demand management; of the",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "A validation code has been sent to your email address.",
-  "Erreur lors de l": "Error during"
+  "Erreur lors de l": "Error during",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "The purpose of this Contract is to define the conditions under which the Lender provides the Borrower with a sum of money as a personal loan, subject to the latter repaying the principal, interest and, where applicable, the contractually applicable fees in accordance with the terms provided for in this Contract and its repayment schedule.",
+  "échéances masquées dans l'aperçu": "installments hidden in the preview",
+  "Compte FINTECHIA de l'emprunteur": "Borrower's FINTECHIA account",
+  "Sans garantie": "Without guarantee",
+  "Durée du remboursement": "Repayment period",
+  "10 ans (Durée légale)": "10 years (Legal duration)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "The purpose of this Contract is to define the conditions under which the Lender provides the Borrower with a sum of money as a consumer loan, subject to the latter repaying the principal, interest and, where applicable, the contractually applicable fees in accordance with the terms provided for in this Contract and its repayment schedule.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "The purpose of this Contract is to define the conditions under which the Lender provides the Borrower with a sum of money as a real estate loan, subject to the latter repaying the principal, interest and, where applicable, the contractually applicable fees in accordance with the terms provided for in this Contract and its repayment schedule.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "The purpose of this Contract is to define the conditions under which the Lender provides the Borrower with a sum of money as a major projects financing, subject to the latter repaying the principal, interest and, where applicable, the contractually applicable fees in accordance with the terms provided for in this Contract and its repayment schedule."
 }

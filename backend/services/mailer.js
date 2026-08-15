@@ -182,10 +182,32 @@ async function envoyerOTP(email, prenom, code) {
   try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
 }
 
+async function envoyerAlerteAdmin(sujet, message) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM || 'no-reply@fintechia.co',
+    to: 'info@fintechia.co',
+    subject: `[ADMIN ALERTE] ${sujet}`,
+    text: message,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #EF4444; padding: 20px; text-align: center; color: white;">
+          <h1 style="margin: 0;">Fintechia - Alerte Admin</h1>
+        </div>
+        <div style="padding: 20px;">
+          <h2>Nouvelle alerte</h2>
+          <p style="white-space: pre-wrap;">${message}</p>
+        </div>
+      </div>
+    `
+  };
+  try { await sendMailWrapper(mailOptions); } catch (e) { console.error('[MAILER] Erreur alerte admin:', e); }
+}
+
 module.exports = {
   envoyerResetMdp,
   envoyerConfirmationMdp,
   envoyerBienvenue,
   envoyerConfirmationVirement,
-  envoyerOTP
+  envoyerOTP,
+  envoyerAlerteAdmin
 };

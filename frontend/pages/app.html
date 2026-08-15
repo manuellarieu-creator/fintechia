@@ -130,7 +130,7 @@
 <div id="app-wrap">
   <!-- ECRAN CHARGEMENT -->
   <div id="pg-loading" class="page flex-col" style="display:flex; justify-content:center; align-items:center; height:100vh;">
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div style="display:flex; align-items:center; gap:5px;">
       <img src="../assets/favicon.svg" alt="Fintechia Icon" style="width:36px; height:36px;">
       <div style="font-family:'Inter',sans-serif; font-size:28px; font-weight:800; color:#2563EB;">Fintechia</div>
     </div>
@@ -1061,7 +1061,7 @@
     <!-- === LAYOUT DESKTOP (Bleu Fintechia) === -->
     <div class="desktop-layout">
       <aside class="nb-sidebar">
-        <div class="nb-logo" style="display:flex; align-items:center; gap:10px;">
+        <div class="nb-logo" style="display:flex; align-items:center; gap:5px;">
           <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <mask id="mask-outer-1">
@@ -1114,8 +1114,8 @@
           <div class="nb-header-right">
             <div class="i18n-container" style="margin-right:15px;"></div>
             <button class="nb-btn-primary" onclick="openTunnelModal()">+ Nouveau virement ↗</button>
-            <button class="nb-btn-icon" style="position:relative;" id="btn-notifications-desktop" onclick="toggleNotificationDropdown(event)">
-              🔔
+            <button class="nb-btn-icon" style="position:relative; display: flex; align-items: center; justify-content: center; padding: 8px;" id="btn-notifications-desktop" onclick="toggleNotificationDropdown(event)">
+              <img src="../assets/favicon.svg" alt="Notifications" style="width:20px; height:20px;">
               <div class="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#ef4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; align-items:center; justify-content:center;"></div>
             </button>
           </div>
@@ -3075,8 +3075,8 @@ function saveSettingsMock(msg) {
       <span>Accueil</span>
     </a>
     <a href="#" class="mobile-nav-item" id="mobile-bell-icon" onclick="toggleNotificationDropdown(event)">
-      <div style="position:relative;">
-        <i class="ti ti-bell"></i>
+      <div style="position:relative; display:flex;">
+        <img src="../assets/favicon.svg" alt="Notifs" style="width:22px; height:22px;">
         <div class="notif-badge" style="display:none; position:absolute; top:-4px; right:-8px; background:#ef4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; align-items:center; justify-content:center;"></div>
       </div>
       <span>Notifs</span>

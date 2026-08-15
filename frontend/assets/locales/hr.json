@@ -318,7 +318,7 @@
   "Évolution des": "Évolution des",
   "dépenses": "dépenses",
   "6 derniers": "6 derniers",
-  "mois": "mois",
+  "mois": "mjeseci",
   "Répartition": "Répartition",
   "Alertes budget": "Alertes budget",
   "Configurer": "Configurer",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Zajmoprimac u kontekstu: upravljanja potražnjom; od",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "Kod za provjeru valjanosti poslan je na vašu adresu e-pošte.",
-  "Erreur lors de l": "Pogreška tijekom"
+  "Erreur lors de l": "Pogreška tijekom",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Svrha ovog Ugovora je definirati uvjete pod kojima Zajmodavac stavlja Zajmoprimcu na raspolaganje novčani iznos kao osobni zajam, uz uvjet da potonji otplati glavnicu, kamate i, gdje je to primjenjivo, ugovorno primjenjive naknade u skladu s uvjetima predviđenim ovim Ugovorom i njegovim planom otplate.",
+  "échéances masquées dans l'aperçu": "rate skrivene u pregledu",
+  "Compte FINTECHIA de l'emprunteur": "Zajmoprimčev račun FINTECHIA",
+  "Sans garantie": "Bez jamstva",
+  "Durée du remboursement": "Razdoblje otplate",
+  "10 ans (Durée légale)": "10 godina (Zakonsko trajanje)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Svrha ovog Ugovora je definirati uvjete pod kojima Zajmodavac stavlja Zajmoprimcu na raspolaganje novčani iznos kao potrošački zajam, uz uvjet da potonji otplati glavnicu, kamate i, gdje je to primjenjivo, ugovorno primjenjive naknade u skladu s uvjetima predviđenim ovim Ugovorom i njegovim planom otplate.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Svrha ovog Ugovora je definirati uvjete pod kojima Zajmodavac stavlja Zajmoprimcu na raspolaganje novčani iznos kao stambeni zajam, uz uvjet da potonji otplati glavnicu, kamate i, gdje je to primjenjivo, ugovorno primjenjive naknade u skladu s uvjetima predviđenim ovim Ugovorom i njegovim planom otplate.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Svrha ovog Ugovora je definirati uvjete pod kojima Zajmodavac stavlja Zajmoprimcu na raspolaganje novčani iznos kao financiranje velikih projekata, uz uvjet da potonji otplati glavnicu, kamate i, gdje je to primjenjivo, ugovorno primjenjive naknade u skladu s uvjetima predviđenim ovim Ugovorom i njegovim planom otplate."
 }

@@ -656,7 +656,7 @@
     if (duree > 12) {
         echeancierRows += `<tr>
             <td colspan="7" style="padding:8px; border:1px solid #E2E8F0; text-align:center; background:#F8FAFC; color:#64748B; font-style:italic;">
-                ... (${duree - 12} échéances masquées dans l'aperçu) ...
+                ... (<span class="hidden-echeances-count">${duree - 12}</span> <span>échéances masquées dans l'aperçu</span>) ...
             </td>
         </tr>`;
     }
@@ -710,7 +710,10 @@
 
         <div class="contrat-doc-section">
           <h4>ARTICLE 1 – OBJET DU CONTRAT</h4>
-          <p>Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de ${type === 'personnel' ? 'prêt personnel' : type.replace('_', ' ')}, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.</p>
+          ${type === 'personnel' 
+            ? `<p>Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.</p>`
+            : `<p>Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de ${type.replace('_', ' ')}, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.</p>`
+          }
           <p>Le prêt est accordé conformément à la décision prise à la suite de l'analyse de la demande de financement enregistrée sous la référence :</p>
           <p style="text-align:center; font-weight:700; font-family:monospace; font-size:14px; margin:12px 0;">${refDemande}</p>
         </div>
@@ -1050,7 +1053,7 @@
           <p>Le Prêteur conserve le présent Contrat, ses annexes, l'échéancier et les éléments de preuve nécessaires pendant la durée requise par la législation applicable et ses obligations réglementaires.</p>
           <p>La durée de conservation est :</p>
           <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px; font-weight:600; text-align:center;">
-            Durée du remboursement (${duree} mois) + 10 ans (Durée légale)
+            <span>Durée du remboursement</span> (<span class="duree-val">${duree}</span> <span>mois</span>) + <span>10 ans (Durée légale)</span>
           </div>
         </div>
 
@@ -1060,7 +1063,6 @@
           <ul style="margin:8px 0 16px 20px; color:#475569;">
             <li><strong>Adresse :</strong> Service Réclamations FINTECHIA, 12 rue de la Paix, 75000 Paris</li>
             <li><strong>E-mail :</strong> reclamations@fintechia.com</li>
-            <li><strong>Téléphone :</strong> +33 (0)1 23 45 67 89</li>
             <li><strong>Portail :</strong> Espace personnel > Messagerie sécurisée</li>
           </ul>
           <p>La réclamation est traitée conformément à la procédure interne du Prêteur et aux exigences légales applicables.</p>
@@ -1093,7 +1095,11 @@
           <h4>ARTICLE 36 – LANGUE DU CONTRAT</h4>
           <p>Le présent Contrat est établi en :</p>
           <div style="padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; margin:12px 0; border-radius:6px; font-weight:600; text-align:center;">
-            Français
+            ${(function() {
+              const langMap = { 'fr': 'Français', 'en': 'Anglais', 'es': 'Espagnol', 'de': 'Allemand', 'da': 'Danois', 'hu': 'Hongrois', 'hr': 'Croate' };
+              const code = typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale().split('-')[0] : 'fr';
+              return langMap[code] || 'Français';
+            })()}
           </div>
           <p>Lorsque plusieurs versions linguistiques sont disponibles, la version faisant foi est : la version française.</p>
         </div>
@@ -1111,7 +1117,7 @@
         <div class="contrat-doc-section">
           <h4>CLAUSES ET CONDITIONS COMPLÉMENTAIRES</h4>
           <p style="font-size:11px; color:#64748b;">Les clauses supplémentaires sont détaillées à l'étape 3 et doivent être acceptées par l'emprunteur.</p>
-          ${contratFormData.acceptClauses ? '<p style="color:#059669; font-size:12px; font-weight:600;">✓ Clauses acceptées et intégrées au contrat</p>' : '<p style="color:#94A3B8; font-size:12px;">En attente d\'acceptation des clauses (Étape 3)</p>'}
+          ${contratFormData.acceptClauses ? '<p style="color:#059669; font-size:12px; font-weight:600;">✓ Clauses acceptées et intégrées au contrat</p>' : ''}
         </div>
 
         <div class="contrat-signature-area">

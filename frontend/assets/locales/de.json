@@ -318,7 +318,7 @@
   "Évolution des": "Entwicklung von",
   "dépenses": "Ausgaben",
   "6 derniers": "Letzte 6",
-  "mois": "Monat",
+  "mois": "Monate",
   "Répartition": "Verteilung",
   "Alertes budget": "Budgetwarnungen",
   "Configurer": "Konfigurieren",
@@ -1656,5 +1656,14 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Kreditnehmer im Rahmen von: Nachfragemanagement; des",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "Ein Validierungscode wurde an Ihre E-Mail-Adresse gesendet.",
-  "Erreur lors de l": "Fehler während"
+  "Erreur lors de l": "Fehler während",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de prêt personnel, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Zweck dieses Vertrages ist es, die Bedingungen festzulegen, unter denen der Darlehensgeber dem Darlehensnehmer einen Geldbetrag als Privatkredit zur Verfügung stellt, vorbehaltlich der Rückzahlung des Kapitals, der Zinsen und gegebenenfalls der vertraglich geschuldeten Gebühren durch letzteren gemäß den in diesem Vertrag und seinem Tilgungsplan vorgesehenen Bedingungen.",
+  "échéances masquées dans l'aperçu": "Raten in der Vorschau ausgeblendet",
+  "Compte FINTECHIA de l'emprunteur": "FINTECHIA-Konto des Kreditnehmers",
+  "Sans garantie": "Ohne Garantie",
+  "Durée du remboursement": "Rückzahlungsdauer",
+  "10 ans (Durée légale)": "10 Jahre (Gesetzliche Dauer)",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de consommation, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Zweck dieses Vertrages ist es, die Bedingungen festzulegen, unter denen der Darlehensgeber dem Darlehensnehmer einen Geldbetrag als Verbraucherkredit zur Verfügung stellt, vorbehaltlich der Rückzahlung des Kapitals, der Zinsen und gegebenenfalls der vertraglich geschuldeten Gebühren durch letzteren gemäß den in diesem Vertrag und seinem Tilgungsplan vorgesehenen Bedingungen.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de immobilier, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Zweck dieses Vertrages ist es, die Bedingungen festzulegen, unter denen der Darlehensgeber dem Darlehensnehmer einen Geldbetrag als Immobilienkredit zur Verfügung stellt, vorbehaltlich der Rückzahlung des Kapitals, der Zinsen und gegebenenfalls der vertraglich geschuldeten Gebühren durch letzteren gemäß den in diesem Vertrag und seinem Tilgungsplan vorgesehenen Bedingungen.",
+  "Le présent Contrat a pour objet de définir les conditions dans lesquelles le Prêteur met à la disposition de l'Emprunteur une somme d'argent à titre de grands projets, à charge pour ce dernier de rembourser le capital, les intérêts et, le cas échéant, les frais contractuellement applicables selon les modalités prévues au présent Contrat et à son échéancier.": "Zweck dieses Vertrages ist es, die Bedingungen festzulegen, unter denen der Darlehensgeber dem Darlehensnehmer einen Geldbetrag als Großprojektfinanzierung zur Verfügung stellt, vorbehaltlich der Rückzahlung des Kapitals, der Zinsen und gegebenenfalls der vertraglich geschuldeten Gebühren durch letzteren gemäß den in diesem Vertrag und seinem Tilgungsplan vorgesehenen Bedingungen."
 }

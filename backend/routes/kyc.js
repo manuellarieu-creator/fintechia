@@ -6,6 +6,7 @@ const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
+const mailer = require('../services/mailer');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -136,7 +137,8 @@ router.post('/submit', authMiddleware, upload.fields([{ name: 'document', maxCou
     });
 
     await notifications.envoyer(req.user.id, 'KYC Soumis', 'Documents KYC reçus, délai de traitement 24-48h.', 'info');
-    await notifications.envoyer(1, 'KYC Soumis', `L\'utilisateur ${req.user.id} a soumis ses documents KYC.`, 'info');
+    await notifications.envoyer(1, 'KYC Soumis', `L'utilisateur ${req.user.id} a soumis ses documents KYC.`, 'info');
+    try { await mailer.envoyerAlerteAdmin('KYC Soumis', `L'utilisateur ${req.user.id} a soumis ses documents KYC.`); } catch(e){}
 
     res.json({ success: true, message: 'KYC soumis avec succès' });
   } catch (err) {
