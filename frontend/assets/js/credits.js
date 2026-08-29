@@ -240,8 +240,6 @@ async function loadCredits() {
       let contratBtn = '';
       if (c.statut === 'contrat_a_signer') {
         contratBtn = `<button class="btn-primary" style="font-size:12px; padding:6px 12px; border-radius:6px; background:#059669; border:none; color:white; cursor:pointer; margin-left:8px; font-weight:600;" onclick="openContratModal('${creditType}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-writing"></i> Signer le contrat</button>`;
-      } else if (c.statut !== 'rejete') {
-        contratBtn = `<button class="btn-outline" style="font-size:12px; padding:6px 12px; border-radius:6px; background:white; cursor:pointer; margin-left:8px; color:#059669; border-color:#059669;" onclick="openContratModal('${creditType}', {reference:'${c.reference}', montant:${c.montant}, duree:${c.duree_mois}, taux:${c.taux}, mensualite:${c.mensualite}, id:${c.id}})"><i class="ti ti-file-text"></i> Contrat</button>`;
       }
 
       const actions = `

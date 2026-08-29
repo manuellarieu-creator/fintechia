@@ -52,6 +52,7 @@ router.post('/register', [
   try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN nationalite VARCHAR(100) DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN must_change_pin BOOLEAN DEFAULT FALSE"); } catch(e) {}
 
   const connection = await db.getConnection();
   try {
@@ -301,6 +302,12 @@ router.post('/login/2fa', [
     // Reset OTP fails on success
     await db.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [user.id]);
 
+    const [check] = await db.query('SELECT must_change_pin FROM users WHERE id = ?', [user.id]);
+    if (check.length > 0 && check[0].must_change_pin) {
+      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      return res.json({ requirePinReset: true, resetToken });
+    }
+
     const pinUsage = user.pin_code_usage_count || 0;
     if (pinUsage >= 20 && user.role !== 'admin') {
       const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
@@ -368,7 +375,7 @@ router.post('/reset-pin', [
     
     const user = users[0];
 
-    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0 WHERE id = ?', [new_pin, user.id]);
+    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0, must_change_pin = FALSE WHERE id = ?', [new_pin, user.id]);
 
     // Proceed to login
     const deviceToken = crypto.randomBytes(32).toString('hex');
@@ -736,6 +743,31 @@ router.post('/verify-pin', authMiddleware, [body('pin').isLength({ min: 6 })], v
       return res.status(400).json({ success: false, error: 'Code PIN incorrect' });
     }
     res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/recover-pin/init
+router.post('/recover-pin/init', [
+  body('email').isEmail().normalizeEmail(),
+  body('password').notEmpty()
+], validateReq, async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const [users] = await db.query('SELECT id, password_hash FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
+    }
+    const user = users[0];
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+      return res.status(401).json({ error: 'Identifiants invalides', code: 'INVALID_CREDS', status: 401 });
+    }
+    
+    // Generate a recovery token for the KYC step
+    const recoveryToken = jwt.sign({ id: user.id, intent: 'recover_pin_kyc' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+    res.json({ success: true, recoveryToken });
   } catch (err) {
     next(err);
   }

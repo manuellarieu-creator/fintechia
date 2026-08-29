@@ -203,11 +203,35 @@ async function envoyerAlerteAdmin(sujet, message) {
   try { await sendMailWrapper(mailOptions); } catch (e) { console.error('[MAILER] Erreur alerte admin:', e); }
 }
 
+async function envoyerPinProvisoire(email, prenom, code) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Votre code PIN provisoire Fintechia',
+    text: `Bonjour ${prenom},\n\nSuite à votre demande et la vérification de votre identité, voici votre code PIN provisoire à 6 chiffres : ${code}.\nLors de votre prochaine connexion, il vous sera demandé de définir un nouveau code PIN définitif.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #0F1B33; padding: 20px; text-align: center; color: white;">
+          <h1 style="margin: 0; color: #4F46E5;">Fintechia</h1>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+          <h2>Bonjour ${prenom},</h2>
+          <p>Suite à la vérification de votre identité, voici votre code PIN provisoire :</p>
+          <div style="font-size: 32px; font-weight: bold; letter-spacing: 4px; padding: 20px; background: #F3F4F6; border-radius: 8px; margin: 20px 0;">${code}</div>
+          <p>Utilisez ce code pour vous connecter. Vous devrez immédiatement <strong>définir un nouveau code PIN définitif</strong>.</p>
+        </div>
+      </div>
+    `
+  };
+  try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
+}
+
 module.exports = {
   envoyerResetMdp,
   envoyerConfirmationMdp,
   envoyerBienvenue,
   envoyerConfirmationVirement,
   envoyerOTP,
-  envoyerAlerteAdmin
+  envoyerAlerteAdmin,
+  envoyerPinProvisoire
 };

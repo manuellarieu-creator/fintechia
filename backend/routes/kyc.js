@@ -162,4 +162,78 @@ router.get('/status', authMiddleware, async (req, res, next) => {
   }
 });
 
+const verifyRecoveryToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Token manquant', status: 401 });
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    if (decoded.intent !== 'recover_pin_kyc') {
+      return res.status(401).json({ error: 'Token invalide', status: 401 });
+    }
+    req.user = { id: decoded.id };
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Token expiré ou invalide', status: 401 });
+  }
+};
+
+// POST /api/kyc/recover-pin-submit
+router.post('/recover-pin-submit', verifyRecoveryToken, upload.fields([{ name: 'document', maxCount: 1 }, { name: 'document_verso', maxCount: 1 }, { name: 'selfie', maxCount: 1 }]), async (req, res, next) => {
+  try {
+    if (!req.files || !req.files['document'] || !req.files['document_verso'] || !req.files['selfie']) {
+      return res.status(400).json({ error: 'Documents (recto et verso) et selfie vidéo requis', code: 'MISSING_FILES', status: 400 });
+    }
+
+    const docUrl = req.files['document'][0].path || `/uploads/${req.files['document'][0].filename}`;
+    const docVersoUrl = req.files['document_verso'][0].path || `/uploads/${req.files['document_verso'][0].filename}`;
+    const selfieUrl = req.files['selfie'][0].path || `/uploads/${req.files['selfie'][0].filename}`;
+
+    const [users] = await db.query('SELECT prenom, email FROM users WHERE id = ?', [req.user.id]);
+    if (users.length === 0) return res.status(404).json({ error: 'Utilisateur introuvable' });
+    const user = users[0];
+
+    // Enregistrement de cette soumission KYC (facultatif mais bon pour l'audit)
+    // On l'ajoute ou on remplace l'existant.
+    const [existingKyc] = await db.query('SELECT id FROM kyc WHERE user_id = ?', [req.user.id]);
+    if (existingKyc.length > 0) {
+      await db.query(
+        'UPDATE kyc SET document_url = ?, document_verso_url = ?, selfie_url = ?, commentaire = ?, soumis_le = NOW() WHERE user_id = ?',
+        [docUrl, docVersoUrl, selfieUrl, 'KYC pour récupération PIN', req.user.id]
+      );
+    } else {
+      await db.query(
+        'INSERT INTO kyc (user_id, type_document, document_url, document_verso_url, selfie_url, commentaire, statut) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [req.user.id, 'cni', docUrl, docVersoUrl, selfieUrl, 'KYC pour récupération PIN', 'en_attente']
+      );
+    }
+
+    // Generer le PIN provisoire (6 chiffres)
+    const tempPin = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Mettre à jour l'utilisateur (force changement de PIN)
+    await db.query('UPDATE users SET pin_code = ?, must_change_pin = TRUE WHERE id = ?', [tempPin, req.user.id]);
+
+    // Envoyer l'email
+    await mailer.envoyerPinProvisoire(user.email, user.prenom, tempPin);
+
+    await audit.log({
+      acteur_id: req.user.id, acteur_email: user.email,
+      action: 'demande_recuperation_pin', categorie: audit.CATEGORIES.securite,
+      cible_type: 'user', cible_id: req.user.id,
+      cible_detail: 'Soumission KYC + Génération PIN provisoire', req
+    });
+
+    res.json({ success: true, message: 'Documents reçus. Votre PIN provisoire a été envoyé par email.' });
+  } catch (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: err.message, code: 'UPLOAD_ERROR', status: 400 });
+    }
+    next(err);
+  }
+});
+
 module.exports = router;

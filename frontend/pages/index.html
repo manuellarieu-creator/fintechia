@@ -372,11 +372,12 @@
       <div class="form-group" style="margin-bottom:20px;">
         <label style="display:block; font-size:13px; color:#5B5546; margin-bottom:8px;">Motif du crédit</label>
         <select id="modalCreditType" style="width:100%; padding:12px; border:1px solid #DEDACB; border-radius:6px; background:#F4F1E9; font-family:inherit;">
-          <option value="immobilier">Immobilier</option>
           <option value="personnel">Prêt personnel</option>
           <option value="consommation">Crédit consommation</option>
+          <option value="immobilier">Crédit immobilier</option>
           <option value="grands_projets">Financement grands projets</option>
         </select>
+        <div id="modalLimitsInfo" style="margin-top:8px;"></div>
       </div>
 
       <div style="margin-bottom:20px;">
@@ -395,9 +396,12 @@
         <input class="nb-range" type="range" min="12" max="360" step="12" value="120" id="modalDuration" style="width:100%;">
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid #EFEBDE;">
-        <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;" id="modalRateLabel">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(TAEG indicatif: 2.5%)</span></span>
-        <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">625 €</span>
+      <div style="padding-top:20px;border-top:1px solid #EFEBDE;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:14px;color:#1C2436;font-weight:500;line-height:1.4;" id="modalRateLabel">Mensualité estimée<br><span style="font-size:12px;color:#8A8676;font-weight:normal;">(TAEG indicatif: 2.5%)</span></span>
+          <span class="nb-mono" id="modalMonthly" style="font-size:26px;color:#1C2436;font-weight:500;white-space:nowrap;">625 €</span>
+        </div>
+        <div id="modalTotalCost" style="font-size:12px; color:#64748b; margin-top:4px;"></div>
       </div>
 
       <button id="btnRequestAmount" class="nb-btn" style="width:100%; margin-top:24px; background:#C99A3B; color:#0F1B33; font-weight:600; padding:14px; border-radius:6px; font-size:14px;" onclick="goToStep2()">Demander ce montant</button>
@@ -529,6 +533,30 @@
     computeMonthly();
   })();
 
+  // ===== Configuration Crédit (Identique à l'espace client) =====
+  var CREDIT_CONFIG = {
+    personnel: { minAmount: 5000, maxAmount: 120000, stepAmount: 500, minDuration: 3, maxDuration: 60, stepDuration: 1, rates: [{ max: 50000, rate: 0.03 }, { max: 120000, rate: 0.025 }], defaultAmount: 15000, defaultDuration: 24 },
+    consommation: { minAmount: 5000, maxAmount: 30000, stepAmount: 500, minDuration: 3, maxDuration: 60, stepDuration: 1, rates: [{ max: 30000, rate: 0.03 }], defaultAmount: 10000, defaultDuration: 24 },
+    immobilier: { minAmount: 70000, maxAmount: 1000000, stepAmount: 5000, minDuration: 24, maxDuration: 300, stepDuration: 6, rates: [{ max: 500000, rate: 0.025 }, { max: 1000000, rate: 0.02 }], defaultAmount: 200000, defaultDuration: 240 },
+    grands_projets: { minAmount: 1000000, maxAmount: 5000000, stepAmount: 50000, minDuration: 24, maxDuration: 360, stepDuration: 6, rates: [{ max: 2000000, rate: 0.02 }, { max: 5000000, rate: 0.015 }], defaultAmount: 1500000, defaultDuration: 120 }
+  };
+
+  function getCreditRate(type, amount) {
+    const config = CREDIT_CONFIG[type];
+    if (!config) return 0.03;
+    for (const bracket of config.rates) {
+      if (amount <= bracket.max) return bracket.rate;
+    }
+    return config.rates[config.rates.length - 1].rate;
+  }
+
+  function computeMonthlyPayment(principal, annualRate, months) {
+    if (months <= 0 || principal <= 0) return 0;
+    const r = annualRate / 12;
+    if (r === 0) return principal / months;
+    return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+  }
+
   // Modale Credit
   var mAmount = document.getElementById('modalAmount');
   var mDuration = document.getElementById('modalDuration');
@@ -536,28 +564,58 @@
   var mDurationOut = document.getElementById('modalDurationOut');
   var mMonthly = document.getElementById('modalMonthly');
   var mRateLabel = document.getElementById('modalRateLabel');
+  var typeSelect = document.getElementById('modalCreditType');
   var currentCreditData = {};
+
+  function updateSlidersForType() {
+    if (!typeSelect || !mAmount || !mDuration) return;
+    var type = typeSelect.value;
+    var config = CREDIT_CONFIG[type];
+    if (!config) return;
+
+    mAmount.min = config.minAmount;
+    mAmount.max = config.maxAmount;
+    mAmount.step = config.stepAmount;
+    
+    mDuration.min = config.minDuration;
+    mDuration.max = config.maxDuration;
+    mDuration.step = config.stepDuration;
+
+    mAmount.value = config.defaultAmount;
+    mDuration.value = config.defaultDuration;
+
+    var limitsEl = document.getElementById('modalLimitsInfo');
+    if (limitsEl) {
+      limitsEl.innerHTML = '<span style="font-size:12px; color:#64748b;"><i class="ti ti-info-circle"></i> ' + Math.round(config.minAmount).toLocaleString('fr-FR') + ' € — ' + Math.round(config.maxAmount).toLocaleString('fr-FR') + ' € · ' + config.minDuration + ' à ' + config.maxDuration + ' mois</span>';
+    }
+
+    computeModalMonthly();
+  }
 
   function computeModalMonthly() {
     var P = parseFloat(mAmount.value);
     var n = parseFloat(mDuration.value);
-    var rate = 0.03;
-    if(P > 50000 && P <= 500000) rate = 0.025;
-    if(P > 500000) rate = 0.02;
-
-    var r = rate / 12;
-    var monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+    var type = typeSelect ? typeSelect.value : 'personnel';
     
-    mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
-    mDurationOut.textContent = Math.round(n) + ' mois';
-    mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
-    mRateLabel.innerHTML = "Mensualité estimée<br><span style=\"font-size:12px;color:#8A8676;font-weight:normal;\">(TAEG indicatif: " + (rate*100) + "%)</span>";
+    var rate = getCreditRate(type, P);
+    var monthly = computeMonthlyPayment(P, rate, n);
+    
+    if (mAmountOut) mAmountOut.textContent = Math.round(P).toLocaleString('fr-FR') + ' €';
+    if (mDurationOut) mDurationOut.textContent = Math.round(n) + ' mois';
+    if (mMonthly) mMonthly.textContent = Math.round(monthly).toLocaleString('fr-FR') + ' €';
+    if (mRateLabel) mRateLabel.innerHTML = "Mensualité estimée<br><span style=\"font-size:12px;color:#8A8676;font-weight:normal;\">(TAEG indicatif: " + (rate*100) + "%)</span>";
+    
+    var totalCostEl = document.getElementById('modalTotalCost');
+    if (totalCostEl) {
+       totalCostEl.textContent = 'Coût total du crédit : ' + Math.round((monthly * n) - P).toLocaleString('fr-FR') + ' €';
+    }
   }
   
   if(mAmount) {
     mAmount.addEventListener('input', computeModalMonthly);
     mDuration.addEventListener('input', computeModalMonthly);
-    computeModalMonthly();
+    if (typeSelect) typeSelect.addEventListener('change', updateSlidersForType);
+    updateSlidersForType(); // Initialisation automatique avec les bornes du type sélectionné
   }
 
   function openCreditModal() {

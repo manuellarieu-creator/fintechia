@@ -2593,6 +2593,63 @@ function saveSettingsMock(msg) {
       <input type="text" class="otp-box" maxlength="1" onkeyup="checkOtpAndLogin(this, event)">
     </div>
     <button type="button" class="btn-primary w-full" style="justify-content: center; text-align: center;" onclick="forceLogin()">Valider</button>
+    <div style="margin-top: 15px; text-align: center;">
+      <a href="#" onclick="openRecoverPin()" style="color:var(--primary); font-size:13px; text-decoration:underline;">Code PIN oublié ?</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modale Recover PIN -->
+<div id="modal-recover-pin" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
+  <div class="auth-panel" style="background:white; box-shadow:0 20px 40px rgba(0,0,0,0.2); width:450px; max-width:90%; padding:40px 30px; margin:0; border:none; text-align:center;">
+    
+    <div id="recover-step-1">
+      <div class="auth-title" style="font-size:22px; margin-bottom:12px;">Code PIN oublié ?</div>
+      <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Veuillez confirmer vos identifiants pour démarrer la récupération.</p>
+      
+      <form id="form-recover-init" onsubmit="submitRecoverInit(event)">
+        <div class="form-group" style="text-align:left; margin-bottom:15px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Adresse Email</label>
+          <input type="email" id="recover-email" required class="form-control" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="form-group" style="text-align:left; margin-bottom:20px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Mot de passe</label>
+          <input type="password" id="recover-pwd" required class="form-control" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div id="recover-error-1" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;"></div>
+        <button type="submit" class="btn-primary w-full" style="justify-content:center;">Continuer</button>
+        <button type="button" class="btn-outline w-full" style="justify-content:center; margin-top:10px;" onclick="closeRecoverPin()">Annuler</button>
+      </form>
+    </div>
+
+    <div id="recover-step-2" style="display:none;">
+      <div class="auth-title" style="font-size:22px; margin-bottom:12px;">Vérification d'identité</div>
+      <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Pour des raisons de sécurité, veuillez fournir vos documents.</p>
+      
+      <form id="form-recover-kyc" onsubmit="submitRecoverKyc(event)">
+        <div class="form-group" style="text-align:left; margin-bottom:15px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Pièce d'identité (Recto)</label>
+          <input type="file" id="recover-doc" required accept="image/*,.pdf" class="form-control" style="width:100%;">
+        </div>
+        <div class="form-group" style="text-align:left; margin-bottom:15px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Pièce d'identité (Verso)</label>
+          <input type="file" id="recover-doc-verso" required accept="image/*,.pdf" class="form-control" style="width:100%;">
+        </div>
+        <div class="form-group" style="text-align:left; margin-bottom:20px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Selfie vidéo</label>
+          <input type="file" id="recover-selfie" required accept="video/*" capture="user" class="form-control" style="width:100%;">
+        </div>
+        <div id="recover-error-2" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;"></div>
+        <button type="submit" id="btn-recover-kyc" class="btn-primary w-full" style="justify-content:center;">Soumettre et recevoir mon PIN</button>
+      </form>
+    </div>
+
+    <div id="recover-step-3" style="display:none;">
+      <div class="auth-title" style="font-size:22px; margin-bottom:12px; color: #16a34a;"><i class="ti ti-check"></i> PIN Envoyé</div>
+      <p style="margin-bottom:24px; font-size:14px; color:#64748B;">Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.</p>
+      <button type="button" class="btn-primary w-full" style="justify-content:center;" onclick="closeRecoverPin()">Retour à la connexion</button>
+    </div>
+
   </div>
 </div>
 
@@ -2792,6 +2849,77 @@ function saveSettingsMock(msg) {
     } catch (err) {
       errEl.innerText = err.message;
       errEl.style.display = 'block';
+    }
+  let tempRecoveryToken = null;
+
+  function openRecoverPin() {
+    document.getElementById('modal-2fa-login').style.display = 'none';
+    document.getElementById('modal-recover-pin').style.display = 'flex';
+    document.getElementById('recover-step-1').style.display = 'block';
+    document.getElementById('recover-step-2').style.display = 'none';
+    document.getElementById('recover-step-3').style.display = 'none';
+    document.getElementById('recover-email').value = document.getElementById('login-id-client').value || '';
+    document.getElementById('recover-pwd').value = document.getElementById('login-pwd').value || '';
+  }
+
+  function closeRecoverPin() {
+    document.getElementById('modal-recover-pin').style.display = 'none';
+  }
+
+  async function submitRecoverInit(e) {
+    e.preventDefault();
+    const email = document.getElementById('recover-email').value;
+    const password = document.getElementById('recover-pwd').value;
+    const errEl = document.getElementById('recover-error-1');
+    
+    try {
+      const res = await apiCall('/auth/recover-pin/init', 'POST', { email, password });
+      if (res.success) {
+        tempRecoveryToken = res.recoveryToken;
+        document.getElementById('recover-step-1').style.display = 'none';
+        document.getElementById('recover-step-2').style.display = 'block';
+      }
+    } catch(err) {
+      errEl.innerText = err.message;
+      errEl.style.display = 'block';
+    }
+  }
+
+  async function submitRecoverKyc(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('recover-error-2');
+    const btn = document.getElementById('btn-recover-kyc');
+    
+    const doc = document.getElementById('recover-doc').files[0];
+    const docVerso = document.getElementById('recover-doc-verso').files[0];
+    const selfie = document.getElementById('recover-selfie').files[0];
+
+    const formData = new FormData();
+    formData.append('document', doc);
+    formData.append('document_verso', docVerso);
+    formData.append('selfie', selfie);
+
+    btn.innerText = "Envoi en cours...";
+    btn.disabled = true;
+
+    try {
+      const response = await fetch(`${API_BASE}/kyc/recover-pin-submit`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${tempRecoveryToken}` },
+        body: formData
+      });
+      const res = await response.json();
+      
+      if (!response.ok) throw new Error(res.error || 'Erreur lors de l\'envoi');
+
+      document.getElementById('recover-step-2').style.display = 'none';
+      document.getElementById('recover-step-3').style.display = 'block';
+    } catch(err) {
+      errEl.innerText = err.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.innerText = "Soumettre et recevoir mon PIN";
+      btn.disabled = false;
     }
   }
 </script>
