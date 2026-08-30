@@ -162,7 +162,7 @@
           <h2>Connexion</h2>
           <p class="subtitle">Accédez à votre espace personnel</p>
           
-          <form id="form-login-dynamic" class="login-form">
+          <form id="form-login-dynamic" class="login-form" onsubmit="handleLoginSubmit(event)">
             <div class="form-group">
               <label>ID client</label>
               <input type="text" id="login-id-client" required placeholder="Saisissez votre ID client" oninput="handleLoginDynamic()" />
@@ -2693,8 +2693,7 @@ function saveSettingsMock(msg) {
 
   let tempToken2FA = null;
 
-  // Intercepter la soumission du formulaire pour afficher la modale ou connecter directement
-  document.getElementById('form-login-dynamic').addEventListener('submit', async function(e) {
+  async function handleLoginSubmit(e) {
     e.preventDefault();
     const idClient = document.getElementById('login-id-client').value;
     const password = document.getElementById('login-pwd').value;
@@ -2715,7 +2714,7 @@ function saveSettingsMock(msg) {
     } catch (err) {
       alert(err.message);
     }
-  });
+  }
 
   function moveOtpFocus(el, index) {
     if (el.value.length === 1) {
