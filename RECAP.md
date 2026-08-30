@@ -20,6 +20,7 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
   - Section Héro avec 3 blocs animés s'interchangeant toutes les 9 secondes.
   - Fix des liens d'ancrage du Header (Tarifs, Sécurité).
   - Traductions validées et complétées dans l'ensemble des 6 langues additionnelles (incluant la révision complète du vocabulaire financier en allemand).
+  - Alignement exact du Simulateur de Crédit avec l'espace client (taux dynamiques, bornes, affichage du coût total).
 - **Formatage dynamique :** Les dates, les nombres et les devises s'adaptent dynamiquement au standard du pays sélectionné (locale locale).
 - **Gestion des Budgets :** Chargement dynamique depuis la base de données. Affichage de la répartition, des enveloppes budgétaires, et de l'évolution des dépenses.
 - **Virements (Tunnel) :** Tunnel de virement étape par étape avec gestion des bénéficiaires et saisie des montants. L'UI a été harmonisée (modale).
@@ -30,6 +31,7 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
   - Parsing dynamique des libellés lors des débits/crédits réalisés par l'Admin pour alerter le client (ex: détection de "Paiement", "Virement", ou "Frais mensuel").
 - **Sécurité et 2FA :** 
   - Le tunnel de Double Authentification (Code PIN) gère de manière flexible les codes à 4 ou 6 chiffres et propose des messages d'erreur ciblés en cas d'échec.
+  - Procédure de récupération de Code PIN sécurisée : vérification du mot de passe de base, upload KYC (Recto, Verso, Selfie vidéo), envoi d'un PIN provisoire par e-mail, et redirection obligatoire vers le choix d'un nouveau code à la reconnexion.
 
 ### 3. Panel d'Administration et Modération
 - **Validation des Comptes & KYC :** L'administrateur peut valider les documents. Le système débloque automatiquement l'accès au tableau de bord pour le client une fois le statut "valide" obtenu. L'Admin assigne les informations bancaires (IBAN, BIC) pour chaque utilisateur.
@@ -46,6 +48,7 @@ Ce document sert de suivi pour le projet **Fintechia**. Il liste toutes les fonc
   - Tunnel interactif en 4 étapes : Identité, Conditions, Clauses, Signature.
   - Option de signature électronique (validation OTP) ou d'impression pour signature manuelle avec upload.
   - Enregistrement des documents signés sur Cloudinary pour un accès pérenne (contournement du file system read-only).
+  - Suivi des demandes de crédit fiabilisé : le contrat n'est proposé à la signature au client que lorsque l'administrateur a explicitement positionné le statut de la demande sur "Contrat à signer".
 - **Traductions (i18n) avancées :** Extraction et auto-traduction de plus de 400 chaînes de caractères complexes liées aux clauses de contrat dans les 6 langues gérées, traitées dynamiquement via le `MutationObserver`.
 - **Numéro Client Unique :** Attribuer et générer automatiquement un "Numéro Client" unique à 12 chiffres pour chaque utilisateur lors de la création de son compte (affiché côté User et Admin).
 
