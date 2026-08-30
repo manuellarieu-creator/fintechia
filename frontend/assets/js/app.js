@@ -1108,7 +1108,7 @@ window.nextVideoStep = function() {
   if (kycStep === 1) {
     overlay.innerText = "Étape 1/3: Tournez la tête en haut puis à droite";
   } else if (kycStep === 2) {
-    overlay.innerText = `Étape 2/3: Lisez à voix haute les chiffres : ${kycCode.split('').join(' - ')}`;
+    overlay.innerHTML = `<span>Étape 2/3: Lisez à voix haute les chiffres : </span><span>${kycCode.split('').join(' - ')}</span>`;
   } else if (kycStep === 3) {
     overlay.innerText = "Étape 3/3: Dites votre nom, prénom, puis le numéro de la pièce d'identité";
     document.getElementById('btn-kyc-next-step').style.display = 'none';
