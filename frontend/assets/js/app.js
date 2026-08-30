@@ -1057,8 +1057,19 @@ window.startRecording = function() {
 
   mediaRecorder.onstop = function() {
     recordedVideoBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
-    document.getElementById('video-kyc-status').innerText = 'Vidéo enregistrée avec succès (Prêt à soumettre)';
-    document.getElementById('video-kyc-status').style.color = '#16A34A';
+    const statusMsg = 'Vidéo enregistrée avec succès (Prêt à soumettre)';
+    
+    const kycStatus = document.getElementById('video-kyc-status');
+    if (kycStatus) {
+      kycStatus.innerText = statusMsg;
+      kycStatus.style.color = '#16A34A';
+    }
+    
+    const recoverStatus = document.getElementById('recover-video-status');
+    if (recoverStatus) {
+      recoverStatus.innerText = statusMsg;
+      recoverStatus.style.color = '#16A34A';
+    }
     
     // Stop camera
     if (kycStream) {

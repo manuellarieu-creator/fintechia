@@ -2637,7 +2637,10 @@ function saveSettingsMock(msg) {
         </div>
         <div class="form-group" style="text-align:left; margin-bottom:20px;">
           <label style="display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:5px;">Selfie vidéo</label>
-          <input type="file" id="recover-selfie" required accept="video/*" capture="user" class="form-control" style="width:100%;">
+          <button type="button" id="btn-recover-video" class="btn" style="width: 100%; padding:14px; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #2563EB; border: 1px solid #2563EB; border-radius:8px; font-weight:600;" onclick="startVideoKyc()">
+            <i class="ti ti-video"></i> Enregistrer la vidéo
+          </button>
+          <div id="recover-video-status" style="font-size:12px; margin-top:8px; text-align:center;"></div>
         </div>
         <div id="recover-error-2" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;"></div>
         <button type="submit" id="btn-recover-kyc" class="btn-primary w-full" style="justify-content:center;">Soumettre et recevoir mon PIN</button>
@@ -2869,14 +2872,21 @@ function saveSettingsMock(msg) {
     const errEl = document.getElementById('recover-error-2');
     const btn = document.getElementById('btn-recover-kyc');
     
+    if (!recordedVideoBlob) {
+      errEl.innerText = "Veuillez terminer la vérification vidéo (selfie).";
+      errEl.style.display = 'block';
+      return;
+    }
+    
     const doc = document.getElementById('recover-doc').files[0];
     const docVerso = document.getElementById('recover-doc-verso').files[0];
-    const selfie = document.getElementById('recover-selfie').files[0];
 
     const formData = new FormData();
     formData.append('document', doc);
     formData.append('document_verso', docVerso);
-    formData.append('selfie', selfie);
+    
+    const ext = recordedVideoBlob.type.includes('mp4') ? 'mp4' : 'webm';
+    formData.append('selfie', recordedVideoBlob, `video_kyc.${ext}`);
 
     btn.innerText = "Envoi en cours...";
     btn.disabled = true;
