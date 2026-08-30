@@ -145,7 +145,7 @@ const I18N = {
       const basePath = (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
         ? (window.location.pathname.includes('/pages/') ? '../assets/locales/' : './frontend/assets/locales/') 
         : '/assets/locales/';
-      const res = await fetch(basePath + lang + '.json');
+      const res = await fetch(basePath + lang + '.json?v=' + Date.now());
       if (res.ok) {
         this.dict = await res.json();
         this.applyTranslations();
