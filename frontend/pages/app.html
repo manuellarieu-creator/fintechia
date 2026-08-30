@@ -167,19 +167,19 @@
               <label>ID client</label>
               <input type="text" id="login-id-client" required placeholder="Saisissez votre ID client" oninput="handleLoginDynamic()" />
             </div>
-            <div class="form-group" id="login-pwd-group" style="display:none; opacity:0; transition: opacity 0.3s ease;">
+            <div class="form-group" id="login-pwd-group">
               <label>Mot de passe</label>
-              <input type="password" id="login-pwd" required placeholder="••••••••" oninput="handleLoginDynamic()" />
+              <input type="password" id="login-pwd" required placeholder="••••••••" />
             </div>
             
-            <div class="form-options" id="login-options-group" style="display:none;">
+            <div class="form-options" id="login-options-group">
               <label class="checkbox-label">
                 <input type="checkbox" checked />
                 <span>Rester connecté sur cet appareil</span>
               </label>
             </div>
             
-            <button type="submit" id="btn-login-submit" class="btn-primary w-full" style="margin-top: 10px; display:none;">Continuer</button>
+            <button type="submit" id="btn-login-submit" class="btn-primary w-full" style="margin-top: 10px;">Continuer</button>
           </form>
           
           <div class="login-footer">
