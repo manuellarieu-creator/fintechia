@@ -1676,5 +1676,17 @@
   "Soumettre et recevoir mon PIN": "Senden und meinen PIN erhalten",
   "PIN Envoyé": "PIN gesendet",
   "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.": "Ihre Dokumente wurden empfangen. Ein temporärer PIN-Code wurde an Ihre E-Mail-Adresse gesendet.",
-  "Retour à la connexion": "Zurück zur Anmeldung"
+  "Retour à la connexion": "Zurück zur Anmeldung",
+  "Étape suivante": "Nächster Schritt",
+  "Créer votre mot de passe": "Erstellen Sie Ihr Passwort",
+  "3 — Vérification d'identité": "3 — Identitätsüberprüfung",
+  "4 — Choix de l'offre": "4 — Auswahl des Angebots",
+  "Paiements sans frais": "Gebührenfreie Zahlungen",
+  "Support prioritaire": "Prioritärer Support",
+  "Terminer l'inscription": "Registrierung abschließen",
+  "5 — Félicitations !": "5 — Herzlichen Glückwunsch!",
+  "Votre compte est créé.": "Ihr Konto wurde erstellt.",
+  "Veuillez terminer la vérification vidéo (selfie).": "Bitte schließen Sie die Video-Verifizierung (Selfie) ab.",
+  "Envoi en cours...": "Wird gesendet...",
+  "Erreur lors de l'envoi": "Fehler beim Senden"
 }

@@ -1676,5 +1676,17 @@
   "Soumettre et recevoir mon PIN": "Beküldés és a PIN kódom fogadása",
   "PIN Envoyé": "PIN elküldve",
   "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.": "Dokumentumait megkaptuk. Egy ideiglenes PIN kódot küldtünk e-mail címére.",
-  "Retour à la connexion": "Vissza a bejelentkezéshez"
+  "Retour à la connexion": "Vissza a bejelentkezéshez",
+  "Étape suivante": "Következő lépés",
+  "Créer votre mot de passe": "Hozza létre jelszavát",
+  "3 — Vérification d'identité": "3 — Személyazonosság ellenőrzése",
+  "4 — Choix de l'offre": "4 — Ajánlat kiválasztása",
+  "Paiements sans frais": "Díjmentes fizetések",
+  "Support prioritaire": "Kiemelt támogatás",
+  "Terminer l'inscription": "Regisztráció befejezése",
+  "5 — Félicitations !": "5 — Gratulálunk!",
+  "Votre compte est créé.": "Fiókja létrejött.",
+  "Veuillez terminer la vérification vidéo (selfie).": "Kérjük, fejezze be a videós ellenőrzést (szelfi).",
+  "Envoi en cours...": "Küldés...",
+  "Erreur lors de l'envoi": "Hiba a küldés során"
 }

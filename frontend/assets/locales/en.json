@@ -1676,5 +1676,17 @@
   "Soumettre et recevoir mon PIN": "Submit and receive my PIN",
   "PIN Envoyé": "PIN Sent",
   "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.": "Your documents have been received. A temporary PIN code has been sent to your email address.",
-  "Retour à la connexion": "Back to login"
+  "Retour à la connexion": "Back to login",
+  "Étape suivante": "Next step",
+  "Créer votre mot de passe": "Create your password",
+  "3 — Vérification d'identité": "3 — Identity verification",
+  "4 — Choix de l'offre": "4 — Choice of offer",
+  "Paiements sans frais": "Free payments",
+  "Support prioritaire": "Priority support",
+  "Terminer l'inscription": "Complete registration",
+  "5 — Félicitations !": "5 — Congratulations!",
+  "Votre compte est créé.": "Your account has been created.",
+  "Veuillez terminer la vérification vidéo (selfie).": "Please complete the video verification (selfie).",
+  "Envoi en cours...": "Sending...",
+  "Erreur lors de l'envoi": "Error while sending"
 }

@@ -1676,5 +1676,17 @@
   "Soumettre et recevoir mon PIN": "Indsend og modtag min PIN-kode",
   "PIN Envoyé": "PIN sendt",
   "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.": "Dine dokumenter er modtaget. En midlertidig PIN-kode er sendt til din e-mailadresse.",
-  "Retour à la connexion": "Tilbage til login"
+  "Retour à la connexion": "Tilbage til login",
+  "Étape suivante": "Næste trin",
+  "Créer votre mot de passe": "Opret din adgangskode",
+  "3 — Vérification d'identité": "3 — Identitetsbekræftelse",
+  "4 — Choix de l'offre": "4 — Valg af tilbud",
+  "Paiements sans frais": "Gebyrfrie betalinger",
+  "Support prioritaire": "Prioriteret support",
+  "Terminer l'inscription": "Gennemfør registrering",
+  "5 — Félicitations !": "5 — Tillykke!",
+  "Votre compte est créé.": "Din konto er oprettet.",
+  "Veuillez terminer la vérification vidéo (selfie).": "Gennemfør venligst videobekræftelsen (selfie).",
+  "Envoi en cours...": "Sender...",
+  "Erreur lors de l'envoi": "Fejl under afsendelse"
 }
