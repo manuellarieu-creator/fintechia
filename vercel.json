@@ -20,16 +20,32 @@
       "dest": "/frontend/assets/$1"
     },
     {
+      "src": "/(?:en|es|de|da|hu|hr)/app",
+      "dest": "/frontend/pages/app.html"
+    },
+    {
       "src": "/app",
       "dest": "/frontend/pages/app.html"
+    },
+    {
+      "src": "/(?:en|es|de|da|hu|hr)/admin",
+      "dest": "/frontend/pages/admin.html"
     },
     {
       "src": "/admin",
       "dest": "/frontend/pages/admin.html"
     },
     {
+      "src": "/(?:en|es|de|da|hu|hr)/(.*\\.html)",
+      "dest": "/frontend/pages/$1"
+    },
+    {
       "src": "/(.*\\.html)",
       "dest": "/frontend/pages/$1"
+    },
+    {
+      "src": "/(?:en|es|de|da|hu|hr)/?",
+      "dest": "/frontend/pages/index.html"
     },
     {
       "src": "/",
