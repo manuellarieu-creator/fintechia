@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin-dashboard.html
+Disallow: /app.html
+
+Sitemap: https://www.fintechia.co/sitemap.xml
