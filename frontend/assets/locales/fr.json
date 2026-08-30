@@ -1541,5 +1541,16 @@
   "Emprunteur dans le cadre : de la gestion de la demande ; de l": "Emprunteur dans le cadre : de la gestion de la demande ; de l",
   "REF": "REF",
   "Un code de validation a été envoyé à votre adresse email.": "Un code de validation a été envoyé à votre adresse email.",
-  "Erreur lors de l": "Erreur lors de l"
+  "Erreur lors de l": "Erreur lors de l",
+  "Code PIN oublié ?": "Code PIN oublié ?",
+  "Veuillez confirmer vos identifiants pour démarrer la récupération.": "Veuillez confirmer vos identifiants pour démarrer la récupération.",
+  "Pour des raisons de sécurité, veuillez fournir vos documents.": "Pour des raisons de sécurité, veuillez fournir vos documents.",
+  "Pièce d'identité (Recto)": "Pièce d'identité (Recto)",
+  "Pièce d'identité (Verso)": "Pièce d'identité (Verso)",
+  "Selfie vidéo": "Selfie vidéo",
+  "Enregistrer la vidéo": "Enregistrer la vidéo",
+  "Soumettre et recevoir mon PIN": "Soumettre et recevoir mon PIN",
+  "PIN Envoyé": "PIN Envoyé",
+  "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.": "Vos documents ont été reçus. Un code PIN provisoire a été envoyé à votre adresse email.",
+  "Retour à la connexion": "Retour à la connexion"
 }
