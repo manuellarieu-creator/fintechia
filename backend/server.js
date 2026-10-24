@@ -142,11 +142,15 @@ app.get('/health', (req, res) => {
 
 // Middleware d'erreur global
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    error: err.message || 'Erreur interne du serveur',
+  console.error(err.stack || err);
+  const status = err.status || 500;
+  // Ne pas exposer les messages d'erreur internes (SQL, syntaxe, etc.) en production
+  const isDev = process.env.NODE_ENV === 'development';
+  const userMessage = (status < 500 || isDev) ? (err.message || 'Erreur requête') : 'Une erreur interne est survenue. Veuillez réessayer plus tard.';
+  res.status(status).json({
+    error: userMessage,
     code: err.code || 'INTERNAL_ERROR',
-    status: err.status || 500
+    status: status
   });
 });
 

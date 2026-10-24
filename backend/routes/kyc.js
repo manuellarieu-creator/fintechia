@@ -11,6 +11,7 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const FraudEngine = require('../services/fraudEngine');
+const { JWT_SECRET } = require('../config/jwt');
 
 // Migration BDD silencieuse pour KYC
 (async () => {
@@ -170,7 +171,7 @@ const verifyRecoveryToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const jwt = require('jsonwebtoken');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    const decoded = jwt.verify(token, JWT_SECRET);
     if (decoded.intent !== 'recover_pin_kyc') {
       return res.status(401).json({ error: 'Token invalide', status: 401 });
     }

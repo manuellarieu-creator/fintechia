@@ -1021,30 +1021,7 @@ router.post('/users/:userId/transfers/:action', guard, async (req, res, next) =>
   }
 });
 
-// GET /api/admin/force-migration
-router.get('/force-migration', guard, async (req, res, next) => {
-  try {
-    const db = require('../config/db');
-    try {
-      await db.query("ALTER TABLE accounts ADD COLUMN custom_type VARCHAR(100) DEFAULT NULL");
-    } catch(e) {
-      console.log('Notice: custom_type already exists', e.message);
-    }
-    res.json({ success: true, message: "Migration type_compte (custom_type) effectuée avec succès" });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message, sqlMessage: error.sqlMessage || '' });
-  }
-});
 
-router.get('/debug-db', guard, async (req, res) => {
-  try {
-    const db = require('../config/db');
-    const [schema] = await db.query("DESCRIBE accounts");
-    res.json({ success: true, schema });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
 
 // GET /api/admin/settings
 router.get('/settings', guard, async (req, res, next) => {

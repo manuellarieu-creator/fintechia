@@ -182,6 +182,15 @@ async function envoyerOTP(email, prenom, code) {
   try { await sendMailWrapper(mailOptions); } catch (e) { console.error(e); }
 }
 
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function envoyerAlerteAdmin(sujet, message) {
   const mailOptions = {
     from: process.env.EMAIL_FROM || 'no-reply@fintechia.co',
@@ -195,7 +204,7 @@ async function envoyerAlerteAdmin(sujet, message) {
         </div>
         <div style="padding: 20px;">
           <h2>Nouvelle alerte</h2>
-          <p style="white-space: pre-wrap;">${message}</p>
+          <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
         </div>
       </div>
     `

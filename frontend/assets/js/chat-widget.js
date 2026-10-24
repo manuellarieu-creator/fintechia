@@ -2,13 +2,28 @@
 
 const CHAT_API_BASE = '/api/chat';
 let chatConvId = localStorage.getItem('chat_conv_id') || null;
+let chatVisitorToken = localStorage.getItem('chat_visitor_token') || null;
 let isChatUser = false; // true si c'est un client connecté
 let chatPollInterval = null;
+
+function resetVisitorChat() {
+  chatConvId = null;
+  chatVisitorToken = null;
+  localStorage.removeItem('chat_conv_id');
+  localStorage.removeItem('chat_visitor_token');
+}
 
 // Initialisation de l'UI du Widget
 function initChatWidgetUI() {
   const token = localStorage.getItem('fintech_token');
-  if (token) isChatUser = true;
+  if (token) {
+    isChatUser = true;
+    // Un client connecté utilise sa propre conversation (pas celle d'un ancien chat visiteur)
+    chatConvId = null;
+  } else if (chatConvId && !chatVisitorToken) {
+    // Ancienne conversation sans jeton : plus accessible, on repart à zéro
+    resetVisitorChat();
+  }
 
   const html = `
     <!-- Floating Button -->
@@ -131,9 +146,11 @@ async function startVisitorChat() {
       return;
     }
     
-    if (data.conversation_id) {
+    if (data.conversation_id && data.token) {
       chatConvId = data.conversation_id;
+      chatVisitorToken = data.token;
       localStorage.setItem('chat_conv_id', chatConvId);
+      localStorage.setItem('chat_visitor_token', chatVisitorToken);
       checkChatState();
     } else {
       alert("Erreur : impossible de démarrer la conversation.");
@@ -156,10 +173,19 @@ async function fetchChatMessages() {
     ? `${CHAT_API_BASE}/user/${chatConvId}/messages`
     : `${CHAT_API_BASE}/visitor/${chatConvId}/messages`;
   
-  const headers = isChatUser ? { 'Authorization': `Bearer ${localStorage.getItem('fintech_token')}` } : {};
+  const headers = isChatUser
+    ? { 'Authorization': `Bearer ${localStorage.getItem('fintech_token')}` }
+    : { 'x-chat-token': chatVisitorToken || '' };
 
   try {
     const res = await fetch(url, { headers });
+    if (res.status === 403 && !isChatUser) {
+      // Jeton invalide / conversation inaccessible : on réinitialise le chat visiteur
+      if (chatPollInterval) clearInterval(chatPollInterval);
+      resetVisitorChat();
+      checkChatState();
+      return;
+    }
     if (!res.ok) return;
     const messages = await res.json();
     renderChatMessages(messages);
@@ -227,6 +253,7 @@ async function sendChatMessage() {
   
   const headers = { 'Content-Type': 'application/json' };
   if (isChatUser) headers['Authorization'] = `Bearer ${localStorage.getItem('fintech_token')}`;
+  else headers['x-chat-token'] = chatVisitorToken || '';
 
   input.value = '';
 

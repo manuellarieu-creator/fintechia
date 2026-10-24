@@ -1,5 +1,16 @@
 // admin.js - Logique SPA de l'espace administration
 
+// Helper d'échappement XSS universel
+window.escapeHtml = function(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
 // ============================
 // OVERRIDE ALERT PAR UNE MODALE CUSTOM
 // ============================
@@ -302,29 +313,35 @@ async function renderClientsTable() {
         return;
     }
     
-    tbody.innerHTML = clients.slice(0, 5).map(c => `
+    tbody.innerHTML = clients.slice(0, 5).map(c => {
+        const safeName = escapeHtml(`${c.prenom || ''} ${c.nom || ''}`);
+        const safeEmail = escapeHtml(c.email || '');
+        const safeIban = escapeHtml(c.iban || 'Non attribué');
+        const attrName = escapeHtml(`${c.prenom || ''} ${c.nom || ''}`).replace(/'/g, '&#39;');
+        const attrIban = escapeHtml(c.iban || '').replace(/'/g, '&#39;');
+        return `
         <tr>
             <td>
                 <div class="client-cell">
                     ${getClientAvatar(c)}
                     <div class="client-info">
-                        <span class="client-name">${c.prenom} ${c.nom}</span>
-                        <span class="client-email">${c.email}</span>
+                        <span class="client-name">${safeName}</span>
+                        <span class="client-email">${safeEmail}</span>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="iban-cell">
-                    <span class="iban-code">${c.iban || 'Non attribué'}</span>
+                    <span class="iban-code">${safeIban}</span>
                 </div>
             </td>
-            <td><span class="offre-badge ${c.offre.toLowerCase()}">${c.offre}</span></td>
+            <td><span class="offre-badge ${escapeHtml(c.offre || '').toLowerCase()}">${escapeHtml(c.offre || '')}</span></td>
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
-                <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer</button>
+                <button class="btn-alert-action bloquer" onclick="openManageClient(${parseInt(c.id, 10)}, '${attrIban}', '${attrName}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer</button>
             </td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 async function renderFullClientsTable() {
@@ -358,25 +375,32 @@ async function renderFullClientsTable() {
         if(c.statut === 'en_attente') statutBadge = `<span class="status-badge warning">En attente</span>`;
         if(c.statut === 'bloque') statutBadge = `<span class="status-badge danger">Bloqué</span>`;
         
+        const safeName = escapeHtml(`${c.prenom || ''} ${c.nom || ''}`);
+        const safeEmail = escapeHtml(c.email || '');
+        const safeIban = escapeHtml(c.iban || '-');
+        const attrName = escapeHtml(`${c.prenom || ''} ${c.nom || ''}`).replace(/'/g, '&#39;');
+        const attrIban = escapeHtml(c.iban || '').replace(/'/g, '&#39;');
+        const attrTypes = escapeHtml(c.transfer_types || 'standard,immediat,swift,programme').replace(/'/g, '&#39;');
+
         return `
         <tr>
             <td>
                 <div class="client-cell">
                     ${getClientAvatar(c)}
                     <div class="client-info">
-                        <span class="client-name">${c.prenom} ${c.nom}</span>
-                        <span class="client-email">${c.email}</span>
+                        <span class="client-name">${safeName}</span>
+                        <span class="client-email">${safeEmail}</span>
                     </div>
                 </div>
             </td>
-            <td><span class="iban-code">${c.iban || '-'}</span></td>
-            <td><span class="offre-badge ${c.offre.toLowerCase()}">${c.offre}</span></td>
+            <td><span class="iban-code">${safeIban}</span></td>
+            <td><span class="offre-badge ${escapeHtml(c.offre || '').toLowerCase()}">${escapeHtml(c.offre || '')}</span></td>
             <td>${statutBadge}</td>
             <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
             <td class="solde-cell">${formatMontant(c.solde || 0)}</td>
             <td style="text-align: right;">
-                <button class="btn-alert-action bloquer" onclick="openManageClient(${c.id}, '${c.iban}', '${c.prenom} ${c.nom}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer <i class="ti ti-chevron-down"></i></button>
-                <button class="btn-alert-action" onclick="openTransferTypes(${c.user_id}, '${c.transfer_types || 'standard,immediat,swift,programme'}')" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; margin-left: 8px;">Types Virement</button>
+                <button class="btn-alert-action bloquer" onclick="openManageClient(${parseInt(c.id, 10)}, '${attrIban}', '${attrName}')" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;">Gérer <i class="ti ti-chevron-down"></i></button>
+                <button class="btn-alert-action" onclick="openTransferTypes(${parseInt(c.user_id, 10)}, '${attrTypes}')" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; margin-left: 8px;">Types Virement</button>
             </td>
         </tr>
     `}).join('');
@@ -618,9 +642,9 @@ async function renderIbanTable() {
     
     tbody.innerHTML = clientsWithIban.map(c => `
         <tr>
-            <td><span class="iban-code">${c.iban}</span></td>
+            <td><span class="iban-code">${escapeHtml(c.iban)}</span></td>
             <td>FINTEFR22XXX</td>
-            <td><span class="client-name">${c.prenom} ${c.nom}</span></td>
+            <td><span class="client-name">${escapeHtml(`${c.prenom || ''} ${c.nom || ''}`)}</span></td>
             <td class="text-muted" style="font-size:12px;">${new Date(c.created_at || Date.now()).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'))}</td>
         </tr>
     `).join('');
@@ -774,12 +798,16 @@ function filterKycList() {
             const dayText = diffDays === 0 ? 'Auj.' : `J+${diffDays}`;
             const activeClass = selectedKyc && selectedKyc.id === k.id ? 'act' : '';
             
+            const initPrenom = (k.prenom || '').charAt(0);
+            const initNom = (k.nom || '').charAt(0);
+            const safeFullName = escapeHtml(`${k.prenom || ''} ${k.nom || ''}`);
+            const safeDocType = escapeHtml(k.type_document || 'Document');
             return `
-            <div class="kyc-row ${activeClass}" onclick="showKycDetail(${k.id})">
-                <div class="av" style="background:#F1F5F9;color:#475569;">${k.prenom.charAt(0)}${k.nom.charAt(0)}</div>
+            <div class="kyc-row ${activeClass}" onclick="showKycDetail(${parseInt(k.id, 10)})">
+                <div class="av" style="background:#F1F5F9;color:#475569;">${escapeHtml(initPrenom)}${escapeHtml(initNom)}</div>
                 <div style="flex:1;min-width:0;">
-                <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${k.prenom} ${k.nom}</p>
-                <p style="font-size:9px;color:${urgent ? '#B91C1C' : '#475569'};margin:0;">${k.type_document || 'Document'} · ${dayText}</p>
+                <p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${safeFullName}</p>
+                <p style="font-size:9px;color:${urgent ? '#B91C1C' : '#475569'};margin:0;">${safeDocType} · ${dayText}</p>
                 </div>
                 <span class="bk ${badgeClass}">${badgeText}</span>
             </div>`;
@@ -1284,17 +1312,19 @@ function filterVirementsList() {
                 `;
             }
 
-            const pInit = (v.prenom && v.nom) ? v.prenom.charAt(0) + v.nom.charAt(0) : 'X';
+            const pInit = (v.prenom && v.nom) ? escapeHtml(v.prenom.charAt(0) + v.nom.charAt(0)) : 'X';
             const vColor = v.statut === 'en_attente' ? '#B45309' : (v.statut === 'rejete' ? '#B91C1C' : '#1D4ED8');
             const bgAv = v.statut === 'en_attente' ? '#FEF3C7' : (v.statut === 'rejete' ? '#FEE2E2' : '#EFF6FF');
+            const safeSender = escapeHtml(`${v.prenom || ''} ${v.nom || ''}`);
+            const safeDest = escapeHtml(v.nom_dest || 'Inconnu');
 
             return `
-            <div class="row-tx ${rowClass} ${activeClass}" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 90px 90px 100px 90px;" onclick="showVirementDetail(${v.id})">
+            <div class="row-tx ${rowClass} ${activeClass}" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 90px 90px 100px 90px;" onclick="showVirementDetail(${parseInt(v.id, 10)})">
               <div style="display:flex;align-items:center;gap:8px;">
                 <div class="av" style="background:${bgAv};color:${vColor};">${pInit}</div>
-                <div><p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${v.prenom} ${v.nom}</p><p style="font-size:9px;color:#94A3B8;margin:0;">**** ${(v.iban_source||'0000').slice(-4)} · ${timeStr}</p></div>
+                <div><p style="font-size:11px;font-weight:600;margin:0;color:#0F172A;">${safeSender}</p><p style="font-size:9px;color:#94A3B8;margin:0;">**** ${escapeHtml((v.iban_source||'0000').slice(-4))} · ${timeStr}</p></div>
               </div>
-              <div><p style="font-size:11px;font-weight:500;margin:0;color:#0F172A;">${v.nom_dest || 'Inconnu'}</p><p style="font-size:9px;color:#94A3B8;margin:0;font-family:monospace;">${v.iban_dest ? v.iban_dest.substring(0,4)+' '+v.iban_dest.substring(4,8)+'…'+v.iban_dest.slice(-4) : '-'}</p></div>
+              <div><p style="font-size:11px;font-weight:500;margin:0;color:#0F172A;">${safeDest}</p><p style="font-size:9px;color:#94A3B8;margin:0;font-family:monospace;">${escapeHtml(v.iban_dest ? v.iban_dest.substring(0,4)+' '+v.iban_dest.substring(4,8)+'…'+v.iban_dest.slice(-4) : '-')}</p></div>
               <p style="font-size:12px;font-weight:700;color:${v.statut==='rejete'?'#B91C1C':''};text-align:right;">${formatMontant(v.montant)}</p>
               <div style="text-align:center;">${typeBadge}</div>
               <div style="text-align:center;">${statBadge}</div>

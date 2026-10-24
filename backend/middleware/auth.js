@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../config/jwt');
 
 const authMiddleware = (req, res, next) => {
   try {
@@ -7,7 +8,14 @@ const authMiddleware = (req, res, next) => {
       return res.status(401).json({ error: 'Authentification requise', code: 'UNAUTHORIZED', status: 401 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Les tokens à usage restreint (2FA, reset PIN, récupération PIN...) portent un champ "intent".
+    // Ils ne doivent JAMAIS être acceptés comme jeton de session.
+    if (decoded.intent) {
+      return res.status(401).json({ error: 'Token invalide ou expiré', code: 'INVALID_TOKEN', status: 401 });
+    }
+
     req.user = decoded;
     next();
   } catch (error) {

@@ -4,6 +4,16 @@ const ADMIN_CHAT_API = '/api/chat/admin';
 let activeAdminChatConvId = null;
 let adminChatPollInterval = null;
 
+// Échappe les données contrôlées par l'utilisateur avant insertion dans du HTML
+function escapeChatHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function loadAdminChats() {
   const token = localStorage.getItem('fintech_token');
   if (!token) return;
@@ -46,10 +56,10 @@ function renderAdminChatList(convs) {
 
     div.innerHTML = `
       <div style="display:flex; justify-content:space-between; margin-bottom:4px; align-items:center;">
-        <span style="font-weight:600; font-size:13px; color:#0f172a;">${name}</span>
+        <span style="font-weight:600; font-size:13px; color:#0f172a;">${escapeChatHtml(name)}</span>
         ${typeBadge}
       </div>
-      <p style="margin:0; font-size:12px; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.last_message || 'Nouveau chat'}</p>
+      <p style="margin:0; font-size:12px; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeChatHtml(c.last_message || 'Nouveau chat')}</p>
     `;
     list.appendChild(div);
   });

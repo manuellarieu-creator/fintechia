@@ -142,9 +142,8 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   FOREIGN KEY (acteur_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-INSERT IGNORE INTO users (prenom, nom, email, password_hash, role)
-VALUES ('Super', 'Admin', 'admin@fintechia.fr',
-'$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+-- SECURITE : aucun compte admin n'est créé par défaut (l'ancien seed utilisait un mot de passe connu).
+-- Créez votre admin avec : ADMIN_EMAIL=... ADMIN_PASSWORD=... ADMIN_PIN=...  node backend/scripts/set_admin.js
 
 CREATE TABLE IF NOT EXISTS budgets (
   id INT AUTO_INCREMENT PRIMARY KEY,

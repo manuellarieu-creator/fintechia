@@ -1,13 +1,15 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const db = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
 
-// === VISITOR ROUTES ===
+const MAX_MESSAGE_LENGTH = 2000;
 
-router.get('/test/db', async (req, res) => {
+// Création silencieuse des tables de chat (remplace l'ancienne route publique /test/db)
+const schemaReady = (async () => {
   try {
     await db.query(`
       CREATE TABLE IF NOT EXISTS chat_conversations (
@@ -16,13 +18,13 @@ router.get('/test/db', async (req, res) => {
         visitor_name VARCHAR(100) DEFAULT NULL,
         visitor_email VARCHAR(100) DEFAULT NULL,
         visitor_phone VARCHAR(50) DEFAULT NULL,
+        visitor_token VARCHAR(64) DEFAULT NULL,
         status ENUM('open', 'closed') DEFAULT 'open',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
-
     await db.query(`
       CREATE TABLE IF NOT EXISTS chat_messages (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,43 +37,63 @@ router.get('/test/db', async (req, res) => {
         FOREIGN KEY (conversation_id) REFERENCES chat_conversations(id) ON DELETE CASCADE
       )
     `);
-
-    res.json({ success: true, message: "Tables de chat créées ou déjà existantes." });
+    try { await db.query('ALTER TABLE chat_conversations ADD COLUMN visitor_token VARCHAR(64) DEFAULT NULL'); } catch (e) { /* colonne déjà présente */ }
   } catch (err) {
-    res.json({ error: err.message });
+    console.error('[chat] Erreur création des tables:', err.message);
   }
-});
+})();
 
-router.get('/test/query', async (req, res) => {
-  try {
-    const [rows] = await db.query(`
-      SELECT c.*, 
-        u.prenom, u.nom, u.email as user_email,
-        (SELECT content FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message,
-        (SELECT m.created_at FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message_date
-      FROM chat_conversations c
-      LEFT JOIN users u ON c.user_id = u.id
-      ORDER BY last_message_date DESC
-    `);
-    res.json({ success: true, rows });
-  } catch (err) {
-    res.json({ error: err.message, stack: err.stack, sql: err.sql, sqlMessage: err.sqlMessage });
-  }
-});
+// Vérifie qu'un visiteur possède bien la conversation via son jeton secret
+async function visitorOwnsConversation(req, convId) {
+  const token = req.headers['x-chat-token'];
+  if (!token || typeof token !== 'string' || token.length < 32) return false;
+  const [rows] = await db.query(
+    'SELECT id FROM chat_conversations WHERE id = ? AND user_id IS NULL AND visitor_token = ?',
+    [convId, token]
+  );
+  return rows.length > 0;
+}
+
+// Vérifie qu'un client connecté possède bien la conversation
+async function userOwnsConversation(userId, convId) {
+  const [rows] = await db.query(
+    'SELECT id FROM chat_conversations WHERE id = ? AND user_id = ?',
+    [convId, userId]
+  );
+  return rows.length > 0;
+}
+
+function cleanContent(content) {
+  if (typeof content !== 'string') return null;
+  const trimmed = content.trim();
+  if (!trimmed || trimmed.length > MAX_MESSAGE_LENGTH) return null;
+  return trimmed;
+}
+
+// === VISITOR ROUTES ===
 
 // Initialiser un chat visiteur
 router.post('/visitor/init', async (req, res) => {
   try {
-    const { name, email, phone } = req.body;
-    if (!name || !email || !phone) return res.status(400).json({ error: 'Infos manquantes' });
+    await schemaReady;
+    const { name, email, phone } = req.body || {};
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof phone !== 'string' ||
+        !name.trim() || !email.trim() || !phone.trim()) {
+      return res.status(400).json({ error: 'Infos manquantes' });
+    }
+    if (name.length > 100 || email.length > 100 || phone.length > 50 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return res.status(400).json({ error: 'Infos invalides' });
+    }
 
-    // Créer une nouvelle conversation
+    // Jeton secret non devinable : seul le visiteur qui crée la conversation peut la lire / y écrire
+    const visitorToken = crypto.randomBytes(32).toString('hex');
+
     const [result] = await db.query(
-      'INSERT INTO chat_conversations (visitor_name, visitor_email, visitor_phone) VALUES (?, ?, ?)',
-      [name, email, phone]
+      'INSERT INTO chat_conversations (visitor_name, visitor_email, visitor_phone, visitor_token) VALUES (?, ?, ?, ?)',
+      [name.trim(), email.trim(), phone.trim(), visitorToken]
     );
-    
-    res.json({ conversation_id: result.insertId, name, email });
+
+    res.json({ conversation_id: result.insertId, token: visitorToken, name: name.trim(), email: email.trim() });
   } catch (err) {
     console.error('Erreur init visitor:', err);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -82,6 +104,9 @@ router.post('/visitor/init', async (req, res) => {
 router.get('/visitor/:conv_id/messages', async (req, res) => {
   try {
     const { conv_id } = req.params;
+    if (!(await visitorOwnsConversation(req, conv_id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
     const [rows] = await db.query(
       'SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC',
       [conv_id]
@@ -96,8 +121,12 @@ router.get('/visitor/:conv_id/messages', async (req, res) => {
 router.post('/visitor/:conv_id/message', async (req, res) => {
   try {
     const { conv_id } = req.params;
-    const { content } = req.body;
-    if (!content) return res.status(400).json({ error: 'Message vide' });
+    const content = cleanContent(req.body && req.body.content);
+    if (!content) return res.status(400).json({ error: 'Message vide ou trop long' });
+
+    if (!(await visitorOwnsConversation(req, conv_id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
 
     await db.query(
       'INSERT INTO chat_messages (conversation_id, sender_type, content) VALUES (?, "visitor", ?)',
@@ -119,6 +148,7 @@ router.post('/visitor/:conv_id/message', async (req, res) => {
 // Initialiser / Récupérer chat utilisateur connecté
 router.post('/user/init', authMiddleware, async (req, res) => {
   try {
+    await schemaReady;
     const userId = req.user.id;
     // Chercher une conversation ouverte
     let [convs] = await db.query('SELECT * FROM chat_conversations WHERE user_id = ? AND status = "open"', [userId]);
@@ -141,7 +171,9 @@ router.post('/user/init', authMiddleware, async (req, res) => {
 router.get('/user/:conv_id/messages', authMiddleware, async (req, res) => {
   try {
     const { conv_id } = req.params;
-    // TODO: Verify ownership
+    if (!(await userOwnsConversation(req.user.id, conv_id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
     const [rows] = await db.query(
       'SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC',
       [conv_id]
@@ -155,9 +187,12 @@ router.get('/user/:conv_id/messages', authMiddleware, async (req, res) => {
 router.post('/user/:conv_id/message', authMiddleware, async (req, res) => {
   try {
     const { conv_id } = req.params;
-    const { content } = req.body;
-    const userId = req.user.id;
-    if (!content) return res.status(400).json({ error: 'Message vide' });
+    const content = cleanContent(req.body && req.body.content);
+    if (!content) return res.status(400).json({ error: 'Message vide ou trop long' });
+
+    if (!(await userOwnsConversation(req.user.id, conv_id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
 
     await db.query(
       'INSERT INTO chat_messages (conversation_id, sender_type, sender_id, content) VALUES (?, "user", ?, ?)',
@@ -182,7 +217,7 @@ router.get('/admin/conversations', authMiddleware, async (req, res) => {
     
     // Récupérer les conversations avec le dernier message
     const [rows] = await db.query(`
-      SELECT c.*, 
+      SELECT c.id, c.user_id, c.visitor_name, c.visitor_email, c.visitor_phone, c.status, c.created_at, c.updated_at,
         u.prenom, u.nom, u.email as user_email,
         (SELECT content FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message,
         (SELECT m.created_at FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message_date
@@ -217,7 +252,8 @@ router.post('/admin/:conv_id/message', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Accès refusé' });
     const { conv_id } = req.params;
-    const { content } = req.body;
+    const content = cleanContent(req.body && req.body.content);
+    if (!content) return res.status(400).json({ error: 'Message vide ou trop long' });
     const adminId = req.user.id;
     
     await db.query(

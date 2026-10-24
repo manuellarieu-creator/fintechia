@@ -10,6 +10,7 @@ const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
 const FraudEngine = require('../services/fraudEngine');
+const { JWT_SECRET } = require('../config/jwt');
 
 // Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
 
@@ -110,9 +111,9 @@ router.post('/register', [
     await notifications.envoyer(1, 'Nouvel Utilisateur', `Un nouvel utilisateur s\'est inscrit (ID: ${userId}).`, 'info');
     try { await mailer.envoyerAlerteAdmin('Nouvel Utilisateur', `Un nouvel utilisateur s'est inscrit : ${prenom} ${nom} (${email}, ID: ${userId}).`); } catch(e){}
 
-    const token = jwt.sign({ id: userId, email, role: 'client' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+    const token = jwt.sign({ id: userId, email, role: 'client' }, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
     
-    res.json({ token, telephone_code, numero_client, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
+    res.json({ token, numero_client, user: { id: userId, prenom, nom, email, role: 'client' }, account: { id: accRes.insertId, statut: 'en_attente' } });
   } catch (err) {
     if (connection) {
       try { await connection.rollback(); } catch (e) {}
@@ -227,14 +228,14 @@ router.post('/login', [
 
     if (!deviceKnown && !isLocalhost) {
       // Create a temporary token for the 2FA flow
-      const tempToken = jwt.sign({ id: user.id, intent: '2fa' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      const tempToken = jwt.sign({ id: user.id, intent: '2fa' }, JWT_SECRET, { expiresIn: '15m' });
       // We don't send the telephone_code, the user must provide it
       const obfuscatedPhone = user.telephone ? user.telephone.replace(/(.{3}).*(.{2})/, '$1 *** ** $2') : '+33 6 ** ** ** 42';
       return res.json({ require2FA: true, obfuscatedPhone, tempToken });
     }
 
     // Direct Login (Device Known)
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
       acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
@@ -248,7 +249,7 @@ router.post('/login', [
 
     res.json({
       token,
-      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, telephone_code: user.telephone_code, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
+      user: { id: user.id, prenom: user.prenom, nom: user.nom, email: user.email, role: user.role, telephone: user.telephone, adresse: user.adresse, nationalite: user.nationalite, date_naissance: user.date_naissance, profession: user.profession, revenus: user.revenus, numero_client: user.numero_client },
       account,
       kyc_statut
     });
@@ -264,7 +265,7 @@ router.post('/login/2fa', [
 ], validateReq, async (req, res, next) => {
   const { tempToken, code } = req.body;
   try {
-    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    const decoded = jwt.verify(tempToken, JWT_SECRET);
     if (decoded.intent !== '2fa') {
       return res.status(401).json({ error: 'Token invalide', status: 401 });
     }
@@ -274,11 +275,8 @@ router.post('/login/2fa', [
     
     const user = users[0];
 
-    // Check code statique (pin_code ou telephone_code de la db)
-    let isValidCode = (user.pin_code === code || user.telephone_code === code);
-    if (!isValidCode && user.role === 'admin' && code === '0000') {
-      isValidCode = true;
-    }
+    // Seul le PIN code (ou le code SMS vérifié) est accepté
+    const isValidCode = !!code && (user.pin_code === code || (user.telephone_verifie && user.telephone_code === code));
     
     if (!isValidCode) {
       await db.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [user.id]);
@@ -304,13 +302,13 @@ router.post('/login/2fa', [
 
     const [check] = await db.query('SELECT must_change_pin FROM users WHERE id = ?', [user.id]);
     if (check.length > 0 && check[0].must_change_pin) {
-      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, JWT_SECRET, { expiresIn: '15m' });
       return res.json({ requirePinReset: true, resetToken });
     }
 
     const pinUsage = user.pin_code_usage_count || 0;
     if (pinUsage >= 20 && user.role !== 'admin') {
-      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+      const resetToken = jwt.sign({ id: user.id, intent: 'reset_pin' }, JWT_SECRET, { expiresIn: '15m' });
       return res.json({ requirePinReset: true, resetToken });
     }
 
@@ -331,7 +329,7 @@ router.post('/login/2fa', [
     } catch(e) { console.error('[2fa] accounts select:', e.message); }
     const account = accounts.length > 0 ? accounts[0] : null;
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
       acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
@@ -365,7 +363,7 @@ router.post('/reset-pin', [
 ], validateReq, async (req, res, next) => {
   const { resetToken, new_pin } = req.body;
   try {
-    const decoded = jwt.verify(resetToken, process.env.JWT_SECRET || 'FintechiaSecretKey2026!');
+    const decoded = jwt.verify(resetToken, JWT_SECRET);
     if (decoded.intent !== 'reset_pin') {
       return res.status(401).json({ error: 'Token invalide', status: 401 });
     }
@@ -384,7 +382,7 @@ router.post('/reset-pin', [
     const [accounts] = await db.query('SELECT id, solde, statut, type_compte, custom_type, depot_initial_requis, iban FROM accounts WHERE user_id = ? ORDER BY id ASC', [user.id]);
     const account = accounts.length > 0 ? accounts[0] : null;
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
 
     await audit.log({
       acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
@@ -414,7 +412,7 @@ router.post('/reset-pin', [
 // GET /api/auth/me
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at, transfer_types, adresse, profession, revenus, telephone_code, telephone_verifie, date_naissance, nationalite FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT id, prenom, nom, email, telephone, role, numero_client, created_at, transfer_types, adresse, profession, revenus, telephone_verifie, date_naissance, nationalite FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) return res.status(404).json({ error: 'User not found', code: 'NOT_FOUND', status: 404 });
     const user = users[0];
     
@@ -525,7 +523,6 @@ router.patch('/profile', [
     if (prenom !== undefined) { query += 'prenom = ?, '; params.push(prenom); }
     if (nom !== undefined) { query += 'nom = ?, '; params.push(nom); }
     if (telephone !== undefined) { query += 'telephone = ?, '; params.push(telephone); }
-    if (telephone_code !== undefined) { query += 'telephone_code = ?, '; params.push(telephone_code); }
     if (adresse !== undefined) { query += 'adresse = ?, '; params.push(adresse); }
     if (date_naissance !== undefined) { query += 'date_naissance = ?, '; params.push(date_naissance || null); }
     if (nationalite !== undefined) { query += 'nationalite = ?, '; params.push(nationalite); }
@@ -711,7 +708,7 @@ router.post('/otp/send', authMiddleware, async (req, res, next) => {
     global.otpCache = global.otpCache || {};
     global.otpCache[req.user.id] = code;
     await mailer.envoyerOTP(req.user.email, req.user.prenom, code);
-    res.json({ success: true, message: 'Code OTP envoyé', code_debug: code });
+    res.json({ success: true, message: 'Code OTP envoyé' });
   } catch (err) {
     next(err);
   }
@@ -766,7 +763,7 @@ router.post('/recover-pin/init', [
     }
     
     // Generate a recovery token for the KYC step
-    const recoveryToken = jwt.sign({ id: user.id, intent: 'recover_pin_kyc' }, process.env.JWT_SECRET || 'FintechiaSecretKey2026!', { expiresIn: '15m' });
+    const recoveryToken = jwt.sign({ id: user.id, intent: 'recover_pin_kyc' }, JWT_SECRET, { expiresIn: '15m' });
     res.json({ success: true, recoveryToken });
   } catch (err) {
     next(err);

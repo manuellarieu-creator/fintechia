@@ -52,7 +52,7 @@ router.post('/virement', [
   body('nom_banque_dest').optional().trim(),
   body('montant').isFloat({ gt: 0 }),
   body('motif').trim().notEmpty(),
-  body('pin_code').optional().trim(),
+  body('pin_code').trim().notEmpty().withMessage('Code PIN requis'),
   body('type_virement').optional().trim()
 ], validateReq, async (req, res, next) => {
   const connection = await db.getConnection();
@@ -67,12 +67,13 @@ router.post('/virement', [
       return res.status(400).json({ error: 'Utilisateur invalide.', code: 'INVALID_USER', status: 400 });
     }
     
-    if (pin_code !== undefined && users[0].pin_code !== pin_code) {
+    // Le PIN est obligatoire : il ne peut plus être contourné en omettant le champ
+    if (!users[0].pin_code || users[0].pin_code !== pin_code) {
       await connection.rollback();
       return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
     }
 
-    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? ORDER BY id ASC', [req.user.id]);
+    const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? ORDER BY id ASC FOR UPDATE', [req.user.id]);
     if (accounts.length === 0 || accounts[0].statut !== 'actif') {
       await connection.rollback();
       return res.status(400).json({ error: 'Compte inactif ou inexistant', code: 'ACCOUNT_INVALID', status: 400 });
