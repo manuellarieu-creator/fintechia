@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const fs = require('fs');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -96,8 +97,52 @@ app.use('/api/chat', chatRoutes);
 const documentsRoutes = require('./routes/documents');
 app.use('/api/documents', documentsRoutes);
 
-// Fichiers statiques
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Fichiers statiques et téléchargements sécurisés
+// Protection de /uploads : l'accès aux documents nécessite d'être authentifié et soit propriétaire, soit admin
+app.get('/uploads/:filename', async (req, res, next) => {
+  const filename = path.basename(req.params.filename); // Empêche le path traversal
+  const token = req.headers.authorization?.split(' ')[1] || req.query.token;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Authentification requise pour accéder aux documents', code: 'UNAUTHORIZED' });
+  }
+
+  try {
+    const jwt = require('jsonwebtoken');
+    const { JWT_SECRET } = require('./config/jwt');
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.intent) {
+      return res.status(401).json({ error: 'Token invalide', code: 'INVALID_TOKEN' });
+    }
+
+    const isAdmin = decoded.role === 'admin';
+    if (!isAdmin) {
+      // Vérifier si le fichier appartient à l'utilisateur (dans kyc ou credit_documents)
+      const db = require('./config/db');
+      const [kyc] = await db.query(
+        'SELECT id FROM kyc WHERE user_id = ? AND (document_url LIKE ? OR document_verso_url LIKE ? OR selfie_url LIKE ?)',
+        [decoded.id, `%${filename}`, `%${filename}`, `%${filename}`]
+      );
+      const [creditDoc] = await db.query(
+        'SELECT cd.id FROM credit_documents cd JOIN credit_requests cr ON cd.credit_request_id = cr.id WHERE cr.user_id = ? AND cd.file_path LIKE ?',
+        [decoded.id, `%${filename}`]
+      );
+
+      if (kyc.length === 0 && creditDoc.length === 0) {
+        return res.status(403).json({ error: 'Accès interdit à ce document', code: 'FORBIDDEN' });
+      }
+    }
+
+    const uploadDir = process.env.UPLOAD_DIR || (process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'uploads'));
+    const filePath = path.join(uploadDir, filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Fichier introuvable', code: 'NOT_FOUND' });
+    }
+    return res.sendFile(filePath);
+  } catch (err) {
+    return res.status(401).json({ error: 'Session invalide ou expirée', code: 'INVALID_TOKEN' });
+  }
+});
 
 // Servir les assets et pages frontend depuis le backend (nécessaire en dev et Codespaces)
 app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));

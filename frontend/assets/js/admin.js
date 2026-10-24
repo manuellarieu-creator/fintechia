@@ -853,22 +853,35 @@ function showKycDetail(kycId) {
     
     const isVideo = selectedKyc.selfie_url && (selectedKyc.selfie_url.endsWith('.webm') || selectedKyc.selfie_url.endsWith('.mp4'));
     
+    const token = localStorage.getItem('token') || '';
+    const getSecureUrl = (url) => {
+        if (!url) return '';
+        if (url.startsWith('/uploads/') && token) {
+            return `${url}?token=${encodeURIComponent(token)}`;
+        }
+        return url;
+    };
+
+    const docUrl = getSecureUrl(selectedKyc.document_url);
+    const docVersoUrl = getSecureUrl(selectedKyc.document_verso_url);
+    const selfieUrl = getSecureUrl(selectedKyc.selfie_url);
+
     document.getElementById('kyc-docs-grid').innerHTML = `
         <div>
         <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">${selectedKyc.type_document ? selectedKyc.type_document.toUpperCase() : 'Document'} (Recto)</p>
-        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${selectedKyc.document_url || '#'}', '_blank')">
-            ${selectedKyc.document_url ? `<img src="${selectedKyc.document_url}" style="width:100%;height:100%;object-fit:cover;">` : '<div class="doc-overlay"><i class="ti ti-file-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
+        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${docUrl || '#'}', '_blank')">
+            ${docUrl ? `<img src="${docUrl}" style="width:100%;height:100%;object-fit:cover;">` : '<div class="doc-overlay"><i class="ti ti-file-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
         </div>
-        ${selectedKyc.document_verso_url ? `
+        ${docVersoUrl ? `
         <p style="font-size:10px;font-weight:500;color:#475569;margin:10px 0 4px;">Verso du document</p>
-        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${selectedKyc.document_verso_url || '#'}', '_blank')">
-            <img src="${selectedKyc.document_verso_url}" style="width:100%;height:100%;object-fit:cover;">
+        <div class="doc-thumb" style="height:120px;background:#F8FAFC;" onclick="window.open('${docVersoUrl || '#'}', '_blank')">
+            <img src="${docVersoUrl}" style="width:100%;height:100%;object-fit:cover;">
         </div>` : ''}
         </div>
         <div>
         <p style="font-size:10px;font-weight:500;color:#475569;margin-bottom:4px;">Selfie Vidéo (Vérification)</p>
         <div class="doc-thumb" style="height:120px;background:#000;">
-            ${selectedKyc.selfie_url ? (isVideo ? `<video src="${selectedKyc.selfie_url}" controls style="width:100%;height:100%;object-fit:contain;"></video>` : `<img src="${selectedKyc.selfie_url}" style="width:100%;height:100%;object-fit:cover;">`) : '<div class="doc-overlay" style="background:#F8FAFC;"><i class="ti ti-user-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
+            ${selfieUrl ? (isVideo ? `<video src="${selfieUrl}" controls style="width:100%;height:100%;object-fit:contain;"></video>` : `<img src="${selfieUrl}" style="width:100%;height:100%;object-fit:cover;">`) : '<div class="doc-overlay" style="background:#F8FAFC;"><i class="ti ti-user-x" style="font-size:24px;color:#94A3B8;"></i></div>'}
         </div>
         ${selectedKyc.commentaire && (selectedKyc.commentaire.includes('Code lu') || selectedKyc.commentaire.includes('Actions demandées')) ? `<div style="font-size:10px;margin-top:4px;color:#0F172A;font-weight:600;white-space:pre-wrap;">${selectedKyc.commentaire}</div>` : ''}
         </div>

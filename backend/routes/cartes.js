@@ -19,8 +19,14 @@ pool.query(`
 
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const [cartes] = await pool.query('SELECT * FROM cartes WHERE user_id = ?', [req.user.id]);
-    res.json(cartes);
+    const [cartes] = await pool.query('SELECT id, user_id, pan, exp_date, bloquee, plafond, cree_le FROM cartes WHERE user_id = ?', [req.user.id]);
+    // Toujours masquer le PAN (ne renvoyer que les 4 derniers chiffres pour la conformité PCI-DSS) et ne pas renvoyer le CVV
+    const sanitizedCartes = cartes.map(c => ({
+      ...c,
+      pan: c.pan ? `•••• •••• •••• ${c.pan.slice(-4)}` : '•••• •••• •••• 0000',
+      last_4: c.pan ? c.pan.slice(-4) : '0000'
+    }));
+    res.json(sanitizedCartes);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur fetch cartes' });
@@ -78,6 +84,14 @@ router.get('/admin', [authMiddleware, adminMiddleware], async (req, res) => {
     `;
     const [cartes] = await pool.query(query, [...queryParams, limit, offset]);
     
+    // Conformité PCI-DSS : masquer le PAN et ne jamais exposer le CVV même aux administrateurs
+    const sanitizedCartes = cartes.map(c => ({
+      ...c,
+      cvv: undefined,
+      pan: c.pan ? `•••• •••• •••• ${c.pan.slice(-4)}` : '•••• •••• •••• 0000',
+      last_4: c.pan ? c.pan.slice(-4) : '0000'
+    }));
+    
     // Stats
     const [stats] = await pool.query(`
       SELECT 
@@ -88,7 +102,7 @@ router.get('/admin', [authMiddleware, adminMiddleware], async (req, res) => {
     `);
 
     res.json({
-      cartes,
+      cartes: sanitizedCartes,
       stats: stats[0],
       pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
