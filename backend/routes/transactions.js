@@ -7,6 +7,7 @@ const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
+const { verifyPin, hashPin } = require('../services/pinHelper');
 
 const FraudEngine = require('../services/fraudEngine');
 
@@ -61,16 +62,42 @@ router.post('/virement', [
     
     await connection.beginTransaction();
 
-    const [users] = await connection.query('SELECT prenom, pin_code, transfer_types FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await connection.query('SELECT prenom, pin_code, transfer_types, otp_fails FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) {
       await connection.rollback();
       return res.status(400).json({ error: 'Utilisateur invalide.', code: 'INVALID_USER', status: 400 });
     }
     
-    // Le PIN est obligatoire : il ne peut plus être contourné en omettant le champ
-    if (!users[0].pin_code || users[0].pin_code !== pin_code) {
+    // Protection anti force-brute sur le PIN de virement
+    if ((users[0].otp_fails || 0) >= 5) {
       await connection.rollback();
-      return res.status(400).json({ error: 'Code secret incorrect.', code: 'INVALID_PIN', status: 400 });
+      return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives de PIN infructueuses.', code: 'SECURITY_BLOCK', status: 403 });
+    }
+
+    // Le PIN est vérifié via hash bcrypt ou compatibilité antérieure sécurisée
+    const isPinValid = await verifyPin(pin_code, users[0].pin_code);
+    if (!isPinValid) {
+      await connection.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [req.user.id]);
+      const [u] = await connection.query('SELECT otp_fails FROM users WHERE id = ?', [req.user.id]);
+      const fails = u[0]?.otp_fails || 1;
+      if (fails >= 5) {
+        await connection.query("UPDATE accounts SET statut = 'bloque' WHERE user_id = ?", [req.user.id]);
+        await connection.commit();
+        return res.status(403).json({ error: 'Compte bloqué suite à 5 tentatives de code secret erronées.', code: 'SECURITY_BLOCK', status: 403 });
+      }
+      await connection.rollback();
+      return res.status(400).json({ error: `Code secret incorrect (${Math.max(0, 5 - fails)} tentative(s) restante(s)).`, code: 'INVALID_PIN', status: 400 });
+    }
+
+    // Réinitialise le compteur d'échecs sur succès
+    await connection.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [req.user.id]);
+
+    // Si le code PIN était en clair, mise à niveau automatique vers bcrypt
+    if (users[0].pin_code && !users[0].pin_code.startsWith('$2')) {
+      try {
+        const upgradedPin = await hashPin(pin_code);
+        await connection.query('UPDATE users SET pin_code = ? WHERE id = ?', [upgradedPin, req.user.id]);
+      } catch (e) {}
     }
 
     const [accounts] = await connection.query('SELECT id, solde, statut, transfer_allowed, max_transfer_amount FROM accounts WHERE user_id = ? ORDER BY id ASC FOR UPDATE', [req.user.id]);

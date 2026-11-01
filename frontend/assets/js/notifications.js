@@ -9,6 +9,8 @@ let isFirstFetch = true;
 // The base endpoint
 const NOTIF_API_URL = '/api/notifications';
 
+const esc = (s) => (typeof window.escapeHtml === 'function' ? window.escapeHtml(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+
 function getAuthToken() {
   return localStorage.getItem('fintech_token');
 }
@@ -47,8 +49,8 @@ function showToast(title, message, type = 'info') {
   toast.style.cursor = 'pointer';
 
   toast.innerHTML = `
-    <div style="font-weight:600; margin-bottom:4px;">${title}</div>
-    <div style="font-size:13px; opacity:0.9;">${message}</div>
+    <div style="font-weight:600; margin-bottom:4px;">${esc(title)}</div>
+    <div style="font-size:13px; opacity:0.9;">${esc(message)}</div>
   `;
 
   // Click to dismiss
@@ -220,11 +222,11 @@ function updateNotificationUI(notifs) {
     
     div.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-        <span style="font-size:13px; font-weight:600; color:#0F172A;">${n.titre}</span>
+        <span style="font-size:13px; font-weight:600; color:#0F172A;">${esc(n.titre)}</span>
         ${!n.lu ? '<span style="width:8px;height:8px;background:#3b82f6;border-radius:50%; flex-shrink:0;"></span>' : ''}
       </div>
-      <p style="font-size:12px; color:#475569; margin:0 0 6px 0;">${n.message}</p>
-      <div style="font-size:10px; color:#94A3B8;">${date}</div>
+      <p style="font-size:12px; color:#475569; margin:0 0 6px 0;">${esc(n.message)}</p>
+      <div style="font-size:10px; color:#94A3B8;">${esc(date)}</div>
     `;
     listContainer.appendChild(div);
   });

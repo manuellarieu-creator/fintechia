@@ -7,6 +7,8 @@ const { authMiddleware } = require('../middleware/auth');
 const audit = require('../services/audit');
 const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
+const crypto = require('crypto');
+const { hashPin } = require('../services/pinHelper');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -212,11 +214,12 @@ router.post('/recover-pin-submit', verifyRecoveryToken, upload.fields([{ name: '
       );
     }
 
-    // Generer le PIN provisoire (6 chiffres)
-    const tempPin = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generer le PIN provisoire cryptographique (6 chiffres)
+    const tempPin = crypto.randomInt(100000, 1000000).toString();
+    const hashedTempPin = await hashPin(tempPin);
 
-    // Mettre à jour l'utilisateur (force changement de PIN)
-    await db.query('UPDATE users SET pin_code = ?, must_change_pin = TRUE WHERE id = ?', [tempPin, req.user.id]);
+    // Mettre à jour l'utilisateur (force changement de PIN au prochain login)
+    await db.query('UPDATE users SET pin_code = ?, must_change_pin = TRUE, otp_fails = 0 WHERE id = ?', [hashedTempPin, req.user.id]);
 
     // Envoyer l'email
     await mailer.envoyerPinProvisoire(user.email, user.prenom, tempPin);

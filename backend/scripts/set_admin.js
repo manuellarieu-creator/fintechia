@@ -17,10 +17,12 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 const bcrypt = require('bcrypt');
 const db = require('../config/db');
+const { hashPin } = require('../services/pinHelper');
 
 const LEGACY_EMAIL = 'admin@fintechia.fr';
 
 async function main() {
+  await db.query('ALTER TABLE users MODIFY COLUMN pin_code VARCHAR(100) DEFAULT NULL').catch(() => {});
   const email = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD || '';
   const pin = process.env.ADMIN_PIN || '';
@@ -35,20 +37,22 @@ async function main() {
   if (password && password.length < 12) throw new Error('ADMIN_PASSWORD doit contenir au moins 12 caractères');
   if (!isExistingAdmin && !password) throw new Error('ADMIN_PASSWORD est requis pour créer un nouvel admin');
 
+  const hashedPin = await hashPin(pin);
+
   if (isExistingAdmin) {
     if (password) {
       const hash = await bcrypt.hash(password, 12);
-      await db.query('UPDATE users SET password_hash = ?, pin_code = ? WHERE id = ?', [hash, pin, existing[0].id]);
+      await db.query('UPDATE users SET password_hash = ?, pin_code = ? WHERE id = ?', [hash, hashedPin, existing[0].id]);
       console.log(`Admin mis à jour (mot de passe + PIN) : ${email}`);
     } else {
-      await db.query('UPDATE users SET pin_code = ? WHERE id = ?', [pin, existing[0].id]);
+      await db.query('UPDATE users SET pin_code = ? WHERE id = ?', [hashedPin, existing[0].id]);
       console.log(`Admin mis à jour (PIN uniquement, mot de passe conservé) : ${email}`);
     }
   } else {
     const hash = await bcrypt.hash(password, 12);
     await db.query(
       "INSERT INTO users (prenom, nom, email, password_hash, role, pin_code) VALUES ('Super', 'Admin', ?, ?, 'admin', ?)",
-      [email, hash, pin]
+      [email, hash, hashedPin]
     );
     console.log(`Admin créé : ${email}`);
   }

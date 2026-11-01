@@ -1,3 +1,5 @@
+const esc = (s) => (typeof window.escapeHtml === 'function' ? window.escapeHtml(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+
 async function loadTransactions() {
   const containerMobile = document.getElementById('tx-tbody-mobile');
   const containerDesktop = document.getElementById('tx-tbody-desktop');
@@ -31,8 +33,8 @@ async function loadTransactions() {
           <div class="tx">
             <div class="tx-icon ${iconClass}"><i class="ti ${icon}"></i></div>
             <div class="tx-body">
-              <div class="tx-name">${libelle}</div>
-              <div class="tx-meta">${date} <span class="badge ${badgeClass}">${typeLabel}</span></div>
+              <div class="tx-name">${esc(libelle)}</div>
+              <div class="tx-meta">${esc(date)} <span class="badge ${badgeClass}">${esc(typeLabel)}</span></div>
             </div>
             <div class="tx-amount ${amountClass}">${sign}${Math.abs(tx.montant).toFixed(2).replace('.', ',')} €</div>
           </div>
@@ -59,11 +61,11 @@ async function loadTransactions() {
             <td>
               <div class="nb-tx-lib">
                 <div class="nb-tx-icon ${iconClass}">${icon}</div>
-                <span>${libelle}</span>
+                <span>${esc(libelle)}</span>
               </div>
             </td>
-            <td>${date}</td>
-            <td><span class="nb-cat-badge ${catClass}">${typeLabel}</span></td>
+            <td>${esc(date)}</td>
+            <td><span class="nb-cat-badge ${catClass}">${esc(typeLabel)}</span></td>
             <td class="right ${amountClass}">${sign} ${Math.abs(tx.montant).toFixed(2).replace('.', ',')} €</td>
           </tr>
         `;
@@ -232,9 +234,9 @@ async function loadVirementHistory(page = 1) {
               <div style="width:32px; height:32px; border-radius:50%; background:var(--bg-body); display:flex; align-items:center; justify-content:center;">
                 <i class="${isCredit ? 'ti ti-arrow-down-left' : 'ti ti-shopping-bag'}" style="color:${isCredit ? 'var(--success)' : 'var(--text-muted)'}"></i>
               </div>
-              <span style="font-weight:600; color:var(--text-main);">${libelle}</span>
+              <span style="font-weight:600; color:var(--text-main);">${esc(libelle)}</span>
             </div></td>
-            <td style="color:var(--text-muted);">${date}</td>
+            <td style="color:var(--text-muted);">${esc(date)}</td>
             <td><span class="badge ${isCredit ? 'badge-success' : 'badge-neutral'}">${tx.categorie || (isCredit ? 'Virement entrant' : 'Virement sortant')}</span></td>
             <td style="text-align:right; font-weight:700; color:${color};">${sign}${parseFloat(tx.montant).toFixed(2)} €</td>
           </tr>

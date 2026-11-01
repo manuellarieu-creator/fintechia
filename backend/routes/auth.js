@@ -11,6 +11,7 @@ const notifications = require('../services/notifications');
 const mailer = require('../services/mailer');
 const FraudEngine = require('../services/fraudEngine');
 const { JWT_SECRET } = require('../config/jwt');
+const { verifyPin, hashPin } = require('../services/pinHelper');
 
 // Auto-migration silencieuse au chargement du module (fonctionne aussi sur Vercel)
 
@@ -32,10 +33,10 @@ router.post('/register', [
   body('adresse').optional().trim(),
   body('profession').optional().trim(),
   body('revenus').optional().trim(),
-  body('password').isLength({ min: 6 }).withMessage('Minimum 6 caractères'),
+  body('password').isLength({ min: 8 }).withMessage('Minimum 8 caractères requis pour le mot de passe'),
   body('type_compte').optional().isIn(['credit', 'epargne', 'courant']).withMessage('Type de compte invalide'),
   body('date_naissance').optional().trim(),
-  body('pin_code').optional().trim()
+  body('pin_code').optional().matches(/^\d{6}$/).withMessage('Le code PIN doit comporter exactement 6 chiffres')
 ], validateReq, async (req, res, next) => {
   const { prenom, nom, email, telephone, adresse, profession, revenus, password, date_naissance, pin_code } = req.body;
   const type_compte = req.body.type_compte || 'courant';
@@ -52,7 +53,8 @@ router.post('/register', [
   try { await db.query("CREATE TABLE IF NOT EXISTS user_devices (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, device_token VARCHAR(255) NOT NULL UNIQUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, last_used DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN date_naissance DATE DEFAULT NULL"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN nationalite VARCHAR(100) DEFAULT NULL"); } catch(e) {}
-  try { await db.query("ALTER TABLE users ADD COLUMN pin_code VARCHAR(10) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users MODIFY COLUMN pin_code VARCHAR(100) DEFAULT NULL"); } catch(e) {}
+  try { await db.query("ALTER TABLE users ADD COLUMN otp_fails INT DEFAULT 0"); } catch(e) {}
   try { await db.query("ALTER TABLE users ADD COLUMN must_change_pin BOOLEAN DEFAULT FALSE"); } catch(e) {}
 
   const connection = await db.getConnection();
@@ -65,12 +67,14 @@ router.post('/register', [
     }
 
     const password_hash = await bcrypt.hash(password, 10);
-    const telephone_code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits backward compatibility
+    const telephone_code = crypto.randomInt(100000, 1000000).toString();
     
     // Générer le numéro client à 12 chiffres
     const timestamp = Date.now().toString().slice(-7);
-    const random = Math.floor(10000 + Math.random() * 90000).toString(); // 5 chiffres
+    const random = crypto.randomInt(10000, 100000).toString(); // 5 chiffres cryptographiquement sécurisés
     const numero_client = `${timestamp}${random}`; // 7 + 5 = 12 chiffres
+
+    const hashedPin = pin_code ? await hashPin(pin_code) : null;
 
     const [userRes] = await connection.query(
       'INSERT INTO users (prenom, nom, email, telephone, adresse, profession, revenus, telephone_code, password_hash, numero_client, date_naissance, pin_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -86,7 +90,7 @@ router.post('/register', [
         password_hash,
         numero_client,
         date_naissance || null,
-        pin_code || null
+        hashedPin
       ]
     );
     const userId = userRes.insertId;
@@ -143,7 +147,7 @@ router.post('/verify-phone', authMiddleware, async (req, res, next) => {
       acteur_id: req.user.id, acteur_email: req.user.email, acteur_role: req.user.role,
       action: 'telephone_verifie', categorie: audit.CATEGORIES.securite,
       cible_type: 'user', cible_id: req.user.id,
-      cible_detail: `Téléphone vérifié avec le code ${code}`, req
+      cible_detail: 'Téléphone vérifié avec succès', req
     });
 
     res.json({ success: true });
@@ -211,7 +215,8 @@ router.post('/login', [
     }
 
     // Verification 2FA / Device
-    const isLocalhost = req.headers.host && req.headers.host.includes('localhost');
+    // Le contournement localhost n'est permis qu'en local hors production
+    const isLocalDev = process.env.NODE_ENV !== 'production' && (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1');
     let deviceKnown = false;
 
     if (trustedDeviceToken) {
@@ -226,7 +231,7 @@ router.post('/login', [
       }
     }
 
-    if (!deviceKnown && !isLocalhost) {
+    if (!deviceKnown && !isLocalDev) {
       // Create a temporary token for the 2FA flow
       const tempToken = jwt.sign({ id: user.id, intent: '2fa' }, JWT_SECRET, { expiresIn: '15m' });
       // We don't send the telephone_code, the user must provide it
@@ -276,29 +281,45 @@ router.post('/login/2fa', [
     const user = users[0];
 
     // Seul le PIN code (ou le code SMS vérifié) est accepté
-    const isValidCode = !!code && (user.pin_code === code || (user.telephone_verifie && user.telephone_code === code));
+    const isPinMatch = await verifyPin(code, user.pin_code);
+    const isPhoneMatch = Boolean(user.telephone_verifie && user.telephone_code === code);
+    const isValidCode = Boolean(code && (isPinMatch || isPhoneMatch));
     
     if (!isValidCode) {
       await db.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [user.id]);
       const [updated] = await db.query('SELECT otp_fails FROM users WHERE id = ?', [user.id]);
+      const fails = updated[0]?.otp_fails || 1;
       
       const fraudRes = await FraudEngine.checkLogin({
           user_id: user.id,
           ip_risk: 0,
-          otp_fails: updated[0].otp_fails
+          otp_fails: fails
       });
       
-      if (fraudRes.action === 'block') {
+      if (fraudRes.action === 'block' || fails >= 5) {
           // Block the account
           await db.query("UPDATE accounts SET statut = 'bloque' WHERE user_id = ?", [user.id]);
-          return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives.', code: 'SECURITY_BLOCK', status: 403 });
+          await audit.log({
+            acteur_id: user.id, acteur_email: user.email, acteur_role: user.role,
+            action: 'compte_bloque_bruteforce', categorie: audit.CATEGORIES.securite,
+            statut: 'echec', detail: `Compte bloqué après ${fails} tentatives 2FA infructueuses`, req
+          });
+          return res.status(403).json({ error: 'Compte bloqué suite à de trop nombreuses tentatives. Contactez le support.', code: 'SECURITY_BLOCK', status: 403 });
       }
 
-      return res.status(401).json({ error: 'Code PIN erroné. Veuillez entrer le bon code PIN.', code: 'INVALID_2FA', status: 401 });
+      return res.status(401).json({ error: `Code de sécurité erroné (${Math.max(0, 5 - fails)} tentative(s) restante(s)).`, code: 'INVALID_2FA', status: 401 });
     }
 
     // Reset OTP fails on success
     await db.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [user.id]);
+
+    // Si le code PIN était en clair, mise à niveau automatique vers le hachage bcrypt
+    if (isPinMatch && user.pin_code && !user.pin_code.startsWith('$2')) {
+      try {
+        const upgradedPin = await hashPin(code);
+        await db.query('UPDATE users SET pin_code = ? WHERE id = ?', [upgradedPin, user.id]);
+      } catch(e) {}
+    }
 
     const [check] = await db.query('SELECT must_change_pin FROM users WHERE id = ?', [user.id]);
     if (check.length > 0 && check[0].must_change_pin) {
@@ -373,7 +394,8 @@ router.post('/reset-pin', [
     
     const user = users[0];
 
-    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0, must_change_pin = FALSE WHERE id = ?', [new_pin, user.id]);
+    const hashedPin = await hashPin(new_pin);
+    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0, must_change_pin = FALSE, otp_fails = 0 WHERE id = ?', [hashedPin, user.id]);
 
     // Proceed to login
     const deviceToken = crypto.randomBytes(32).toString('hex');
@@ -557,11 +579,14 @@ router.patch('/pin', [
     const [users] = await db.query('SELECT pin_code, prenom, email FROM users WHERE id = ?', [req.user.id]);
     if (users.length === 0) return res.status(404).json({ error: 'User non trouvé', code: 'NOT_FOUND', status: 404 });
     
-    if (users[0].pin_code !== current_pin) {
+    const isCurrentValid = await verifyPin(current_pin, users[0].pin_code);
+    if (!isCurrentValid) {
+      await db.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [req.user.id]);
       return res.status(400).json({ error: 'Code PIN actuel incorrect', code: 'INVALID_PIN', status: 400 });
     }
 
-    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0 WHERE id = ?', [new_pin, req.user.id]);
+    const hashedPin = await hashPin(new_pin);
+    await db.query('UPDATE users SET pin_code = ?, pin_code_usage_count = 0, otp_fails = 0 WHERE id = ?', [hashedPin, req.user.id]);
 
     await audit.log({
       acteur_id: req.user.id, acteur_email: req.user.email,
@@ -626,7 +651,10 @@ router.post('/reset-demande', [
       await db.query('UPDATE password_reset_tokens SET used = TRUE WHERE user_id = ? AND used = FALSE', [user.id]);
       await db.query('INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)', [user.id, token, expires]);
 
-      const resetLink = `${process.env.APP_URL}/reset-password?token=${token}`;
+      const baseUrl = (process.env.FRONTEND_URL && process.env.FRONTEND_URL !== 'https://votredomaine.com') 
+        ? process.env.FRONTEND_URL 
+        : (process.env.APP_URL && process.env.APP_URL !== 'https://votredomaine.com' ? process.env.APP_URL : 'https://fintechia.co');
+      const resetLink = `${baseUrl.replace(/\/+$/, '')}/reset-password?token=${token}`;
       await mailer.envoyerResetMdp(email, user.prenom, resetLink);
 
       await audit.log({
@@ -704,9 +732,14 @@ router.post('/reset-valider', [
 // POST /api/auth/otp/send
 router.post('/otp/send', authMiddleware, async (req, res, next) => {
   try {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = crypto.randomInt(100000, 1000000).toString();
     global.otpCache = global.otpCache || {};
-    global.otpCache[req.user.id] = code;
+    // Stocker le code avec expiration à 10 minutes et compteur de tentatives
+    global.otpCache[req.user.id] = {
+      code,
+      expires: Date.now() + 10 * 60 * 1000,
+      attempts: 0
+    };
     await mailer.envoyerOTP(req.user.email, req.user.prenom, code);
     res.json({ success: true, message: 'Code OTP envoyé' });
   } catch (err) {
@@ -715,14 +748,26 @@ router.post('/otp/send', authMiddleware, async (req, res, next) => {
 });
 
 // POST /api/auth/otp/verify
-router.post('/otp/verify', authMiddleware, [body('code').notEmpty()], validateReq, async (req, res, next) => {
+router.post('/otp/verify', authMiddleware, [body('code').notEmpty().trim()], validateReq, async (req, res, next) => {
   try {
     global.otpCache = global.otpCache || {};
-    const expected = global.otpCache[req.user.id];
-    if (!expected || expected !== req.body.code) {
-      return res.status(400).json({ success: false, error: 'Code de validation incorrect ou expiré' });
+    const entry = global.otpCache[req.user.id];
+    if (!entry || Date.now() > entry.expires) {
+      delete global.otpCache[req.user.id];
+      return res.status(400).json({ success: false, error: 'Code de validation expiré ou non demandé' });
     }
-    // Code correct, on le supprime (usage unique)
+
+    entry.attempts = (entry.attempts || 0) + 1;
+    if (entry.attempts > 5) {
+      delete global.otpCache[req.user.id];
+      return res.status(400).json({ success: false, error: 'Trop de tentatives erronées. Veuillez demander un nouveau code.' });
+    }
+
+    if (entry.code !== req.body.code) {
+      return res.status(400).json({ success: false, error: 'Code de validation incorrect' });
+    }
+
+    // Code correct, usage unique
     delete global.otpCache[req.user.id];
     res.json({ success: true });
   } catch (err) {
@@ -731,14 +776,36 @@ router.post('/otp/verify', authMiddleware, [body('code').notEmpty()], validateRe
 });
 
 // POST /api/auth/verify-pin
-router.post('/verify-pin', authMiddleware, [body('pin').isLength({ min: 6 })], validateReq, async (req, res, next) => {
+router.post('/verify-pin', authMiddleware, [
+  body('pin').matches(/^\d{6}$/).withMessage('Code PIN à 6 chiffres requis')
+], validateReq, async (req, res, next) => {
   try {
-    const [users] = await db.query('SELECT pin_code FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await db.query('SELECT pin_code, otp_fails, email FROM users WHERE id = ?', [req.user.id]);
     if (!users.length) return res.status(404).json({ error: 'Utilisateur introuvable' });
     
-    if (users[0].pin_code !== req.body.pin) {
-      return res.status(400).json({ success: false, error: 'Code PIN incorrect' });
+    const user = users[0];
+    if (user.otp_fails >= 5) {
+      return res.status(403).json({ success: false, error: 'Trop de tentatives de PIN infructueuses. Compte temporairement verrouillé.', code: 'SECURITY_BLOCK' });
     }
+
+    const isValid = await verifyPin(req.body.pin, user.pin_code);
+    if (!isValid) {
+      await db.query('UPDATE users SET otp_fails = otp_fails + 1 WHERE id = ?', [req.user.id]);
+      const remaining = Math.max(0, 4 - (user.otp_fails || 0));
+      return res.status(400).json({ success: false, error: `Code PIN incorrect (${remaining} tentative(s) restante(s))` });
+    }
+
+    // Réinitialise le compteur d'échecs
+    await db.query('UPDATE users SET otp_fails = 0 WHERE id = ?', [req.user.id]);
+
+    // Mise à niveau transparente vers bcrypt si ancien PIN en clair
+    if (user.pin_code && !user.pin_code.startsWith('$2')) {
+      try {
+        const upgradedPin = await hashPin(req.body.pin);
+        await db.query('UPDATE users SET pin_code = ? WHERE id = ?', [upgradedPin, req.user.id]);
+      } catch (e) {}
+    }
+
     res.json({ success: true });
   } catch (err) {
     next(err);

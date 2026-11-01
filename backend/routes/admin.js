@@ -911,8 +911,10 @@ router.post('/users', guard, async (req, res, next) => {
       return res.status(400).json({ error: 'Champs obligatoires manquants (Prénom, Nom, Mot de passe)' });
     }
 
+    const crypto = require('crypto');
+    const { hashPin } = require('../services/pinHelper');
     const timestamp = Date.now().toString().slice(-7);
-    const random = Math.floor(10000 + Math.random() * 90000).toString();
+    const random = crypto.randomInt(10000, 100000).toString();
     const numero_client = reqNumClient || `${timestamp}${random}`;
     
     // Fallback email to satisfy NOT NULL unique constraint in DB
@@ -927,10 +929,11 @@ router.post('/users', guard, async (req, res, next) => {
 
     const bcrypt = require('bcrypt');
     const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPin = pin_code ? await hashPin(pin_code) : null;
     
     const [userRes] = await connection.query(
       'INSERT INTO users (prenom, nom, email, password_hash, role, telephone, numero_client, created_at, pin_code) VALUES (?, ?, ?, ?, "client", ?, ?, IFNULL(?, CURRENT_TIMESTAMP), ?)',
-      [prenom, nom, finalEmail, hashedPassword, phoneVal, numero_client, date_creation || null, pin_code || null]
+      [prenom, nom, finalEmail, hashedPassword, phoneVal, numero_client, date_creation || null, hashedPin]
     );
     const userId = userRes.insertId;
 
@@ -1016,47 +1019,6 @@ router.post('/users/:userId/transfers/:action', guard, async (req, res, next) =>
     });
 
     res.json({ success: true });
-  } catch (err) {
-    next(err);
-  }
-});
-
-
-
-// GET /api/admin/settings
-router.get('/settings', guard, async (req, res, next) => {
-  try {
-    const [rows] = await db.query("SELECT setting_key, setting_value, description FROM settings");
-    const settingsObj = {};
-    rows.forEach(r => {
-      settingsObj[r.setting_key] = { value: r.setting_value, description: r.description };
-    });
-    res.json(settingsObj);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// PATCH /api/admin/settings
-router.patch('/settings', guard, async (req, res, next) => {
-  try {
-    const settings = req.body;
-    for (const [key, value] of Object.entries(settings)) {
-      if (typeof value !== 'object') {
-        await db.query(
-          "UPDATE settings SET setting_value = ? WHERE setting_key = ?",
-          [value, key]
-        );
-      } else {
-        await db.query(
-          "UPDATE settings SET setting_value = ? WHERE setting_key = ?",
-          [value.value, key]
-        );
-      }
-    }
-    
-    await audit.log(req.user.id, 'modification_parametres', 'Succès', 'Paramètres généraux mis à jour');
-    res.json({ success: true, message: "Paramètres mis à jour avec succès" });
   } catch (err) {
     next(err);
   }

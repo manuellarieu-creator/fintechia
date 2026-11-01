@@ -1,10 +1,20 @@
-window.alert = function(message, callback) {
-    let modal = document.getElementById('modal-custom-alert');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'modal-custom-alert';
-        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.2s;';
-        modal.innerHTML = `
+window.escapeHtml = function (value) {
+  if (value == null) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
+window.alert = function (message, callback) {
+  let modal = document.getElementById('modal-custom-alert');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-custom-alert';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.2s;';
+    modal.innerHTML = `
             <div style="background:var(--bg-body, #fff); border-radius:24px; padding:32px; max-width:400px; width:90%; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.2); transform:scale(0.9); transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);" id="custom-alert-box">
                 <div id="custom-alert-icon" style="font-size:56px; margin-bottom:16px; line-height:1;"></div>
                 <h3 id="custom-alert-title" style="margin:0 0 12px; font-size:20px; font-weight:700; color:var(--text-main, #1e293b);"></h3>
@@ -12,37 +22,37 @@ window.alert = function(message, callback) {
                 <button id="custom-alert-btn" style="background:var(--primary, #3b82f6); color:#fff; border:none; padding:14px 24px; border-radius:12px; font-weight:600; width:100%; cursor:pointer; font-size:15px; transition:transform 0.1s, filter 0.2s;">Compris</button>
             </div>
         `;
-        document.body.appendChild(modal);
-        const btn = document.getElementById('custom-alert-btn');
-        btn.addEventListener('mouseover', () => btn.style.filter = 'brightness(1.1)');
-        btn.addEventListener('mouseout', () => btn.style.filter = 'brightness(1)');
-        btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.97)');
-        btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
-    }
-    const lowerMsg = (message || '').toString().toLowerCase();
-    let type = 'info';
-    if (lowerMsg.includes('erreur') || lowerMsg.includes('échoué') || lowerMsg.includes('invalide') || lowerMsg.includes('incorrect') || lowerMsg.includes('insuffisant') || lowerMsg.includes('bloqué') || lowerMsg.includes('rejetée') || lowerMsg.includes('impossible') || lowerMsg.includes('exigé')) {
-        type = 'error';
-    } else if (lowerMsg.includes('succès') || lowerMsg.includes('validé') || lowerMsg.includes('ajouté') || lowerMsg.includes('réussi')) {
-        type = 'success';
-    } else if (lowerMsg.includes('attention') || lowerMsg.includes('bientôt') || lowerMsg.includes('limite')) {
-        type = 'warning';
-    }
-    let emoji = '🔔', title = 'Notification', btnColor = 'var(--primary, #3b82f6)';
-    if (type === 'error') { emoji = '🚨'; title = 'Oups !'; btnColor = 'var(--danger, #ef4444)'; }
-    else if (type === 'success') { emoji = '✅'; title = 'Succès !'; btnColor = 'var(--success, #22c55e)'; }
-    else if (type === 'warning') { emoji = '⚠️'; title = 'Attention'; btnColor = 'var(--warning, #f59e0b)'; }
-    document.getElementById('custom-alert-icon').innerText = emoji;
-    document.getElementById('custom-alert-title').innerText = title;
-    document.getElementById('custom-alert-message').innerText = message;
-    document.getElementById('custom-alert-btn').style.background = btnColor;
-    modal.style.display = 'flex';
-    setTimeout(() => { modal.style.opacity = '1'; document.getElementById('custom-alert-box').style.transform = 'scale(1)'; }, 10);
-    document.getElementById('custom-alert-btn').onclick = () => {
-        modal.style.opacity = '0';
-        document.getElementById('custom-alert-box').style.transform = 'scale(0.9)';
-        setTimeout(() => { modal.style.display = 'none'; if (callback) callback(); }, 200);
-    };
+    document.body.appendChild(modal);
+    const btn = document.getElementById('custom-alert-btn');
+    btn.addEventListener('mouseover', () => btn.style.filter = 'brightness(1.1)');
+    btn.addEventListener('mouseout', () => btn.style.filter = 'brightness(1)');
+    btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.97)');
+    btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
+  }
+  const lowerMsg = (message || '').toString().toLowerCase();
+  let type = 'info';
+  if (lowerMsg.includes('erreur') || lowerMsg.includes('échoué') || lowerMsg.includes('invalide') || lowerMsg.includes('incorrect') || lowerMsg.includes('insuffisant') || lowerMsg.includes('bloqué') || lowerMsg.includes('rejetée') || lowerMsg.includes('impossible') || lowerMsg.includes('exigé')) {
+    type = 'error';
+  } else if (lowerMsg.includes('succès') || lowerMsg.includes('validé') || lowerMsg.includes('ajouté') || lowerMsg.includes('réussi')) {
+    type = 'success';
+  } else if (lowerMsg.includes('attention') || lowerMsg.includes('bientôt') || lowerMsg.includes('limite')) {
+    type = 'warning';
+  }
+  let emoji = '🔔', title = 'Notification', btnColor = 'var(--primary, #3b82f6)';
+  if (type === 'error') { emoji = '🚨'; title = 'Oups !'; btnColor = 'var(--danger, #ef4444)'; }
+  else if (type === 'success') { emoji = '✅'; title = 'Succès !'; btnColor = 'var(--success, #22c55e)'; }
+  else if (type === 'warning') { emoji = '⚠️'; title = 'Attention'; btnColor = 'var(--warning, #f59e0b)'; }
+  document.getElementById('custom-alert-icon').innerText = emoji;
+  document.getElementById('custom-alert-title').innerText = title;
+  document.getElementById('custom-alert-message').innerText = message;
+  document.getElementById('custom-alert-btn').style.background = btnColor;
+  modal.style.display = 'flex';
+  setTimeout(() => { modal.style.opacity = '1'; document.getElementById('custom-alert-box').style.transform = 'scale(1)'; }, 10);
+  document.getElementById('custom-alert-btn').onclick = () => {
+    modal.style.opacity = '0';
+    document.getElementById('custom-alert-box').style.transform = 'scale(0.9)';
+    setTimeout(() => { modal.style.display = 'none'; if (callback) callback(); }, 200);
+  };
 };
 
 // Base logic for the frontend SPA
@@ -57,29 +67,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('fintech_token');
   if (token) {
     checkAuth(token);
-    } else {
-      setTimeout(() => {
-        if (action === 'register') {
-          showPage('pg-register');
-        } else {
-          showPage('pg-login');
-        }
-      }, 500); // Petit délai pour éviter les flashs
-    }
-
-    // Auto-logout: 3 minutes d'inactivité
-    let logoutTimer;
-    function resetLogoutTimer() {
-      clearTimeout(logoutTimer);
-      if (localStorage.getItem('fintech_token')) {
-        logoutTimer = setTimeout(() => {
-          localStorage.removeItem('fintech_token');
-          alert('Session expirée pour inactivité.', () => window.location.reload());
-        }, 3 * 60 * 1000);
+  } else {
+    setTimeout(() => {
+      if (action === 'register') {
+        showPage('pg-register');
+      } else {
+        showPage('pg-login');
       }
+    }, 500); // Petit délai pour éviter les flashs
+  }
+
+  // Auto-logout: 3 minutes d'inactivité
+  let logoutTimer;
+  function resetLogoutTimer() {
+    clearTimeout(logoutTimer);
+    if (localStorage.getItem('fintech_token')) {
+      logoutTimer = setTimeout(() => {
+        localStorage.removeItem('fintech_token');
+        alert('Session expirée pour inactivité.', () => window.location.reload());
+      }, 3 * 60 * 1000);
     }
-    ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => document.addEventListener(evt, resetLogoutTimer));
-    resetLogoutTimer();
+  }
+  ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => document.addEventListener(evt, resetLogoutTimer));
+  resetLogoutTimer();
 });
 
 function showPage(pageId) {
@@ -94,14 +104,14 @@ function showView(viewId) {
   if (viewId === 'view-kyc' && typeof kycStatut !== 'undefined' && kycStatut === 'valide') {
     viewId = 'view-dashboard';
   }
-  
+
   localStorage.setItem('activeClientView', viewId);
   document.querySelectorAll('.nb-view').forEach(v => v.style.display = 'none');
   const target = document.getElementById(viewId);
   if (target) {
     target.style.display = 'block';
   }
-  
+
   if (viewId === 'view-virements') {
     if (typeof loadBeneficiairesForSelect === 'function') loadBeneficiairesForSelect();
     if (typeof loadVirementHistory === 'function') loadVirementHistory(1);
@@ -122,7 +132,7 @@ function showMobileView(viewId) {
   if (viewId === 'm-view-kyc' && typeof kycStatut !== 'undefined' && kycStatut === 'valide') {
     viewId = 'm-view-dashboard';
   }
-  
+
   localStorage.setItem('activeClientMobileView', viewId);
   document.querySelectorAll('.m-view').forEach(v => v.style.display = 'none');
   const target = document.getElementById(viewId);
@@ -155,7 +165,7 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   if (body) options.body = JSON.stringify(body);
 
   const res = await fetch(`/api${endpoint}`, options);
-  
+
   if (res.status === 401 && !endpoint.startsWith('/auth/login')) {
     localStorage.removeItem('fintech_token');
     showPage('pg-login');
@@ -169,10 +179,10 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   let data;
   try {
     data = await res.json();
-  } catch(e) {
+  } catch (e) {
     throw new Error('Erreur serveur critique (Base de données probablement arrêtée). Veuillez relancer MySQL.');
   }
-  
+
   if (!res.ok) {
     const err = new Error(data.error || 'Erreur API');
     err.isPopupRule = data.isPopupRule;
@@ -187,10 +197,10 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-pwd').value;
-  
+
   try {
     const res = await apiCall('/auth/login', 'POST', { email, password });
-    
+
     if (res.require2FA) {
       document.getElementById('modal-2fa-login').style.display = 'flex';
       document.getElementById('login-2fa-phone').innerText = res.obfuscatedPhone;
@@ -198,7 +208,7 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
       document.getElementById('2fa-input-1').focus();
       return;
     }
-    
+
     localStorage.setItem('fintech_token', res.token);
     initDashboard(res.user, res.account, res.kyc_statut);
   } catch (err) {
@@ -209,7 +219,7 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
 async function checkAuth() {
   try {
     const data = await apiCall('/auth/me');
-        if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
+    if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
     initDashboard(data.user, data.account, data.kyc_statut);
   } catch (err) {
     console.error(err);
@@ -223,25 +233,25 @@ async function initDashboard(user, account, kycStatut = null) {
 
   // Filter transfer types in dropdowns
   ['vir-type-desktop', 'vir-type-mobile'].forEach(id => {
-      const select = document.getElementById(id);
-      if (select) {
-          Array.from(select.options).forEach(opt => {
-              const allowed = window.userTransferTypes.includes(opt.value);
-              opt.style.display = allowed ? '' : 'none';
-              opt.hidden = !allowed;
-              opt.disabled = !allowed;
-          });
-          // Also set the selected index to the first visible option if the current one is hidden
-          if (select.options.length > 0 && select.options[select.selectedIndex] && select.options[select.selectedIndex].disabled) {
-             for (let i=0; i<select.options.length; i++) {
-                 if (!select.options[i].disabled) {
-                     select.selectedIndex = i;
-                     if(typeof toggleDateProgrammee === 'function') toggleDateProgrammee(select.value, id.replace('vir-type-', ''));
-                     break;
-                 }
-             }
+    const select = document.getElementById(id);
+    if (select) {
+      Array.from(select.options).forEach(opt => {
+        const allowed = window.userTransferTypes.includes(opt.value);
+        opt.style.display = allowed ? '' : 'none';
+        opt.hidden = !allowed;
+        opt.disabled = !allowed;
+      });
+      // Also set the selected index to the first visible option if the current one is hidden
+      if (select.options.length > 0 && select.options[select.selectedIndex] && select.options[select.selectedIndex].disabled) {
+        for (let i = 0; i < select.options.length; i++) {
+          if (!select.options[i].disabled) {
+            select.selectedIndex = i;
+            if (typeof toggleDateProgrammee === 'function') toggleDateProgrammee(select.value, id.replace('vir-type-', ''));
+            break;
           }
+        }
       }
+    }
   });
 
   if (kycStatut === 'valide') {
@@ -281,33 +291,33 @@ async function initDashboard(user, account, kycStatut = null) {
 
   const savedView = localStorage.getItem('activeClientView');
   if (savedView) {
-      if (window.innerWidth <= 768) {
-          const savedMobileView = localStorage.getItem('activeClientMobileView') || 'm-' + savedView;
-          showMobileView(savedMobileView);
-          document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
-              i.classList.remove('active');
-              if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(savedMobileView)) {
-                  i.classList.add('active');
-              }
-          });
-      } else {
-          showView(savedView);
-          document.querySelectorAll('.nb-nav a').forEach(a => {
-              a.classList.remove('active');
-              if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(savedView)) {
-                  a.classList.add('active');
-              }
-          });
-      }
+    if (window.innerWidth <= 768) {
+      const savedMobileView = localStorage.getItem('activeClientMobileView') || 'm-' + savedView;
+      showMobileView(savedMobileView);
+      document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
+        i.classList.remove('active');
+        if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(savedMobileView)) {
+          i.classList.add('active');
+        }
+      });
+    } else {
+      showView(savedView);
+      document.querySelectorAll('.nb-nav a').forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(savedView)) {
+          a.classList.add('active');
+        }
+      });
+    }
   }
 
   showPage('pg-dash');
-  
+
   if (account && user.role !== 'admin') {
     if (account.depot_initial_requis && parseFloat(account.depot_initial_requis) > 0) {
       const feeRequired = parseFloat(account.depot_initial_requis);
       const currentSolde = parseFloat(account.solde || 0);
-      
+
       if (currentSolde < feeRequired) {
         const feeModal = document.getElementById('modal-activation-fee');
         if (feeModal) {
@@ -318,58 +328,58 @@ async function initDashboard(user, account, kycStatut = null) {
       }
     }
   }
-  
+
   ['user-prenom-mobile', 'user-prenom-desktop', 'user-prenom-greeting'].forEach(id => {
     const el = document.getElementById(id);
-    if(el) el.innerText = user.prenom;
+    if (el) el.innerText = user.prenom;
   });
-  
+
   ['user-nom-mobile', 'user-nom-desktop'].forEach(id => {
     const el = document.getElementById(id);
-    if(el) el.innerText = user.nom;
+    if (el) el.innerText = user.nom;
   });
 
   ['user-avatar-mobile', 'user-avatar-desktop', 'settings-avatar-initials'].forEach(id => {
     const el = document.getElementById(id);
-    if(el) el.innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
+    if (el) el.innerText = (user.prenom[0] + user.nom[0]).toUpperCase();
   });
-  
+
   const planDesktop = document.getElementById('user-plan-desktop');
   if (planDesktop && account) {
     let t = account.custom_type || account.type_compte || 'Courant';
-    if(t.toLowerCase() === 'courant') t = 'Compte courant';
-    if(t.toLowerCase() === 'epargne') t = 'Compte épargne';
-    if(t.toLowerCase() === 'credit') t = 'Compte crédit';
+    if (t.toLowerCase() === 'courant') t = 'Compte courant';
+    if (t.toLowerCase() === 'epargne') t = 'Compte épargne';
+    if (t.toLowerCase() === 'credit') t = 'Compte crédit';
     t = t.charAt(0).toUpperCase() + t.slice(1);
     planDesktop.innerText = t;
   }
 
   // Update Profile Settings page inputs
   const settingsPrenom = document.getElementById('settings-prenom');
-  if(settingsPrenom) settingsPrenom.value = user.prenom;
-  
+  if (settingsPrenom) settingsPrenom.value = user.prenom;
+
   const settingsNom = document.getElementById('settings-nom');
-  if(settingsNom) settingsNom.value = user.nom;
-  
+  if (settingsNom) settingsNom.value = user.nom;
+
   const settingsEmail = document.getElementById('settings-email');
-  if(settingsEmail) settingsEmail.value = user.email;
-  
+  if (settingsEmail) settingsEmail.value = user.email;
+
   const settingsAdresse = document.getElementById('settings-adresse');
-  if(settingsAdresse) settingsAdresse.value = user.adresse || '';
-  
+  if (settingsAdresse) settingsAdresse.value = user.adresse || '';
+
   const settingsPhoneCode = document.getElementById('settings-phone-code');
-  if(settingsPhoneCode) settingsPhoneCode.value = user.telephone_code || '';
-  
+  if (settingsPhoneCode) settingsPhoneCode.value = user.telephone_code || '';
+
   const settingsPhone = document.getElementById('settings-phone');
-  if(settingsPhone) settingsPhone.value = user.telephone || '';
-  
+  if (settingsPhone) settingsPhone.value = user.telephone || '';
+
   const settingsDob = document.getElementById('settings-dob');
-  if(settingsDob && user.date_naissance) {
+  if (settingsDob && user.date_naissance) {
     settingsDob.value = user.date_naissance.substring(0, 10);
   }
-  
+
   const settingsNationalite = document.getElementById('settings-nationalite');
-  if(settingsNationalite) settingsNationalite.value = user.nationalite || '';
+  if (settingsNationalite) settingsNationalite.value = user.nationalite || '';
 
   const smsContainer = document.getElementById('settings-2fa-sms-container');
   const smsVal = document.getElementById('settings-2fa-sms-val');
@@ -392,28 +402,28 @@ async function initDashboard(user, account, kycStatut = null) {
       emailContainer.style.display = 'none';
     }
   }
-  
+
   if (account) {
     ['solde-display-mobile', 'solde-display-desktop', 'virement-solde-display'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) el.innerText = `${parseFloat(account.solde).toFixed(2).replace('.', ',')} €`;
+      if (el) el.innerText = `${parseFloat(account.solde).toFixed(2).replace('.', ',')} €`;
     });
-    
+
     ['iban-display-mobile', 'iban-display-desktop', 'virement-iban-display'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) el.innerText = account.iban ? account.iban.replace(/.(?=.{4})/g, '*') : 'En attente';
+      if (el) el.innerText = account.iban ? account.iban.replace(/.(?=.{4})/g, '*') : 'En attente';
     });
-    
+
     ['type-compte-display-mobile', 'type-compte-display-desktop'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) {
+      if (el) {
         const typeRaw = account.custom_type || account.type_compte || 'Courant';
         const typeFormat = typeRaw.charAt(0).toUpperCase() + typeRaw.slice(1);
         el.innerText = `Compte ${typeFormat}`;
       }
     });
-    
-    if(document.getElementById('kyc-alert-mobile')) {
+
+    if (document.getElementById('kyc-alert-mobile')) {
       document.getElementById('kyc-alert-mobile').style.display = (account.statut === 'kyc_requis' || kycStatut === 'en_attente') ? 'block' : 'none';
     }
 
@@ -443,7 +453,7 @@ async function initDashboard(user, account, kycStatut = null) {
   }
 
   const dateEl = document.getElementById('nb-current-date');
-  if(dateEl) {
+  if (dateEl) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const dateStr = new Date().toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'), options);
     dateEl.innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
@@ -462,14 +472,14 @@ async function initDashboard(user, account, kycStatut = null) {
   }
 
   // Pre-fill profile settings
-  if(document.getElementById('prof-prenom')) {
+  if (document.getElementById('prof-prenom')) {
     document.getElementById('prof-prenom').value = user.prenom || '';
     document.getElementById('prof-nom').value = user.nom || '';
     document.getElementById('prof-tel').value = user.telephone || '';
   }
 
   // Pre-fill credit modal
-  if(document.getElementById('reqPrenom')) {
+  if (document.getElementById('reqPrenom')) {
     document.getElementById('reqPrenom').value = user.prenom || '';
     document.getElementById('reqNom').value = user.nom || '';
     document.getElementById('reqTel').value = user.telephone || '';
@@ -480,26 +490,26 @@ async function initDashboard(user, account, kycStatut = null) {
   const urlParams = new URLSearchParams(window.location.search);
   const view = urlParams.get('view');
   const mview = urlParams.get('mview');
-  
+
   if (view && typeof showView === 'function') {
-      showView(view);
-      // Highlight the correct menu item
-      document.querySelectorAll('.nb-nav a').forEach(a => {
-          a.classList.remove('active');
-          if(a.getAttribute('onclick') && a.getAttribute('onclick').includes(view)) {
-              a.classList.add('active');
-          }
-      });
+    showView(view);
+    // Highlight the correct menu item
+    document.querySelectorAll('.nb-nav a').forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(view)) {
+        a.classList.add('active');
+      }
+    });
   }
-  
+
   if (mview && typeof showMobileView === 'function' && window.innerWidth <= 768) {
-      showMobileView(mview);
-      document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
-          i.classList.remove('active');
-          if(i.getAttribute('onclick') && i.getAttribute('onclick').includes(mview)) {
-              i.classList.add('active');
-          }
-      });
+    showMobileView(mview);
+    document.querySelectorAll('.bottom-nav .nb-item').forEach(i => {
+      i.classList.remove('active');
+      if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(mview)) {
+        i.classList.add('active');
+      }
+    });
   }
 }
 
@@ -507,7 +517,7 @@ async function initDashboard(user, account, kycStatut = null) {
 async function loadCredits() {
   try {
     const credits = await apiCall('/credits/mes-demandes');
-    
+
     // Desktop UI
     const tbodyDesktop = document.getElementById('credits-tbody-desktop');
     if (tbodyDesktop) {
@@ -523,9 +533,9 @@ async function loadCredits() {
             <td>${c.duree_mois} mois</td>
             <td>
               <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
-                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' : 
-                  c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' : 
-                  'background:#FEF3C7; color:#92400E;'}">
+                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' :
+            c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' :
+              'background:#FEF3C7; color:#92400E;'}">
                 ${c.statut.replace('_', ' ').toUpperCase()}
               </span>
             </td>
@@ -533,7 +543,7 @@ async function loadCredits() {
         `).join('');
       }
     }
-    
+
     // Mobile UI
     const listMobile = document.getElementById('credits-list-mobile');
     if (listMobile) {
@@ -545,9 +555,9 @@ async function loadCredits() {
             <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
               <strong style="text-transform:capitalize;">${c.type_credit || c.motif}</strong>
               <span style="padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; 
-                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' : 
-                  c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' : 
-                  'background:#FEF3C7; color:#92400E;'}">
+                ${c.statut === 'valide_succes' || c.statut === 'credite' ? 'background:#D1FAE5; color:#065F46;' :
+            c.statut === 'rejete' ? 'background:#FEE2E2; color:#991B1B;' :
+              'background:#FEF3C7; color:#92400E;'}">
                 ${c.statut.replace('_', ' ').toUpperCase()}
               </span>
             </div>
@@ -559,7 +569,7 @@ async function loadCredits() {
         `).join('');
       }
     }
-  } catch(e) {
+  } catch (e) {
     console.error("Erreur chargement crédits", e);
   }
 }
@@ -578,8 +588,8 @@ async function loadBudgets() {
 
 function renderBudgetsManageList() {
   const container = document.getElementById('budgets-manage-list');
-  if(!container) return;
-  if(userBudgets.length === 0) {
+  if (!container) return;
+  if (userBudgets.length === 0) {
     container.innerHTML = '<p style="font-size:13px; color:#64748B;">Aucune enveloppe budgétaire définie.</p>';
     return;
   }
@@ -587,7 +597,7 @@ function renderBudgetsManageList() {
     <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #E2E8F0;">
       <div>
         <div style="font-weight:600; font-size:14px; color:#0F172A;">${b.categorie}</div>
-        <div style="font-size:12px; color:#64748B;">Limite: ${parseFloat(b.limite).toFixed(2).replace('.',',')} €</div>
+        <div style="font-size:12px; color:#64748B;">Limite: ${parseFloat(b.limite).toFixed(2).replace('.', ',')} €</div>
       </div>
       <button onclick="supprimerBudget(${b.id})" style="background:none; border:none; color:#EF4444; font-size:16px; cursor:pointer;">🗑</button>
     </div>
@@ -597,36 +607,36 @@ function renderBudgetsManageList() {
 async function ajouterBudget() {
   const cat = document.getElementById('new-budget-cat').value;
   const lim = document.getElementById('new-budget-limite').value;
-  if(!cat || !lim) return; // Simple validation
+  if (!cat || !lim) return; // Simple validation
   try {
     await apiCall('/budgets', 'POST', { categorie: cat, limite: parseFloat(lim), couleur: 'blue' });
     document.getElementById('new-budget-cat').value = '';
     document.getElementById('new-budget-limite').value = '';
     await loadBudgets();
-    if(typeof loadTransactions === 'function') loadTransactions();
-  } catch(e) {
+    if (typeof loadTransactions === 'function') loadTransactions();
+  } catch (e) {
     alert('Erreur ajout budget');
   }
 }
 
 async function supprimerBudget(id) {
-  if(!confirm("Supprimer cette enveloppe budgétaire ?")) return;
+  if (!confirm("Supprimer cette enveloppe budgétaire ?")) return;
   try {
     await apiCall(`/budgets/${id}`, 'DELETE');
     await loadBudgets();
-    if(typeof loadTransactions === 'function') loadTransactions();
-  } catch(e) {
+    if (typeof loadTransactions === 'function') loadTransactions();
+  } catch (e) {
     alert('Erreur suppression');
   }
 }
 
 // Drawer logic
-window.openAppDrawer = function() {
+window.openAppDrawer = function () {
   document.getElementById('app-overlay').style.display = 'block';
   document.getElementById('app-drawer').style.transform = 'translateX(0)';
 };
 
-window.closeAppDrawer = function() {
+window.closeAppDrawer = function () {
   document.getElementById('app-overlay').style.display = 'none';
   document.getElementById('app-drawer').style.transform = 'translateX(100%)';
 };
@@ -642,7 +652,7 @@ async function downloadPDF(type) {
   try {
     const token = localStorage.getItem('fintech_token');
     if (!token) return alert('Vous devez être connecté');
-    
+
     // Animation de chargement sur le bouton
     const btnText = event.currentTarget.innerHTML;
     event.currentTarget.innerHTML = '<i class="ti ti-loader ti-spin"></i> Téléchargement...';
@@ -652,7 +662,7 @@ async function downloadPDF(type) {
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + token }
     });
-    
+
     event.currentTarget.innerHTML = btnText;
     event.currentTarget.disabled = false;
 
@@ -665,10 +675,10 @@ async function downloadPDF(type) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    
+
     const d = new Date();
-    const dateStr = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0');
-    
+    const dateStr = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
+
     a.download = type === 'rib' ? 'RIB_Fintechia.pdf' : `Releve_Fintechia_${dateStr}.pdf`;
     document.body.appendChild(a);
     a.click();
@@ -689,12 +699,12 @@ let regData = {};
 function setStep(num) {
   const stepper = document.querySelector('.register-stepper');
   if (stepper) stepper.style.display = (num === 5) ? 'none' : 'flex';
-  for(let i=1; i<=5; i++) {
-    const sForm = document.getElementById('form-step-'+i);
-    const sNav = document.getElementById('step-nav-'+i);
-    if(sForm) sForm.style.display = (i === num) ? 'block' : 'none';
-    if(sNav) {
-      if(i < num) {
+  for (let i = 1; i <= 5; i++) {
+    const sForm = document.getElementById('form-step-' + i);
+    const sNav = document.getElementById('step-nav-' + i);
+    if (sForm) sForm.style.display = (i === num) ? 'block' : 'none';
+    if (sNav) {
+      if (i < num) {
         sNav.className = 'register-step completed';
       } else if (i === num) {
         sNav.className = 'register-step active';
@@ -715,7 +725,7 @@ document.getElementById('form-step-1')?.addEventListener('submit', (e) => {
   setStep(2);
 });
 
-window.movePinFocus = function(el, num) {
+window.movePinFocus = function (el, num) {
   if (el.value.length === 1 && num < 6) {
     document.getElementById('reg-pin-' + (num + 1)).focus();
   }
@@ -725,17 +735,17 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   e.preventDefault();
   const pwd = document.getElementById('reg-pwd').value;
   const pwdConf = document.getElementById('reg-pwd-confirm').value;
-  if(pwd !== pwdConf) {
+  if (pwd !== pwdConf) {
     return alert('Les mots de passe ne correspondent pas');
   }
-  const pin = document.getElementById('reg-pin-1').value + 
-              document.getElementById('reg-pin-2').value + 
-              document.getElementById('reg-pin-3').value + 
-              document.getElementById('reg-pin-4').value +
-              document.getElementById('reg-pin-5').value +
-              document.getElementById('reg-pin-6').value;
-  
-  if(pin.length !== 6) return alert('Le code secret doit comporter 6 chiffres');
+  const pin = document.getElementById('reg-pin-1').value +
+    document.getElementById('reg-pin-2').value +
+    document.getElementById('reg-pin-3').value +
+    document.getElementById('reg-pin-4').value +
+    document.getElementById('reg-pin-5').value +
+    document.getElementById('reg-pin-6').value;
+
+  if (pin.length !== 6) return alert('Le code secret doit comporter 6 chiffres');
 
   regData.password = pwd;
   regData.pin_code = pin;
@@ -748,7 +758,7 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   try {
     const res = await apiCall('/auth/register', 'POST', regData);
     localStorage.setItem('fintech_token', res.token);
-    
+
     if (res.numero_client) {
       alert(`Votre identifiant client est : ${res.numero_client}. Notez-le bien !`);
     }
@@ -762,33 +772,33 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   }
 });
 
-  document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('fintech_token');
-    if(!token) return alert('Vous devez d\'abord créer le compte.');
-  
-    const typeDoc = document.getElementById('reg-kyc-type').value;
-    const rectoFile = document.getElementById('reg-kyc-recto').files[0];
-  
-    if (!rectoFile || !recordedVideoBlob) {
-      return alert('Veuillez fournir la pièce d\'identité et terminer la vérification vidéo.');
-    }
-  
-    const formData = new FormData();
-    formData.append('type_document', typeDoc);
-    formData.append('document', rectoFile);
-    
-    const versoFile = document.getElementById('reg-kyc-verso').files[0];
-    if (versoFile) {
-      formData.append('document_verso', versoFile);
-    }
-    
-    // Check if recordedVideoBlob is set, and append it with a filename based on mime type
-    const ext = recordedVideoBlob.type.includes('mp4') ? 'mp4' : 'webm';
-    formData.append('selfie', recordedVideoBlob, `video_kyc.${ext}`);
-    
-    const fullInstructions = `Actions demandées :\n1. Tourner la tête en haut puis à droite\n2. Code lu : ${kycCode.split('').join(' - ')}\n3. Dire son nom, prénom, puis le numéro de la pièce d'identité`;
-    formData.append('instructions_kyc', fullInstructions);
+document.getElementById('form-step-3')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const token = localStorage.getItem('fintech_token');
+  if (!token) return alert('Vous devez d\'abord créer le compte.');
+
+  const typeDoc = document.getElementById('reg-kyc-type').value;
+  const rectoFile = document.getElementById('reg-kyc-recto').files[0];
+
+  if (!rectoFile || !recordedVideoBlob) {
+    return alert('Veuillez fournir la pièce d\'identité et terminer la vérification vidéo.');
+  }
+
+  const formData = new FormData();
+  formData.append('type_document', typeDoc);
+  formData.append('document', rectoFile);
+
+  const versoFile = document.getElementById('reg-kyc-verso').files[0];
+  if (versoFile) {
+    formData.append('document_verso', versoFile);
+  }
+
+  // Check if recordedVideoBlob is set, and append it with a filename based on mime type
+  const ext = recordedVideoBlob.type.includes('mp4') ? 'mp4' : 'webm';
+  formData.append('selfie', recordedVideoBlob, `video_kyc.${ext}`);
+
+  const fullInstructions = `Actions demandées :\n1. Tourner la tête en haut puis à droite\n2. Code lu : ${kycCode.split('').join(' - ')}\n3. Dire son nom, prénom, puis le numéro de la pièce d'identité`;
+  formData.append('instructions_kyc', fullInstructions);
 
   const btn = document.getElementById('btn-step-3');
   const prevText = btn.innerText;
@@ -818,7 +828,7 @@ document.getElementById('form-step-2')?.addEventListener('submit', async (e) => 
   }
 });
 
-window.selectPlan = function(el, type) {
+window.selectPlan = function (el, type) {
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   regData.plan = type;
@@ -826,7 +836,7 @@ window.selectPlan = function(el, type) {
 
 document.getElementById('form-step-4')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if(!document.getElementById('reg-cgu').checked) {
+  if (!document.getElementById('reg-cgu').checked) {
     return alert('Veuillez accepter les CGU');
   }
   setStep(5);
@@ -838,13 +848,13 @@ function startFinalTimer() {
   let timeRemaining = 300; // 5 minutes
   const timerEl = document.getElementById('kyc-timer-final');
   if (!timerEl) return;
-  
+
   const interval = setInterval(() => {
     timeRemaining--;
     let m = Math.floor(timeRemaining / 60);
     let s = timeRemaining % 60;
     timerEl.innerText = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
-    
+
     if (timeRemaining <= 0) {
       clearInterval(interval);
     }
@@ -857,12 +867,12 @@ document.getElementById('form-profile')?.addEventListener('submit', async (e) =>
   const prenom = document.getElementById('prof-prenom').value;
   const nom = document.getElementById('prof-nom').value;
   const telephone = document.getElementById('prof-tel').value;
-  
+
   try {
     await apiCall('/auth/profile', 'PATCH', { prenom, nom, telephone });
     alert('Profil mis à jour avec succès !');
     checkAuth(); // Refresh UI with new data
-  } catch(err) {
+  } catch (err) {
     alert(err.message);
   }
 });
@@ -946,18 +956,18 @@ document.getElementById('form-security')?.addEventListener('submit', async (e) =
   e.preventDefault();
   const current_password = document.getElementById('sec-current-pwd').value;
   const new_password = document.getElementById('sec-new-pwd').value;
-  
+
   try {
     await apiCall('/auth/password', 'PATCH', { current_password, new_password });
     alert('Mot de passe mis à jour avec succès !');
     document.getElementById('form-security').reset();
     showPage('pg-dash');
-  } catch(err) {
+  } catch (err) {
     alert(err.message);
   }
 });
 
-window.filterTx = function(type, btn) {
+window.filterTx = function (type, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.tx-row').forEach(row => {
@@ -969,12 +979,12 @@ window.filterTx = function(type, btn) {
   });
 };
 
-window.openModal = function(id) {
+window.openModal = function (id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'flex';
 };
 
-window.closeModal = function(id) {
+window.closeModal = function (id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
 };
@@ -993,7 +1003,7 @@ function generateKycCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-window.startVideoKyc = async function() {
+window.startVideoKyc = async function () {
   const modal = document.getElementById('modal-video-kyc');
   modal.style.display = 'flex';
   document.getElementById('btn-kyc-start-record').style.display = 'block';
@@ -1001,16 +1011,16 @@ window.startVideoKyc = async function() {
   document.getElementById('btn-kyc-finish').style.display = 'none';
   document.getElementById('kyc-instruction-overlay').style.display = 'none';
   document.getElementById('kyc-timer').style.display = 'none';
-  
+
   kycCode = generateKycCode();
   recordedChunks = [];
   recordedVideoBlob = null;
   kycStep = 0;
 
   try {
-    kycStream = await navigator.mediaDevices.getUserMedia({ 
-      video: { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 15, max: 24 } }, 
-      audio: true 
+    kycStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 15, max: 24 } },
+      audio: true
     });
     const videoPreview = document.getElementById('kyc-video-preview');
     videoPreview.srcObject = kycStream;
@@ -1023,7 +1033,7 @@ window.startVideoKyc = async function() {
   }
 }
 
-window.cancelVideoKyc = function() {
+window.cancelVideoKyc = function () {
   if (kycStream) {
     kycStream.getTracks().forEach(track => track.stop());
     kycStream = null;
@@ -1035,9 +1045,9 @@ window.cancelVideoKyc = function() {
   document.getElementById('modal-video-kyc').style.display = 'none';
 }
 
-window.startRecording = function() {
+window.startRecording = function () {
   if (!kycStream) return;
-  
+
   recordedChunks = [];
   try {
     mediaRecorder = new MediaRecorder(kycStream, { mimeType: 'video/webm; codecs=vp8,opus', videoBitsPerSecond: 250000 });
@@ -1049,28 +1059,28 @@ window.startRecording = function() {
     }
   }
 
-  mediaRecorder.ondataavailable = function(e) {
+  mediaRecorder.ondataavailable = function (e) {
     if (e.data.size > 0) {
       recordedChunks.push(e.data);
     }
   };
 
-  mediaRecorder.onstop = function() {
+  mediaRecorder.onstop = function () {
     recordedVideoBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
     const statusMsg = 'Vidéo enregistrée avec succès (Prêt à soumettre)';
-    
+
     const kycStatus = document.getElementById('video-kyc-status');
     if (kycStatus) {
       kycStatus.innerText = statusMsg;
       kycStatus.style.color = '#16A34A';
     }
-    
+
     const recoverStatus = document.getElementById('recover-video-status');
     if (recoverStatus) {
       recoverStatus.innerText = statusMsg;
       recoverStatus.style.color = '#16A34A';
     }
-    
+
     // Stop camera
     if (kycStream) {
       kycStream.getTracks().forEach(track => track.stop());
@@ -1079,15 +1089,15 @@ window.startRecording = function() {
   };
 
   mediaRecorder.start(100);
-  
+
   document.getElementById('btn-kyc-start-record').style.display = 'none';
   document.getElementById('btn-kyc-next-step').style.display = 'block';
-  
+
   // Timer setup
   kycTimeRemaining = 30;
   document.getElementById('kyc-timer').style.display = 'block';
   document.getElementById('kyc-timer').innerText = '00:' + kycTimeRemaining;
-  
+
   kycTimerInterval = setInterval(() => {
     kycTimeRemaining--;
     let displayTime = kycTimeRemaining < 10 ? '0' + kycTimeRemaining : kycTimeRemaining;
@@ -1100,11 +1110,11 @@ window.startRecording = function() {
   window.nextVideoStep();
 }
 
-window.nextVideoStep = function() {
+window.nextVideoStep = function () {
   kycStep++;
   const overlay = document.getElementById('kyc-instruction-overlay');
   overlay.style.display = 'block';
-  
+
   if (kycStep === 1) {
     overlay.innerText = "Étape 1/3: Tournez la tête en haut puis à droite";
   } else if (kycStep === 2) {
@@ -1116,7 +1126,7 @@ window.nextVideoStep = function() {
   }
 }
 
-window.finishVideoKyc = function() {
+window.finishVideoKyc = function () {
   clearInterval(kycTimerInterval);
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     mediaRecorder.stop();
@@ -1130,11 +1140,11 @@ let kycPollInterval = null;
 
 function startKycPolling() {
   if (kycPollInterval) clearInterval(kycPollInterval);
-  
+
   kycPollInterval = setInterval(async () => {
     try {
       const data = await apiCall('/auth/me');
-        if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
+      if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
       if (data && data.kyc_statut === 'valide' && data.account) {
         clearInterval(kycPollInterval);
         initDashboard(data.user, data.account, data.kyc_statut);
@@ -1151,65 +1161,65 @@ function startKycPolling() {
   }, 10000); // Check every 10 seconds
 }
 
-window.goToEspaceBancaire = function() {
+window.goToEspaceBancaire = function () {
   document.getElementById('modal-kyc-approved').style.display = 'none';
   localStorage.setItem('activeClientView', 'view-dashboard');
   localStorage.setItem('activeClientMobileView', 'm-view-dashboard');
   window.location.href = window.location.pathname; // Clear hash and reload to dashboard
 }
 
-window.verifyInitialDeposit = async function() {
+window.verifyInitialDeposit = async function () {
   const btn = document.getElementById('btn-verify-deposit');
   const ogText = btn.innerText;
   btn.innerText = 'Vérification...';
   btn.disabled = true;
 
   try {
-      const res = await apiCall('/auth/verify-deposit', 'POST');
-      if (res && res.success) {
-          document.getElementById('modal-activation-fee').style.display = 'none';
-          document.getElementById('modal-activation-success').style.display = 'flex';
-      } else {
-          alert("Nous n'avons pas encore reçu votre virement. Veuillez patienter ou vérifier auprès de votre banque émettrice.");
-      }
+    const res = await apiCall('/auth/verify-deposit', 'POST');
+    if (res && res.success) {
+      document.getElementById('modal-activation-fee').style.display = 'none';
+      document.getElementById('modal-activation-success').style.display = 'flex';
+    } else {
+      alert("Nous n'avons pas encore reçu votre virement. Veuillez patienter ou vérifier auprès de votre banque émettrice.");
+    }
   } catch (err) {
-      console.error("Erreur de vérification du dépôt:", err);
-      alert("Erreur lors de la vérification. Veuillez réessayer.");
+    console.error("Erreur de vérification du dépôt:", err);
+    alert("Erreur lors de la vérification. Veuillez réessayer.");
   } finally {
-      btn.innerText = ogText;
-      btn.disabled = false;
+    btn.innerText = ogText;
+    btn.disabled = false;
   }
 }
 
-window.closeActivationSuccess = function() {
+window.closeActivationSuccess = function () {
   document.getElementById('modal-activation-success').style.display = 'none';
   window.location.reload();
 }
 
 
 function applyTheme(theme) {
-    if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-        const btnDark = document.getElementById('theme-btn-dark');
-        if(btnDark) btnDark.style.border = '2px solid #2563EB';
-        const btnLight = document.getElementById('theme-btn-light');
-        if(btnLight) btnLight.style.border = '1px solid #E2E8F0';
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-        const btnLight = document.getElementById('theme-btn-light');
-        if(btnLight) btnLight.style.border = '2px solid #2563EB';
-        const btnDark = document.getElementById('theme-btn-dark');
-        if(btnDark) btnDark.style.border = '1px solid #E2E8F0';
-    }
+  if (theme === 'dark') {
+    document.body.classList.add('dark-mode');
+    localStorage.setItem('theme', 'dark');
+    const btnDark = document.getElementById('theme-btn-dark');
+    if (btnDark) btnDark.style.border = '2px solid #2563EB';
+    const btnLight = document.getElementById('theme-btn-light');
+    if (btnLight) btnLight.style.border = '1px solid #E2E8F0';
+  } else {
+    document.body.classList.remove('dark-mode');
+    localStorage.setItem('theme', 'light');
+    const btnLight = document.getElementById('theme-btn-light');
+    if (btnLight) btnLight.style.border = '2px solid #2563EB';
+    const btnDark = document.getElementById('theme-btn-dark');
+    if (btnDark) btnDark.style.border = '1px solid #E2E8F0';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        applyTheme(savedTheme);
-    }
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  }
 });
 
 

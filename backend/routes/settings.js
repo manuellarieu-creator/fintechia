@@ -27,13 +27,19 @@ const authMiddleware = require('../middleware/auth');
   }
 })();
 
-// GET /api/settings (Accessible by authenticated users)
+// Clés de paramètres accessibles aux clients non-admin
+const PUBLIC_SETTINGS = ['activation_fee', 'min_virement', 'max_virement', 'devise', 'app_name', 'support_email'];
+
+// GET /api/settings (Accessible by authenticated users: filtré pour non-admins)
 router.get('/', authMiddleware.authMiddleware, async (req, res, next) => {
   try {
+    const isAdmin = req.user && req.user.role === 'admin';
     const [rows] = await db.query('SELECT setting_key, setting_value FROM settings');
     const settings = {};
     rows.forEach(r => {
-      settings[r.setting_key] = r.setting_value;
+      if (isAdmin || PUBLIC_SETTINGS.includes(r.setting_key)) {
+        settings[r.setting_key] = r.setting_value;
+      }
     });
     res.json(settings);
   } catch (err) {
@@ -63,6 +69,10 @@ router.patch('/', [authMiddleware.authMiddleware, authMiddleware.adminMiddleware
 // GET /api/settings/:key (Accessible by authenticated users)
 router.get('/:key', authMiddleware.authMiddleware, async (req, res, next) => {
   try {
+    const isAdmin = req.user && req.user.role === 'admin';
+    if (!isAdmin && !PUBLIC_SETTINGS.includes(req.params.key)) {
+      return res.status(403).json({ error: 'Accès non autorisé à ce paramètre', code: 'FORBIDDEN' });
+    }
     const [rows] = await db.query('SELECT setting_value FROM settings WHERE setting_key = ?', [req.params.key]);
     if (rows.length === 0) return res.status(404).json({ error: 'Setting introuvable' });
     res.json({ key: req.params.key, value: rows[0].setting_value });

@@ -1,5 +1,7 @@
 let beneficiairesList = [];
 
+const esc = (s) => (typeof window.escapeHtml === 'function' ? window.escapeHtml(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+
 async function loadBeneficiaires() {
   try {
     beneficiairesList = await apiCall('/beneficiaires');
@@ -19,11 +21,11 @@ async function loadBeneficiaires() {
         const date = new Date(dateStr).toLocaleDateString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         return `
           <tr>
-            <td><b>${b.nom}</b></td>
-            <td>${b.iban}</td>
-            <td>${date}</td>
+            <td><b>${esc(b.nom)}</b></td>
+            <td>${esc(b.iban)}</td>
+            <td>${esc(date)}</td>
             <td>
-              <button onclick="preparerModificationBeneficiaire(${b.id}, '${b.nom.replace(/'/g, "\\'")}', '${b.iban}', '${b.bic || ''}')" style="color:#2563EB; background:none; border:none; cursor:pointer; font-weight:bold; margin-right: 10px;">Modifier</button>
+              <button onclick="preparerModificationBeneficiaire(${b.id})" style="color:#2563EB; background:none; border:none; cursor:pointer; font-weight:bold; margin-right: 10px;">Modifier</button>
               <button onclick="supprimerBeneficiaire(${b.id})" style="color:#EF4444; background:none; border:none; cursor:pointer; font-weight:bold;">Supprimer</button>
             </td>
           </tr>
@@ -34,11 +36,11 @@ async function loadBeneficiaires() {
     const mobileList = document.getElementById('beneficiaires-mobile-list');
     if(mobileList) {
       mobileList.innerHTML = beneficiairesList.map(b => {
-        const initials = b.nom.substring(0, 2).toUpperCase();
+        const initials = esc(b.nom.substring(0, 2).toUpperCase());
         return `
           <div class="bene" onclick="showMobileView('m-view-virements')">
             <div class="bene-av" style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border);">${initials}</div>
-            <span class="bene-n">${b.nom.split(' ')[0]}</span>
+            <span class="bene-n">${esc(b.nom.split(' ')[0])}</span>
           </div>
         `;
       }).join('') + `
@@ -52,18 +54,18 @@ async function loadBeneficiaires() {
     const mobileFullList = document.getElementById('beneficiaires-mobile-full-list');
     if(mobileFullList) {
       mobileFullList.innerHTML = beneficiairesList.map(b => {
-        const initials = b.nom.substring(0, 2).toUpperCase();
+        const initials = esc(b.nom.substring(0, 2).toUpperCase());
         return `
           <div class="bene" style="flex-direction:row; width:100%; justify-content:space-between; align-items:center; background:var(--surface-0); padding:10px; border-radius:10px; margin-bottom:8px;">
             <div style="display:flex; align-items:center; gap:10px;">
               <div class="bene-av" style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border);">${initials}</div>
               <div style="display:flex; flex-direction:column;">
-                <span style="font-size:13px; font-weight:600;">${b.nom}</span>
-                <span style="font-size:10px; color:var(--text-muted);">${b.iban}</span>
+                <span style="font-size:13px; font-weight:600;">${esc(b.nom)}</span>
+                <span style="font-size:10px; color:var(--text-muted);">${esc(b.iban)}</span>
               </div>
             </div>
             <div style="display:flex; gap: 8px;">
-              <button onclick="preparerModificationBeneficiaire(${b.id}, '${b.nom.replace(/'/g, "\\'")}', '${b.iban}', '${b.bic || ''}')" style="color:#2563EB; background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-edit" style="font-size:18px;"></i></button>
+              <button onclick="preparerModificationBeneficiaire(${b.id})" style="color:#2563EB; background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-edit" style="font-size:18px;"></i></button>
               <button onclick="supprimerBeneficiaire(${b.id})" style="color:var(--danger); background:none; border:none; cursor:pointer; padding:5px;"><i class="ti ti-trash" style="font-size:18px;"></i></button>
             </div>
           </div>
@@ -144,13 +146,15 @@ async function loadBeneficiairesForSelect() {
     // Fonction d'aide pour générer les cartes
     const generateCards = (list, isMobile, includeAddButton) => {
       let html = list.map(b => {
-        const initials = b.nom.substring(0, 2).toUpperCase();
+        const initials = esc(b.nom.substring(0, 2).toUpperCase());
+        const cleanIban = esc(b.iban.replace(/'/g, ''));
+        const cleanNom = esc(b.nom).replace(/'/g, '&#39;');
         return `
-          <div class="recent-card" style="grid-column: 1 / -1;" onclick="selectBeneficiary('${b.iban}', '${b.nom}', ${isMobile})">
+          <div class="recent-card" style="grid-column: 1 / -1;" onclick="selectBeneficiary('${cleanIban}', '${cleanNom}', ${isMobile})">
               <div class="avatar-sm" style="background:var(--primary-light); color:var(--primary); font-weight:bold;">${initials}</div>
               <div class="recent-info">
-                  <h5>${b.nom}</h5>
-                  <p>${b.iban.substring(0, 8)}...</p>
+                  <h5>${esc(b.nom)}</h5>
+                  <p>${esc(b.iban.substring(0, 8))}...</p>
               </div>
           </div>
         `;
@@ -301,13 +305,21 @@ async function previewBIC() {
 
 // === FONCTIONS MODIFICATION ===
 window.preparerModificationBeneficiaire = function(id, nom, iban, bic) {
+  if (nom === undefined) {
+    const item = (beneficiairesList || []).find(x => x.id == id);
+    if (item) {
+      nom = item.nom;
+      iban = item.iban;
+      bic = item.bic || '';
+    }
+  }
   document.getElementById('edit-ben-id').value = id;
-  document.getElementById('edit-ben-nom').value = nom;
-  document.getElementById('edit-ben-iban').value = iban;
+  document.getElementById('edit-ben-nom').value = nom || '';
+  document.getElementById('edit-ben-iban').value = iban || '';
   const bicInput = document.getElementById('edit-ben-bic');
-  if (bicInput) bicInput.value = bic;
+  if (bicInput) bicInput.value = bic || '';
   openModal('modal-edit-beneficiaire');
-}
+};
 
 window.validerModificationBeneficiaire = async function() {
   const id = document.getElementById('edit-ben-id').value;

@@ -1,3 +1,5 @@
+const esc = (s) => (typeof window.escapeHtml === 'function' ? window.escapeHtml(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+
 window.changeBudgetMonth = function(dir) {
     window.currentMonthOffset = (window.currentMonthOffset || 0) + dir;
     loadBudgetsPage();
@@ -196,7 +198,7 @@ async function loadBudgetsPage() {
            <div class="bdg-env-icon" style="color:var(--text-main); background:var(--bg-body);"><i class="ti ${icon}"></i></div>
            <div class="bdg-env-details">
               <div class="bdg-env-top">
-                 <span class="bdg-env-name">${b.categorie}</span>
+                 <span class="bdg-env-name">${esc(b.categorie)}</span>
                  <span class="bdg-env-amounts">${spent.toFixed(0)} / ${limit.toFixed(0)} €</span>
                  <span class="bdg-env-percent" style="color:${pct >= 100 ? 'var(--danger)' : (pct >= 80 ? 'var(--warning)' : 'inherit')}">${pct >= 100 ? 'Atteint' : pct + '%'}</span>
               </div>
@@ -213,7 +215,7 @@ async function loadBudgetsPage() {
            <div class="bdg-alert-item">
               <div class="bdg-alert-icon" style="color:var(--danger); background:#FEF2F2;"><i class="ti ti-alert-triangle"></i></div>
               <div class="bdg-alert-text">
-                 <strong style="color:var(--danger);">${b.categorie} — Plafond dépassé</strong>
+                 <strong style="color:var(--danger);">${esc(b.categorie)} — Plafond dépassé</strong>
                  <span>${spent.toFixed(0)} € / ${limit.toFixed(0)} € consommés</span>
               </div>
            </div>

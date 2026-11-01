@@ -30,38 +30,92 @@ const app = express();
 app.set('trust proxy', 1); // Trust first proxy for Vercel rate-limiting
 const server = http.createServer(app);
 
+// Configuration CORS des domaines autorisés
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.APP_URL,
+  'https://fintechia.co',
+  'https://www.fintechia.co'
+].filter(Boolean);
+
 // Socket.io configuration (not supported on Vercel Serverless Functions)
 if (!process.env.VERCEL) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
-      methods: ['GET', 'POST']
+      origin: function(origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        if (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error('CORS Socket.io non autorisé'));
+      },
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
+
+  // Authentification obligatoire des sockets Socket.io
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(' ')[1] || socket.handshake.query?.token;
+    if (!token) {
+      return next(new Error('Authentification Socket.io requise'));
+    }
+    try {
+      const jwt = require('jsonwebtoken');
+      const { JWT_SECRET } = require('./config/jwt');
+      const decoded = jwt.verify(token, JWT_SECRET);
+      if (decoded.intent) {
+        return next(new Error('Token Socket.io invalide'));
+      }
+      socket.user = decoded;
+      next();
+    } catch (err) {
+      return next(new Error('Session Socket.io invalide ou expirée'));
+    }
+  });
+
   notificationsService.setIo(io);
 
   io.on('connection', (socket) => {
-    socket.on('rejoindre', (userId) => {
-      socket.join(`user_${userId}`);
+    // Rejoint automatiquement la room de l'utilisateur authentifié
+    if (socket.user && socket.user.id) {
+      socket.join(`user_${socket.user.id}`);
+    }
+
+    socket.on('rejoindre', (requestedUserId) => {
+      // Un utilisateur ne peut écouter que ses propres notifications (sauf admin)
+      if (socket.user && (String(socket.user.id) === String(requestedUserId) || socket.user.role === 'admin')) {
+        socket.join(`user_${requestedUserId}`);
+      }
     });
   });
 }
 
 // Middlewares
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 app.use(compression());
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (same-origin, mobile apps, curl, etc.)
+    // Requêtes sans en-tête origin (same-origin, curl, applications natives, mobile)
     if (!origin) return callback(null, true);
-    // Allow the configured frontend URL
-    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) return callback(null, true);
-    // Allow same-host requests (Vercel serves frontend and backend on same domain)
-    return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Accès refusé par la politique CORS'), false);
   },
   credentials: true
 }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
 
 // Rate limiters — handler renvoie du JSON pour éviter les erreurs de parsing côté client
 const rateLimitHandler = (req, res) => {
@@ -72,12 +126,19 @@ const registerLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, handler: r
 const resetDemandeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5, handler: rateLimitHandler });
 const resetValiderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5, handler: rateLimitHandler });
 const adminLimiter = rateLimit({ windowMs: 60 * 1000, max: 200, handler: rateLimitHandler });
+const virementLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, handler: rateLimitHandler });
+const pinLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, handler: rateLimitHandler });
+const otpLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, handler: rateLimitHandler });
 
-// Routes API avec rate limiters spǸcifiques
+// Routes API avec rate limiters spécifiques
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
 app.use('/api/auth/reset-demande', resetDemandeLimiter);
 app.use('/api/auth/reset-valider', resetValiderLimiter);
+app.use('/api/auth/verify-pin', pinLimiter);
+app.use('/api/auth/pin', pinLimiter);
+app.use('/api/auth/otp', otpLimiter);
+app.use('/api/transactions/virement', virementLimiter);
 app.use('/api/admin', adminLimiter);
 
 // Setup routes
@@ -100,7 +161,11 @@ app.use('/api/documents', documentsRoutes);
 // Fichiers statiques et téléchargements sécurisés
 // Protection de /uploads : l'accès aux documents nécessite d'être authentifié et soit propriétaire, soit admin
 app.get('/uploads/:filename', async (req, res, next) => {
-  const filename = path.basename(req.params.filename); // Empêche le path traversal
+  const rawFilename = path.basename(req.params.filename); // Empêche le path traversal
+  if (!/^[a-zA-Z0-9_\.\-]+$/.test(rawFilename)) {
+    return res.status(400).json({ error: 'Nom de fichier invalide', code: 'INVALID_FILENAME' });
+  }
+  const filename = rawFilename;
   const token = req.headers.authorization?.split(' ')[1] || req.query.token;
 
   if (!token) {
@@ -121,11 +186,11 @@ app.get('/uploads/:filename', async (req, res, next) => {
       const db = require('./config/db');
       const [kyc] = await db.query(
         'SELECT id FROM kyc WHERE user_id = ? AND (document_url LIKE ? OR document_verso_url LIKE ? OR selfie_url LIKE ?)',
-        [decoded.id, `%${filename}`, `%${filename}`, `%${filename}`]
+        [decoded.id, `%/${filename}`, `%/${filename}`, `%/${filename}`]
       );
       const [creditDoc] = await db.query(
         'SELECT cd.id FROM credit_documents cd JOIN credit_requests cr ON cd.credit_request_id = cr.id WHERE cr.user_id = ? AND cd.file_path LIKE ?',
-        [decoded.id, `%${filename}`]
+        [decoded.id, `%/${filename}`]
       );
 
       if (kyc.length === 0 && creditDoc.length === 0) {
@@ -292,6 +357,9 @@ if (!process.env.VERCEL) {
       `).catch(err => console.error("Erreur insertion iban_rules:", err.message));
 
       await db.query("ALTER TABLE beneficiaires ADD COLUMN bic VARCHAR(20) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users MODIFY COLUMN pin_code VARCHAR(100) DEFAULT NULL").catch(() => {});
+      await db.query("ALTER TABLE users ADD COLUMN otp_fails INT DEFAULT 0").catch(() => {});
+      await db.query("UPDATE fraud_detection_rules SET is_active = TRUE WHERE rule_name = 'Tentative de force brute'").catch(() => {});
 
       console.log("Auto-migration DB terminée.");
     } catch (err) {

@@ -3,6 +3,35 @@ const router = express.Router();
 const pool = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 
+/**
+ * Validation locale du format et de la clé de contrôle IBAN (ISO 13616 / MOD-97)
+ */
+function isValidIbanChecksum(iban) {
+  if (!iban || typeof iban !== 'string') return false;
+  const clean = iban.replace(/[^A-Z0-9]/g, '').toUpperCase();
+  if (clean.length < 15 || clean.length > 34) return false;
+  
+  const rearranged = clean.slice(4) + clean.slice(0, 4);
+  let numericStr = '';
+  for (let i = 0; i < rearranged.length; i++) {
+    const code = rearranged.charCodeAt(i);
+    if (code >= 65 && code <= 90) {
+      numericStr += (code - 55);
+    } else if (code >= 48 && code <= 57) {
+      numericStr += rearranged[i];
+    } else {
+      return false;
+    }
+  }
+  
+  let remainder = 0;
+  for (let i = 0; i < numericStr.length; i += 7) {
+    const part = remainder.toString() + numericStr.substring(i, i + 7);
+    remainder = parseInt(part, 10) % 97;
+  }
+  return remainder === 1;
+}
+
 // Initialisation de la table si elle n'existe pas
 pool.query(`
   CREATE TABLE IF NOT EXISTS beneficiaires (
@@ -37,6 +66,11 @@ router.post('/', authMiddleware, async (req, res) => {
       await pool.query("INSERT IGNORE INTO iban_rules (code_pays, longueur) VALUES ('FR', 27), ('MC', 27), ('BE', 16), ('DE', 22), ('ES', 24), ('IT', 27), ('LU', 20), ('CH', 21), ('GB', 22), ('PT', 25), ('NL', 18)");
       await pool.query('ALTER TABLE beneficiaires ADD COLUMN bic VARCHAR(20) DEFAULT NULL');
     } catch(e) {}
+
+    // 0. Validation locale stricte de l'IBAN (longueur et MOD-97)
+    if (!isValidIbanChecksum(iban)) {
+      return res.status(400).json({ error: "L'IBAN n'est pas valide (clé de contrôle ou format incorrect)", code: 'INVALID_IBAN' });
+    }
 
     // 1. Validation de la longueur via BDD
     const codePays = iban.substring(0, 2);
@@ -91,6 +125,11 @@ router.put('/:id', authMiddleware, async (req, res) => {
   if(!nom || !iban) return res.status(400).json({ error: 'Nom et IBAN requis' });
   
   try {
+    // Validation locale de l'IBAN
+    if (!isValidIbanChecksum(iban)) {
+      return res.status(400).json({ error: "L'IBAN n'est pas valide (clé de contrôle ou format incorrect)", code: 'INVALID_IBAN' });
+    }
+
     // Basic length validation (optional here since POST handles it, but good to have)
     const codePays = iban.substring(0, 2);
     const [rules] = await pool.query('SELECT longueur FROM iban_rules WHERE code_pays = ?', [codePays]);
