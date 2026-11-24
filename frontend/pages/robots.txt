@@ -2,5 +2,18 @@ User-agent: *
 Allow: /
 Disallow: /admin-dashboard.html
 Disallow: /app.html
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /api/
+Disallow: /*?*
+
+User-agent: SemrushBot
+User-agent: AhrefsBot
+User-agent: PetalBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: BLEXBot
+User-agent: DataForSeoBot
+Disallow: /
 
 Sitemap: https://www.fintechia.co/sitemap.xml

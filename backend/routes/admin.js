@@ -46,9 +46,11 @@ router.get('/dashboard', guard, async (req, res, next) => {
 // GET /api/admin/comptes
 router.get('/comptes', guard, async (req, res, next) => {
   try {
-    const { statut } = req.query;
+    const { statut, limit = 100, offset = 0 } = req.query;
     let sql = `
-      SELECT a.*, u.prenom, u.nom, u.email, u.transfer_types, k.statut as kyc_statut, a.motif_blocage 
+      SELECT a.id, a.user_id, a.numero_compte, a.iban, a.solde, a.devise, a.statut, a.type_compte,
+             a.transfer_allowed, a.depot_initial_requis, a.motif_blocage, a.created_at, a.updated_at,
+             u.prenom, u.nom, u.email, u.transfer_types, k.statut as kyc_statut
       FROM accounts a 
       JOIN users u ON a.user_id = u.id 
       LEFT JOIN (SELECT user_id, statut FROM kyc WHERE id IN (SELECT MAX(id) FROM kyc GROUP BY user_id)) k ON k.user_id = u.id
@@ -58,6 +60,8 @@ router.get('/comptes', guard, async (req, res, next) => {
       sql += ' WHERE a.statut = ?';
       params.push(statut);
     }
+    sql += ' ORDER BY a.id DESC LIMIT ? OFFSET ?';
+    params.push(Math.min(parseInt(limit, 10) || 100, 200), Math.max(parseInt(offset, 10) || 0, 0));
     const [comptes] = await db.query(sql, params);
     res.json(comptes);
   } catch (err) {
@@ -587,9 +591,11 @@ router.patch('/kyc/:kycId/selfie', guard, async (req, res, next) => {
 // GET /api/admin/virements
 router.get('/virements', guard, async (req, res, next) => {
   try {
-    const { statut } = req.query;
+    const { statut, limit = 100, offset = 0 } = req.query;
     let sql = `
-      SELECT t.*, a.iban as iban_source, u.nom, u.prenom, u.email
+      SELECT t.id, t.account_id, t.montant, t.devise, t.type, t.description, t.statut, t.created_at,
+             t.motif_rejet, t.beneficiaire_iban, t.beneficiaire_nom, t.reference,
+             a.iban as iban_source, u.nom, u.prenom, u.email
       FROM transactions t 
       JOIN accounts a ON t.account_id = a.id 
       JOIN users u ON a.user_id = u.id 
@@ -600,6 +606,8 @@ router.get('/virements', guard, async (req, res, next) => {
       sql += ' AND t.statut = ?';
       params.push(statut);
     }
+    sql += ' ORDER BY t.created_at DESC LIMIT ? OFFSET ?';
+    params.push(Math.min(parseInt(limit, 10) || 100, 200), Math.max(parseInt(offset, 10) || 0, 0));
     const [virements] = await db.query(sql, params);
     res.json(virements);
   } catch (err) {
@@ -761,20 +769,39 @@ router.post('/notifier', guard, async (req, res, next) => {
 // GET /api/admin/credits
 router.get('/credits', guard, async (req, res, next) => {
   try {
-    const { statut } = req.query;
-    let sql = 'SELECT c.*, u.prenom as user_prenom, u.nom as user_nom, u.email as user_email FROM credit_requests c JOIN users u ON c.user_id = u.id';
+    const { statut, limit = 100, offset = 0 } = req.query;
+    // Projection minimale : exclusion explicite du lourd contrat_data JSON
+    let sql = `
+      SELECT c.id, c.user_id, c.type_credit, c.montant, c.duree_mois, c.mensualite, c.taux_interet,
+             c.motif, c.statut, c.motif_rejet, c.signature_client, c.date_signature, c.created_at, c.updated_at,
+             u.prenom as user_prenom, u.nom as user_nom, u.email as user_email
+      FROM credit_requests c
+      JOIN users u ON c.user_id = u.id
+    `;
     const params = [];
     if (statut) {
       sql += ' WHERE c.statut = ?';
       params.push(statut);
     }
-    sql += ' ORDER BY c.created_at DESC';
+    sql += ' ORDER BY c.created_at DESC LIMIT ? OFFSET ?';
+    params.push(Math.min(parseInt(limit, 10) || 100, 200), Math.max(parseInt(offset, 10) || 0, 0));
     const [demandes] = await db.query(sql, params);
     
-    // Fetch documents pour chaque demande
-    for (let d of demandes) {
-      const [docs] = await db.query('SELECT id, type_document, file_path, statut, created_at FROM credit_documents WHERE credit_request_id = ?', [d.id]);
-      d.documents = docs;
+    // Résolution anti-N+1 : récupération groupée de tous les documents en une seule requête SQL
+    if (demandes.length > 0) {
+      const creditIds = demandes.map(d => d.id);
+      const [allDocs] = await db.query(
+        'SELECT id, credit_request_id, type_document, file_path, statut, created_at FROM credit_documents WHERE credit_request_id IN (?)',
+        [creditIds]
+      );
+      const docsMap = {};
+      allDocs.forEach(doc => {
+        if (!docsMap[doc.credit_request_id]) docsMap[doc.credit_request_id] = [];
+        docsMap[doc.credit_request_id].push(doc);
+      });
+      demandes.forEach(d => {
+        d.documents = docsMap[d.id] || [];
+      });
     }
     
     res.json(demandes);

@@ -3,6 +3,14 @@
 const ADMIN_CHAT_API = '/api/chat/admin';
 let activeAdminChatConvId = null;
 let adminChatPollInterval = null;
+let lastAdminMessageId = 0;
+
+function stopAdminChatPolling() {
+  if (adminChatPollInterval) {
+    clearInterval(adminChatPollInterval);
+    adminChatPollInterval = null;
+  }
+}
 
 // Échappe les données contrôlées par l'utilisateur avant insertion dans du HTML
 function escapeChatHtml(value) {
@@ -67,6 +75,7 @@ function renderAdminChatList(convs) {
 
 function openAdminConversation(convId, name, email) {
   activeAdminChatConvId = convId;
+  lastAdminMessageId = 0;
   document.getElementById('admin-chat-title').innerText = name;
   document.getElementById('admin-chat-subtitle').innerText = email;
   document.getElementById('admin-chat-input-area').style.display = 'flex';
@@ -75,40 +84,56 @@ function openAdminConversation(convId, name, email) {
   loadAdminChats(); // refresh list to highlight active
   fetchAdminChatMessages();
 
-  if (adminChatPollInterval) clearInterval(adminChatPollInterval);
-  adminChatPollInterval = setInterval(fetchAdminChatMessages, 5000);
+  stopAdminChatPolling();
+  adminChatPollInterval = setInterval(() => {
+    if (document.hidden || !activeAdminChatConvId) return;
+    fetchAdminChatMessages();
+  }, 10000);
 }
 
 async function fetchAdminChatMessages() {
   if (!activeAdminChatConvId) return;
   const token = localStorage.getItem('fintech_token');
+  const url = lastAdminMessageId > 0
+    ? `${ADMIN_CHAT_API}/${activeAdminChatConvId}/messages?after_id=${lastAdminMessageId}`
+    : `${ADMIN_CHAT_API}/${activeAdminChatConvId}/messages`;
   
   try {
-    const res = await fetch(`${ADMIN_CHAT_API}/${activeAdminChatConvId}/messages`, {
+    const res = await fetch(url, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) return;
     const messages = await res.json();
-    renderAdminMessages(messages);
+    renderAdminMessages(messages, lastAdminMessageId === 0);
   } catch (e) {
     console.error("Erreur messages admin", e);
   }
 }
 
-function renderAdminMessages(messages) {
+function renderAdminMessages(messages, isFullReplace = false) {
   const area = document.getElementById('admin-chat-messages');
   if (!area) return;
   
-  const isAtBottom = area.scrollHeight - area.scrollTop === area.clientHeight;
-  const forceScroll = (area.children.length === 0) || isAtBottom;
-  
-  area.innerHTML = '';
-  if (messages.length === 0) {
-    area.innerHTML = '<div style="margin:auto; color:#94A3B8; font-size:14px;">Envoyez un message pour démarrer</div>';
+  if (isFullReplace) {
+    area.innerHTML = '';
+    if (!messages || messages.length === 0) {
+      area.innerHTML = '<div style="margin:auto; color:#94A3B8; font-size:14px;">Envoyez un message pour démarrer</div>';
+      return;
+    }
+  } else if (!messages || messages.length === 0) {
     return;
   }
 
+  const placeholder = area.querySelector('div[style*="margin:auto"]');
+  if (placeholder && messages.length > 0) placeholder.remove();
+
+  const isAtBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 40;
+  const forceScroll = isFullReplace || isAtBottom;
+
   messages.forEach(m => {
+    if (m.id && m.id > lastAdminMessageId) {
+      lastAdminMessageId = m.id;
+    }
     const isAdmin = m.sender_type === 'admin';
     const bubble = document.createElement('div');
     bubble.style.maxWidth = '70%';
@@ -197,8 +222,23 @@ const originalShowAdminView = window.showAdminView;
 if (originalShowAdminView) {
   window.showAdminView = function(viewId, element) {
     if (viewId !== 'view-chat' && adminChatPollInterval) {
-      clearInterval(adminChatPollInterval);
+      stopAdminChatPolling();
     }
     originalShowAdminView(viewId, element);
   }
 }
+
+// Pause du polling admin chat si l'onglet est masqué
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopAdminChatPolling();
+  } else if (activeAdminChatConvId) {
+    fetchAdminChatMessages();
+    if (!adminChatPollInterval) {
+      adminChatPollInterval = setInterval(() => {
+        if (document.hidden || !activeAdminChatConvId) return;
+        fetchAdminChatMessages();
+      }, 10000);
+    }
+  }
+});

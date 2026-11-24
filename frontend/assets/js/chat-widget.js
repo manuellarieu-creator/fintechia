@@ -5,10 +5,12 @@ let chatConvId = localStorage.getItem('chat_conv_id') || null;
 let chatVisitorToken = localStorage.getItem('chat_visitor_token') || null;
 let isChatUser = false; // true si c'est un client connecté
 let chatPollInterval = null;
+let lastChatMessageId = 0;
 
 function resetVisitorChat() {
   chatConvId = null;
   chatVisitorToken = null;
+  lastChatMessageId = 0;
   localStorage.removeItem('chat_conv_id');
   localStorage.removeItem('chat_visitor_token');
 }
@@ -72,6 +74,18 @@ function initChatWidgetUI() {
   }
 }
 
+function isChatWindowOpen() {
+  const win = document.getElementById('chat-widget-window');
+  return win && win.style.display !== 'none';
+}
+
+function stopChatPolling() {
+  if (chatPollInterval) {
+    clearInterval(chatPollInterval);
+    chatPollInterval = null;
+  }
+}
+
 function toggleChatWindow() {
   const win = document.getElementById('chat-widget-window');
   if (win.style.display === 'none') {
@@ -79,7 +93,7 @@ function toggleChatWindow() {
     checkChatState();
   } else {
     win.style.display = 'none';
-    if (chatPollInterval) clearInterval(chatPollInterval);
+    stopChatPolling();
   }
 }
 
@@ -162,17 +176,23 @@ async function startVisitorChat() {
 }
 
 function startChatPolling() {
+  if (!isChatWindowOpen()) return;
   fetchChatMessages();
-  if (chatPollInterval) clearInterval(chatPollInterval);
-  chatPollInterval = setInterval(fetchChatMessages, 5000);
+  stopChatPolling();
+  chatPollInterval = setInterval(() => {
+    if (document.hidden || !isChatWindowOpen()) return;
+    fetchChatMessages();
+  }, 10000);
 }
 
 async function fetchChatMessages() {
   if (!chatConvId) return;
-  const url = isChatUser 
+  const baseUrl = isChatUser 
     ? `${CHAT_API_BASE}/user/${chatConvId}/messages`
     : `${CHAT_API_BASE}/visitor/${chatConvId}/messages`;
   
+  const url = lastChatMessageId > 0 ? `${baseUrl}?after_id=${lastChatMessageId}` : baseUrl;
+
   const headers = isChatUser
     ? { 'Authorization': `Bearer ${localStorage.getItem('fintech_token')}` }
     : { 'x-chat-token': chatVisitorToken || '' };
@@ -181,37 +201,45 @@ async function fetchChatMessages() {
     const res = await fetch(url, { headers });
     if (res.status === 403 && !isChatUser) {
       // Jeton invalide / conversation inaccessible : on réinitialise le chat visiteur
-      if (chatPollInterval) clearInterval(chatPollInterval);
+      stopChatPolling();
       resetVisitorChat();
       checkChatState();
       return;
     }
     if (!res.ok) return;
     const messages = await res.json();
-    renderChatMessages(messages);
+    renderChatMessages(messages, lastChatMessageId === 0);
   } catch (e) {
     console.error("Erreur fetch messages", e);
   }
 }
 
-function renderChatMessages(messages) {
+function renderChatMessages(messages, isFullReplace = false) {
   const area = document.getElementById('chat-messages-area');
   if (!area) return;
-  
-  // Save scroll state
-  const isAtBottom = area.scrollHeight - area.scrollTop === area.clientHeight;
-  
-  // Forcer le scroll si c'est le premier chargement ou si on est en bas
-  const forceScroll = (area.children.length === 0) || isAtBottom;
-  
-  area.innerHTML = '';
-  
-  if (messages.length === 0) {
-    area.innerHTML = '<div style="text-align:center; color:#94A3B8; font-size:13px; margin-top:auto; margin-bottom:auto;">Un conseiller va vous répondre très bientôt.</div>';
+
+  if (isFullReplace) {
+    area.innerHTML = '';
+    if (!messages || messages.length === 0) {
+      area.innerHTML = '<div style="text-align:center; color:#94A3B8; font-size:13px; margin-top:auto; margin-bottom:auto;">Un conseiller va vous répondre très bientôt.</div>';
+      return;
+    }
+  } else if (!messages || messages.length === 0) {
     return;
   }
 
+  // Retirer l'éventuel placeholder si des messages arrivent
+  const placeholder = area.querySelector('div[style*="margin-top:auto"]');
+  if (placeholder && messages.length > 0) placeholder.remove();
+
+  // Save scroll state
+  const isAtBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 40;
+  const forceScroll = isFullReplace || isAtBottom;
+
   messages.forEach(m => {
+    if (m.id && m.id > lastChatMessageId) {
+      lastChatMessageId = m.id;
+    }
     const isMe = (isChatUser && m.sender_type === 'user') || (!isChatUser && m.sender_type === 'visitor');
     const bubble = document.createElement('div');
     bubble.style.maxWidth = '80%';
@@ -275,3 +303,12 @@ async function sendChatMessage() {
 
 // Init on load
 document.addEventListener('DOMContentLoaded', initChatWidgetUI);
+
+// Écouteur de visibilité d'onglet pour stopper le polling en arrière-plan (économie CPU/Egress)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopChatPolling();
+  } else if (typeof isChatWindowOpen === 'function' && isChatWindowOpen()) {
+    startChatPolling();
+  }
+});

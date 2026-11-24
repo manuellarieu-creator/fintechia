@@ -312,13 +312,26 @@ function initNotifications() {
   }
 
   fetchNotifications();
-  notificationPollInterval = setInterval(fetchNotifications, 15000);
+  notificationPollInterval = setInterval(fetchNotifications, 45000);
 }
 
 // Auto init on load if token is present
 document.addEventListener('DOMContentLoaded', () => {
   if (getAuthToken()) {
     initNotifications();
+  }
+});
+
+// Arrêt du polling quand l'onglet est masqué, reprise immédiate au focus
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (notificationPollInterval) {
+      clearInterval(notificationPollInterval);
+      notificationPollInterval = null;
+    }
+  } else if (getAuthToken() && !notificationPollInterval) {
+    fetchNotifications();
+    notificationPollInterval = setInterval(fetchNotifications, 45000);
   }
 });
 

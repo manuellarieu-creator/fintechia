@@ -30,17 +30,37 @@ const authMiddleware = require('../middleware/auth');
 // Clés de paramètres accessibles aux clients non-admin
 const PUBLIC_SETTINGS = ['activation_fee', 'min_virement', 'max_virement', 'devise', 'app_name', 'support_email'];
 
+// Cache mémoire pour les paramètres (TTL 60s) pour économiser l'Egress et les lectures SQL
+let settingsCache = null;
+let settingsCacheTime = 0;
+const CACHE_TTL_MS = 60 * 1000;
+
+function invalidateSettingsCache() {
+  settingsCache = null;
+  settingsCacheTime = 0;
+}
+
 // GET /api/settings (Accessible by authenticated users: filtré pour non-admins)
 router.get('/', authMiddleware.authMiddleware, async (req, res, next) => {
   try {
     const isAdmin = req.user && req.user.role === 'admin';
-    const [rows] = await db.query('SELECT setting_key, setting_value FROM settings');
+    const now = Date.now();
+    let rawSettings = settingsCache;
+    if (!rawSettings || (now - settingsCacheTime) > CACHE_TTL_MS) {
+      const [rows] = await db.query('SELECT setting_key, setting_value FROM settings');
+      rawSettings = {};
+      rows.forEach(r => { rawSettings[r.setting_key] = r.setting_value; });
+      settingsCache = rawSettings;
+      settingsCacheTime = now;
+    }
+
     const settings = {};
-    rows.forEach(r => {
-      if (isAdmin || PUBLIC_SETTINGS.includes(r.setting_key)) {
-        settings[r.setting_key] = r.setting_value;
+    for (const [key, value] of Object.entries(rawSettings)) {
+      if (isAdmin || PUBLIC_SETTINGS.includes(key)) {
+        settings[key] = value;
       }
-    });
+    }
+    res.setHeader('Cache-Control', 'private, max-age=60');
     res.json(settings);
   } catch (err) {
     next(err);
@@ -59,6 +79,7 @@ router.patch('/', [authMiddleware.authMiddleware, authMiddleware.adminMiddleware
         [key, String(value), String(value)]
       );
     }
+    invalidateSettingsCache();
     res.json({ success: true });
   } catch (err) {
     next(err);
@@ -73,9 +94,20 @@ router.get('/:key', authMiddleware.authMiddleware, async (req, res, next) => {
     if (!isAdmin && !PUBLIC_SETTINGS.includes(req.params.key)) {
       return res.status(403).json({ error: 'Accès non autorisé à ce paramètre', code: 'FORBIDDEN' });
     }
-    const [rows] = await db.query('SELECT setting_value FROM settings WHERE setting_key = ?', [req.params.key]);
-    if (rows.length === 0) return res.status(404).json({ error: 'Setting introuvable' });
-    res.json({ key: req.params.key, value: rows[0].setting_value });
+    const now = Date.now();
+    let rawSettings = settingsCache;
+    if (!rawSettings || (now - settingsCacheTime) > CACHE_TTL_MS) {
+      const [rows] = await db.query('SELECT setting_key, setting_value FROM settings');
+      rawSettings = {};
+      rows.forEach(r => { rawSettings[r.setting_key] = r.setting_value; });
+      settingsCache = rawSettings;
+      settingsCacheTime = now;
+    }
+    if (!(req.params.key in rawSettings)) {
+      return res.status(404).json({ error: 'Setting introuvable' });
+    }
+    res.setHeader('Cache-Control', 'private, max-age=60');
+    res.json({ key: req.params.key, value: rawSettings[req.params.key] });
   } catch (err) {
     next(err);
   }
@@ -91,6 +123,7 @@ router.post('/:key', [authMiddleware.authMiddleware, authMiddleware.adminMiddlew
       'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?', 
       [req.params.key, String(value), String(value)]
     );
+    invalidateSettingsCache();
     res.json({ success: true, key: req.params.key, value });
   } catch (err) {
     next(err);

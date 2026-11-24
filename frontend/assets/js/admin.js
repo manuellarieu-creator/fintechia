@@ -164,6 +164,12 @@ async function showAdminView(viewId, navElement) {
         targetView.style.display = (viewId === 'view-chat') ? 'flex' : 'block';
     }
 
+    // Nettoyer l'intervalle de supervision si on quitte la vue supervision (anti-CPU leak)
+    if (window.supervisionInterval && viewId !== 'view-supervision') {
+        clearInterval(window.supervisionInterval);
+        window.supervisionInterval = null;
+    }
+
     // Appel du loader spécifique à la vue
     switch(viewId) {
         case 'view-dashboard':
@@ -2413,6 +2419,7 @@ window.startSupervisionLive = async function() {
     if (window.supervisionInterval) clearInterval(window.supervisionInterval);
     
     window.supervisionInterval = setInterval(async () => {
+        if (document.hidden) return; // Ne pas poller si l'onglet est masqué
         // Refresh KPIs randomly for effect
         document.getElementById('sup-req').innerText = (2400 + Math.floor(Math.random() * 200)).toLocaleString((typeof window.getCurrentLocale === 'function' ? window.getCurrentLocale() : 'fr-FR'));
         document.getElementById('sup-err').innerText = (Math.random() * 0.05).toFixed(2) + '%';
@@ -2428,7 +2435,7 @@ window.startSupervisionLive = async function() {
                 }
             });
         }
-    }, 3000);
+    }, 12000); // 12s au lieu de 3s (économie de 75% des requêtes)
 }
 
 function appendTerminalLine(log) {

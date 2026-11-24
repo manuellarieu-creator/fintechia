@@ -9,16 +9,16 @@ router.get('/', authMiddleware, async (req, res) => {
   try {
     const { role, id } = req.user;
     let query, params;
-    
+
     if (role === 'admin') {
       // Les admins voient les notifications avec user_id = NULL
-      query = 'SELECT * FROM notifications WHERE user_id IS NULL ORDER BY created_at DESC LIMIT 50';
+      query = 'SELECT id, user_id, titre, message, type, lu, created_at FROM notifications WHERE user_id IS NULL ORDER BY created_at DESC LIMIT 25';
       params = [];
     } else {
-      query = 'SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 50';
+      query = 'SELECT id, user_id, titre, message, type, lu, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 25';
       params = [id];
     }
-    
+
     const [rows] = await db.query(query, params);
     res.json(rows);
   } catch (err) {
@@ -32,7 +32,7 @@ router.patch('/:id/read', authMiddleware, async (req, res) => {
   try {
     const { role, id: userId } = req.user;
     const notifId = req.params.id;
-    
+
     let query, params;
     if (role === 'admin') {
       query = 'UPDATE notifications SET lu = TRUE WHERE id = ? AND user_id IS NULL';
@@ -41,7 +41,7 @@ router.patch('/:id/read', authMiddleware, async (req, res) => {
       query = 'UPDATE notifications SET lu = TRUE WHERE id = ? AND user_id = ?';
       params = [notifId, userId];
     }
-    
+
     const [result] = await db.query(query, params);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Notification introuvable ou non autorisée' });
@@ -58,7 +58,7 @@ router.patch('/read-all', authMiddleware, async (req, res) => {
   try {
     const { role, id: userId } = req.user;
     let query, params;
-    
+
     if (role === 'admin') {
       query = 'UPDATE notifications SET lu = TRUE WHERE user_id IS NULL AND lu = FALSE';
       params = [];
@@ -66,7 +66,7 @@ router.patch('/read-all', authMiddleware, async (req, res) => {
       query = 'UPDATE notifications SET lu = TRUE WHERE user_id = ? AND lu = FALSE';
       params = [userId];
     }
-    
+
     await db.query(query, params);
     res.json({ success: true });
   } catch (err) {

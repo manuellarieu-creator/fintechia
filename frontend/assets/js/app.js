@@ -1142,6 +1142,7 @@ function startKycPolling() {
   if (kycPollInterval) clearInterval(kycPollInterval);
 
   kycPollInterval = setInterval(async () => {
+    if (document.hidden) return; // Économie CPU/Egress si l'onglet n'est pas actif
     try {
       const data = await apiCall('/auth/me');
       if (!data || !localStorage.getItem('fintech_token')) { clearInterval(kycPollInterval); return; }
@@ -1158,7 +1159,7 @@ function startKycPolling() {
       console.error('KYC Polling error', err);
       if (err.message && err.message.includes('Token') || err.message === 'Erreur serveur') { clearInterval(kycPollInterval); }
     }
-  }, 10000); // Check every 10 seconds
+  }, 30000); // 30s au lieu de 10s pour préserver les quotas serverless
 }
 
 window.goToEspaceBancaire = function () {

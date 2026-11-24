@@ -107,10 +107,15 @@ router.get('/visitor/:conv_id/messages', async (req, res) => {
     if (!(await visitorOwnsConversation(req, conv_id))) {
       return res.status(403).json({ error: 'Accès refusé' });
     }
-    const [rows] = await db.query(
-      'SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC',
-      [conv_id]
-    );
+    const afterId = parseInt(req.query.after_id, 10) || 0;
+    let sql = 'SELECT id, conversation_id, sender_type, sender_id, content, created_at FROM chat_messages WHERE conversation_id = ?';
+    const params = [conv_id];
+    if (afterId > 0) {
+      sql += ' AND id > ?';
+      params.push(afterId);
+    }
+    sql += ' ORDER BY id ASC';
+    const [rows] = await db.query(sql, params);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });
@@ -174,10 +179,15 @@ router.get('/user/:conv_id/messages', authMiddleware, async (req, res) => {
     if (!(await userOwnsConversation(req.user.id, conv_id))) {
       return res.status(403).json({ error: 'Accès refusé' });
     }
-    const [rows] = await db.query(
-      'SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC',
-      [conv_id]
-    );
+    const afterId = parseInt(req.query.after_id, 10) || 0;
+    let sql = 'SELECT id, conversation_id, sender_type, sender_id, content, created_at FROM chat_messages WHERE conversation_id = ?';
+    const params = [conv_id];
+    if (afterId > 0) {
+      sql += ' AND id > ?';
+      params.push(afterId);
+    }
+    sql += ' ORDER BY id ASC';
+    const [rows] = await db.query(sql, params);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });
@@ -215,7 +225,7 @@ router.get('/admin/conversations', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Accès refusé' });
     
-    // Récupérer les conversations avec le dernier message
+    // Récupérer les conversations avec le dernier message (limité aux 50 plus récentes)
     const [rows] = await db.query(`
       SELECT c.id, c.user_id, c.visitor_name, c.visitor_email, c.visitor_phone, c.status, c.created_at, c.updated_at,
         u.prenom, u.nom, u.email as user_email,
@@ -224,6 +234,7 @@ router.get('/admin/conversations', authMiddleware, async (req, res) => {
       FROM chat_conversations c
       LEFT JOIN users u ON c.user_id = u.id
       ORDER BY last_message_date DESC
+      LIMIT 50
     `);
     
     res.json(rows);
@@ -237,11 +248,15 @@ router.get('/admin/:conv_id/messages', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Accès refusé' });
     const { conv_id } = req.params;
-    
-    const [rows] = await db.query(
-      'SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC',
-      [conv_id]
-    );
+    const afterId = parseInt(req.query.after_id, 10) || 0;
+    let sql = 'SELECT id, conversation_id, sender_type, sender_id, content, created_at FROM chat_messages WHERE conversation_id = ?';
+    const params = [conv_id];
+    if (afterId > 0) {
+      sql += ' AND id > ?';
+      params.push(afterId);
+    }
+    sql += ' ORDER BY id ASC';
+    const [rows] = await db.query(sql, params);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });

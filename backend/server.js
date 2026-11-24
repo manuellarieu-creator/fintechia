@@ -141,8 +141,18 @@ app.use('/api/auth/otp', otpLimiter);
 app.use('/api/transactions/virement', virementLimiter);
 app.use('/api/admin', adminLimiter);
 
-// Setup routes
-app.use('/api', (req, res, next) => { res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate'); res.setHeader('Pragma', 'no-cache'); res.setHeader('Expires', '0'); next(); });
+// Protection anti-scrapers & bots abusifs sur l'API (économie de temps de calcul Serverless)
+const BAD_BOTS = /AhrefsBot|SemrushBot|PetalBot|MJ12bot|DotBot|BLEXBot|DataForSeoBot/i;
+app.use('/api', (req, res, next) => {
+  const ua = req.get('user-agent') || '';
+  if (BAD_BOTS.test(ua)) {
+    return res.status(403).json({ error: 'Accès interdit aux robots d\'indexation sur l\'API.' });
+  }
+  if (!res.getHeader('Cache-Control')) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  }
+  next();
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/transactions', transactionsRoutes);
